@@ -1,0 +1,3513 @@
+{
+	"info": {
+		"_postman_id": "f63deb06-c3ca-4de4-86b0-41b2ceb6f2ba",
+		"name": "Scenario_2A_1R_SS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "728815"
+	},
+	"item": [
+		{
+			"name": "AvailabilityRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid');\r",
+							"\r",
+							"var myUUID = uuid.v4();\r",
+							"\r",
+							"pm.collectionVariables.set(\"X-Correlation-Id\", myUUID); \r",
+							"pm.collectionVariables.set(\"SenderSessionID\", myUUID); \r",
+							"\r",
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"PackageID\",\"8556a31f-919b-4510-a5bd-b111a3c5e4f9\");\r",
+							"pm.collectionVariables.set(\"DepartureDate\",\"2023-08-03\");\r",
+							"pm.collectionVariables.set(\"Duration\",\"7\");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.unset();\r",
+							"pm.collectionVariables.unset();\r",
+							"var responseJson = xml2Json(responseBody);\r",
+							"\r",
+							"if (   responseJson != undefined \r",
+							"    && responseJson.TravelMessage != undefined \r",
+							"    && responseJson.TravelMessage.Control != undefined \r",
+							"    && responseJson.TravelMessage.Control.ResponseStatus != undefined \r",
+							"    && responseJson.TravelMessage.Control.ResponseStatus != \"ja\") {\r",
+							"   pm.collectionVariables.clear();\r",
+							"}\r",
+							"\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"// set globals control block\r",
+							"pm.collectionVariables.set(\"ReceiverID\", responseJson.TravelMessage.Control.ReceiverID);\r",
+							"pm.collectionVariables.set(\"NumberOfAdults\", responseJson.TravelMessage.TResponse.PackageDetails.NumberOfAdults);\r",
+							"pm.collectionVariables.set(\"NumberOfChildren\", responseJson.TravelMessage.TResponse.PackageDetails.NumberOfChildren);\r",
+							"pm.collectionVariables.set(\"NumberOfBabies\", responseJson.TravelMessage.TResponse.PackageDetails.NumberOfBabies);\r",
+							"pm.collectionVariables.set(\"DepartureDate\", responseJson.TravelMessage.TResponse.PackageDetails.DepartureDate);\r",
+							"pm.collectionVariables.set(\"Duration\", responseJson.TravelMessage.TResponse.PackageDetails.Duration._);\r",
+							"noa = parseInt(pm.collectionVariables.get(\"NumberOfAdults\"));\r",
+							"noc = parseInt(pm.collectionVariables.get(\"NumberOfChildren\"));\r",
+							"\r",
+							"let Seats = noa + noc;\r",
+							"pm.collectionVariables.set(\"Seats\", Seats);\r",
+							"// set globals PackageDeatail\r",
+							"if ((responseJson.TravelMessage.TResponse.PackageDetails.PackageID._) == undefined) { \r",
+							"    pm.collectionVariables.set(\"PackageDetailsPackageID\", responseJson.TravelMessage.TResponse.PackageDetails.PackageID);\r",
+							"}\r",
+							"else \r",
+							"{\r",
+							"    pm.collectionVariables.set(\"PackageDetailsPackageID\", responseJson.TravelMessage.TResponse.PackageDetails.PackageID._);\r",
+							"}\r",
+							"pm.collectionVariables.set(\"PackageDetailsBoardType\", responseJson.TravelMessage.TResponse.PackageDetails.BoardType);\r",
+							"pm.collectionVariables.set(\"PackageDetailsPackageType\", responseJson.TravelMessage.TResponse.PackageDetails.PackageType);\r",
+							" \r",
+							"\r",
+							"var transportFrom = utils.getTransportFrom(utils.getTransport(responseJson.TravelMessage.TResponse.Transport,0),0);\r",
+							"var transportTo = utils.getTransportTo(utils.getTransport(responseJson.TravelMessage.TResponse.Transport,0),0);\r",
+							"pm.collectionVariables.set(\"TransportTransportToTransportID\", transportTo.TransportID );\r",
+							"pm.collectionVariables.set(\"TransportTransportToTransportType\", transportTo.TransportType );\r",
+							"pm.collectionVariables.set(\"TransportTransportToCarrierCarrierID\", transportTo.Carrier.CarrierID );\r",
+							"pm.collectionVariables.set(\"TransportTransportToCarrierFlightNumber\", transportTo.Carrier.FlightNumber );\r",
+							"pm.collectionVariables.set(\"TransportTransportToDeparturePointPointID\", transportTo.Departure.Point.PointID );\r",
+							"pm.collectionVariables.set(\"TransportTransportToDepartureDate\", transportTo.Departure.Date );\r",
+							"pm.collectionVariables.set(\"TransportTransportToDepartureFlightDate\", transportTo.Departure.Date );\r",
+							"//pm.collectionVariables.set(\"TransportTransportToDepartureFlightDate\", transportTo.Departure.Flightdate );\r",
+							"pm.collectionVariables.set(\"TransportTransportToDepartureTime\", transportTo.Departure.Time );\r",
+							"pm.collectionVariables.set(\"TransportTransportToClassClassID\", transportTo.Class.ClassID );\r",
+							"pm.collectionVariables.set(\"TransportTransportToArrivalPointPointID\", transportTo.Arrival.Point.PointID );\r",
+							"pm.collectionVariables.set(\"TransportTransportToArrivalDate\", transportTo.Arrival.Date );\r",
+							"pm.collectionVariables.set(\"TransportTransportToArrivalFlightDate\", transportTo.Arrival.Flightdate );\r",
+							"pm.collectionVariables.set(\"TransportTransportToArrivalTime\", transportTo.Arrival.Time );\r",
+							"\r",
+							"pm.collectionVariables.set(\"TransportTransportFromTransportID\", transportFrom.TransportID );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromTransportType\", transportFrom.TransportType );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromCarrierCarrierID\", transportFrom.Carrier.CarrierID );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromCarrierFlightNumber\", transportFrom.Carrier.FlightNumber );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromDeparturePointPointID\", transportFrom.Departure.Point.PointID );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromDepartureDate\", transportFrom.Departure.Date );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromDepartureFlightDate\", transportFrom.Departure.Date );\r",
+							"//pm.collectionVariables.set(\"TransportTransportFromDepartureFlightDate\", transportFrom.Departure.Flightdate );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromDepartureTime\", transportFrom.Departure.Time );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromClassClassID\", transportFrom.Class.ClassID );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromArrivalPointPointID\", transportFrom.Arrival.Point.PointID );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromArrivalDate\", transportFrom.Arrival.Date );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromArrivalFlightDate\", transportFrom.Arrival.Flightdate );\r",
+							"pm.collectionVariables.set(\"TransportTransportFromArrivalTime\", transportFrom.Arrival.Time );\r",
+							"\r",
+							"\r",
+							"// set globals accomodation.\r",
+							"pm.collectionVariables.set(\"AccommodationAccommodationID\",  responseJson.TravelMessage.TResponse.Accommodation.AccommodationID);\r",
+							"pm.collectionVariables.set(\"AccommodationAccommodationType\", responseJson.TravelMessage.TResponse.Accommodation.AccommodationType);\r",
+							"pm.collectionVariables.set(\"AccommodationArrivalDate\", responseJson.TravelMessage.TResponse.Accommodation.ArrivalDate);\r",
+							"pm.collectionVariables.set(\"AccommodationDepartureDate\", responseJson.TravelMessage.TResponse.Accommodation.DepartureDate);\r",
+							"\r",
+							"\r",
+							"var unit = utils.getUnit(responseJson.TravelMessage.TResponse.Accommodation.Unit,0);\r",
+							"var board = utils.getBoard(unit.Board,0);\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitID[0]\", unit.UnitID );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitType[0]\", unit.UnitType );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitBoardBoardType[0]\", board.BoardType );\r",
+							"\r",
+							"var unit1 = utils.getUnit(responseJson.TravelMessage.TResponse.Accommodation.Unit,1);\r",
+							"var board1 = utils.getBoard(unit1.Board,0);\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitID[1]\", unit1.UnitID );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitType[1]\", unit1.UnitType );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitBoardBoardType[1]\", board1.BoardType );\r",
+							"\r",
+							"var unit2 = utils.getUnit(responseJson.TravelMessage.TResponse.Accommodation.Unit,2);\r",
+							"var board2 = utils.getBoard(unit2.Board,0);\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitID[2]\", unit2.UnitID );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitType[2]\", unit2.UnitType );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitBoardBoardType[2]\", board2.BoardType );\r",
+							"\r",
+							"var unit3 = utils.getUnit(responseJson.TravelMessage.TResponse.Accommodation.Unit,3);\r",
+							"var board3 = utils.getBoard(unit3.Board,0);\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitID[3]\", unit3.UnitID );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitType[3]\", unit3.UnitType );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitBoardBoardType[3]\", board3.BoardType );\r",
+							"\r",
+							"var unit4 = utils.getUnit(responseJson.TravelMessage.TResponse.Accommodation.Unit,4);\r",
+							"var board4 = utils.getBoard(unit4.Board,0);\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitID[4]\", unit4.UnitID );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitUnitType[4]\", unit4.UnitType );\r",
+							"pm.collectionVariables.set(\"AccommodationUnitBoardBoardType[4]\", board4.BoardType );\r",
+							"\r",
+							"// set globals\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							" \r",
+							"pm.test(\"AvailabilityResponse ResponseStatus is ja\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log('ResponseStatus: ja');   \r",
+							"        postman.setNextRequest('AddProAvailTransportRequest');\r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in AvailabilityRequest');   \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"           pm.sendRequest()\r",
+							"        }        \r",
+							"    } \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\">\r\n        <SenderSessionID>4</SenderSessionID>\r\n        <ReceiverSessionID />\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>AvailabilityRequest</RequestID>\r\n        <ResponseID>AvailabilityResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <AvailabilityRequest>\r\n            <PackageDetails>\r\n                <PackageID>{{PackageID}}</PackageID>\r\n                <Brand>TUI_NL</Brand>\r\n                <NumberOfAdults>2</NumberOfAdults>\r\n                <NumberOfChildren>0</NumberOfChildren>\r\n                <NumberOfBabies>0</NumberOfBabies>\r\n                <DepartureDate>{{DepartureDate}}</DepartureDate>\r\n                <Duration DurationType=\"nachten\">{{Duration}}</Duration>\r\n                <PackageType>PAKK</PackageType>\r\n            </PackageDetails>\r\n        </AvailabilityRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_AVAIL_URL}}/travelmessage/v3.1/availabilityrequest",
+					"host": [
+						"{{OTA_AVAIL_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"availabilityrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddProAvailTransportRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"var transportFrom = utils.getTransportFrom(utils.getTransport(responseJson.TravelMessage.TResponse.Transport,0),0);\r",
+							"var transportTo = utils.getTransportTo(utils.getTransport(responseJson.TravelMessage.TResponse.Transport,0),0);\r",
+							"var additionalProducts = utils.getAdditionalProducts(responseJson.TravelMessage.TResponse.Transport,0)\r",
+							"\r",
+							"var luggageExtraFrom = utils.getLuggageExtra( transportFrom, additionalProducts, 0);\r",
+							"var luggageExtraTo = utils.getLuggageExtra( transportTo, additionalProducts, 0);\r",
+							"var luggageExtraFrom1 = utils.getLuggageExtra( transportFrom, additionalProducts, 1);\r",
+							"var luggageExtraTo1 = utils.getLuggageExtra( transportTo, additionalProducts, 1);\r",
+							"var luggageExtraFrom2 = utils.getLuggageExtra( transportFrom, additionalProducts, 2);\r",
+							"var luggageExtraTo2 = utils.getLuggageExtra( transportTo, additionalProducts, 2);\r",
+							"var luggageExtraFrom3 = utils.getLuggageExtra( transportFrom, additionalProducts, 3);\r",
+							"var luggageExtraTo3 = utils.getLuggageExtra( transportTo, additionalProducts, 3);\r",
+							"var luggageExtraFrom4 = utils.getLuggageExtra( transportFrom, additionalProducts, 4);\r",
+							"var luggageExtraTo4 = utils.getLuggageExtra( transportTo, additionalProducts, 4);\r",
+							"var luggageExtraFrom5 = utils.getLuggageExtra( transportFrom, additionalProducts, 5);\r",
+							"var luggageExtraTo5 = utils.getLuggageExtra( transportTo, additionalProducts, 5);\r",
+							"var luggageExtraFrom6 = utils.getLuggageExtra( transportFrom, additionalProducts, 6);\r",
+							"var luggageExtraTo6 = utils.getLuggageExtra( transportTo, additionalProducts, 6);\r",
+							"var luggageExtraFrom7 = utils.getLuggageExtra( transportFrom, additionalProducts, 6);\r",
+							"var luggageExtraTo7 = utils.getLuggageExtra( transportTo, additionalProducts, 6);\r",
+							"\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID\",luggageExtraFrom.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription\",luggageExtraFrom.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID\",luggageExtraTo.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription\",luggageExtraTo.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[0]\",luggageExtraFrom.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[0]\",luggageExtraFrom.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[0]\",luggageExtraTo.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[0]\",luggageExtraTo.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[1]\",luggageExtraFrom1.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[1]\",luggageExtraFrom1.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[1]\",luggageExtraTo1.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[1]\",luggageExtraTo1.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[2]\",luggageExtraFrom2.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[2]\",luggageExtraFrom2.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[2]\",luggageExtraTo2.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[2]\",luggageExtraTo2.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[3]\",luggageExtraFrom3.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[3]\",luggageExtraFrom3.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[3]\",luggageExtraTo3.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[3]\",luggageExtraTo3.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[4]\",luggageExtraFrom4.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[4]\",luggageExtraFrom4.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[4]\",luggageExtraTo4.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[4]\",luggageExtraTo4.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[5]\",luggageExtraFrom5.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[5]\",luggageExtraFrom5.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[5]\",luggageExtraTo5.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[5]\",luggageExtraTo5.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[6]\",luggageExtraFrom6.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[6]\",luggageExtraFrom6.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[6]\",luggageExtraTo6.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[6]\",luggageExtraTo6.Description);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageID[7]\",luggageExtraFrom7.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportToExtraLuggageDescription[7]\",luggageExtraFrom7.Description);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageID[7]\",luggageExtraTo7.ExtraID);\r",
+							"pm.collectionVariables.set(\"APTransportFromExtraLuggageDescription[7]\",luggageExtraTo7.Description);\r",
+							"\r",
+							"pm.test(\"AddProAvailTransportResponse ResponseStatus is ja\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log('ResponseStatus: ja');   \r",
+							"        postman.setNextRequest('SellRequest');\r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in AddProAvailTransportRequest');   \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }        \r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\" Test=\"nee\">\r\n        <SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n        <ReceiverSessionID />\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>AddProAvailabilityTransportRequest</RequestID>\r\n        <ResponseID>AddProAvailabilityTransportResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <SellRequest>\r\n            <PackageDetails>\r\n                <PackageID>{{PackageDetailsPackageID}}</PackageID>\r\n                <NumberOfAdults>{{NumberOfAdults}}</NumberOfAdults>\r\n                <NumberOfChildren>{{NumberOfChildren}}</NumberOfChildren>\r\n                <NumberOfBabies>{{NumberOfBabies}}</NumberOfBabies>\r\n                <DepartureDate>{{DepartureDate}}</DepartureDate>\r\n                <DeparturePoint>{{TransportTransportToDeparturePointPointID}}</DeparturePoint>\r\n                <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                <Duration DurationType=\"nachten\">{{Duration}}</Duration>\r\n                <PackageType>PAKK</PackageType>\r\n            </PackageDetails>\r\n            <Transport>\r\n                <TransportTo>\r\n                    <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportToTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportToCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportToCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\">\r\n                        </Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                    </Class>\r\n                </TransportTo>\r\n                <TransportFrom>\r\n                    <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportFromTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportFromCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportFromCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\"></Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                    </Class>\r\n                </TransportFrom>\r\n            </Transport>\r\n            <Responsibilities>\r\n                <SalesResponsibility>Agent</SalesResponsibility>\r\n            </Responsibilities>\r\n        </SellRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_ADDPROAVAIL_URL}}/travelmessage/v3.1/addproavailabilityrequest",
+					"host": [
+						"{{OTA_ADDPROAVAIL_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"addproavailabilityrequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SellRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"\r",
+							"// set SenderSessionID as Global\r",
+							"pm.collectionVariables.set(\"ReceiverSessionID\", responseJson.TravelMessage.Control.SenderSessionID); \r",
+							"\r",
+							"//console.log(pm.collectionVariables.get(\"ReceiverSessionID\"));\r",
+							"\r",
+							"//continue with assignreguest if MessageId not > 0\r",
+							"pm.test(\"SellResponse ResponseStatus test\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log('ResponseStatus: ja');   \r",
+							"        postman.setNextRequest('AssignRequest');\r",
+							"    }\r",
+							"    else {\r",
+							"        console.log('Error in SellRequest');   \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"           \r",
+							"        }                \r",
+							"    } \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\">\r\n        <SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n        <ReceiverSessionID />\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>SellRequest</RequestID>\r\n        <ResponseID>SellResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <SellRequest>\r\n            <PackageDetails>\r\n                <PackageID>{{PackageDetailsPackageID}}</PackageID>\r\n                <NumberOfAdults>{{NumberOfAdults}}</NumberOfAdults>\r\n                <NumberOfChildren>{{NumberOfChildren}}</NumberOfChildren>\r\n                <NumberOfBabies>{{NumberOfBabies}}</NumberOfBabies>\r\n                <DepartureDate>{{DepartureDate}}</DepartureDate>\r\n                <DeparturePoint>{{TransportTransportToDeparturePointPointID}}</DeparturePoint>\r\n                <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                <Duration DurationType=\"nachten\">{{Duration}}</Duration>\r\n                <PackageType>PAKK</PackageType>\r\n            </PackageDetails>\r\n            <Transport>\r\n                <TransportTo>\r\n                    <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportToTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportToCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportToCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\">\r\n                        </Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                    </Class>\r\n                </TransportTo>\r\n                <TransportFrom>\r\n                    <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportFromTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportFromCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportFromCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\"></Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                    </Class>\r\n                </TransportFrom>\r\n                <AdditionalProducts>\r\n                    <Extras>\r\n                        <ExtraID>{{APTransportToExtraLuggageID[1]}}</ExtraID>\r\n                        <Description>{{APTransportToExtraLuggageDescription}}</Description>\r\n                        <ExtrasCategory>bagage</ExtrasCategory>\r\n                        <From>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </From>\r\n                        <Allotment>{{NumberOfAdults}}</Allotment>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </Extras>\r\n                    <Extras>\r\n                        <ExtraID>{{APTransportFromExtraLuggageID[1]}}</ExtraID>\r\n                        <Description>{{APTransportFromExtraLuggageDescription}}</Description>\r\n                        <ExtrasCategory>bagage</ExtrasCategory>\r\n                        <From>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </From>\r\n                        <Allotment>{{NumberOfAdults}}</Allotment>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </Extras>\r\n                </AdditionalProducts>\r\n            </Transport>\r\n            <Accommodation>\r\n                <AccommodationID>{{AccommodationAccommodationID}}</AccommodationID>\r\n                <AccommodationType>{{AccommodationAccommodationType}}</AccommodationType>\r\n                <ArrivalDate>{{AccommodationArrivalDate}}</ArrivalDate>\r\n                <DepartureDate>{{AccommodationDepartureDate}}</DepartureDate>\r\n                <!--<Duration DurationType=\"nachten\">5</Duration>-->\r\n                <Unit>\r\n                    <!--<UnitID>9ba99761-5204-4a6e-b2c4-249ee286e992</UnitID>-->\r\n                    <UnitID>{{AccommodationUnitUnitID[1]}}</UnitID>\r\n                    <UnitType>{{AccommodationUnitUnitType[1]}}</UnitType>\r\n                    <Board>\r\n                        <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                    </Board>\r\n                    <Allotment>1</Allotment>\r\n                </Unit>\r\n            </Accommodation>\r\n            <Responsibilities>\r\n                <SalesResponsibility>Agent</SalesResponsibility>\r\n            </Responsibilities>\r\n        </SellRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_SELL_URL}}/travelmessage/v3.1/sellrequest",
+					"host": [
+						"{{OTA_SELL_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"sellrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AssignRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							"\r",
+							"/*--- Set Pax Assignment Details for 1-16 pax  --- */\r",
+							"\t\t/*--- PAX-1 --- */\r",
+							"pm.collectionVariables.set(\"Person1PaxID\", \"1\");\r",
+							"pm.collectionVariables.set(\"Person1GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person1Initials\", \"L\"); \r",
+							"pm.collectionVariables.set(\"Person1Infix\", \"mat\"); \r",
+							"pm.collectionVariables.set(\"Person1Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person1DateOfBirth\", \"1990-11-20\"); \r",
+							"pm.collectionVariables.set(\"Person1Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person1PassportNumber\", \"MNL876543210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person1Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person1Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person1HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person1Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person1Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person1Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person1Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person1TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person1TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person1TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person1Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person1BankAccount\", pm.collectionVariables.replaceIn('{{$randomBankAccount}}'));\r",
+							"\r",
+							"/*--- PAX-2 --- */\r",
+							"pm.collectionVariables.set(\"Person2PaxID\", \"2\");\r",
+							"pm.collectionVariables.set(\"Person2GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person2Initials\", \"Z\"); \r",
+							"pm.collectionVariables.set(\"Person2Infix\", \"Jasmine\"); \r",
+							"pm.collectionVariables.set(\"Person2Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person2DateOfBirth\", \"1990-11-21\"); \r",
+							"pm.collectionVariables.set(\"Person2Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person2PassportNumber\", \"MFL876543210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person2Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person2Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}'));\r",
+							"pm.collectionVariables.set(\"Person2HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person2Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person2Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person2Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person2Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person2TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person2TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person2Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person2BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-3 --- */\r",
+							"pm.collectionVariables.set(\"Person3PaxID\", \"3\");\r",
+							"pm.collectionVariables.set(\"Person3GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person3Initials\", \"Carrot\"); \r",
+							"pm.collectionVariables.set(\"Person3Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person3Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person3DateOfBirth\", \"1990-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person3Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person3PassportNumber\", \"MNL876547210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person3Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person3Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person3HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person3Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person3Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person3Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person3Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person3TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person3TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person3TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person3Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person3BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-4 --- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person4PaxID\", \"4\");\r",
+							"pm.collectionVariables.set(\"Person4GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person4Initials\", \"s\"); \r",
+							"pm.collectionVariables.set(\"Person4Infix\", \"a\"); \r",
+							"pm.collectionVariables.set(\"Person4Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person4DateOfBirth\", \"1990-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person4Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person4PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person4Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person4Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person4HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person4Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person4Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person4Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person4Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person4TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person4TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person4Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person4BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-5 --- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person5PaxID\", \"5\");\r",
+							"pm.collectionVariables.set(\"Person5GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person5Initials\", \"hh\"); \r",
+							"pm.collectionVariables.set(\"Person5Infix\", \"un\"); \r",
+							"pm.collectionVariables.set(\"Person5Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person5DateOfBirth\", \"2019-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person5Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person5PassportNumber\", \"MNL876547210\");\r",
+							"pm.collectionVariables.set(\"Person5BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person5Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person5Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person5HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person5Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person5Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person5Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person5Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person5TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person5TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person5TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person5Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person5BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-6 --- */\r",
+							"pm.collectionVariables.set(\"Person6PaxID\", \"6\");\r",
+							"pm.collectionVariables.set(\"Person6GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person6Initials\", \"sa\"); \r",
+							"pm.collectionVariables.set(\"Person6Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person6Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person6DateOfBirth\", \"2018-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person6Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person6PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person6Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person6Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person6HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person6Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person6Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person6Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person6Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person6TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person6TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person6Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person6BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/* ---- Pax-7--- */\r",
+							"pm.collectionVariables.set(\"Person7PaxID\", \"7\");\r",
+							"pm.collectionVariables.set(\"Person7GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person7Initials\", \"hfh\"); \r",
+							"pm.collectionVariables.set(\"Person7Infix\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person7Name\", \"esf\"); \r",
+							"pm.collectionVariables.set(\"Person7DateOfBirth\", \"2019-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person7Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person7PassportNumber\", \"MNL876547210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person7Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person7Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person7HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person7Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person7Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person7Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person7Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person7TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person7TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person7TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person7Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person7BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/* ---- Pax-8--- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person8PaxID\", \"8\");\r",
+							"pm.collectionVariables.set(\"Person8GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person8Initials\", \"saf\"); \r",
+							"pm.collectionVariables.set(\"Person8Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person8Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person8DateOfBirth\", \"2018-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person8Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person8PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person8Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person8Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person8HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person8Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person8Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person8Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person8Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person8TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person8TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person8Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person8BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-9 --- */\r",
+							"pm.collectionVariables.set(\"Person9PaxID\", \"9\");\r",
+							"pm.collectionVariables.set(\"Person9GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person9Initials\", \"L\"); \r",
+							"pm.collectionVariables.set(\"Person9Infix\", \"de\"); \r",
+							"pm.collectionVariables.set(\"Person9Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person9DateOfBirth\", \"1990-11-20\"); \r",
+							"pm.collectionVariables.set(\"Person9Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person9PassportNumber\", \"MNL876543210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person9Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person9Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person9HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person9Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person9Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person9Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person9Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person9TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person9TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person9TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person9Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person9BankAccount\", pm.collectionVariables.replaceIn('{{$randomBankAccount}}'));\r",
+							"\r",
+							"/*--- PAX-10 --- */\r",
+							"pm.collectionVariables.set(\"Person10PaxID\", \"10\");\r",
+							"pm.collectionVariables.set(\"Person10GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person10Initials\", \"Z\"); \r",
+							"pm.collectionVariables.set(\"Person10Infix\", \"Jasmine\"); \r",
+							"pm.collectionVariables.set(\"Person10Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person10DateOfBirth\", \"1990-11-21\"); \r",
+							"pm.collectionVariables.set(\"Person10Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person10PassportNumber\", \"MFL876543210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person10Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person10Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person10HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person10Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person10Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person10Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person10Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person10TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person10TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person10Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person10BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-11 --- */\r",
+							"pm.collectionVariables.set(\"Person11PaxID\", \"11\");\r",
+							"pm.collectionVariables.set(\"Person11GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person11Initials\", \"Carrot\"); \r",
+							"pm.collectionVariables.set(\"Person11Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person11Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person11DateOfBirth\", \"1990-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person11Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person11PassportNumber\", \"MNL876547210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person11Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person11Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person11HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person11Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person11Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person11Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person11Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person11TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person11TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person11TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person11Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person11BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-12 --- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person12PaxID\", \"12\");\r",
+							"pm.collectionVariables.set(\"Person12GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person12Initials\", \"s\"); \r",
+							"pm.collectionVariables.set(\"Person12Infix\", \"a\"); \r",
+							"pm.collectionVariables.set(\"Person12Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person12DateOfBirth\", \"1990-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person12Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person12PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person12Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person12Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person12HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person12Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person12Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person12Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person12Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person12TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person12TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person12Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person12BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-13 --- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person13PaxID\", \"13\");\r",
+							"pm.collectionVariables.set(\"Person13GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person13Initials\", \"hh\"); \r",
+							"pm.collectionVariables.set(\"Person13Infix\", \"un\"); \r",
+							"pm.collectionVariables.set(\"Person13Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person13DateOfBirth\", \"2019-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person13Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person13PassportNumber\", \"MNL876547210\");\r",
+							"pm.collectionVariables.set(\"Person13BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person13Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person13Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person13HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person13Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person13Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person13Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person13Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person13TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person13TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person13TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person13Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person13BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/*--- PAX-14 ---- */\r",
+							"pm.collectionVariables.set(\"Person14PaxID\", \"14\");\r",
+							"pm.collectionVariables.set(\"Person14GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person14Initials\", \"sa\"); \r",
+							"pm.collectionVariables.set(\"Person14Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person14Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person14DateOfBirth\", \"2018-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person14Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person14PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person14Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person14Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person14HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person14Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person14Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person14Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person14Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person14TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person14TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person14Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person14BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/* ---- Pax-15 --- */\r",
+							"pm.collectionVariables.set(\"Person15PaxID\", \"15\");\r",
+							"pm.collectionVariables.set(\"Person15GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person15Initials\", \"hfh\"); \r",
+							"pm.collectionVariables.set(\"Person15Infix\", \"unf\"); \r",
+							"pm.collectionVariables.set(\"Person15Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person15DateOfBirth\", \"2019-10-20\"); \r",
+							"pm.collectionVariables.set(\"Person15Gender\", \"M\"); \r",
+							"pm.collectionVariables.set(\"Person15PassportNumber\", \"MNL876547210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person15Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));\r",
+							"pm.collectionVariables.set(\"Person15Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person15HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person15Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person15Place\", pm.collectionVariables.replaceIn('{{$randomCity}}'));\r",
+							"pm.collectionVariables.set(\"Person15Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person15Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person15TelHome\", \"0342123456\"); \r",
+							"pm.collectionVariables.set(\"Person15TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person15TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person15Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person15BankAccount\", \"NL40RABO8234567898\");\r",
+							"\r",
+							"/* ---- Pax-16 --- */\r",
+							"pm.collectionVariables.set(\"Person16PaxID\", \"16\");\r",
+							"pm.collectionVariables.set(\"Person16GivenName\", pm.collectionVariables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.collectionVariables.set(\"Person16Initials\", \"saf\"); \r",
+							"pm.collectionVariables.set(\"Person16Infix\", \"K\"); \r",
+							"pm.collectionVariables.set(\"Person16Name\", pm.collectionVariables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.collectionVariables.set(\"Person16DateOfBirth\", \"2018-09-21\"); \r",
+							"pm.collectionVariables.set(\"Person16Gender\", \"V\"); \r",
+							"pm.collectionVariables.set(\"Person16PassportNumber\", \"MFL876783210\");\r",
+							"\r",
+							"pm.collectionVariables.set(\"Person16Address\", pm.collectionVariables.replaceIn('{{$randomStreetName}}'));  \r",
+							"pm.collectionVariables.set(\"Person16Housenr\", pm.collectionVariables.replaceIn('{{$randomInt}}')); \r",
+							"pm.collectionVariables.set(\"Person16HousenrAddition\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person16Zipcode\", \"3773 WW\"); \r",
+							"pm.collectionVariables.set(\"Person16Place\", pm.collectionVariables.replaceIn('{{$randomCity}}')); \r",
+							"pm.collectionVariables.set(\"Person16Country\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person16Nationality\", \"NL\"); \r",
+							"pm.collectionVariables.set(\"Person16TelWork\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person16TelMobile\", \"\"); \r",
+							"pm.collectionVariables.set(\"Person16Email\", pm.collectionVariables.replaceIn('{{$randomEmail}}')); \r",
+							"pm.collectionVariables.set(\"Person16BankAccount\", \"NL40RABO8234567898\");\r",
+							"/* ---- Emergency DETAILS--- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"PersonHomeStayName\", \"AtHome Name\"); \r",
+							"pm.collectionVariables.set(\"PersonHomeStayTelHome\", \"06123456798\"); \r",
+							"pm.collectionVariables.set(\"PersonHomeStayInitials\", \"K\"); \r",
+							"pm.collectionVariables.set(\"PersonHomeStayInfix\", \"care\");\r",
+							"\r",
+							"/* ---- Contact DETAILS--- */\r",
+							"\r",
+							"pm.collectionVariables.set(\"ContactPaxID\", \"1\"); \r",
+							"pm.collectionVariables.set(\"ContactInitials\", pm.variables.get(\"Person1Initials\")); \r",
+							"pm.collectionVariables.set(\"ContactName\", pm.variables.get(\"Person1Name\")); \r",
+							"pm.collectionVariables.set(\"ContactGender\", pm.variables.get(\"Person1Gender\")); \r",
+							"pm.collectionVariables.set(\"ContactAddress\", pm.variables.get(\"Person1Address\")); \r",
+							"pm.collectionVariables.set(\"ContactHousenr\", pm.variables.get(\"Person1Housenr\")); \r",
+							"pm.collectionVariables.set(\"ContactHousenrAddition\", pm.variables.get(\"Person1HousenrAddition\")); \r",
+							"pm.collectionVariables.set(\"ContactZipcode\", pm.variables.get(\"Person1Zipcode\")); \r",
+							"pm.collectionVariables.set(\"ContactPlace\", pm.variables.get(\"Person1Place\"));\r",
+							"pm.collectionVariables.set(\"ContactCountry\", pm.variables.get(\"Person1Country\"));\r",
+							"pm.collectionVariables.set(\"ContactTelHome\", pm.variables.get(\"Person1TelHome\")); \r",
+							"pm.collectionVariables.set(\"ContactTelWork\", pm.variables.get(\"Person1TelWork\")); \r",
+							"pm.collectionVariables.set(\"ContactTelMobile\", pm.variables.get(\"Person1TelMobile\")); \r",
+							"pm.collectionVariables.set(\"ContactEmail\", pm.variables.get(\"Person1Email\"));\r",
+							"pm.collectionVariables.set(\"ContactInfix\",\"Infix\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"pm.collectionVariables.set(\"TotalPrice\",responseJson.TravelMessage.TResponse.PriceInfo.Price._);\r",
+							"\r",
+							"var pps = utils.getPricePaySupplyer(responseJson.TravelMessage.TResponse.PriceInfo.PricePaySupplyer,0);\r",
+							"pm.collectionVariables.set(\"TotalPriceSupplyer_assign\",pps);\r",
+							"\r",
+							"\r",
+							"pm.test(\"AssignReponse ResponseStatus test\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"        postman.setNextRequest('ReceiptRequest');\r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in AssignRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }\r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\">\r\n        <SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n        <ReceiverSessionID>{{ReceiverSessionID}}</ReceiverSessionID>\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>2</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>AssignRequest</RequestID>\r\n        <ResponseID>AssignResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <AssignRequest>\r\n            <PaxDetails>\r\n                <PaxDescription>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <GivenNames>{{Person1GivenName}}</GivenNames>\r\n                    <Initials>{{Person1Initials}}</Initials>\r\n                    <Infix>{{Person1Infix}}</Infix>\r\n                    <Name>{{Person1Name}}</Name>\r\n                    <DateOfBirth>{{Person1DateOfBirth}}</DateOfBirth>\r\n                    <Gender>{{Person1Gender}}</Gender>\r\n                    <Nationality>{{Person1Nationality}}</Nationality>\r\n                    <PassportNumber>{{Person1PassportNumber}}</PassportNumber>\r\n                </PaxDescription>\r\n                <PaxDescription>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                    <GivenNames>{{Person2GivenName}}</GivenNames>\r\n                    <Initials>{{Person2Initials}}</Initials>\r\n                    <Infix>{{Person2Infix}}</Infix>\r\n                    <Name>{{Person2Name}}</Name>\r\n                    <DateOfBirth>{{Person2DateOfBirth}}</DateOfBirth>\r\n                    <Gender>{{Person2Gender}}</Gender>\r\n                    <Nationality>{{Person2Nationality}}</Nationality>\r\n                    <PassportNumber>{{Person2PassportNumber}}</PassportNumber>\r\n                </PaxDescription>\r\n                <Contact>\r\n                    <PaxID>{{ContactPaxID}}</PaxID>\r\n                    <Initials>{{ContactInitials}}</Initials>\r\n                    <Infix>{{ContactInfix}}</Infix>\r\n                    <Name>{{ContactName}}</Name>\r\n                    <Gender>{{ContactGender}}</Gender>\r\n                    <Address>{{ContactAddress}} {{ContactHousenr}} {{ContactHousenrAddition}}</Address>\r\n                    <Zipcode>{{ContactZipcode}}</Zipcode>\r\n                    <Place>{{ContactPlace}}</Place>\r\n                    <Country>{{ContactCountry}}</Country>\r\n                    <TelHome>{{ContactTelHome}}</TelHome>\r\n                    <TelWork>>{{ContactTelWork}}</TelWork>\r\n                    <TelMobile>>{{ContactTelMobile}}</TelMobile>\r\n                    <Email>{{ContactEmail}}</Email>\r\n                    <BankAccount>{{ContactBankAccount}}</BankAccount>\r\n                </Contact>\r\n                <HomeStay>\r\n                    <Initials>{{PersonHomeStayInitials}}</Initials>\r\n                    <Infix>{{PersonHomeStayInfix}}</Infix>\r\n                    <Name>{{PersonHomeStayName}}</Name>\r\n                    <TelHome>{{PersonHomeStayTelHome}}</TelHome>\r\n                    <TelWork />\r\n                    <TelMobile />\r\n                    <Email />\r\n                </HomeStay>\r\n            </PaxDetails>\r\n            <PaxAssignment>\r\n                <TransportAssignment>\r\n                    <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                    <Sequence>1</Sequence>\r\n                    <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                </TransportAssignment>\r\n                <TransportAssignment>\r\n                    <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                    <Sequence>2</Sequence>\r\n                    <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                </TransportAssignment>\r\n                <AccoAssignment>\r\n                    <AccommodationID>{{AccommodationAccommodationID}}</AccommodationID>\r\n                    <Sequence>1</Sequence>\r\n                    <ArrivalDate>{{AccommodationArrivalDate}}</ArrivalDate>\r\n                    <DepartureDate>{{AccommodationDepartureDate}}</DepartureDate>\r\n                    <BoardAssignment>\r\n                        <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                        <PaxID>{{Person1PaxID}}</PaxID>\r\n                        <PaxID>{{Person2PaxID}}</PaxID>\r\n                    </BoardAssignment>\r\n                    <UnitAssignment>\r\n                        <UnitID>{{AccommodationUnitUnitID[1]}}</UnitID>\r\n                        <Quantity>1</Quantity>\r\n                        <RoomAssignment>\r\n                            <Sequence>1</Sequence>\r\n                            <RoomNumber>101</RoomNumber>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                        </RoomAssignment>\r\n                    </UnitAssignment>\r\n                </AccoAssignment>\r\n                <APAssignment>\r\n                    <ExtrasAssignment>\r\n                        <ExtraID>{{APTransportToExtraLuggageID[1]}}</ExtraID>\r\n                        <Sequence>1</Sequence>\r\n                        <From>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </From>\r\n                        <To>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </To>\r\n                        <Quantity>2</Quantity>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </ExtrasAssignment>\r\n                    <ExtrasAssignment>\r\n                        <ExtraID>{{APTransportFromExtraLuggageID[1]}}</ExtraID>\r\n                        <Sequence>2</Sequence>\r\n                        <From>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </From>\r\n                        <To>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </To>\r\n                        <Quantity>2</Quantity>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </ExtrasAssignment>\r\n                </APAssignment>\r\n            </PaxAssignment>\r\n            <Responsibilities>\r\n                <SalesResponsibility>Agent</SalesResponsibility>\r\n            </Responsibilities>\r\n        </AssignRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_ASSIGN_URL}}/travelmessage/v3.1/assignrequest",
+					"host": [
+						"{{OTA_ASSIGN_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"assignrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ReceiptRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(responseJson);\r",
+							"\r",
+							"pm.collectionVariables.set(\"TotalPrice\",responseJson.TravelMessage.TResponse.ReceiptResponse.PriceInfo.Price._);\r",
+							"\r",
+							"var pps = utils.getPricePaySupplyer(responseJson.TravelMessage.TResponse.ReceiptResponse.PriceInfo.PricePaySupplyer,0);\r",
+							"//console.log(pps);\r",
+							"pm.collectionVariables.set(\"TotalPriceSupplyer_Receipt\",pps);\r",
+							"\r",
+							"var request1Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_assign\");\r",
+							"\r",
+							"// Get the variable set in Request 1\r",
+							"var request1Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_assign\");\r",
+							"pm.test(\"Assign Total Price per Supplyer\", function() {\r",
+							"    pm.expect(request1Variable).to.exist;\r",
+							"});\r",
+							"\r",
+							"// Get the variable set in Request 2\r",
+							"var request2Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_Receipt\");\r",
+							"pm.test(\"Receipt Total Price per Supplyer\", function() {\r",
+							"    pm.expect(request2Variable).to.exist;\r",
+							"});\r",
+							"\r",
+							"// Validate that Request 1 variable is equal to Request 2 variable\r",
+							"pm.test(\"TotalPriceSupplyer for Assign and Receipt are Equal\", function() {\r",
+							"    pm.expect(request1Variable).to.equal(request2Variable);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"ReceiptResponse ResponseStatus test\", function(){\r",
+							"   if(responseJson.TravelMessage.TResponse.ReceiptResponse != undefined){\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"        // set globals control block\r",
+							"        postman.setNextRequest('BookRequest');      \r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in ReceiptRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }\r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\">\r\n        <SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n        <ReceiverSessionID />\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>ReceiptRequest</RequestID>\r\n        <ResponseID>ReceiptResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <ReceiptRequest>\r\n            <PackageDetails>\r\n                <PackageID>{{PackageDetailsPackageID}}</PackageID>\r\n                <DepartureDate>{{DepartureDate}}</DepartureDate>\r\n                <Duration DurationType=\"nachten\">{{Duration}}</Duration>\r\n            </PackageDetails>\r\n            <PaxDetails>\r\n                <PaxID>{{Person1PaxID}}</PaxID>\r\n                <DateOfBirth>{{Person1DateOfBirth}}</DateOfBirth>\r\n            </PaxDetails>\r\n            <PaxDetails>\r\n                <PaxID>{{Person2PaxID}}</PaxID>\r\n                <DateOfBirth>{{Person2DateOfBirth}}</DateOfBirth>\r\n            </PaxDetails>\r\n            <Transport>\r\n                <TransportTo>\r\n                    <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportToTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportToCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportToCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\"></Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportToArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportToArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                        <PaxID>{{Person1PaxID}}</PaxID>\r\n                        <PaxID>{{Person2PaxID}}</PaxID>\r\n                    </Class>\r\n                </TransportTo>\r\n                <TransportFrom>\r\n                    <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                    <TransportType>{{TransportTransportFromTransportType}}</TransportType>\r\n                    <Carrier>\r\n                        <CarrierID>{{TransportTransportFromCarrierCarrierID}}</CarrierID>\r\n                        <Description>TuiFlyNe</Description>\r\n                        <FlightNumber>{{TransportTransportFromCarrierFlightNumber}}</FlightNumber>\r\n                        <Stopovers NumberOfStops=\"0\"></Stopovers>\r\n                    </Carrier>\r\n                    <Departure>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromDeparturePointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                    </Departure>\r\n                    <Arrival>\r\n                        <Point PointType=\"IATAcode\">\r\n                            <PointID>{{TransportTransportFromArrivalPointPointID}}</PointID>\r\n                        </Point>\r\n                        <Date>{{TransportTransportFromArrivalDate}}</Date>\r\n                    </Arrival>\r\n                    <Class>\r\n                        <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        <Seats>{{Seats}}</Seats>\r\n                        <PaxID>{{Person1PaxID}}</PaxID>\r\n                        <PaxID>{{Person2PaxID}}</PaxID>\r\n                    </Class>\r\n                </TransportFrom>\r\n                <AdditionalProducts>\r\n                    <Extras>\r\n                        <ExtraID>{{APTransportToExtraLuggageID[1]}}</ExtraID>\r\n                        <Description>{{APTransportToExtraLuggageDescription}}</Description>\r\n                        <ExtrasCategory>bagage</ExtrasCategory>\r\n                        <From>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </From>\r\n                        <ExtrasPax>\r\n                            <PaxID>1</PaxID>\r\n                            <PaxID>2</PaxID>\r\n                            <Quantity>{{Seats}}</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </Extras>\r\n                    <Extras>\r\n                        <ExtraID>{{APTransportFromExtraLuggageID[1]}}</ExtraID>\r\n                        <Description>{{APTransportFromExtraLuggageDescription}}</Description>\r\n                        <ExtrasCategory>bagage</ExtrasCategory>\r\n                        <From>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </From>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                            <Quantity>{{Seats}}</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </Extras>\r\n                </AdditionalProducts>\r\n            </Transport>\r\n            <Accommodation>\r\n                <AccommodationID>{{AccommodationAccommodationID}}</AccommodationID>\r\n                <AccommodationType>{{AccommodationAccommodationType}}</AccommodationType>\r\n                <ArrivalDate>{{AccommodationArrivalDate}}</ArrivalDate>\r\n                <DepartureDate>{{AccommodationDepartureDate}}</DepartureDate>\r\n                <Unit>\r\n                    <UnitID>{{AccommodationUnitUnitID[0]}}</UnitID>\r\n                    <UnitType>{{AccommodationUnitUnitType[0]}}</UnitType>\r\n                    <Board>\r\n                        <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                    </Board>\r\n                    <RoomAssignment>\r\n                        <Sequence>1</Sequence>\r\n                        <PaxID>{{Person1PaxID}}</PaxID>\r\n                        <PaxID>{{Person2PaxID}}</PaxID>\r\n                    </RoomAssignment>\r\n                </Unit>\r\n            </Accommodation>\r\n        </ReceiptRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_RECEIPT_URL}}/travelmessage/v3.1/receiptrequest",
+					"host": [
+						"{{OTA_RECEIPT_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"receiptrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BookRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"pm.test(\"BookResponse ResponseStatus test\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"        // set globals control block\r",
+							"        pm.collectionVariables.set(\"BookID\", responseJson.TravelMessage.TResponse.BookResponse.BookID); \r",
+							"        console.log(responseJson.TravelMessage.TResponse.BookResponse.BookID)\r",
+							"        setTimeout(function(){\r",
+							"          console.log(\"Sleeping for 60 seconds before next request.\");\r",
+							"        }, 60000);\r",
+							"        postman.setNextRequest('RecapRequest');\r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in BookRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }\r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\">\r\n        <SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n        <ReceiverSessionID>{{ReceiverSessionID}}</ReceiverSessionID>\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>2</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>BookRequest</RequestID>\r\n        <ResponseID>BookResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <BookRequest>\r\n            <PaxDetails>\r\n                <PaxDescription>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <GivenNames>{{Person1GivenName}}</GivenNames>\r\n                    <Initials>{{Person1Initials}}</Initials>\r\n                    <Infix>{{Person1Infix}}</Infix>\r\n                    <Name>{{Person1Name}}</Name>\r\n                    <DateOfBirth>{{Person1DateOfBirth}}</DateOfBirth>\r\n                    <Gender>{{Person1Gender}}</Gender>\r\n                    <Nationality>{{Person1Nationality}}</Nationality>\r\n                    <PassportNumber>{{Person1PassportNumber}}</PassportNumber>\r\n                </PaxDescription>\r\n                <PaxDescription>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                    <GivenNames>{{Person2GivenName}}</GivenNames>\r\n                    <Initials>{{Person2Initials}}</Initials>\r\n                    <Infix>{{Person2Infix}}</Infix>\r\n                    <Name>{{Person2Name}}</Name>\r\n                    <DateOfBirth>{{Person2DateOfBirth}}</DateOfBirth>\r\n                    <Gender>{{Person2Gender}}</Gender>\r\n                    <Nationality>{{Person2Nationality}}</Nationality>\r\n                    <PassportNumber>{{Person2PassportNumber}}</PassportNumber>\r\n                </PaxDescription>\r\n                <Contact>\r\n                    <PaxID>{{ContactPaxID}}</PaxID>\r\n                    <Initials>{{ContactInitials}}</Initials>\r\n                    <Infix>{{ContactInfix}}</Infix>\r\n                    <Name>{{ContactName}}</Name>\r\n                    <Gender>{{ContactGender}}</Gender>\r\n                    <Address>{{ContactAddress}} {{ContactHousenr}} {{ContactHousenrAddition}}</Address>\r\n                    <Zipcode>{{ContactZipcode}}</Zipcode>\r\n                    <Place>{{ContactPlace}}</Place>\r\n                    <Country>{{ContactCountry}}</Country>\r\n                    <TelHome>{{ContactTelHome}}</TelHome>\r\n                    <TelWork>>{{ContactTelWork}}</TelWork>\r\n                    <TelMobile>>{{ContactTelMobile}}</TelMobile>\r\n                    <Email>{{ContactEmail}}</Email>\r\n                    <BankAccount>{{ContactBankAccount}}</BankAccount>\r\n                </Contact>\r\n                <HomeStay>\r\n                    <Initials>{{PersonHomeStayInitials}}</Initials>\r\n                    <Infix>{{PersonHomeStayInfix}}</Infix>\r\n                    <Name>{{PersonHomeStayName}}</Name>\r\n                    <TelHome>{{PersonHomeStayTelHome}}</TelHome>\r\n                    <TelWork />\r\n                    <TelMobile />\r\n                    <Email />\r\n                </HomeStay>\r\n            </PaxDetails>\r\n            <PaxAssignment>\r\n                <TransportAssignment>\r\n                    <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                    <Sequence>1</Sequence>\r\n                    <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                </TransportAssignment>\r\n                <TransportAssignment>\r\n                    <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                    <Sequence>2</Sequence>\r\n                    <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                    <PaxID>{{Person1PaxID}}</PaxID>\r\n                    <PaxID>{{Person2PaxID}}</PaxID>\r\n                </TransportAssignment>\r\n                <AccoAssignment>\r\n                    <AccommodationID>{{AccommodationAccommodationID}}</AccommodationID>\r\n                    <Sequence>1</Sequence>\r\n                    <ArrivalDate>{{AccommodationArrivalDate}}</ArrivalDate>\r\n                    <DepartureDate>{{AccommodationDepartureDate}}</DepartureDate>\r\n                    <BoardAssignment>\r\n                        <BoardType>{{AccommodationUnitBoardBoardType[0]}}</BoardType>\r\n                        <PaxID>{{Person1PaxID}}</PaxID>\r\n                        <PaxID>{{Person2PaxID}}</PaxID>\r\n                    </BoardAssignment>\r\n                    <UnitAssignment>\r\n                        <UnitID>{{AccommodationUnitUnitID[0]}}</UnitID>\r\n                        <Quantity>1</Quantity>\r\n                        <RoomAssignment>\r\n                            <Sequence>1</Sequence>\r\n                            <RoomNumber>101</RoomNumber>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                        </RoomAssignment>\r\n                    </UnitAssignment>\r\n                </AccoAssignment>\r\n                <APAssignment>\r\n                    <ExtrasAssignment>\r\n                        <ExtraID>{{APTransportToExtraLuggageID[1]}}</ExtraID>\r\n                        <Sequence>1</Sequence>\r\n                        <From>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </From>\r\n                        <To>\r\n                            <Date>{{TransportTransportToDepartureDate}}</Date>\r\n                        </To>\r\n                        <Quantity>2</Quantity>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportToTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportToClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </ExtrasAssignment>\r\n                    <ExtrasAssignment>\r\n                        <ExtraID>{{APTransportFromExtraLuggageID[1]}}</ExtraID>\r\n                        <Sequence>2</Sequence>\r\n                        <From>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </From>\r\n                        <To>\r\n                            <Date>{{TransportTransportFromDepartureDate}}</Date>\r\n                        </To>\r\n                        <Quantity>2</Quantity>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person1PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <ExtrasPax>\r\n                            <PaxID>{{Person2PaxID}}</PaxID>\r\n                            <Quantity>1</Quantity>\r\n                        </ExtrasPax>\r\n                        <RelatedTransport>\r\n                            <TransportID>{{TransportTransportFromTransportID}}</TransportID>\r\n                            <ClassID>{{TransportTransportFromClassClassID}}</ClassID>\r\n                        </RelatedTransport>\r\n                    </ExtrasAssignment>\r\n                </APAssignment>\r\n            </PaxAssignment>\r\n            <Responsibilities>\r\n                <SalesResponsibility>Agent</SalesResponsibility>\r\n            </Responsibilities>\r\n        </BookRequest>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_BOOK_URL}}/travelmessage/v3.1/bookrequest",
+					"host": [
+						"{{OTA_BOOK_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"bookrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RecapRequest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"pm.collectionVariables.set(\"TotalPrice\",responseJson.TravelMessage.TResponse.PriceInfo.Price._);\r",
+							"var pps = utils.getPricePaySupplyer(responseJson.TravelMessage.TResponse.PriceInfo.PricePaySupplyer,0);\r",
+							"pm.collectionVariables.set(\"TotalPriceSupplyer_Recap\",pps);\r",
+							"\r",
+							"// Get the variable set in Request 1\r",
+							"var request1Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_assign\");\r",
+							"pm.test(\"Assign Total Price per Supplyer\", function() {\r",
+							"    pm.expect(request1Variable).to.exist;\r",
+							"});\r",
+							"\r",
+							"// Get the variable set in Request 2\r",
+							"var request2Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_Receipt\");\r",
+							"pm.test(\"Receipt Total Price per Supplyer\", function() {\r",
+							"    pm.expect(request2Variable).to.exist;\r",
+							"});\r",
+							"\r",
+							"// Get the variable set in Request 3\r",
+							"var request3Variable = pm.collectionVariables.get(\"TotalPriceSupplyer_Recap\");\r",
+							"pm.test(\"Recap Total Price per Supplyer\", function() {\r",
+							"    pm.expect(request3Variable).to.exist;\r",
+							"});\r",
+							"\r",
+							"// Validate that Request 1 variable is equal to Request 2 variable\r",
+							"pm.test(\"TotalPriceSupplyer for Assign and Receipt are Equal\", function() {\r",
+							"    pm.expect(request1Variable).to.equal(request2Variable);\r",
+							"});\r",
+							"\r",
+							"// Validate that Request 1 variable is equal to Request 3 variable\r",
+							"pm.test(\"TotalPriceSupplyer for Assign and Recap are Equal\", function() {\r",
+							"    pm.expect(request1Variable).to.equal(request3Variable);\r",
+							"});\r",
+							"\r",
+							"// Validate that Request 2 variable is equal to Request 3 variable\r",
+							"pm.test(\"TotalPriceSupplyer for Recap and Receipt are Equal\", function() {\r",
+							"    pm.expect(request2Variable).to.equal(request3Variable);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"RecapResponse ResponseStatus test\", function(){\r",
+							"   if (responseJson.TravelMessage.TResponse.BookResponse.BookID != undefined) {\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"        // set globals control block\r",
+							"        console.log(responseJson.TravelMessage.TResponse.BookResponse.BookID + \" \"  \r",
+							"        + responseJson.TravelMessage.TResponse.BookResponse.Status.StatusID + \" \"\r",
+							"        + responseJson.TravelMessage.TResponse.BookResponse.Status.Description )\r",
+							"        postman.setNextRequest('CancellationRequest');\r",
+							"    }\r",
+							"     else{\r",
+							"        console.log('Error in RecapRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }  \r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\" Test=\"nee\">\r\n        <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952007</SenderSessionID>\r\n        <ReceiverSessionID/>\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>RecapRequest</RequestID>\r\n        <ResponseID>RecapResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <SecurityInfo>\r\n            <BookID>{{BookID}}</BookID>\r\n        </SecurityInfo>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_RECAP_URL}}/travelmessage/v3.1/recaprequest",
+					"host": [
+						"{{OTA_RECAP_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"recaprequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CancellationRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"\r",
+							"pm.test(\"CancellationResponse ResponseStatus test\", function(){\r",
+							"   if((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\"){\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"    }\r",
+							"    else{\r",
+							"        console.log('Error in CancellationConfirmRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }\r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n    <Control Language=\"NL\" Test=\"ja\">\r\n        <SenderSessionID>1</SenderSessionID>\r\n        <ReceiverSessionID></ReceiverSessionID>\r\n        <Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n        <MessageSequence>1</MessageSequence>\r\n        <SenderID>{{SenderID}}</SenderID>\r\n        <ReceiverID>TUI</ReceiverID>\r\n        <RequestID>CancellationConfirmedRequest</RequestID>\r\n        <ResponseID>CancellationConfirmedResponse</ResponseID>\r\n    </Control>\r\n    <TRequest>\r\n        <SecurityInfo>\r\n            <BookID>{{BookID}}</BookID>\r\n        </SecurityInfo>\r\n    </TRequest>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_CANCEL_URL}}/travelmessage/v3.1/cancellationrequest",
+					"host": [
+						"{{OTA_CANCEL_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"cancellationrequest"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BreakRequest",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.add(pm.collectionVariables.get(\"X-Correlation-Id\"),\"X-Correlation-Id\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = xml2Json(responseBody);\r",
+							"//console.log(pm.request.body);\r",
+							"//console.log(responseJson);\r",
+							"//console.log(\"X-Correlation-Id: \" + pm.request.headers.get(\"X-Correlation-Id\"));\r",
+							"\r",
+							"\r",
+							"pm.test(\"BreakResponse ResponseStatus test\", function(){\r",
+							"   if ((responseJson.TravelMessage.Control.ResponseStatus) == \"ja\") {\r",
+							"        console.log(\"ResponseStatus: ja\");   \r",
+							"    }\r",
+							"    else { \r",
+							"        console.log('Error in BreakRequest');      \r",
+							"        postman.setNextRequest(null); \r",
+							"        if ((responseJson.TravelMessage.TResponse.Messages) != undefined) {\r",
+							"           console.log(responseJson.TravelMessage.TResponse.Messages)\r",
+							"        }\r",
+							"    } \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{OAuth_Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "AnvrCode",
+						"value": "{{AnvrCode}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<TravelMessage VersionID=\"3.1\">\r\n\t<Control Language=\"NL\" Test=\"nee\">\r\n\t\t<SenderSessionID>{{SenderSessionID}}</SenderSessionID>\r\n\t\t<ReceiverSessionID>{{ReceiverSessionID}}</ReceiverSessionID>\r\n\t\t<Date>{{ControlDate}}</Date>\r\n        <Time>{{ControlTime}}</Time>\r\n\t\t<MessageSequence>1</MessageSequence>\r\n\t\t<SenderID>{{SenderID}}</SenderID>\r\n\t\t<ReceiverID>TUI</ReceiverID>\r\n\t\t<RequestID>BreakRequest</RequestID>\r\n\t\t<ResponseID>BreakResponse</ResponseID>\r\n\t</Control>\r\n</TravelMessage>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{OTA_BREAK_URL}}/travelmessage/v3.1/breakrequest/",
+					"host": [
+						"{{OTA_BREAK_URL}}"
+					],
+					"path": [
+						"travelmessage",
+						"v3.1",
+						"breakrequest",
+						""
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenName",
+				"value": "{{OAuth_TokenName}}",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{OAuth_Url}}",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{OAuth_clientsecret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{OAuth_clientid}}",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "o3a7t3zy8W2uM5kEkUjjflwCphUI",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var moment = require(\"moment\");",
+					"pm.variables.set('ControlDate', moment().format(\"YYYY-MM-DD\"));",
+					"pm.variables.set('ControlTime', moment().format(\"hh:mm\"));",
+					"",
+					"if (pm.environment.get(\"OAuth_Url\") != undefined && pm.environment.get(\"OAuth_Url\") != \"\") {",
+					"    // Refresh the OAuth token if necessary ",
+					"    var tokenDate = new Date(2010, 1, 1);",
+					"    var tokenTimestamp = pm.environment.get(\"OAuth_Timestamp\");",
+					"    if (tokenTimestamp) {",
+					"        tokenDate = Date.parse(tokenTimestamp);",
+					"    }",
+					"    var expiresInTime = pm.environment.get(\"OAuth_ExpiresInTime\");",
+					"    if (!expiresInTime) {",
+					"        expiresInTime = 300000; // Set default expiration time to 5 minutes",
+					"    }",
+					"    if ((new Date() - tokenDate) >= expiresInTime) {",
+					"        pm.sendRequest({",
+					"            url: pm.environment.get(\"OAuth_Url\"),",
+					"            method: 'POST',",
+					"            header: {",
+					"                'Content-Type': 'application/x-www-form-urlencoded'",
+					"            },",
+					"            body: {",
+					"                mode: 'urlencoded',",
+					"                urlencoded: [{",
+					"                    key: 'grant_type',",
+					"                    value: pm.environment.get(\"OAuth_client_credentials\")",
+					"                }, {",
+					"                    key: 'client_id',",
+					"                    value: pm.environment.get(\"OAuth_clientid\")",
+					"                }, {",
+					"                    key: 'client_secret',",
+					"                    value: pm.environment.get(\"OAuth_clientsecret\")",
+					"                }]",
+					"            }",
+					"        }, function(err, res) {",
+					"            // Set the ExpiresInTime variable to the time given in the response if it exists   ",
+					"            pm.environment.set(\"OAuth_Token\", res.json().access_token);",
+					"            pm.environment.set(\"OAuth_Timestamp\", new Date());",
+					"            if (res.json().expires_in) {",
+					"                expiresInTime = res.json().expires_in * 1000;",
+					"            }",
+					"            pm.environment.set(\"OAuth_ExpiresInTime\", expiresInTime);",
+					"        });",
+					"    }",
+					"}",
+					"",
+					"utils = {",
+					"    getTransportLuggageID(transport, extras, index) {",
+					"        var transportID = transport.TransportID;",
+					"        var classID = transport.Class.ClassID;",
+					"        if (index >= 0) {",
+					"            return extras.Extras[index].ExtraID;",
+					"        }",
+					"        for (var i = 0; i < extras.Extras.length; i++) {",
+					"            //    if ((extras.Extras[i].groupID != undefined || extras.Extras[i].groupID != \"BAG\") &&",
+					"            //  (extras.Extras[i].GroupID != undefined ||  extras.Extras[i].GroupID != \"BAG\")) { continue; }",
+					"            if (extras.Extras[i].RelatedTransport.TransportID == transportID &&",
+					"                extras.Extras[i].RelatedTransport.ClassID == classID) {",
+					"                return extras.Extras[i].ExtraID;",
+					"            }",
+					"        }",
+					"        return \"\";",
+					"    },",
+					"    getTransportLuggageDescription(transport, extras, index) {",
+					"        var transportID = transport.TransportID;",
+					"        var classID = transport.Class.ClassID;",
+					"        if (index >= 0) {",
+					"            return extras.Extras[index].Description;",
+					"        }",
+					"        for (var i = 0; i < extras.Extras.length; i++) {",
+					"            //    if ((extras.Extras[i].groupID != undefined || extras.Extras[i].groupID != \"BAG\") &&",
+					"            //  (extras.Extras[i].GroupID != undefined ||  extras.Extras[i].GroupID != \"BAG\")) { continue; }",
+					"            if (extras.Extras[i].RelatedTransport.TransportID == transportID &&",
+					"                extras.Extras[i].RelatedTransport.ClassID == classID) {",
+					"                return extras.Extras[i].Description;",
+					"            }",
+					"        }",
+					"        return \"\";",
+					"    },",
+					"    getLuggageExtra(transport, extras, index) {",
+					"        var transportID = transport.TransportID;",
+					"        var classID = transport.Class.ClassID;",
+					"        var count = 0;",
+					"        for (var i = 0; i < extras.Extras.length; i++) {",
+					"            //    if ((extras.Extras[i].groupID != undefined || extras.Extras[i].groupID != \"BAG\") &&",
+					"            //  (extras.Extras[i].GroupID != undefined ||  extras.Extras[i].GroupID != \"BAG\")) { continue; }",
+					"            if (extras.Extras[i].RelatedTransport.TransportID == transportID &&",
+					"                extras.Extras[i].RelatedTransport.ClassID == classID) {",
+					"                count++;",
+					"                if (index != count - 1) {",
+					"                    continue;",
+					"                }",
+					"                return extras.Extras[i];",
+					"            }",
+					"        }",
+					"        return \"\";",
+					"    },",
+					"    getTransportFrom(transport, index) {",
+					"        //console.log(\"Count TransportFrom\" + transport.length);",
+					"        if (transport.TransportFrom.length == undefined & transport.TransportFrom.length > 1) {",
+					"            // console.log(\"transport.TransportFrom with index: \" + index);",
+					"            return transport.TransportFrom[index];",
+					"        }",
+					"        //console.log(\"transport.TransportFrom without index.\");",
+					"        return transport.TransportFrom;",
+					"    },",
+					"    getTransportTo(transport, index) {",
+					"        //console.log(\"Count TransportTo\" + transport.length);",
+					"        if (transport.TransportTo.length == undefined & transport.TransportTo.length > 1) {",
+					"            // console.log(\"transport.TransportTo with index: \" + index);",
+					"            return transport.TransportTo[index];",
+					"        }",
+					"        //console.log(\"transport.TransportTo without index.\");",
+					"        return transport.TransportTo;",
+					"    },",
+					"    getTransport(transport, index) {",
+					"        // console.log(\"Count transport\" + transport.length);",
+					"        if (transport.length != undefined && transport.length > 1) {",
+					"            // console.log(\"transport with index: \" + index);",
+					"            return transport[index];",
+					"        }",
+					"        //console.log(\"transport without index.\");",
+					"        return transport;",
+					"    },",
+					"    getAdditionalProducts(transport, index) {",
+					"        // console.log(\"Count transport\" + transport.length);",
+					"        if (transport.length != undefined && transport.length > 1) {",
+					"            // console.log(\"transport with index: \" + index);",
+					"            return transport[index].AdditionalProducts;",
+					"        }",
+					"        //console.log(\"transport without index.\");",
+					"        return transport.AdditionalProducts;",
+					"    },",
+					"    getUnit(units, index) {",
+					"        //console.log(\"Count unit\" + unit.length);",
+					"        if (units.length != undefined && units.length > 1) {",
+					"            //console.log(\"unit with index: \" + index);",
+					"            if (index < units.length - 1) {",
+					"                return units[index];",
+					"            } else {",
+					"                return units[0];",
+					"            }",
+					"        }",
+					"        //console.log(\"unit without index.\");",
+					"        return units;",
+					"    },",
+					"    getBoard(board, index) {",
+					"        // console.log(\"Count board\" + board.length);",
+					"        if (board.length != undefined && board.length > 1) {",
+					"            // console.log(\"board with index: \" + index);",
+					"            if (index < board.length - 1) {",
+					"                return board[index];",
+					"            } else {",
+					"                return board[0];",
+					"            }",
+					"        }",
+					"        //console.log(\"board without index.\");",
+					"        return board;",
+					"    },",
+					"    getPricePaySupplyer(pps, index) {",
+					"",
+					"        //var pps = responseJson.TravelMessage.TResponse.ReceiptResponse.PriceInfo.PricePaySupplyer;",
+					"        console.log(pps);",
+					"        console.log(pps.PriceDetails);",
+					"        console.log(pps.PriceDetails.length);",
+					"",
+					"        var totalp = 0;",
+					"        for (var i = 0; i < pps.PriceDetails.length; i++) {",
+					"            //console.log(pps.PriceDetails[i].PriceDescription + \" -->\" + pps.PriceDetails[i].Price._ );",
+					"            totalp += parseInt(pps.PriceDetails[i].Price._);",
+					"        }",
+					"        console.log('TotalPrice calculated' + \" -->\" + totalp);",
+					"",
+					"        return totalp;",
+					"    }",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "DepartureDate",
+			"value": ""
+		},
+		{
+			"key": "Duration",
+			"value": ""
+		},
+		{
+			"key": "ReceiverID",
+			"value": ""
+		},
+		{
+			"key": "NumberOfAdults",
+			"value": ""
+		},
+		{
+			"key": "NumberOfChildren",
+			"value": ""
+		},
+		{
+			"key": "NumberOfBabies",
+			"value": ""
+		},
+		{
+			"key": "Seats",
+			"value": ""
+		},
+		{
+			"key": "PackageDetailsPackageID",
+			"value": ""
+		},
+		{
+			"key": "PackageDetailsBoardType",
+			"value": ""
+		},
+		{
+			"key": "PackageDetailsPackageType",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToTransportID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToTransportType",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToCarrierCarrierID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToCarrierFlightNumber",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToDeparturePointPointID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToDepartureDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToDepartureFlightDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToDepartureTime",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToClassClassID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToArrivalPointPointID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToArrivalDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToArrivalFlightDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportToArrivalTime",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromTransportID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromTransportType",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromCarrierCarrierID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromCarrierFlightNumber",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromDeparturePointPointID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromDepartureDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromDepartureFlightDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromDepartureTime",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromClassClassID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromArrivalPointPointID",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromArrivalDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromArrivalFlightDate",
+			"value": ""
+		},
+		{
+			"key": "TransportTransportFromArrivalTime",
+			"value": ""
+		},
+		{
+			"key": "AccommodationAccommodationID",
+			"value": ""
+		},
+		{
+			"key": "AccommodationAccommodationType",
+			"value": ""
+		},
+		{
+			"key": "AccommodationArrivalDate",
+			"value": ""
+		},
+		{
+			"key": "AccommodationDepartureDate",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitID[0]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitType[0]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitBoardBoardType[0]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitID[1]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitType[1]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitBoardBoardType[1]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitID[2]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitType[2]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitBoardBoardType[2]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitID[3]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitType[3]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitBoardBoardType[3]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitID[4]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitUnitType[4]",
+			"value": ""
+		},
+		{
+			"key": "AccommodationUnitBoardBoardType[4]",
+			"value": ""
+		},
+		{
+			"key": "X-Correlation-Id",
+			"value": ""
+		},
+		{
+			"key": "SenderSessionID",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[0]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[0]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[0]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[0]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[1]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[1]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[1]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[1]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[2]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[2]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[2]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[2]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[3]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[3]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[3]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[3]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[4]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[4]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[4]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[4]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[5]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[5]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[5]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[5]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[6]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[6]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[6]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[6]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageID[7]",
+			"value": ""
+		},
+		{
+			"key": "APTransportToExtraLuggageDescription[7]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageID[7]",
+			"value": ""
+		},
+		{
+			"key": "APTransportFromExtraLuggageDescription[7]",
+			"value": ""
+		},
+		{
+			"key": "PackageID",
+			"value": ""
+		},
+		{
+			"key": "ReceiverSessionID",
+			"value": ""
+		},
+		{
+			"key": "Person1PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person1GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person1Initials",
+			"value": ""
+		},
+		{
+			"key": "Person1Infix",
+			"value": ""
+		},
+		{
+			"key": "Person1Name",
+			"value": ""
+		},
+		{
+			"key": "Person1DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person1Gender",
+			"value": ""
+		},
+		{
+			"key": "Person1PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person1Address",
+			"value": ""
+		},
+		{
+			"key": "Person1Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person1HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person1Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person1Place",
+			"value": ""
+		},
+		{
+			"key": "Person1Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person1Country",
+			"value": ""
+		},
+		{
+			"key": "Person1TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person1TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person1TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person1Email",
+			"value": ""
+		},
+		{
+			"key": "Person1BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person2PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person2GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person2Initials",
+			"value": ""
+		},
+		{
+			"key": "Person2Infix",
+			"value": ""
+		},
+		{
+			"key": "Person2Name",
+			"value": ""
+		},
+		{
+			"key": "Person2DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person2Gender",
+			"value": ""
+		},
+		{
+			"key": "Person2PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person2Address",
+			"value": ""
+		},
+		{
+			"key": "Person2Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person2HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person2Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person2Place",
+			"value": ""
+		},
+		{
+			"key": "Person2Country",
+			"value": ""
+		},
+		{
+			"key": "Person2Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person2TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person2TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person2Email",
+			"value": ""
+		},
+		{
+			"key": "Person2BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person3PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person3GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person3Initials",
+			"value": ""
+		},
+		{
+			"key": "Person3Infix",
+			"value": ""
+		},
+		{
+			"key": "Person3Name",
+			"value": ""
+		},
+		{
+			"key": "Person3DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person3Gender",
+			"value": ""
+		},
+		{
+			"key": "Person3PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person3Address",
+			"value": ""
+		},
+		{
+			"key": "Person3Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person3HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person3Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person3Place",
+			"value": ""
+		},
+		{
+			"key": "Person3Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person3Country",
+			"value": ""
+		},
+		{
+			"key": "Person3TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person3TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person3TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person3Email",
+			"value": ""
+		},
+		{
+			"key": "Person3BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person4PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person4GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person4Initials",
+			"value": ""
+		},
+		{
+			"key": "Person4Infix",
+			"value": ""
+		},
+		{
+			"key": "Person4Name",
+			"value": ""
+		},
+		{
+			"key": "Person4DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person4Gender",
+			"value": ""
+		},
+		{
+			"key": "Person4PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person4Address",
+			"value": ""
+		},
+		{
+			"key": "Person4Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person4HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person4Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person4Place",
+			"value": ""
+		},
+		{
+			"key": "Person4Country",
+			"value": ""
+		},
+		{
+			"key": "Person4Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person4TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person4TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person4Email",
+			"value": ""
+		},
+		{
+			"key": "Person4BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person5PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person5GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person5Initials",
+			"value": ""
+		},
+		{
+			"key": "Person5Infix",
+			"value": ""
+		},
+		{
+			"key": "Person5Name",
+			"value": ""
+		},
+		{
+			"key": "Person5DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person5Gender",
+			"value": ""
+		},
+		{
+			"key": "Person5PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person5BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person5Address",
+			"value": ""
+		},
+		{
+			"key": "Person5Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person5HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person5Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person5Place",
+			"value": ""
+		},
+		{
+			"key": "Person5Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person5Country",
+			"value": ""
+		},
+		{
+			"key": "Person5TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person5TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person5TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person5Email",
+			"value": ""
+		},
+		{
+			"key": "Person6PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person6GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person6Initials",
+			"value": ""
+		},
+		{
+			"key": "Person6Infix",
+			"value": ""
+		},
+		{
+			"key": "Person6Name",
+			"value": ""
+		},
+		{
+			"key": "Person6DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person6Gender",
+			"value": ""
+		},
+		{
+			"key": "Person6PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person6Address",
+			"value": ""
+		},
+		{
+			"key": "Person6Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person6HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person6Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person6Place",
+			"value": ""
+		},
+		{
+			"key": "Person6Country",
+			"value": ""
+		},
+		{
+			"key": "Person6Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person6TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person6TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person6Email",
+			"value": ""
+		},
+		{
+			"key": "Person6BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person7PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person7GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person7Initials",
+			"value": ""
+		},
+		{
+			"key": "Person7Infix",
+			"value": ""
+		},
+		{
+			"key": "Person7Name",
+			"value": ""
+		},
+		{
+			"key": "Person7DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person7Gender",
+			"value": ""
+		},
+		{
+			"key": "Person7PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person7Address",
+			"value": ""
+		},
+		{
+			"key": "Person7Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person7HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person7Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person7Place",
+			"value": ""
+		},
+		{
+			"key": "Person7Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person7Country",
+			"value": ""
+		},
+		{
+			"key": "Person7TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person7TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person7TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person7Email",
+			"value": ""
+		},
+		{
+			"key": "Person7BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person8PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person8GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person8Initials",
+			"value": ""
+		},
+		{
+			"key": "Person8Infix",
+			"value": ""
+		},
+		{
+			"key": "Person8Name",
+			"value": ""
+		},
+		{
+			"key": "Person8DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person8Gender",
+			"value": ""
+		},
+		{
+			"key": "Person8PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person8Address",
+			"value": ""
+		},
+		{
+			"key": "Person8Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person8HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person8Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person8Place",
+			"value": ""
+		},
+		{
+			"key": "Person8Country",
+			"value": ""
+		},
+		{
+			"key": "Person8Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person8TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person8TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person8Email",
+			"value": ""
+		},
+		{
+			"key": "Person8BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person9PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person9GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person9Initials",
+			"value": ""
+		},
+		{
+			"key": "Person9Infix",
+			"value": ""
+		},
+		{
+			"key": "Person9Name",
+			"value": ""
+		},
+		{
+			"key": "Person9DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person9Gender",
+			"value": ""
+		},
+		{
+			"key": "Person9PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person9Address",
+			"value": ""
+		},
+		{
+			"key": "Person9Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person9HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person9Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person9Place",
+			"value": ""
+		},
+		{
+			"key": "Person9Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person9Country",
+			"value": ""
+		},
+		{
+			"key": "Person9TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person9TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person9TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person9Email",
+			"value": ""
+		},
+		{
+			"key": "Person9BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person10PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person10GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person10Initials",
+			"value": ""
+		},
+		{
+			"key": "Person10Infix",
+			"value": ""
+		},
+		{
+			"key": "Person10Name",
+			"value": ""
+		},
+		{
+			"key": "Person10DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person10Gender",
+			"value": ""
+		},
+		{
+			"key": "Person10PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person10Address",
+			"value": ""
+		},
+		{
+			"key": "Person10Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person10HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person10Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person10Place",
+			"value": ""
+		},
+		{
+			"key": "Person10Country",
+			"value": ""
+		},
+		{
+			"key": "Person10Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person10TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person10TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person10Email",
+			"value": ""
+		},
+		{
+			"key": "Person10BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person11PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person11GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person11Initials",
+			"value": ""
+		},
+		{
+			"key": "Person11Infix",
+			"value": ""
+		},
+		{
+			"key": "Person11Name",
+			"value": ""
+		},
+		{
+			"key": "Person11DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person11Gender",
+			"value": ""
+		},
+		{
+			"key": "Person11PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person11Address",
+			"value": ""
+		},
+		{
+			"key": "Person11Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person11HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person11Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person11Place",
+			"value": ""
+		},
+		{
+			"key": "Person11Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person11Country",
+			"value": ""
+		},
+		{
+			"key": "Person11TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person11TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person11TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person11Email",
+			"value": ""
+		},
+		{
+			"key": "Person11BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person12PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person12GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person12Initials",
+			"value": ""
+		},
+		{
+			"key": "Person12Infix",
+			"value": ""
+		},
+		{
+			"key": "Person12Name",
+			"value": ""
+		},
+		{
+			"key": "Person12DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person12Gender",
+			"value": ""
+		},
+		{
+			"key": "Person12PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person12Address",
+			"value": ""
+		},
+		{
+			"key": "Person12Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person12HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person12Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person12Place",
+			"value": ""
+		},
+		{
+			"key": "Person12Country",
+			"value": ""
+		},
+		{
+			"key": "Person12Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person12TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person12TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person12Email",
+			"value": ""
+		},
+		{
+			"key": "Person12BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person13PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person13GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person13Initials",
+			"value": ""
+		},
+		{
+			"key": "Person13Infix",
+			"value": ""
+		},
+		{
+			"key": "Person13Name",
+			"value": ""
+		},
+		{
+			"key": "Person13DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person13Gender",
+			"value": ""
+		},
+		{
+			"key": "Person13PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person13BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person13Address",
+			"value": ""
+		},
+		{
+			"key": "Person13Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person13HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person13Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person13Place",
+			"value": ""
+		},
+		{
+			"key": "Person13Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person13Country",
+			"value": ""
+		},
+		{
+			"key": "Person13TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person13TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person13TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person13Email",
+			"value": ""
+		},
+		{
+			"key": "Person14PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person14GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person14Initials",
+			"value": ""
+		},
+		{
+			"key": "Person14Infix",
+			"value": ""
+		},
+		{
+			"key": "Person14Name",
+			"value": ""
+		},
+		{
+			"key": "Person14DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person14Gender",
+			"value": ""
+		},
+		{
+			"key": "Person14PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person14Address",
+			"value": ""
+		},
+		{
+			"key": "Person14Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person14HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person14Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person14Place",
+			"value": ""
+		},
+		{
+			"key": "Person14Country",
+			"value": ""
+		},
+		{
+			"key": "Person14Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person14TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person14TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person14Email",
+			"value": ""
+		},
+		{
+			"key": "Person14BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person15PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person15GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person15Initials",
+			"value": ""
+		},
+		{
+			"key": "Person15Infix",
+			"value": ""
+		},
+		{
+			"key": "Person15Name",
+			"value": ""
+		},
+		{
+			"key": "Person15DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person15Gender",
+			"value": ""
+		},
+		{
+			"key": "Person15PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person15Address",
+			"value": ""
+		},
+		{
+			"key": "Person15Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person15HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person15Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person15Place",
+			"value": ""
+		},
+		{
+			"key": "Person15Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person15Country",
+			"value": ""
+		},
+		{
+			"key": "Person15TelHome",
+			"value": ""
+		},
+		{
+			"key": "Person15TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person15TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person15Email",
+			"value": ""
+		},
+		{
+			"key": "Person15BankAccount",
+			"value": ""
+		},
+		{
+			"key": "Person16PaxID",
+			"value": ""
+		},
+		{
+			"key": "Person16GivenName",
+			"value": ""
+		},
+		{
+			"key": "Person16Initials",
+			"value": ""
+		},
+		{
+			"key": "Person16Infix",
+			"value": ""
+		},
+		{
+			"key": "Person16Name",
+			"value": ""
+		},
+		{
+			"key": "Person16DateOfBirth",
+			"value": ""
+		},
+		{
+			"key": "Person16Gender",
+			"value": ""
+		},
+		{
+			"key": "Person16PassportNumber",
+			"value": ""
+		},
+		{
+			"key": "Person16Address",
+			"value": ""
+		},
+		{
+			"key": "Person16Housenr",
+			"value": ""
+		},
+		{
+			"key": "Person16HousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "Person16Zipcode",
+			"value": ""
+		},
+		{
+			"key": "Person16Place",
+			"value": ""
+		},
+		{
+			"key": "Person16Country",
+			"value": ""
+		},
+		{
+			"key": "Person16Nationality",
+			"value": ""
+		},
+		{
+			"key": "Person16TelWork",
+			"value": ""
+		},
+		{
+			"key": "Person16TelMobile",
+			"value": ""
+		},
+		{
+			"key": "Person16Email",
+			"value": ""
+		},
+		{
+			"key": "Person16BankAccount",
+			"value": ""
+		},
+		{
+			"key": "PersonHomeStayName",
+			"value": ""
+		},
+		{
+			"key": "PersonHomeStayTelHome",
+			"value": ""
+		},
+		{
+			"key": "PersonHomeStayInitials",
+			"value": ""
+		},
+		{
+			"key": "PersonHomeStayInfix",
+			"value": ""
+		},
+		{
+			"key": "ContactPaxID",
+			"value": ""
+		},
+		{
+			"key": "ContactInitials",
+			"value": ""
+		},
+		{
+			"key": "ContactName",
+			"value": ""
+		},
+		{
+			"key": "ContactGender",
+			"value": ""
+		},
+		{
+			"key": "ContactAddress",
+			"value": ""
+		},
+		{
+			"key": "ContactHousenr",
+			"value": ""
+		},
+		{
+			"key": "ContactHousenrAddition",
+			"value": ""
+		},
+		{
+			"key": "ContactZipcode",
+			"value": ""
+		},
+		{
+			"key": "ContactPlace",
+			"value": ""
+		},
+		{
+			"key": "ContactCountry",
+			"value": ""
+		},
+		{
+			"key": "ContactTelHome",
+			"value": ""
+		},
+		{
+			"key": "ContactTelWork",
+			"value": ""
+		},
+		{
+			"key": "ContactTelMobile",
+			"value": ""
+		},
+		{
+			"key": "ContactEmail",
+			"value": ""
+		},
+		{
+			"key": "TotalPrice",
+			"value": ""
+		},
+		{
+			"key": "TotalPriceSupplyer_assign",
+			"value": ""
+		},
+		{
+			"key": "TotalPriceSupplyer_Receipt",
+			"value": ""
+		},
+		{
+			"key": "BookID",
+			"value": ""
+		},
+		{
+			"key": "TotalPriceSupplyer_Recap",
+			"value": ""
+		},
+		{
+			"key": "ContactInfix",
+			"value": ""
+		}
+	]
+}

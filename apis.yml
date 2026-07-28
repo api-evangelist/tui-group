@@ -1,0 +1,522 @@
+aid: tui-group
+url: https://raw.githubusercontent.com/api-evangelist/tui-group/refs/heads/main/apis.yml
+name: TUI Group
+kind: company
+description: >-
+  TUI Group is the world's largest integrated leisure tourism business — a vertically integrated
+  tour operator that owns the hotels, the cruise ships, the airlines and the retail brands it sells
+  through, serving 34.7 million customers a year across tour operators in 18 countries. The United
+  Kingdom is its largest single source market: TUI UK & Ireland and the UK-registered carrier TUI
+  Airways sit at the centre of the group, alongside Marella Cruises, TUI Musement and the TUI Blue,
+  Robinson and TUI Magic Life hotel brands. The group is domiciled in Hannover, Germany and listed
+  on the Frankfurt MDAX, having ended its London primary listing in 2023. TUI sits at the supply end
+  of the travel distribution chain rather than the intermediation end — it is the principal that
+  creates package holidays, not a GDS or a channel manager — and it distributes chiefly through its
+  own retail estate and websites, supplemented by B2B feeds to travel agents, OTAs and metasearch
+  partners. On the API front TUI runs a real, publicly readable developer portal at developer.tui
+  fronted by Apigee X, with 21 documented API products covering flight shopping and booking,
+  departure control, packages, accommodation content, cruise and metasearch distribution. The
+  documentation is genuinely open — base URLs, endpoints, auth flows, quota tiers and downloadable
+  Postman collections are all published without a login — but the runtime is not: every API product
+  requires a partner-manager approval, most airline APIs additionally require a Navitaire New Skies
+  agent profile and a production IP whitelist, and the TUI fly OTA API states plainly that step one
+  is to conclude a contract. There is no self-serve key, no published developer terms of use (the
+  portal's terms page is still unfilled lorem-ipsum placeholder text), no OpenAPI definitions, and
+  no documented bulk-export or data-portability operation for a departing partner.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
+tags:
+- Travel
+- United Kingdom
+- Aviation
+- Airline
+- Tour Operator
+- Distribution
+- NDC
+- Hospitality
+- Hotels
+- Cruise
+- Booking
+- Packages
+- Metasearch
+created: '2026-07-28'
+modified: '2026-07-28'
+specificationVersion: '0.19'
+apis:
+- aid: tui-group:tui-flight-ndc-gateway
+  name: TUI Flight NDC Gateway (Navitaire)
+  description: >-
+    TUI's single point of access for IATA New Distribution Capability traffic, routing NDC 21.3
+    Shopping, Selling and Servicing messages through to Navitaire. Published operations are
+    AirShopping, OfferPrice, OrderCreate, ServiceList, SeatAvailability, OrderChange, OrderRetrieve,
+    OrderReshop, OrderQuote and AirlineProfile, plus an Auth call that exchanges New Skies agent
+    credentials for a JWT. Two version families are exposed per operation — /r3.x/v21.3 against the
+    Navitaire NDC API and /r3.x/v2 against the Navitaire Digital API. Requires an API key, a New
+    Skies agent, a workflow validation and a production IP whitelist.
+  humanURL: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire
+  baseURL: https://prod.api.tui/flight/ndc
+  tags:
+  - Flights
+  - NDC
+  - Shopping
+  - Booking
+  - Servicing
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/get-started
+  - type: Documentation
+    url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/ndc-workflow
+  - type: PostmanCollection
+    url: collections/tui-flight-ndc-gateway.postman_collection.json
+- aid: tui-group:tui-newskies-digital-api
+  name: TUI New Skies Digital API
+  description: >-
+    JSON API onto the Navitaire New Skies passenger service system, used to create and maintain
+    flight bookings and perform operational tasks such as retrieving flight manifests. The set of
+    permitted operations varies by New Skies agent role. Authentication is handled by the New Skies
+    platform itself via a session token issued from /api/auth/v1/token/user; the TUI API key is a
+    consumer identification layer on top.
+  humanURL: https://developer.tui/api-catalog/newskies-digital-api
+  baseURL: https://prod.api.tui/flight/newskies/rest
+  tags:
+  - Flights
+  - Booking
+  - Reservations
+  - PSS
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/get-started
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/simple-workflow
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/advanced-workflow
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/creditcard-payments
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-digital-api/backwards-compatibility
+- aid: tui-group:tui-newskies-gonow-api
+  name: TUI New Skies GoNow API
+  description: >-
+    Access to Navitaire's full Departure Control System through the TUI Apigee gateway. Documented
+    capability groups are check-in (including reverse check-in and EES validation results), baggage
+    and bag-tag printing, boarding pass and BGR device print streams, passenger search across legs
+    and segments, disruption handling, operational reports, printer initialisation, DCS settings and
+    scanned travel document management.
+  humanURL: https://developer.tui/api-catalog/newskies-gonow-api
+  baseURL: https://prod.api.tui/flight/newskies/gonow
+  tags:
+  - Flights
+  - Check-in
+  - Departure Control
+  - Baggage
+  - Boarding
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-gonow-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-gonow-api/get-started
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-gonow-api/check-workflow
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-gonow-api/backwards-compatibility
+- aid: tui-group:tui-newskies-payment-api
+  name: TUI New Skies Payment API
+  description: >-
+    PCI-DSS scoped payment proxy in front of Navitaire New Skies, exposing three channels: REST
+    Digital API payments under /rest/api/nsk/{version}/booking/payments (create, retrieve, delete,
+    voucher, DCC/MCC, 3-D Secure, refunds, reversals, fees, stored payment methods), a legacy SOAP
+    1.1 endpoint at /soap supporting AddPaymentToBooking, and an /ndc endpoint that is reserved for
+    future IATA NDC payment support and currently returns 501 Not Implemented. Authenticated with an
+    API key passed as an apikey query parameter. No base URL is published on the portal.
+  humanURL: https://developer.tui/api-catalog/newskies-payment-api
+  tags:
+  - Flights
+  - Payment
+  - PCI-DSS
+  - Booking
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-payment-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/newskies-payment-api/booking-flow
+- aid: tui-group:tui-flight-availability-search-api
+  name: TUI Flight Availability Search API (NSKCC)
+  description: >-
+    Real-time flight availability and pricing search, documented as the first step in the booking
+    process. A single GET /search operation takes IATA station codes or ISO country codes, an
+    outbound and optional inbound date window, trip type, carrier codes and passenger count, and
+    returns grouped flight results. Each API key is bound to a specific New Skies agent profile,
+    which determines which flights and fares are visible.
+  humanURL: https://developer.tui/api-catalog/nskcc-availability-search-api
+  baseURL: https://prod.api.tui/flight/newskies/availability/v2
+  tags:
+  - Flights
+  - Availability
+  - Search
+  - Pricing
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/api-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/technical-integration
+  - type: Documentation
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/code-examples
+  - type: Documentation
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/api-onepager
+- aid: tui-group:tui-newskies-pricefile-api
+  name: TUI New Skies PriceFile API
+  description: >-
+    Bulk fare-file distribution. Four GET operations — /download/{filename}, /download/{filename}/timestamp,
+    /download/delta and /download/delta/timestamp — return base64-encoded ZIP archives of CSV price
+    files regenerated approximately every 15 minutes. Each API key is mapped by TUI to a specific
+    pricefile; without that mapping every call fails. This is the closest thing TUI publishes to a
+    bulk data feed, and it is outbound fare content, not a customer data export.
+  humanURL: https://developer.tui/api-catalog/tui-newskies-pricefile-api
+  baseURL: https://prod.api.tui/flight/newskies/pricefile
+  tags:
+  - Flights
+  - Pricing
+  - Bulk
+  - Fares
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-newskies-pricefile-api/description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-newskies-pricefile-api/technical-integration
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-newskies-pricefile-api/data-format
+  - type: PostmanCollection
+    url: collections/tui-newskies-pricefile-api.postman_collection.json
+  - type: PostmanEnvironment
+    url: collections/tui-newskies-pricefile-api.postman_environment.json
+- aid: tui-group:tui-checkinhandler-service-api
+  name: TUI CheckInHandler Service API
+  description: >-
+    REST service in the New Skies flight family described on the portal as the complete API
+    specification for CheckInHandler Service endpoints. The published page documents the playground
+    and production base URLs and the x-correlation-id and versioned Accept headers, but the operation
+    table on the public page is still template placeholder content.
+  humanURL: https://developer.tui/api-catalog/checkinhandler-service-api
+  baseURL: https://prod.api.tui/flight/newskies/checkinhandler
+  tags:
+  - Flights
+  - Check-in
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/checkinhandler-service-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/checkinhandler-service-api/api-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/checkinhandler-service-api/technical-integration
+- aid: tui-group:tui-flight-ota-api
+  name: TUI Flight OTA API
+  description: >-
+    Distribution API for TUI fly Benelux content — the routes and destinations sold on tuifly.be,
+    tui.nl, tuifly.ma and tuifly.fr — offered to third parties who want to resell TUI fly flights.
+    Documented sub-APIs cover flights, price and availability checks with fare basis and fare
+    conditions, baggage allowance and paid extra baggage, and booking plus payment. Access begins
+    with "Step 1: Conclude a contract"; production credentials are only issued after at least one
+    successful test booking on the playground environment.
+  humanURL: https://developer.tui/api-catalog/tui-flight-ota-api
+  baseURL: https://prod.api.tui/ota
+  tags:
+  - Flights
+  - OTA
+  - Booking
+  - Payment
+  - Baggage
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-flight-ota-api/api-description
+- aid: tui-group:tui-b2bota-g7-travelmessage
+  name: TUI TravelMessage G7 v3.1 API
+  description: >-
+    TUI's B2B tour-operator booking interface for travel agents, implementing the Dutch ANVR G7
+    standard "standard for ANVR XML-message flow" at TravelMessage version 3.1. Documented dialogues
+    are Availability, Sell, Assign, Book, AddProAvailability, Break, Receipt and Recap, operated as a
+    session-based XML flow. Every request must carry an anvrcode header containing the agent's
+    four-digit ANVR code. TUI states plainly that it altered the published 3.1 XSD to fit its own
+    needs, and that several standard dialogues and approaches are not implemented at TUI.
+  humanURL: https://developer.tui/api-catalog/b2bota-g7
+  baseURL: https://prod.api.tui/travelmessage/v3.1
+  tags:
+  - Packages
+  - Travel Agencies
+  - OTA
+  - Booking
+  - ANVR G7
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/b2bota-g7/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/b2bota-g7/technical-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/b2bota-g7/release-notes
+  - type: XMLSchema
+    url: schemas/tui-b2bota-g7-travelmessage-v31.xsd
+  - type: PostmanCollection
+    url: collections/tui-b2bota-g7-travelmessage.postman_collection.json
+  - type: PostmanEnvironment
+    url: collections/tui-b2bota-g7-travelmessage.postman_environment.json
+- aid: tui-group:tui-ota-content-api
+  name: TUI OTA Content API
+  description: >-
+    Accommodation content companion to the TravelMessage G7 booking interface, described on the
+    portal as OTA content V2.0 and delivered as JSON rather than the G7 XML. Returns the content of
+    a particular accommodation for partners already integrated with the G7 flow.
+  humanURL: https://developer.tui/api-catalog/ota-content-api
+  baseURL: https://prod.api.tui/sales-ota-content
+  tags:
+  - Content
+  - Accommodation
+  - OTA
+  - Travel Agencies
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/ota-content-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/ota-content-api/technical-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/ota-content-api/release-notes
+- aid: tui-group:tui-supply
+  name: TUI Supply v1.5.1
+  description: >-
+    Bulk package supply feed for OTAs, delivered as XML files placed on a TUI server for SFTP
+    download rather than over HTTP. The message is a TUI custom version 1.5.1 built on the TUI XML
+    Supply standard combined with the G7 standard, carrying ProductInfo, SupplyTransportInfo,
+    SupplyAccoInfo and SupplyPriceAvailabilityInfo per package, including a CommissionGroup with
+    commission categories by travel and booking period. Two workflows are documented — full daily
+    loads and intraday delta loads — and TUI states each OTA must eventually switch to delta because
+    full loads will be switched off.
+  humanURL: https://developer.tui/api-catalog/supply
+  tags:
+  - Packages
+  - Supply
+  - Bulk
+  - SFTP
+  - OTA
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/supply/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/supply/technical-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/supply/release-notes
+- aid: tui-group:tui-search-walldy-api
+  name: TUI WallDy Holiday Offers Search API (search-walldy)
+  description: >-
+    Proxy service exposing the WallDy holiday search over Apigee X. A single POST /offers operation
+    takes accommodation IDs and a travel window with optional party composition, board type,
+    departure and arrival airport, duration and price filters, and returns matching holiday offers
+    grouped per accommodation with flight details, duration and price. Results are available as a
+    single JSON response or as an application/x-json-stream, and can be ordered via an
+    ordering-criteria header.
+  humanURL: https://developer.tui/api-catalog/walldy-api
+  baseURL: https://prod.api.tui/search-walldy
+  tags:
+  - Search
+  - Packages
+  - Offers
+  - Availability
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/walldy-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/walldy-api/api-details
+  - type: Documentation
+    url: https://developer.tui/api-catalog/walldy-api/technical-integration
+  - type: Documentation
+    url: https://developer.tui/api-catalog/walldy-api/api-onepager
+  - type: Documentation
+    url: https://developer.tui/api-catalog/walldy-api/release-notes
+- aid: tui-group:tui-holiday-offers-controller-api
+  name: TUI HolidayOffersController API (search-holiday-offers)
+  description: >-
+    REST service in TUI's search family, listed in the portal's Search category. The public page
+    documents the playground and production base URLs and the x-correlation-id and versioned Accept
+    headers; the operation table is still template placeholder content on the public page.
+  humanURL: https://developer.tui/api-catalog/holidayofferscontroller-api
+  baseURL: https://prod.api.tui/search-holiday-offers
+  tags:
+  - Search
+  - Offers
+  - Packages
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/holidayofferscontroller-api/api-description
+  - type: Documentation
+    url: https://developer.tui/api-catalog/holidayofferscontroller-api/technical-integration
+  - type: Documentation
+    url: https://developer.tui/api-catalog/holidayofferscontroller-api/release-notes
+- aid: tui-group:tui-meta-search-generic-api
+  name: TUI Meta Search Generics API
+  description: >-
+    Metasearch partner interface onto TUI's accommodation portfolio for the Central region
+    (Germany). Two documented operations — GET /hotel_inventory returns the hotels portfolio and
+    POST /hotel_availability checks availability against search criteria. Meta partners must
+    complete onboarding before access is granted; OAuth 2.0 client credentials.
+  humanURL: https://developer.tui/api-catalog/meta-search-generic-api
+  baseURL: https://prod.api.tui/sales/pip/germany/tui/generic
+  tags:
+  - Metasearch
+  - Accommodation
+  - Availability
+  - Germany
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/meta-search-generic-api/api-description
+- aid: tui-group:tui-meta-partner-packages-flights
+  name: TUI Meta Partner Packages & Flights API
+  description: >-
+    Metasearch partner interface for the Nordic region (Sweden, Denmark, Finland, Norway). Documented
+    operations are GET /{market}/flights/search/{agent}, GET /{market}/flights/{agent}/route-feed,
+    GET /{market}/packages/{pax}, GET /{market}/live-search/packages/{agent} and
+    GET /{market}/live-search/packages/{agent}/locations. OAuth 2.0 client credentials.
+  humanURL: https://developer.tui/api-catalog/meta-partner-packages-flights
+  baseURL: https://prod.api.tui/sales/pip-package/partner
+  tags:
+  - Metasearch
+  - Packages
+  - Flights
+  - Nordic
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/meta-partner-packages-flights/api-description
+- aid: tui-group:tui-meta-partner-package-live-search
+  name: TUI Partner Live Search API
+  description: >-
+    Real-time package search for meta partners in the Nordic region, returning live pricing and
+    availability over REST with OAuth 2.0 client credentials.
+  humanURL: https://developer.tui/api-catalog/meta-partner-package-live-search
+  baseURL: https://prod.api.tui/sales/pip-package/live-search
+  tags:
+  - Metasearch
+  - Packages
+  - Live Search
+  - Nordic
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/meta-partner-package-live-search/api-description
+- aid: tui-group:tui-partner-content-api
+  name: TUI Partner Content API
+  description: >-
+    Accommodation content for partners in the Nordic region (Sweden, Denmark, Finland, Norway),
+    exposed as REST endpoints secured with OAuth 2.0 client credentials.
+  humanURL: https://developer.tui/api-catalog/partner-content-api
+  baseURL: https://prod.api.tui/sales/pip-package/content
+  tags:
+  - Content
+  - Accommodation
+  - Metasearch
+  - Nordic
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/partner-content-api/api-description
+- aid: tui-group:tui-cruise-price-and-availability
+  name: TUI Cruise Price and Availability API (Cruise Offers v1.0)
+  description: >-
+    Cruise shopping family covering Cruise Offers Search across itineraries, date ranges and
+    durations; Unique Cruise Offers Search for a specific itinerary; Cruise Alternate Cabin and Board
+    Search; Cruise Alternate Flight Variant Search; Cruise Alternate Stay Variant Search; and Cruise
+    Stay Upsell Options for cross-selling stay onto cruise packages.
+  humanURL: https://developer.tui/api-catalog/tui-cruise-price-and-availability
+  baseURL: https://prod.api.tui/cruisepriceresults
+  tags:
+  - Cruise
+  - Pricing
+  - Availability
+  - Search
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-cruise-price-and-availability/api-description
+- aid: tui-group:tui-cruise-booking-apis
+  name: TUI Cruise OTA Booking APIs v1.0
+  description: >-
+    Cruise booking flow for OTA partners, documented as three sequential operations — Validate
+    Holiday (validates the booking with customer and travel details and returns the latest prices) at
+    /cruise-ota-book/validate-holiday, Checkout Holiday (reserves inventory for a fixed period) at
+    /cruise-ota-book/checkout-holiday, and Confirm Holiday (creates the booking) at
+    /cruise-ota-book/confirm-holiday.
+  humanURL: https://developer.tui/api-catalog/tui-cruise-booking-apis
+  baseURL: https://prod.api.tui/cruise-ota-book
+  tags:
+  - Cruise
+  - Booking
+  - OTA
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/tui-cruise-booking-apis/api-description
+- aid: tui-group:tui-cruise-cabin-availability
+  name: TUI Cruise Cabin Availability API v1.0
+  description: >-
+    Returns the physical cabins available on a cruise for a given itinerary, duration, cabin type,
+    occupancy and board, with promo code support.
+  humanURL: https://developer.tui/api-catalog/cruise-cabin-availability
+  baseURL: https://prod.api.tui/v2/cruises/cabinsavailability
+  tags:
+  - Cruise
+  - Availability
+  - Cabins
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/cruise-cabin-availability/api-description
+- aid: tui-group:tui-ship-content-api
+  name: TUI Ship Content API v1.0
+  description: >-
+    GraphQL endpoint for ship reference content — cabin types, boards and deck plans — queried for
+    specific information related to a ship. The only GraphQL surface in TUI's published catalog.
+  humanURL: https://developer.tui/api-catalog/ship-content-api
+  baseURL: https://prod.api.tui/cruises/ship
+  tags:
+  - Cruise
+  - Content
+  - GraphQL
+  - Ships
+  properties:
+  - type: Documentation
+    url: https://developer.tui/api-catalog/ship-content-api/api-description
+common:
+- type: Website
+  url: https://www.tuigroup.com/en
+- type: DeveloperPortal
+  url: https://developer.tui/
+- type: Documentation
+  url: https://developer.tui/docs/overview
+- type: APIReference
+  url: https://developer.tui/api-catalog
+- type: SignUp
+  url: https://signup.developer.tui
+- type: Authentication
+  url: https://developer.tui/docs/general/oauth2
+- type: RateLimits
+  url: https://developer.tui/docs/getting-started_technical-integration
+- type: Environments
+  url: https://developer.tui/docs/getting-started_environments
+- type: GettingStarted
+  url: https://developer.tui/docs/getting-started
+- type: Support
+  url: https://developer.tui/support
+- type: TermsOfService
+  url: https://developer.tui/terms-of-use
+- type: PrivacyPolicy
+  url: https://developer.tui/privacy-policy
+- type: VulnerabilityDisclosure
+  url: https://vdp.tui.com/p/Policy
+- type: SecurityTxt
+  url: https://www.tui.com/.well-known/security.txt
+- type: GitHubOrganization
+  url: https://github.com/tuigroup
+- type: LinkedIn
+  url: https://www.linkedin.com/company/tuigroup/
+- type: Email
+  url: mailto:apiplatform@tui.com
+- type: InvestorRelations
+  url: https://www.tuigroup.com/en/investors
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

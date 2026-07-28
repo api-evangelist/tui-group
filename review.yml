@@ -1,0 +1,647 @@
+aid: tui-group
+name: TUI Group
+review:
+  question: >-
+    Does TUI Group publish a real, reachable developer/API surface, and what would it cost a
+    partner integrated with that surface to leave?
+  answer: true
+  date: '2026-07-28'
+  reviewer: API Evangelist
+  tier: ota-metasearch
+  homeMarket: United Kingdom
+  domicileNote: >-
+    The brief assigns United Kingdom as the home market. That is accurate as the group's largest
+    single source market — TUI UK & Ireland, the UK-registered carrier TUI Airways and Marella
+    Cruises are the group's biggest operating units — but the parent, TUI AG, is domiciled in
+    Hannover, Germany and has been listed on the Frankfurt MDAX since it ended its London primary
+    listing in 2023. Recorded here so the UK framing is not mistaken for a legal domicile claim.
+findings:
+  summary: |
+    TUI Group publishes a genuine, publicly readable developer portal at https://developer.tui
+    (a Drupal 10 / Pronovix portal fronting an Apigee X gateway on the *.api.tui brand TLD). It
+    lists 21 API products across flights, packages, accommodation content, cruise and metasearch
+    distribution. The documentation is unusually open for a tour operator: base URLs, endpoint
+    tables, request and response bodies, auth flows, error catalogues, quota tiers and two
+    downloadable Postman collections are all readable without a login. The runtime is not open.
+    Every API product requires partner-manager approval, most flight APIs additionally require a
+    Navitaire New Skies agent profile, a written workflow validation and a production IP whitelist,
+    and the TUI fly OTA API states that step one is to conclude a contract. No OpenAPI, AsyncAPI or
+    other machine-readable API description is published anywhere on the portal.
+  portal:
+    url: https://developer.tui/
+    httpStatus: 200
+    confirmed: true
+    selfServe: false
+    platform: Drupal 10 developer portal (Pronovix theme) in front of Apigee X
+    signupURL: https://signup.developer.tui
+    signupHttpStatus: 405
+    signupNote: >-
+      https://signup.developer.tui returns 405 to a GET probe (the form is POST-only at that host);
+      the registration flow itself is documented at /docs/general/authentication.
+    apiProductsListed: 21
+  probes:
+  - url: https://www.tuigroup.com
+    status: 200
+    note: Redirects to https://www.tuigroup.com/en — corporate site, no developer section.
+  - url: https://developer.tui/
+    status: 200
+    note: The real developer portal. Brand TLD .tui.
+  - url: https://developer.tui/api-catalog
+    status: 200
+    note: Public API catalog; 21 API products enumerated across 5 categories.
+  - url: https://developer.tui/docs/overview
+    status: 200
+  - url: https://developer.tui/docs/getting-started
+    status: 200
+  - url: https://developer.tui/docs/general/oauth2
+    status: 200
+    note: OAuth 2.0 client-credentials flow documented against /oauth2/token.
+  - url: https://developer.tui/docs/general/authentication
+    status: 200
+    note: Portal registration and app-creation walkthrough.
+  - url: https://developer.tui/docs/getting-started_environments
+    status: 200
+  - url: https://developer.tui/docs/getting-started_technical-integration
+    status: 200
+    note: TLS requirements and published quota tiers.
+  - url: https://developer.tui/terms-of-use
+    status: 200
+    note: Page exists but the body is unfilled lorem-ipsum placeholder text, last updated 30-Sep-2021.
+  - url: https://developer.tui/privacy-policy
+    status: 200
+  - url: https://developer.tui/docs/tutorials
+    status: 403
+  - url: https://signup.developer.tui/
+    status: 405
+  - url: https://prod.api.tui/search-walldy
+    status: 401
+    note: >-
+      Live Apigee gateway. Unauthenticated call returns
+      {"fault":{"faultstring":"Invalid access token","detail":{"errorcode":"oauth.v2.InvalidAccessToken"}}}
+      — confirms the documented base URLs are real and OAuth-protected.
+  - url: https://prod.api.tui/
+    status: 404
+  - url: https://api.tui.com
+    status: 403
+  - url: https://www.tui.co.uk
+    status: 403
+  - url: https://developer.tui.com
+    status: 000
+    note: Does not resolve.
+  - url: https://developers.tui.com
+    status: 000
+    note: Does not resolve.
+  - url: https://docs.tui.com
+    status: 000
+    note: Does not resolve.
+  - url: https://developer.tuigroup.com
+    status: 000
+    note: Does not resolve.
+  - url: https://developers.tuigroup.com
+    status: 000
+    note: Does not resolve.
+  - url: https://api.tuigroup.com
+    status: 000
+    note: Does not resolve.
+  - url: https://docs.tuigroup.com
+    status: 000
+    note: Does not resolve.
+  - url: https://developer.tui/openapi.json
+    status: 404
+  - url: https://developer.tui/swagger.json
+    status: 404
+  - url: https://developer.tui/api-docs
+    status: 404
+  - url: https://developer.tui/jsonapi
+    status: 404
+  - url: https://developer.tui/sitemap.xml
+    status: 404
+  - url: https://developer.tui/.well-known/security.txt
+    status: 404
+  - url: https://www.tui.com/.well-known/security.txt
+    status: 200
+    note: 'Contact: https://vdp.tui.com/p/Send-a-report ; Policy: https://vdp.tui.com/p/Policy ; Expires 2028-12-09.'
+  - url: https://vdp.tui.com/p/Policy
+    status: 200
+  - url: https://github.com/tuigroup
+    status: 200
+    note: GitHub organisation "TUI" exists; no published API specifications found there during this pass.
+  machineReadableArtifacts:
+    openapiFound: false
+    openapiNote: >-
+      No OpenAPI or Swagger document is published anywhere on developer.tui. /openapi.json,
+      /swagger.json and /api-docs all 404, no API-reference or specification tab exists on any of the
+      21 API product pages, and no spec file is linked from any documentation page. Every API is
+      documented as hand-written prose plus endpoint tables. The openapi/ directory is therefore
+      absent from this repo rather than populated with anything invented.
+    harvested:
+    - path: collections/tui-flight-ndc-gateway.postman_collection.json
+      type: PostmanCollection
+      schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+      collectionName: NDC Gateway API - Sample Requests
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/61711/71383a67-1817-47a5-a112-bae7983a7bcf/NdcGateway.postman_collection.zip
+      linkedFrom: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/postman-collection
+      httpStatus: 200
+      fetched: '2026-07-28'
+      bytes: 314802
+      parses: true
+      note: >-
+        18 named flow folders (one-way, return, multi-pax, promo code, credit card approved and
+        declined, SSR and seat by OfferID, order change and full cancel) with full NDC 21.3 request
+        bodies against /x3/ndc/api/{Shopping|Selling|Servicing}/r3.x/v21.3/{Operation}.
+    - path: collections/tui-b2bota-g7-travelmessage.postman_collection.json
+      type: PostmanCollection
+      schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+      collectionName: Scenario_2A_1R_SS
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/16522/205a4ef8-74aa-4b4c-afc8-6334b26e403a/Postman-Collection-OTA.zip
+      linkedFrom: https://developer.tui/api-catalog/b2bota-g7/technical-details
+      httpStatus: 200
+      fetched: '2026-07-28'
+      bytes: 144310
+      parses: true
+      note: ANVR G7 TravelMessage v3.1 booking scenario — two adults, one room.
+    - path: collections/tui-b2bota-g7-travelmessage.postman_environment.json
+      type: PostmanEnvironment
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/16522/205a4ef8-74aa-4b4c-afc8-6334b26e403a/Postman-Collection-OTA.zip
+      httpStatus: 200
+      fetched: '2026-07-28'
+      parses: true
+    - path: collections/tui-newskies-pricefile-api.postman_collection.json
+      type: PostmanCollection
+      schema: https://schema.getpostman.com/json/collection/v2.1.0/collection.json
+      collectionName: Pricefile-API
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/9923/c565870c-0164-4efc-8cfd-85bfa206080a/Pricefile-API.postman_collection.zip
+      linkedFrom: https://developer.tui/api-catalog/tui-newskies-pricefile-api/postman-collection
+      httpStatus: 200
+      fetched: '2026-07-28'
+      bytes: 4694
+      parses: true
+    - path: collections/tui-newskies-pricefile-api.postman_environment.json
+      type: PostmanEnvironment
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/9923/c565870c-0164-4efc-8cfd-85bfa206080a/Pricefile-API.postman_environment.zip
+      httpStatus: 200
+      fetched: '2026-07-28'
+      parses: true
+    - path: schemas/tui-b2bota-g7-travelmessage-v31.xsd
+      type: XMLSchema
+      sourceURL: https://dixs1ioif5ku1.cloudfront.net/environments/prod/projects/16522/205a4ef8-74aa-4b4c-afc8-6334b26e403a/travelmessage-v31-schema.zip
+      linkedFrom: https://developer.tui/api-catalog/b2bota-g7/technical-details
+      httpStatus: 200
+      fetched: '2026-07-28'
+      bytes: 169509
+      parses: true
+      note: >-
+        ANVR G7 TravelMessage version 3.1 XSD as served by TUI. TUI states on the same page that it
+        modified the standard 3.1 XSD to fit its own needs, so this artifact is TUI's variant of the
+        published ANVR schema, not the pristine ANVR original.
+  publishedQuotas:
+    source: https://developer.tui/docs/getting-started_technical-integration
+    development: 500 calls per day, 1 call per second
+    production:
+    - Bronze — 3 calls per second
+    - Silver — 6 calls per second
+    - Gold — 9 calls per second
+    - Platinum — 12 calls per second
+    note: >-
+      Tier assignment is not self-serve — "Your partner manager will support you getting the
+      appropriate quota set for your app subscription" and TUI assesses estimated usage against its
+      own capacity model before assigning a production plan.
+  tls:
+    minimumVersion: TLS 1.2
+    preferredCiphers:
+    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+    - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+
+switchingCost:
+  summary: >-
+    TUI is the supplier, not the intermediary. What a partner integrates against is TUI's own
+    inventory — TUI fly seats, TUI package holidays, Marella and TUI Cruises cabins, TUI Blue and
+    Robinson hotels — and no second source exists for that inventory anywhere. The interface,
+    however, is a genuine mix: the flight NDC gateway speaks IATA NDC 21.3 and the B2B agent channel
+    speaks ANVR G7 TravelMessage 3.1, both real cross-industry standards a competing tour operator
+    could also implement. Everything else — search, cruise, metasearch, content, supply — is
+    TUI-proprietary REST or a TUI-custom XML dialect. The practical cost of leaving is therefore not
+    the transport layer; it is the loss of the product, plus the sunk cost of the approval,
+    accreditation, New Skies agent provisioning and IP-whitelisting apparatus that guards it, plus
+    the fact that nothing a partner accumulates inside TUI's systems can be pulled back out through
+    any published operation.
+
+  interfaceShape:
+    value: standard-plus-proprietary
+    standardsNamed:
+    - name: IATA New Distribution Capability (NDC)
+      version: '21.3'
+      evidence: >-
+        https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/ndc-workflow documents the NDC
+        Shopping / Selling / Servicing triad with the standard message names AirShopping, OfferPrice,
+        OrderCreate, ServiceList, SeatAvailability, OrderChange, OrderRetrieve, OrderReshop,
+        OrderQuote and AirlineProfile, at path
+        /x3/ndc/api/{Shopping|Selling|Servicing}/r3.x/v21.3/{Operation}. The harvested Postman
+        collection carries real request bodies for all of them.
+      caveat: >-
+        TUI's own description is explicit that this is a routing layer, not TUI's own NDC stack —
+        "The NDC Gateway API is the single point of access to route all the traffic to a third party
+        vendor (Navitaire) implementing the features defined in the standard." The path is
+        TUI-specific (/flight/ndc/x3/... where x3 is the IATA code of TUI fly Deutschland), auth is a
+        proprietary two-layer x-apikey plus New Skies JWT rather than anything in the NDC spec, and
+        an alternate /r3.x/v2 family routes to the proprietary Navitaire Digital API instead.
+    - name: ANVR G7 "standard for ANVR XML-message flow" / TravelMessage
+      version: '3.1'
+      evidence: >-
+        https://developer.tui/api-catalog/b2bota-g7/api-description — "this follows the standard ANVR
+        G7 Standard version 3.1", with the standard dialogues Availability, Sell, Assign, Book,
+        AddProAvailability, Break, Receipt and Recap. XSD harvested to
+        schemas/tui-b2bota-g7-travelmessage-v31.xsd.
+      caveat: >-
+        TUI states verbatim on the same page that "Because for TUI things were missing in the the
+        structure of the 3.1 xsd, the xsd was changed to fit our needs. So the picture is not
+        entirely correct", and that several standard behaviours are "not (yet) implemented at TUI"
+        (roundtrip and cruise data in Sell; the two standard AddProAvailability approaches, replaced
+        by a TUI-only AddProAvailabilityTransportRequest; changes between Assign and Book are
+        ignored). A partner's G7 integration is therefore G7-shaped but not G7-portable.
+    - name: TUI XML Supply standard (vendor standard, built on G7)
+      version: 1.5.1
+      evidence: >-
+        https://developer.tui/api-catalog/supply/api-description — "The xml is based upon the TUI xml
+        Supply standard and the G7 standard. It combines to a custom Supply message version 1.5.1."
+        Delivered by SFTP file drop, not HTTP.
+    proprietarySurfaces: >-
+      search-walldy, search-holiday-offers, the cruise offers / booking / cabin-availability family,
+      the Ship Content GraphQL endpoint, the OTA Content JSON API, and all four metasearch partner
+      APIs are TUI-proprietary REST or GraphQL shapes with no standard cited anywhere in their
+      documentation. The New Skies Digital API, GoNow DCS API and Payment API are Navitaire product
+      surfaces re-exposed under TUI paths — a partner writing against them is writing against
+      Navitaire's model, which is portable to other Navitaire carriers but to nobody else.
+    verdictReasoning: >-
+      Two real published standards (NDC 21.3, ANVR G7 3.1) sit alongside a majority of proprietary
+      surfaces, and both standards are extended or trimmed in ways TUI documents openly. That is the
+      textbook standard-plus-proprietary case.
+
+  secondSource:
+    value: no-alternative
+    reasoning: >-
+      For the capability actually being bought — TUI's own inventory — there is no second source by
+      construction. TUI fly seats, TUI-operated package holidays, Marella Cruises and TUI Cruises
+      cabins and TUI Blue / Robinson / TUI Magic Life room allocations exist only inside TUI. A
+      metasearch site or an OTA that wants TUI product must integrate TUI. Saying so plainly is the
+      finding, not a failure to look.
+    alternativesConsidered:
+    - name: Travelport, Amadeus, Sabre (GDS)
+      assessment: >-
+        Would be the classic second source for airline content, but TUI fly runs on Navitaire New
+        Skies — a low-cost-carrier PSS — and TUI distributes its flights direct and through its own
+        gateway, not through GDS full-content agreements. TUI package holidays have never been GDS
+        product at all. A GDS cannot supply TUI inventory.
+    - name: Duffel, Kiwi.com and other NDC/API aggregators
+      assessment: >-
+        Genuinely interchangeable for aggregating third-party airline content, and an integrator
+        already speaking NDC 21.3 to TUI has transferable skills. But no aggregator resells TUI's
+        package, cruise or hotel inventory, and TUI's own gateway is the only published route to TUI
+        fly NDC offers.
+    - name: Rival integrated tour operators (Jet2holidays, easyJet holidays, DER Touristik, Booking.com, Expedia Group)
+      assessment: >-
+        Substitutable at the level of "sell somebody a holiday", not at the level of "sell this
+        holiday". Each has its own distinct partner interface; a G7 integration to TUI does not carry
+        across to Jet2 or easyJet holidays. Only inside the Dutch market does the ANVR G7 standard
+        create partial portability between tour operators, and even there TUI's modified XSD and
+        unimplemented dialogues limit it.
+    - name: Navitaire (Amadeus) direct
+      assessment: >-
+        The New Skies Digital, GoNow and Payment APIs are Navitaire surfaces, so those integration
+        patterns port to other Navitaire carriers. That is portability of skill, not of inventory —
+        TUI's New Skies tenant, agent profiles and pricefile mappings are TUI's.
+
+  exitPath:
+    value: no-export-published
+    searched:
+    - Every one of the 21 API product pages and their sub-pages on developer.tui
+    - The /docs/* documentation tree (overview, getting started, authentication, oauth2, environments, technical integration)
+    - The portal terms-of-use and privacy-policy pages
+    operationsFound:
+    - operation: GET /download/{filename} and GET /download/delta (New Skies PriceFile API)
+      whyNotAnExitPath: >-
+        This is the only bulk operation TUI publishes, and it flows the wrong way. It delivers TUI's
+        own fare content out to the partner as base64-encoded ZIPs of CSV; it does not export the
+        partner's bookings, customers or transaction history. Access is additionally scoped to a
+        pricefile mapping TUI controls per API key.
+    - operation: TUI Supply v1.5.1 SFTP full and delta loads
+      whyNotAnExitPath: >-
+        Also outbound TUI product content, delivered as files TUI places on a TUI server. And TUI
+        states the full-load workflow "will be switched off in the future", forcing every OTA onto
+        the delta flow — a unilateral change to the only bulk channel a partner has.
+    - operation: POST OrderRetrieve (NDC Servicing) and the G7 Recap dialogue
+      whyNotAnExitPath: >-
+        Single-order retrieval by order ID or session. Useful for servicing one booking; not a bulk
+        export, and it presupposes the partner already holds every order identifier.
+    gdprNote: >-
+      TUI publishes a portal privacy policy (https://developer.tui/privacy-policy, HTTP 200) and a
+      consumer-facing vulnerability disclosure programme (https://vdp.tui.com/p/Policy, HTTP 200),
+      but no data-portability endpoint, no documented bulk export or dump operation, and no
+      statement about what happens to a partner's data on termination appears anywhere in the
+      developer documentation. A partner leaving TUI leaves with whatever it wrote down on its own
+      side of the wire.
+
+  identifierPortability:
+    summary: >-
+      Shared industry identifiers on the surface, TUI/Navitaire-proprietary keys underneath — the
+      routing keys travel, the entity keys do not.
+    portable:
+    - identifier: IATA airport/station codes
+      evidence: >-
+        Flight Availability Search API parameters departureStationCodes / arrivalStationCodes with
+        documented examples BRU,LHR,MAN and ACE,LPA,PMI.
+    - identifier: IATA airline/carrier codes
+      evidence: >-
+        carrierCodes parameter with documented example TB,OR,X3; the NDC gateway path is namespaced
+        /x3/ and the Auth response returns "organizationCode":"X3" (TUI fly Deutschland). NDC Postman
+        collection carries a Flight.CarrierCode variable.
+    - identifier: ISO 3166 country codes
+      evidence: departureCountries / arrivalCountries with examples GB,DE,BE and ES,FR,IT.
+    - identifier: ANVR agency code
+      evidence: >-
+        "For every request type please add the following header parameter 'anvrcode'. The value is a
+        four-digit number of the AnvrCode." The G7 examples show SenderID 9998 / ReceiverID TUI. This
+        is a Dutch travel-trade accreditation number, portable between ANVR tour operators — the one
+        genuinely cross-vendor party identifier in TUI's stack.
+    notPortable:
+    - identifier: NDC OfferID and OrderID
+      evidence: >-
+        The documented flow is AirShopping → take an offer ID → OfferPrice → OrderCreate → "An order
+        ID (booking reference)". These are opaque Navitaire-issued keys, valid only against TUI's
+        NDC gateway.
+    - identifier: New Skies agent name / agent profile and role code
+      evidence: >-
+        "Each API key is linked to a specific agent profile. The agent profile determines which
+        flights and fares are visible based on role permissions in the NewSkies system." Auth returns
+        roleCode NDCB; the NDC Postman collection defaults Newskies.Agent.Role to NDCC. TUI-tenant
+        only, provisioned by emailing yoda@tui.de or api.flightproduction@tui.com.
+    - identifier: TUI PackageID (GUID) and Brand code
+      evidence: >-
+        G7 AvailabilityRequest carries <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>
+        and <Brand>TUI_NL</Brand>, with PackageType PAKK. Wholly TUI-internal.
+    - identifier: TUI accommodation IDs
+      evidence: >-
+        search-walldy POST /offers takes accommodationIds as its required key. No GIATA ID, no chain
+        code, no cross-vendor hotel identifier appears anywhere in TUI's published documentation.
+    - identifier: TUI product codes carried in G7 payloads
+      evidence: 'Luggage codes BG00 / BG20 / BG40 and seat upgrade "COMFORT_SEAT" in the G7 booking examples.'
+    - identifier: Apigee consumer key (API key) and pricefile mapping
+      evidence: >-
+        "Each consumer is mapped to a specific pricefile via their app registration." The app name
+        itself becomes a TUI-side identity ("No price file mapped to ApiKey YourAppName").
+    absent:
+    - Airline PNR record locators are never mentioned in the published documentation.
+    - IATA/ARC agency numbers are not used — the agent identity is a New Skies agent profile, plus an ANVR code on the Dutch channel.
+    - No GIATA IDs, hotel chain codes, or any other cross-vendor accommodation identifier.
+    - No GDS record identifiers of any kind.
+
+  contractualLockIn:
+    published: partial
+    developerTermsOfUse:
+      url: https://developer.tui/terms-of-use
+      httpStatus: 200
+      lastUpdated: '2021-09-30'
+      finding: >-
+        The page renders unfilled lorem-ipsum placeholder text ("Nam porttitor blandit accumsan. Ut
+        vel dictum sem, a pretium dui..." with a "Headline sample" section listing "First element,
+        Second element, Third element"). TUI's developer portal therefore publishes no actual terms
+        of use at all. Nothing about minimum terms, exclusivity, termination notice, segment fees,
+        content commitments or revocation on account closure is verifiable from TUI's public
+        developer surface.
+    verbatimCommitmentsFound:
+    - quote: 'Step 1: Conclude a contract'
+      source: https://developer.tui/api-catalog/tui-flight-ota-api/api-description
+      note: >-
+        The TUI fly OTA API's own access instructions. The full sequence continues: "Once the
+        contract is signed & our accounting department has set up an account and opened an internal
+        ICT ticket you will be contacted by our ICT department who will provide you with technical
+        information and username and password for access to our test environment." A signed
+        commercial agreement is an explicit precondition, but its terms are not published.
+    - quote: >-
+        Please note that we can only grant you access to the production environment after you've
+        tried out the test environment and you've made at least 1 test booking.
+      source: https://developer.tui/api-catalog/tui-flight-ota-api/api-description
+    - quote: >-
+        For production access manual approval is needed, in some cases specific partner agreements or
+        technical certifications must be provided upfront.
+      source: https://developer.tui/docs/getting-started_environments
+    - quote: >-
+        Access to the Digital API production environment must be done only from your own production
+        system. The access of to the production environment from a lower environment (dev, test, ...)
+        is absolutely prohibited.
+      source: https://developer.tui/api-catalog/newskies-digital-api/api-description
+    - quote: >-
+        Also, please take in account that accessing the NDC Gateway API production environment from
+        any non-production environment is forbidden.
+      source: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/api-description
+    - quote: >-
+        The two flows cannot be combined. ... At a certain time, each OTA needs to switch to delta
+        loads ... And also because the full load will be switched off in the future.
+      source: https://developer.tui/api-catalog/supply/api-description
+      note: >-
+        A unilateral, TUI-scheduled deprecation of the only bulk supply channel, announced in prose
+        with no date and no deprecation policy.
+    - quote: >-
+        Some APIs support different partner tier levels on quota. Your partner manager will support
+        you getting the appropriate quota set for your app subscription.
+      source: https://developer.tui/docs/getting-started_technical-integration
+      note: >-
+        Throughput is a negotiated commercial variable (Bronze/Silver/Gold/Platinum, 3 to 12 calls
+        per second), not a published entitlement.
+    commissionEvidence:
+      finding: >-
+        The Supply v1.5.1 message carries a CommissionGroup with CommissionCategory, TravelPeriod and
+        BookPeriod per package — the closest TUI comes to publishing commercial terms in a
+        machine-readable form. The example shows CommissionCategory "C" with a travel period
+        2022-10-01 to 2024-03-31. The categories themselves are not defined publicly, so no rate can
+        be cited.
+      source: https://developer.tui/api-catalog/supply/api-description
+    notPublished:
+    - Minimum term or notice period
+    - Exclusivity or full-content obligations
+    - Termination or revocation conditions
+    - Commission rates or segment/booking fees
+    - Data retention or return on termination
+    - Any SLA (the authentication doc refers to "possible existing agreements and SLAs" but publishes none)
+
+  accessGate:
+    value: commercial-agreement
+    documentationIsOpen: true
+    runtimeIsClosed: true
+    whatADeveloperMustDo:
+    - step: Register an external developer account at https://signup.developer.tui
+      detail: >-
+        Required fields include Firstname, Lastname, Username, Email, the API Products of interest,
+        Country, Company, Industry, and a Partner Manager Email. TUI states the API-product field
+        exists because "for some API products there is maybe additional legal requirements that we
+        can already kick-off in the onboarding", and the company field so that "If there is also
+        company and partner agreements existing - we can link you to them".
+    - step: Wait for approval
+      detail: >-
+        "After validating your email address our product or partner management team will approve
+        your request." No self-serve path exists past this point.
+    - step: Create an app and subscribe to an API product
+      detail: >-
+        App names must be prefixed with the partner company (TUI's own example:
+        travelparadise.fr-packagesearch-app) because the name is presented to the API owner or
+        partner manager for approval. Consumer key and secret are issued only after that approval.
+    - step: Obtain a New Skies agent (flight APIs only)
+      detail: >-
+        "The New Skies Credentials agent credentials are usually sent by your TUI Business Partner."
+        Requests go to user.flightproduction@tui.com or api.flightproduction@tui.com; the Flight
+        Availability Search API routes agent-mapping requests to yoda@tui.de.
+    - step: Pass a written workflow validation before production go-live (NDC Gateway, Digital API, GoNow)
+      detail: >-
+        Mandatory submission of company contact details, app name, production and non-production IP
+        ranges, use-case description, the endpoints used and the purpose of each request, an overall
+        workflow diagram, expected requests per minute, and evidence of playground test cases with
+        correlation IDs and time ranges.
+    - step: Get production IPs whitelisted (NDC Gateway, Digital API, GoNow)
+      detail: >-
+        "The production environment is protected by an IP whitelisting that will deny all requests
+        unless the requester's IP has been whitelisted." Requested by email to
+        api.flightproduction@tui.com.
+    - step: Request a pricefile mapping (PriceFile API only)
+      detail: >-
+        Email api.flightproduction@tui.com with the app name and the pricefiles needed; without it,
+        calls fail with "No price file mapped to ApiKey YourAppName".
+    - step: Sign a commercial contract (TUI Flight OTA API, and implied for production generally)
+      detail: '"Step 1: Conclude a contract" — commercial terms handled off-portal, unpublished.'
+    accreditationNote: >-
+      No IATA or ARC accreditation is required anywhere in TUI's published flow — TUI is the supplier,
+      not a ticketing intermediary. The nearest thing to an industry accreditation is the four-digit
+      ANVR code required in the anvrcode header on the Dutch G7 travel-agent channel.
+
+  distributionModel:
+    value: direct-only
+    reasoning: >-
+      TUI is a vertically integrated principal. It sells its own product through its own retail
+      estate, websites and apps, and exposes B2B channels — G7 for Dutch travel agents, the Flight
+      OTA API for flight resellers, the Supply SFTP feed and the metasearch partner APIs — directly
+      from its own Apigee gateway. There is no GDS layer in front of TUI's package, cruise or hotel
+      inventory, and TUI fly's PSS is Navitaire New Skies, a low-cost-carrier system built for direct
+      distribution rather than GDS intermediation. Every documented route to TUI content runs through
+      *.api.tui.
+    channelsPublished:
+    - Own retail and web (not an API surface, but the primary channel)
+    - Travel agents via ANVR G7 TravelMessage 3.1 (Netherlands)
+    - Flight resellers via the TUI Flight OTA API (TUI fly Benelux content)
+    - OTAs via the Supply v1.5.1 SFTP package feed
+    - Metasearch partners via the pip / pip-package partner APIs (Germany and the Nordics)
+    - Direct NDC consumers via the NDC Gateway
+    notObserved:
+    - No GDS distribution agreement, full-content agreement or GDS surcharge is mentioned anywhere in TUI's published developer material.
+    - No channel-manager integration (TUI owns its hotels; it is not selling third-party hotel inventory through a channel manager on this surface).
+
+  ndcPosture:
+    apiPublished: true
+    endpoint: https://prod.api.tui/flight/ndc
+    playground: https://playground.api.tui/flight/ndc
+    schemaVersion: '21.3'
+    messagesImplemented:
+    - AirShopping (Shopping)
+    - OfferPrice (Selling)
+    - OrderCreate (Selling)
+    - ServiceList (Selling)
+    - SeatAvailability (Selling)
+    - OrderChange (Servicing)
+    - OrderRetrieve (Servicing)
+    - OrderReshop (Servicing)
+    - OrderQuote (Servicing)
+    - AirlineProfile (Shopping)
+    certificationClaimed: false
+    certificationNote: >-
+      No IATA NDC certification level is claimed anywhere on developer.tui. TUI does not assert Level
+      3 or Level 4 status, does not reference the IATA NDC Certified/Capable registry, and does not
+      publish an IATA NDC Registry entry link. The claim TUI actually makes is architectural — "The
+      NDC Gateway API is the single point of access to route all the traffic to a third party vendor
+      (Navitaire) implementing the features defined in the standard."
+    gdsSurcharge:
+      finding: >-
+        No GDS surcharge is published or applicable — TUI does not distribute through a GDS, so the
+        British Airways-style GDS distribution fee has no analogue here.
+    dualStack:
+      finding: >-
+        Every NDC operation is offered in two flavours: /r3.x/v21.3/{Operation} against the Navitaire
+        NDC API, and /r3.x/v2/{Operation} against the proprietary Navitaire Digital API. A partner
+        can therefore be running "NDC" while actually sitting on the vendor-proprietary path. The
+        NewSkies Payment API's /ndc endpoint, meanwhile, "Returns 501 Not Implemented for all
+        methods" and is a "Placeholder for future NDC payment functionality" — NDC payment is not
+        yet real at TUI.
+      source: https://developer.tui/api-catalog/newskies-payment-api/api-description
+
+  costOfLeaving:
+    - The inventory itself. There is no second source for TUI product; leaving means not selling TUI holidays.
+    - >-
+      Re-earning access. The approval chain — partner-manager approval, New Skies agent provisioning,
+      written workflow validation with diagrams and throughput forecasts, IP whitelisting, at least
+      one successful test booking, and a signed contract — is weeks of human process that does not
+      transfer to any other supplier.
+    - >-
+      Rewriting the proprietary two-thirds. NDC 21.3 and G7 3.1 skills carry; search-walldy,
+      search-holiday-offers, the cruise family, Ship Content GraphQL, OTA Content and the four
+      metasearch APIs do not.
+    - >-
+      Re-keying the data. Order IDs, offer IDs, PackageIDs, accommodation IDs, brand codes, luggage
+      and seat codes and New Skies agent profiles are all TUI-issued; only IATA station and carrier
+      codes, ISO country codes and the ANVR agency number survive the move.
+    - >-
+      Losing everything not already copied. No export operation exists, so a partner's booking
+      history inside TUI's systems is retrievable only one order at a time by identifier, and only
+      while access remains.
+
+sources:
+- url: https://developer.tui/
+  type: DeveloperPortal
+  note: Public developer portal on TUI's .tui brand TLD. HTTP 200.
+- url: https://developer.tui/api-catalog
+  type: APIReference
+  note: 21 API products across Search, Travel Agencies, Flights, Accomodations and OTA categories. HTTP 200.
+- url: https://developer.tui/docs/general/authentication
+  type: Documentation
+  note: Registration, approval and app-creation flow. HTTP 200.
+- url: https://developer.tui/docs/general/oauth2
+  type: Authentication
+  note: OAuth 2.0 client-credentials against /oauth2/token, one-hour tokens. HTTP 200.
+- url: https://developer.tui/docs/getting-started_technical-integration
+  type: RateLimits
+  note: TLS requirements and Bronze/Silver/Gold/Platinum quota tiers. HTTP 200.
+- url: https://developer.tui/docs/getting-started_environments
+  type: Documentation
+  note: playground and prod endpoint pattern https://{env}.api.tui/{API_NAME}. HTTP 200.
+- url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/ndc-workflow
+  type: Documentation
+  note: NDC 21.3 Shopping/Selling/Servicing workflow and full operation list. HTTP 200.
+- url: https://developer.tui/api-catalog/b2bota-g7/api-description
+  type: Documentation
+  note: ANVR G7 TravelMessage 3.1 dialogues, and TUI's statement that it modified the XSD. HTTP 200.
+- url: https://developer.tui/api-catalog/supply/api-description
+  type: Documentation
+  note: TUI custom Supply 1.5.1 over SFTP, CommissionGroup structure, full-load deprecation. HTTP 200.
+- url: https://developer.tui/api-catalog/tui-flight-ota-api/api-description
+  type: Documentation
+  note: '"Step 1: Conclude a contract" and the test-booking precondition for production. HTTP 200.'
+- url: https://developer.tui/terms-of-use
+  type: TermsOfService
+  note: HTTP 200 but body is unfilled lorem-ipsum placeholder; no real developer terms are published.
+- url: https://www.tui.com/.well-known/security.txt
+  type: SecurityTxt
+  note: Points to https://vdp.tui.com/p/Policy. HTTP 200.
+- url: https://www.tuigroup.com/en/about-us
+  type: Website
+  note: Group facts — 34.7m customers, 460+ hotels, 19 cruise ships, five airlines with 125 aircraft, tour operators in 18 countries. HTTP 200.
+
+actions:
+  apisYmlCreated: true
+  apisListed: 21
+  openapiDirectoryCreated: false
+  openapiReason: >-
+    No OpenAPI or Swagger document is published by TUI anywhere. Rather than fabricate one, the six
+    real machine-readable artifacts that do exist were harvested verbatim into collections/ and
+    schemas/ with full provenance recorded above.
+  collectionsHarvested: 5
+  schemasHarvested: 1
+  gitCommittedLocally: true
+  remoteCreated: false
