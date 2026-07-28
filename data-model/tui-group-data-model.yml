@@ -1,0 +1,2891 @@
+generated: '2026-07-28'
+method: derived
+source: openapi/*.yml — components.schemas $ref graph across all 21 harvested TUI OpenAPI documents
+description: 'Entity graph derived from the $ref links inside each product spec. TUI publishes no cross-product
+  object reference and the specs do not share a components namespace, so the graph is per-API rather than
+  provider-wide. Two of the specs are vendor models re-exposed under TUI paths rather than TUI-authored
+  models: the NDC Gateway re-exports 544 fully-qualified Navitaire.Ndc.* IATA NDC 21.3 message types,
+  and the New Skies Digital API carries 1,738 Navitaire schemas. relationships[] is truncated at 60 edges
+  per API; the specs remain the source of truth.'
+identifiers:
+- id: PackageID
+  domain: packages (G7 / Supply)
+  shape: GUID
+  portable: false
+  evidence: G7 AvailabilityRequest <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>
+- id: accommodationIds
+  domain: search / content
+  portable: false
+  evidence: search-walldy POST /offers required key; no GIATA id or chain code appears in any published
+    spec
+- id: OfferID / OrderID
+  domain: NDC
+  portable: false
+  evidence: Navitaire-issued opaque keys throughout the NDC 21.3 message set
+- id: journeyKey / segmentKey / passengerKey / paymentKey / unitKey
+  domain: New Skies
+  portable: false
+  evidence: openapi/tui-group-tui-newskies-digital-api-openapi.yml path parameters
+- id: IATA station and carrier codes, ISO 3166 country codes
+  domain: flights
+  portable: true
+  evidence: NSKCC Availability Search parameters departureStationCodes / carrierCodes / departureCountries
+- id: anvrcode
+  domain: Dutch travel trade
+  portable: true
+  evidence: four-digit ANVR accreditation number required as a header on every G7 request
+apis:
+- api: tui-group:tui-newskies-digital-api
+  openapi: openapi/tui-group-tui-newskies-digital-api-openapi.yml
+  schema_count: 1738
+  relationship_count: 2907
+  root_entities:
+  - IJsonResponseOfPricingConfiguration
+  - PricingConfiguration
+  - PricingSetting
+  - PricingProvider
+  - PricingProduct
+  - ErrorResponse
+  - Exception
+  - Message
+  - MessageStatus
+  - MessageDebug
+  - IJsonResponse
+  - IJsonResponseOfIListOfPriceOffer
+  relationships:
+  - from: IJsonResponseOfPricingConfiguration
+    to: PricingConfiguration
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfPricingConfiguration
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfPricingConfiguration
+    to: Message
+    kind: has_many
+    via: messages
+  - from: PricingConfiguration
+    to: PricingSetting
+    kind: has_many
+    via: settings
+  - from: PricingConfiguration
+    to: PricingProvider
+    kind: has_many
+    via: providers
+  - from: PricingProvider
+    to: PricingProduct
+    kind: has_many
+    via: products
+  - from: ErrorResponse
+    to: Exception
+    kind: has_one
+    via: exception
+  - from: Exception
+    to: Exception
+    kind: has_one
+    via: InnerException
+  - from: Message
+    to: MessageStatus
+    kind: has_one
+    via: status
+  - from: MessageDebug
+    to: MessageStatus
+    kind: has_one
+    via: status
+  - from: IJsonResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: IJsonResponseOfIListOfPriceOffer
+    to: PriceOffer
+    kind: has_many
+    via: data
+  - from: IJsonResponseOfIListOfPriceOffer
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfIListOfPriceOffer
+    to: Message
+    kind: has_many
+    via: messages
+  - from: PriceOffer
+    to: KeyValuePairOfStringAndString
+    kind: has_many
+    via: outputParameters
+  - from: ApoPriceRequest
+    to: ApoPricingStage
+    kind: has_one
+    via: stage
+  - from: ApoPriceRequest
+    to: PriceInputParameters
+    kind: has_many
+    via: inputParameters
+  - from: ApoPriceRequest
+    to: PriceRequestProduct
+    kind: has_many
+    via: products
+  - from: PriceRequestProduct
+    to: PriceInputParameters
+    kind: has_many
+    via: inputParameters
+  - from: IJsonResponseOfEnvironmentHealth
+    to: EnvironmentHealth
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfEnvironmentHealth
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfEnvironmentHealth
+    to: Message
+    kind: has_many
+    via: messages
+  - from: EnvironmentHealth
+    to: HealthStatus
+    kind: has_one
+    via: status
+  - from: EnvironmentHealth
+    to: HealthInformation
+    kind: has_many
+    via: nodes
+  - from: HealthInformation
+    to: HealthStatus
+    kind: has_one
+    via: status
+  - from: IJsonResponseOfListOfString
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfListOfString
+    to: Message
+    kind: has_many
+    via: messages
+  - from: IJsonResponseOfTokenResponse
+    to: TokenResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfTokenResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfTokenResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: IJsonResponseOfObject
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfObject
+    to: Message
+    kind: has_many
+    via: messages
+  - from: UpdateVerifiedTravelDocumentsRequest
+    to: VerifiedTravelDocument
+    kind: has_many
+    via: verifiedTravelDocuments
+  - from: BlockSeatsRequest
+    to: SeatBlockType
+    kind: has_one
+    via: blockType
+  - from: IJsonResponseOfInventoryLegv2
+    to: InventoryLegv2
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfInventoryLegv2
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfInventoryLegv2
+    to: Message
+    kind: has_many
+    via: messages
+  - from: InventoryLegv2
+    to: InventoryLegInformation
+    kind: has_one
+    via: legInformation
+  - from: InventoryLegv2
+    to: OperatingInformation
+    kind: has_one
+    via: operatingInformation
+  - from: InventoryLegv2
+    to: TransportationIdentifier
+    kind: has_one
+    via: identifier
+  - from: InventoryLegv2
+    to: TransportationDesignator
+    kind: has_one
+    via: designator
+  - from: InventoryLegv2
+    to: InventoryLegNest
+    kind: has_many
+    via: nests
+  - from: InventoryLegv2
+    to: LegMoveControls
+    kind: has_one
+    via: legMoveControls
+  - from: InventoryLegv2
+    to: LegSsr
+    kind: has_many
+    via: legSsrs
+  - from: InventoryLegv2
+    to: LegCrossReference
+    kind: has_many
+    via: legCrossReferences
+  - from: InventoryLegInformation
+    to: LegStatus
+    kind: has_one
+    via: status
+  - from: InventoryLegInformation
+    to: CodeShareIndicator
+    kind: has_one
+    via: codeShareIndicator
+  - from: InventoryLegNest
+    to: NestType
+    kind: has_one
+    via: type
+  - from: InventoryLegNest
+    to: InventoryLegClass
+    kind: has_many
+    via: classes
+  - from: InventoryLegClass
+    to: ClassOfServiceType
+    kind: has_one
+    via: type
+  - from: InventoryLegClass
+    to: ClassStatus
+    kind: has_one
+    via: status
+  - from: InventoryLegClass
+    to: SeatsSoldBase
+    kind: has_one
+    via: seatsSold
+  - from: LegMoveControls
+    to: FlyAheadControls
+    kind: has_one
+    via: flyAhead
+  - from: FlyAheadControls
+    to: FlyAheadOfferStatus
+    kind: has_one
+    via: offerStatus
+  - from: LegCrossReference
+    to: MarketInformation
+    kind: has_one
+    via: marketInformation
+  - from: MarketInformation
+    to: TransportationIdentifier
+    kind: has_one
+    via: identifier
+  - from: InventoryLegEditv2Request
+    to: LegStatusRequestType
+    kind: has_one
+    via: status
+  - from: ClassEditDetails
+    to: ClassOfServiceType
+    kind: has_one
+    via: type
+  - from: IJsonResponseOfBoardPassengerResponsev2
+    to: BoardPassengerResponsev2
+    kind: has_one
+    via: data
+  relationships_truncated: true
+- api: tui-group:tui-flight-ndc-gateway
+  openapi: openapi/tui-group-tui-flight-ndc-gateway-openapi.yml
+  schema_count: 544
+  relationship_count: 948
+  root_entities:
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AddlNameType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AirlineTaxonomyType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AllianceType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AvailPeriodType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BDC_Type
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BagDisclosureRuleTypeCodeType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+  - Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageDisclosureType
+  relationships:
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AddlNameType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType
+    kind: has_one
+    via: nameTypeCode
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AirlineTaxonomyType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.TaxonomyFeatureType
+    kind: has_many
+    via: taxonomyFeature
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AllianceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CarrierType
+    kind: has_many
+    via: carrier
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BDC_Type
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType
+    kind: has_one
+    via: bagRuleCode
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AirlineTaxonomyType
+    kind: has_one
+    via: airlineTaxonomy
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BDC_Type
+    kind: has_one
+    via: bdc
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DimensionAllowanceType
+    kind: has_many
+    via: maximumDimensionAllowance
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DimensionAllowanceType
+    kind: has_many
+    via: minimumDimensionAllowance
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PieceAllowanceType
+    kind: has_one
+    via: pieceAllowance
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.WeightAllowanceType
+    kind: has_many
+    via: weightAllowance
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageDisclosureType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BDC_Type
+    kind: has_one
+    via: bdc
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageDisclosureType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DescType
+    kind: has_many
+    via: desc
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageDisclosureType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BagDisclosureRuleTypeCodeType
+    kind: has_one
+    via: ruleTypeCode
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BookingInstructionsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.SpecialServiceType
+    kind: has_many
+    via: specialService
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BookingRefType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BookingEntityType
+    kind: has_one
+    via: bookingEntity
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayeeDataType
+    kind: has_one
+    via: clearancePayeeData
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DigitalSignatureType
+    kind: has_one
+    via: clearancePayeeSignature
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayerDataType
+    kind: has_one
+    via: clearancePayerData
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DigitalSignatureType
+    kind: has_one
+    via: clearancePayerSignature
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: netClearanceAmount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceMethodsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CommissionType
+    kind: has_one
+    via: commission
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearanceMethodsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: netClearanceAmount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayeeDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayeeType
+    kind: has_one
+    via: clearancePayee
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayerDataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ClearancePayerType
+    kind: has_one
+    via: clearancePayer
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CodesetMetadataType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.LangUsageType
+    kind: has_one
+    via: langUsage
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CollectionPointTaxType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: airportAmount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CollectionPointTaxType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.StationType
+    kind: has_one
+    via: station
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CommissionType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: amount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CommissionType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: percentageAppliedToAmount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.EmailAddressType
+    kind: has_many
+    via: emailAddress
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.IndividualType
+    kind: has_one
+    via: individual
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.OtherAddressType
+    kind: has_many
+    via: otherAddress
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PhoneType
+    kind: has_many
+    via: phone
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PostalAddressType
+    kind: has_many
+    via: postalAddress
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CryptographyKeyType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.KeyValueType
+    kind: has_one
+    via: keyValue
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CurConversionType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: amount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CurConversionType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.RateType
+    kind: has_one
+    via: conversionRate
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CurConversionType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AmountType
+    kind: has_one
+    via: localAmount
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CurParameterType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.CurAppCodeType
+    kind: has_one
+    via: appCode
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageAllowanceType
+    kind: has_many
+    via: baggageAllowanceList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.BaggageDisclosureType
+    kind: has_many
+    via: baggageDisclosureList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType
+    kind: has_many
+    via: contactInfoList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedMarketingSegmentType
+    kind: has_many
+    via: datedMarketingSegmentList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedOperatingLegType
+    kind: has_many
+    via: datedOperatingLegList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedOperatingSegmentType
+    kind: has_many
+    via: datedOperatingSegmentList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DisclosureType
+    kind: has_many
+    via: disclosureList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.OriginDestType
+    kind: has_many
+    via: originDestList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PaxJourneyType
+    kind: has_many
+    via: paxJourneyList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PaxType
+    kind: has_many
+    via: paxList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PaxSegmentType
+    kind: has_many
+    via: paxSegmentList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PenaltyType
+    kind: has_many
+    via: penaltyList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.PriceClassType
+    kind: has_many
+    via: priceClassList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.SeatProfileType
+    kind: has_many
+    via: seatProfileList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.ServiceDefinitionType
+    kind: has_many
+    via: serviceDefinitionList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DataListsType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.TermType
+    kind: has_many
+    via: termsList
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedMarketingSegmentType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AirlineTaxonomyType
+    kind: has_many
+    via: airlineTaxonomy
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedMarketingSegmentType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.TransportPointType
+    kind: has_one
+    via: arrival
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedMarketingSegmentType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.TransportPointType
+    kind: has_one
+    via: dep
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedMarketingSegmentType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.MediaResourceRefType
+    kind: has_many
+    via: richMedia
+  - from: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.DatedOperatingLegType
+    to: Navitaire.Ndc.Selling.Application.IataMessageHandlers.v213.IataMessages.AirlineTaxonomyType
+    kind: has_many
+    via: airlineTaxonomy
+  relationships_truncated: true
+- api: tui-group:tui-newskies-gonow-api
+  openapi: openapi/tui-group-tui-newskies-gonow-api-openapi.yml
+  schema_count: 270
+  relationship_count: 362
+  root_entities:
+  - IJsonResponseOfBaggageAddResponse
+  - BaggageAddResponse
+  - ErrorResponse
+  - Exception
+  - Message
+  - MessageStatus
+  - MessageDebug
+  - IJsonResponse
+  - BaggageAddRequest
+  - PassengerBagRequest
+  - ProcessBaggageActionType
+  - WeightType
+  relationships:
+  - from: IJsonResponseOfBaggageAddResponse
+    to: BaggageAddResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfBaggageAddResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfBaggageAddResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: ErrorResponse
+    to: Exception
+    kind: has_one
+    via: exception
+  - from: Exception
+    to: Exception
+    kind: has_one
+    via: InnerException
+  - from: Message
+    to: MessageStatus
+    kind: has_one
+    via: status
+  - from: MessageDebug
+    to: MessageStatus
+    kind: has_one
+    via: status
+  - from: IJsonResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: BaggageAddRequest
+    to: PassengerBagRequest
+    kind: has_many
+    via: bags
+  - from: PassengerBagRequest
+    to: ProcessBaggageActionType
+    kind: has_one
+    via: baggageStatus
+  - from: PassengerBagRequest
+    to: WeightType
+    kind: has_one
+    via: weightType
+  - from: BaggageAddRequestV3
+    to: PassengerBagRequestV3
+    kind: has_many
+    via: bags
+  - from: PassengerBagRequestV3
+    to: ProcessBaggageActionType
+    kind: has_one
+    via: status
+  - from: PassengerBagRequestV3
+    to: WeightType
+    kind: has_one
+    via: weightType
+  - from: IJsonResponseOfBoardingClearanceResponse
+    to: BoardingClearanceResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfBoardingClearanceResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfBoardingClearanceResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: BoardingClearanceRequest
+    to: BoardingClearanceOverride
+    kind: has_many
+    via: overrides
+  - from: BoardingClearanceOverride
+    to: AppsOverrideDataType
+    kind: has_one
+    via: appsDataType
+  - from: BoardingClearanceOverride
+    to: GovernmentProgramType
+    kind: has_one
+    via: governmentProgramType
+  - from: IJsonResponseOfString
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfString
+    to: Message
+    kind: has_many
+    via: messages
+  - from: BoardingClearanceBatchRequest
+    to: ManifestPassengerFilterType
+    kind: has_one
+    via: filterType
+  - from: IJsonResponseOfBgrCommandsResponse
+    to: BgrCommandsResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfBgrCommandsResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfBgrCommandsResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: disconnectCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: activateCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: deactivateCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: preBoardCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardSuccessTokenizedCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardSuccessAndPrintReceiptTokenizedCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardSuccessWithWarningTokenizedCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardSuccessWithWarningAndPrintReceiptTokenizedCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardVerificationTokenizedCommands
+  - from: BgrCommandsResponse
+    to: DeviceCommand
+    kind: has_many
+    via: postBoardFailureTokenizedCommands
+  - from: IJsonResponseOfListOfBookingSummary
+    to: BookingSummary
+    kind: has_many
+    via: data
+  - from: IJsonResponseOfListOfBookingSummary
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfListOfBookingSummary
+    to: Message
+    kind: has_many
+    via: messages
+  - from: BookingSummary
+    to: BookingStatus
+    kind: has_one
+    via: bookingStatus
+  - from: BookingSummary
+    to: ChannelType
+    kind: has_one
+    via: channelType
+  - from: BookingSummary
+    to: Name
+    kind: has_one
+    via: name
+  - from: SearchByScanRequestV2
+    to: ParseScanRequestV2
+    kind: has_one
+    via: scan
+  - from: IJsonResponseOfCheckinGeneralRequirementsResponse
+    to: CheckinGeneralRequirementsResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfCheckinGeneralRequirementsResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfCheckinGeneralRequirementsResponse
+    to: Message
+    kind: has_many
+    via: messages
+  - from: CheckinGeneralRequirementsResponse
+    to: PassengerCheckinRequirements
+    kind: has_many
+    via: passengerRequirements
+  - from: CheckinGeneralRequirementsResponse
+    to: CheckinGeneralRequirementType
+    kind: has_many
+    via: bookingRestrictions
+  - from: PassengerCheckinRequirements
+    to: GeneralRequirement
+    kind: has_many
+    via: requirements
+  - from: PassengerCheckinRequirements
+    to: EmdCouponRequirement
+    kind: has_many
+    via: emdCouponRequirements
+  - from: PassengerCheckinRequirements
+    to: InvalidPricingRequirement
+    kind: has_many
+    via: invalidPricingRequirements
+  - from: PassengerCheckinRequirements
+    to: TicketRequirement
+    kind: has_many
+    via: ticketRequirements
+  - from: GeneralRequirement
+    to: CheckinGeneralRequirementType
+    kind: has_one
+    via: requirementType
+  - from: EmdCouponRequirement
+    to: CheckinGeneralRequirementType
+    kind: has_one
+    via: requirementType
+  - from: InvalidPricingRequirement
+    to: CheckinGeneralRequirementType
+    kind: has_one
+    via: requirementType
+  - from: TicketRequirement
+    to: CheckinGeneralRequirementType
+    kind: has_one
+    via: requirementType
+  - from: IJsonResponseOfCheckinSecurityRequirementsResponse
+    to: CheckinSecurityRequirementsResponse
+    kind: has_one
+    via: data
+  - from: IJsonResponseOfCheckinSecurityRequirementsResponse
+    to: ErrorResponse
+    kind: has_many
+    via: errors
+  - from: IJsonResponseOfCheckinSecurityRequirementsResponse
+    to: Message
+    kind: has_many
+    via: messages
+  relationships_truncated: true
+- api: tui-group:tui-b2bota-g7-travelmessage
+  openapi: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml
+  schema_count: 149
+  relationship_count: 201
+  root_entities:
+  - AccommodationType
+  - AgeType
+  - BoardType
+  - ClassTip
+  - ControlLanguage
+  - CurrencyType
+  - DocumentAddressTypeID
+  - DocumentDeliveryID
+  - DocumentTypeID
+  - DurationType
+  - DutchDays
+  - ExtrasCategoryType
+  relationships:
+  - from: AccoAssignment
+    to: Duration
+    kind: has_one
+    via: Duration
+  - from: AccoAssignment
+    to: BoardAssignment
+    kind: has_many
+    via: BoardAssignment
+  - from: AccoAssignment
+    to: UnitAssignment
+    kind: has_many
+    via: UnitAssignment
+  - from: AccoAssignment
+    to: ExtrasAssignment
+    kind: has_many
+    via: ExtrasAssignment
+  - from: Accommodation
+    to: AccommodationType
+    kind: has_one
+    via: AccommodationType
+  - from: Accommodation
+    to: ISOCountry
+    kind: has_one
+    via: CountryID
+  - from: Accommodation
+    to: GPSCode
+    kind: has_one
+    via: GPSCode
+  - from: Accommodation
+    to: Duration
+    kind: has_one
+    via: Duration
+  - from: Accommodation
+    to: Unit
+    kind: has_many
+    via: Unit
+  - from: Accommodation
+    to: Arrangement
+    kind: has_many
+    via: Arrangement
+  - from: Accommodation
+    to: Extras
+    kind: has_many
+    via: Extras
+  - from: Accommodation
+    to: MultiMedia
+    kind: has_many
+    via: MultiMedia
+  - from: AdditionalProducts
+    to: Extras
+    kind: has_many
+    via: Extras
+  - from: AdditionalProducts
+    to: TransportRental
+    kind: has_many
+    via: TransportRental
+  - from: AgeCondition
+    to: AgeType
+    kind: has_one
+    via: AgeType
+  - from: APAssignment
+    to: ExtrasAssignment
+    kind: has_many
+    via: ExtrasAssignment
+  - from: APAssignment
+    to: TRentalAssignment
+    kind: has_many
+    via: TRentalAssignment
+  - from: Arrangement
+    to: Duration
+    kind: has_one
+    via: Duration
+  - from: Arrival
+    to: Point
+    kind: has_one
+    via: Point
+  - from: Arrival
+    to: Time
+    kind: has_one
+    via: Time
+  - from: Arrival
+    to: DropOff
+    kind: has_one
+    via: DropOff
+  - from: ArrivalInfo
+    to: Point
+    kind: has_one
+    via: Point
+  - from: ArrivalInfo
+    to: DutchDays
+    kind: has_many
+    via: ArrivalDay
+  - from: Board
+    to: BoardType
+    kind: has_one
+    via: BoardType
+  - from: Board
+    to: PriceNote
+    kind: has_many
+    via: PriceNotes
+  - from: BoardAssignment
+    to: BoardType
+    kind: has_one
+    via: BoardType
+  - from: CancellationPolicy
+    to: DateAndTime
+    kind: has_many
+    via: CancellationPeriod
+  - from: Class
+    to: ClassTip
+    kind: has_one
+    via: Tip
+  - from: Class
+    to: CancellationInformation
+    kind: has_one
+    via: CancellationInformation
+  - from: Contact
+    to: Gender
+    kind: has_one
+    via: Gender
+  - from: DateAndTime
+    to: Time
+    kind: has_one
+    via: Time
+  - from: Departure
+    to: Point
+    kind: has_one
+    via: Point
+  - from: Departure
+    to: Time
+    kind: has_one
+    via: Time
+  - from: Departure
+    to: PickUp
+    kind: has_one
+    via: PickUp
+  - from: DepartureArrivalInfo
+    to: Point
+    kind: has_one
+    via: Point
+  - from: Duration
+    to: DurationType
+    kind: has_one
+    via: Duration
+  - from: Document
+    to: DocumentAddressTypeID
+    kind: has_many
+    via: DocumentAddressType
+  - from: DropOff
+    to: Point
+    kind: has_one
+    via: Point
+  - from: DropOff
+    to: Time
+    kind: has_one
+    via: Time
+  - from: Extras
+    to: YesNoValue
+    kind: has_one
+    via: Required
+  - from: Extras
+    to: YesNoValue
+    kind: has_one
+    via: CategoryChoice
+  - from: Extras
+    to: ExtrasCategoryType
+    kind: has_one
+    via: ExtrasCategory
+  - from: Extras
+    to: DateAndTime
+    kind: has_one
+    via: From
+  - from: Extras
+    to: DateAndTime
+    kind: has_one
+    via: To
+  - from: Extras
+    to: Status
+    kind: has_one
+    via: Status
+  - from: Extras
+    to: RecomPrice
+    kind: has_many
+    via: RecomPrice
+  - from: Extras
+    to: MultiMedia
+    kind: has_many
+    via: MultiMedia
+  - from: Extras
+    to: RelatedTransport
+    kind: has_many
+    via: RelatedTransport
+  - from: Extras
+    to: CancellationInformation
+    kind: has_one
+    via: CancellationInformation
+  - from: Extras
+    to: ExtrasPax
+    kind: has_many
+    via: ExtrasPax
+  - from: ExtrasAssignment
+    to: DateAndTime
+    kind: has_one
+    via: From
+  - from: ExtrasAssignment
+    to: DateAndTime
+    kind: has_one
+    via: To
+  - from: ExtrasAssignment
+    to: ExtrasPax
+    kind: has_many
+    via: ExtrasPax
+  - from: ExtrasAssignment
+    to: RelatedTransport
+    kind: has_many
+    via: RelatedTransport
+  - from: Facility
+    to: FacilityType
+    kind: has_one
+    via: FacilityType
+  - from: FulfilmentComponent
+    to: Document
+    kind: has_many
+    via: Document
+  - from: Insurance
+    to: RecomPrice
+    kind: has_many
+    via: RecomPrice
+  - from: Insurance
+    to: PriceType
+    kind: has_one
+    via: PriceType
+  - from: MultiMedia
+    to: MultiMediaFormatValues
+    kind: has_one
+    via: Format
+  - from: MultiMedia
+    to: MultiMediaTypeValues
+    kind: has_one
+    via: Type
+  relationships_truncated: true
+- api: tui-group:tui-holiday-offers-controller-api
+  openapi: openapi/tui-group-tui-holiday-offers-controller-api-openapi.yml
+  schema_count: 122
+  relationship_count: 159
+  root_entities:
+  - ValidationProblem
+  - Problem
+  - SearchOfferRequest
+  - CommercialProductType
+  - SearchOfferResponse
+  - Filter
+  - FilterOption
+  - FilterOptionType
+  - SearchRequestSortType
+  - SearchRequestDestination
+  - SearchRequestDeparture
+  - SearchRequestMetaInformation
+  relationships:
+  - from: ValidationProblem
+    to: Problem
+    kind: has_one
+    via: problem
+  - from: SearchOfferRequest
+    to: SearchRequestDeparture
+    kind: has_many
+    via: from
+  - from: SearchOfferRequest
+    to: SearchRequestDestination
+    kind: has_many
+    via: to
+  - from: SearchOfferRequest
+    to: SearchRequestDateRange
+    kind: has_one
+    via: dateRange
+  - from: SearchOfferRequest
+    to: SearchRequestUnitAllocation
+    kind: has_many
+    via: unitAllocations
+  - from: SearchOfferRequest
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: SearchOfferRequest
+    to: CommercialProductType
+    kind: has_one
+    via: commercialProductType
+  - from: SearchOfferRequest
+    to: SearchRequestSortType
+    kind: has_one
+    via: sortBy
+  - from: SearchOfferRequest
+    to: SearchRequestMetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: SearchOfferRequest
+    to: Filter
+    kind: has_many
+    via: filters
+  - from: SearchOfferResponse
+    to: Filter
+    kind: has_many
+    via: filters
+  - from: SearchOfferResponse
+    to: PackageHoliday
+    kind: has_one
+    via: holidays
+  - from: Filter
+    to: FilterType
+    kind: has_one
+    via: code
+  - from: Filter
+    to: FilterOption
+    kind: has_many
+    via: options
+  - from: FilterOption
+    to: FilterOption
+    kind: has_many
+    via: options
+  - from: FilterOption
+    to: FilterOptionType
+    kind: has_one
+    via: type
+  - from: FilterOption
+    to: ListOfferShortDescription
+    kind: has_many
+    via: shortDescription
+  - from: SearchRequestDestination
+    to: FilterOptionType
+    kind: has_one
+    via: type
+  - from: SearchRequestMetaInformation
+    to: SellingTarget
+    kind: has_one
+    via: target
+  - from: SearchRequestMetaInformation
+    to: SourceMarket
+    kind: has_one
+    via: sourceMarket
+  - from: SearchRequestMetaInformation
+    to: Brand
+    kind: has_one
+    via: brand
+  - from: SearchRequestMetaInformation
+    to: Medium
+    kind: has_one
+    via: medium
+  - from: SearchRequestMetaInformation
+    to: Currency
+    kind: has_one
+    via: currency
+  - from: SearchRequestUnitAllocation
+    to: UnitAllocationType
+    kind: has_one
+    via: unitType
+  - from: AccommodationControllerResponse
+    to: UnitResponse
+    kind: has_many
+    via: units
+  - from: AccommodationControllerResponse
+    to: Concept
+    kind: has_many
+    via: concepts
+  - from: AccommodationControllerResponse
+    to: Overview
+    kind: has_one
+    via: overview
+  - from: CanxResponse
+    to: CancellationRuleResponse
+    kind: has_many
+    via: cancellationRule
+  - from: FlightComponentResponse
+    to: FlightLegFlightComponent
+    kind: has_many
+    via: flightLegs
+  - from: Holidays
+    to: OfferResponse
+    kind: has_many
+    via: offers
+  - from: PackageHoliday
+    to: PackageOfferResponse
+    kind: has_many
+    via: offers
+  - from: ListOfferChannel
+    to: SiteID
+    kind: has_one
+    via: siteID
+  - from: ListOfferChannel
+    to: SellingTarget
+    kind: has_one
+    via: target
+  - from: ListOfferChannel
+    to: SourceMarket
+    kind: has_one
+    via: sourceMarket
+  - from: ListOfferChannel
+    to: Brand
+    kind: has_one
+    via: brand
+  - from: ListOfferChannel
+    to: Medium
+    kind: has_one
+    via: medium
+  - from: ListOfferDestination
+    to: ToType
+    kind: has_one
+    via: type
+  - from: ListOfferOption
+    to: ListOfferOption
+    kind: has_many
+    via: options
+  - from: ListOfferOption
+    to: ListOfferShortDescription
+    kind: has_many
+    via: shortDescription
+  - from: ListOfferTransferUnit
+    to: TransferUnitAllocations
+    kind: has_many
+    via: unitAllocations
+  - from: OfferResponse
+    to: ChannelControllerResponse
+    kind: has_one
+    via: channel
+  - from: OfferResponse
+    to: Price
+    kind: has_one
+    via: price
+  - from: OfferResponse
+    to: AccommodationControllerResponse
+    kind: has_many
+    via: accommodations
+  - from: OfferResponse
+    to: TransportResponse
+    kind: has_one
+    via: transport
+  - from: OfferResponse
+    to: Transfer
+    kind: has_many
+    via: transfers
+  - from: OfferResponse
+    to: CanxResponse
+    kind: has_one
+    via: canx
+  - from: PackageOfferResponse
+    to: PackagePrice
+    kind: has_many
+    via: prices
+  - from: PackageOfferResponse
+    to: AccommodationOfferResponse
+    kind: has_many
+    via: accommodations
+  - from: PackageOfferResponse
+    to: PackageOfferFlight
+    kind: has_many
+    via: flight
+  - from: PackageOfferResponse
+    to: TransferResponse
+    kind: has_many
+    via: transfers
+  - from: PackageOfferResponse
+    to: LuggageResponse
+    kind: has_many
+    via: luggage
+  - from: PackageOfferResponse
+    to: CancellationResponse
+    kind: has_one
+    via: freeCancellation
+  - from: PackageOfferFlight
+    to: DirectionType
+    kind: has_one
+    via: type
+  - from: PackageOfferFlight
+    to: FlightSegment
+    kind: has_many
+    via: segments
+  - from: FlightSegment
+    to: FlightLeg
+    kind: has_many
+    via: legs
+  - from: FlightSegment
+    to: SourcingCategory
+    kind: has_one
+    via: sourcingCategory
+  - from: TransferResponse
+    to: DirectionType
+    kind: has_one
+    via: direction
+  - from: CancellationResponse
+    to: CancellationRuleResponse
+    kind: has_many
+    via: cancellationRule
+  - from: AccommodationOfferResponse
+    to: StayDuration
+    kind: has_one
+    via: duration
+  - from: AccommodationOfferResponse
+    to: RoomBoardData
+    kind: has_many
+    via: rooms
+  relationships_truncated: true
+- api: tui-group:tui-cruise-price-and-availability
+  openapi: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml
+  schema_count: 78
+  relationship_count: 154
+  root_entities:
+  - CruiseOffersRequest
+  - CruiseFlightVariantRequest
+  - CruiseUniqueRequest
+  - CruiseStayOfferRequest
+  - CruiseOfferRequest
+  - CruiseOfferRequestV2
+  - CruiseAlternateCabinAndBoardOffers
+  - CruiseStayUpsellOfferRequest
+  - CruiseStayUpsellRequest
+  - MetaInformation
+  - Destinations
+  - CruiseRequest
+  relationships:
+  - from: CruiseOffersRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CruiseOffersRequest
+    to: Airports
+    kind: has_one
+    via: departureAirports
+  - from: CruiseOffersRequest
+    to: Destinations
+    kind: has_one
+    via: to
+  - from: CruiseOffersRequest
+    to: StayDuration
+    kind: has_one
+    via: stayDuration
+  - from: CruiseOffersRequest
+    to: DateRange
+    kind: has_one
+    via: dateRange
+  - from: CruiseOffersRequest
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: CruiseOffersRequest
+    to: Cabins
+    kind: has_one
+    via: cabins
+  - from: CruiseFlightVariantRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CruiseFlightVariantRequest
+    to: Airports
+    kind: has_one
+    via: departureAirports
+  - from: CruiseFlightVariantRequest
+    to: CruiseOfferRequest
+    kind: has_one
+    via: offer
+  - from: CruiseUniqueRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CruiseUniqueRequest
+    to: CruiseOfferRequest
+    kind: has_one
+    via: offer
+  - from: CruiseStayOfferRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CruiseStayOfferRequest
+    to: CruiseOfferRequestV2
+    kind: has_one
+    via: offer
+  - from: CruiseOfferRequest
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseOfferRequest
+    to: OfferGroupRequest
+    kind: has_one
+    via: offerGroup
+  - from: CruiseOfferRequest
+    to: CruiseRequest
+    kind: has_one
+    via: cruise
+  - from: CruiseOfferRequest
+    to: StayRequest
+    kind: has_one
+    via: stay
+  - from: CruiseOfferRequest
+    to: FlightRequest
+    kind: has_many
+    via: flight
+  - from: CruiseOfferRequest
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: CruiseOfferRequestV2
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseOfferRequestV2
+    to: OfferGroupRequest
+    kind: has_one
+    via: offerGroup
+  - from: CruiseOfferRequestV2
+    to: CruiseRequest
+    kind: has_one
+    via: cruise
+  - from: CruiseOfferRequestV2
+    to: StayRequest
+    kind: has_one
+    via: stay
+  - from: CruiseOfferRequestV2
+    to: FlightRequest
+    kind: has_many
+    via: flight
+  - from: CruiseOfferRequestV2
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: OfferGroup
+    kind: has_one
+    via: offerGroup
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: CruiseV2
+    kind: has_one
+    via: cruise
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: StayResponse
+    kind: has_many
+    via: stay
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: FlightResponse
+    kind: has_many
+    via: flights
+  - from: CruiseAlternateCabinAndBoardOffers
+    to: Extras
+    kind: has_many
+    via: extras
+  - from: CruiseStayUpsellOfferRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CruiseStayUpsellOfferRequest
+    to: CruiseStayUpsellRequest
+    kind: has_one
+    via: offer
+  - from: CruiseStayUpsellRequest
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseStayUpsellRequest
+    to: OfferGroupRequest
+    kind: has_one
+    via: offerGroup
+  - from: CruiseStayUpsellRequest
+    to: CruiseRequest
+    kind: has_one
+    via: cruise
+  - from: CruiseStayUpsellRequest
+    to: StayRequest
+    kind: has_one
+    via: stay
+  - from: CruiseStayUpsellRequest
+    to: FlightRequest
+    kind: has_many
+    via: flight
+  - from: CruiseStayUpsellRequest
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: CruiseRequest
+    to: Itinerary
+    kind: has_many
+    via: sailing
+  - from: CruiseRequest
+    to: Point
+    kind: has_many
+    via: sailing
+  - from: CruiseRequest
+    to: Ship
+    kind: has_many
+    via: sailing
+  - from: StayRequest
+    to: StayDuration
+    kind: has_one
+    via: duration
+  - from: FlightRequest
+    to: DirectionType
+    kind: has_many
+    via: directions
+  - from: Traveller
+    to: PersonType
+    kind: has_one
+    via: type
+  - from: CruiseHolidays
+    to: CruiseOffers
+    kind: has_many
+    via: offers
+  - from: CruiseOffers
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseOffers
+    to: OfferGroup
+    kind: has_one
+    via: offerGroup
+  - from: CruiseOffers
+    to: CruiseResponse
+    kind: has_one
+    via: cruise
+  - from: CruiseOffers
+    to: StayResponse
+    kind: has_many
+    via: stay
+  - from: CruiseOffers
+    to: FlightResponse
+    kind: has_many
+    via: flights
+  - from: CruiseOffers
+    to: Extras
+    kind: has_many
+    via: extras
+  - from: CruiseOffers
+    to: PriceDetail
+    kind: has_many
+    via: prices
+  - from: CruiseFlightVariants
+    to: CruiseOffers
+    kind: has_many
+    via: offers
+  - from: CruiseStayVariants
+    to: CruiseType
+    kind: has_one
+    via: type
+  - from: CruiseStayVariants
+    to: CruiseResponse
+    kind: has_one
+    via: cruise
+  - from: CruiseStayVariants
+    to: OfferGroup
+    kind: has_many
+    via: stayVariants
+  - from: CruiseStayVariants
+    to: PriceDetail
+    kind: has_many
+    via: stayVariants
+  - from: CruiseStayVariants
+    to: StayResponse
+    kind: has_many
+    via: stayVariants
+  relationships_truncated: true
+- api: tui-group:tui-cruise-booking-apis
+  openapi: openapi/tui-group-tui-cruise-booking-apis-openapi.yml
+  schema_count: 61
+  relationship_count: 72
+  root_entities:
+  - ConfirmHolidayRequest
+  - ConfirmHolidayResponse
+  - ValidateHolidayRequest
+  - ValidateHolidayResponse
+  - InfoBookingRequest
+  - TILInfoBookingResponse
+  - TUITILResponse
+  - InfoBookingResponse
+  - ValHolidayRequestAdm
+  - ValHolidayResponseAdm
+  - ValHolidayRequestBkg_Ent
+  - ValHolidayResponseBkg_Ent
+  relationships:
+  - from: ValidateHolidayRequest
+    to: InfoBookingRequest
+    kind: has_one
+    via: InfoBookingRequest
+  - from: ValidateHolidayResponse
+    to: TILInfoBookingResponse
+    kind: has_one
+    via: TILInfoBookingResponse
+  - from: InfoBookingRequest
+    to: ValHolidayRequestAdm
+    kind: has_one
+    via: Adm
+  - from: InfoBookingRequest
+    to: ValHolidayRequestBkg_Ent
+    kind: has_one
+    via: Bkg_Ent
+  - from: InfoBookingRequest
+    to: Pax
+    kind: has_many
+    via: Pax
+  - from: InfoBookingRequest
+    to: ValHolidayRequestSource
+    kind: has_one
+    via: Source
+  - from: InfoBookingRequest
+    to: ValHolidayRequestSub_Source
+    kind: has_one
+    via: Sub_Source
+  - from: TILInfoBookingResponse
+    to: TUITILResponse
+    kind: has_one
+    via: TUITILResponse
+  - from: TILInfoBookingResponse
+    to: InfoBookingResponse
+    kind: has_one
+    via: InfoBookingResponse
+  - from: InfoBookingResponse
+    to: ValHolidayResponseAdm
+    kind: has_one
+    via: Adm
+  - from: InfoBookingResponse
+    to: ValHolidayResponseCltInfo
+    kind: has_one
+    via: CltInfo
+  - from: InfoBookingResponse
+    to: ValHolidayResponseBkg_Ent
+    kind: has_one
+    via: Bkg_Ent
+  - from: InfoBookingResponse
+    to: PayData
+    kind: has_one
+    via: PayData
+  - from: InfoBookingResponse
+    to: Pax
+    kind: has_many
+    via: Pax
+  - from: InfoBookingResponse
+    to: ValHolidayResponseProm
+    kind: has_one
+    via: Prom
+  - from: InfoBookingResponse
+    to: ValHolidayResponseSource
+    kind: has_one
+    via: Source
+  - from: InfoBookingResponse
+    to: ValHolidayResponseSub_Source
+    kind: has_one
+    via: Sub_Source
+  - from: ValHolidayRequestBkg_Ent
+    to: ValHolidayRequestAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayRequestBkg_Ent
+    to: ValHolidayRequestPackage
+    kind: has_one
+    via: Package
+  - from: ValHolidayRequestBkg_Ent
+    to: Item
+    kind: has_many
+    via: Item
+  - from: ValHolidayResponseBkg_Ent
+    to: ValHolidayResponseAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayResponseBkg_Ent
+    to: ValHolidayResponsePackage
+    kind: has_one
+    via: Package
+  - from: ValHolidayResponseBkg_Ent
+    to: ValHolidayResponseItem_Element
+    kind: has_many
+    via: Item
+  - from: ValHolidayResponseBkg_Ent
+    to: Flt_Extra_Cat_List
+    kind: has_one
+    via: Flt_Extra_Cat_List
+  - from: ValHolidayResponseBkg_Ent
+    to: Summary_Prices
+    kind: has_one
+    via: Summary_Prices
+  - from: ValHolidayRequestPackage
+    to: ValHolidayRequestAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayRequestPackage
+    to: ValHolidayRequestMultiCentre
+    kind: has_one
+    via: MultiCentre
+  - from: ValHolidayRequestPackage
+    to: ValHolidayRequestRoute_List
+    kind: has_one
+    via: Route_List
+  - from: ValHolidayResponsePackage
+    to: ValHolidayResponseAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayResponsePackage
+    to: ValHolidayResponseMultiCentre
+    kind: has_one
+    via: MultiCentre
+  - from: ValHolidayResponsePackage
+    to: ValHolidayResponseRoute_List
+    kind: has_one
+    via: Route_List
+  - from: ValHolidayRequestMultiCentre
+    to: ValHolidayRequestMultiCentreProduct
+    kind: has_one
+    via: MC_Prd
+  - from: ValHolidayRequestMultiCentre
+    to: RoomCode
+    kind: has_one
+    via: Rm_Cd
+  - from: ValHolidayRequestMultiCentre
+    to: ValHolidayRequestOfferChoice
+    kind: has_many
+    via: Offer_Choice
+  - from: ValHolidayResponseMultiCentre
+    to: Memo
+    kind: has_one
+    via: Memo
+  - from: ValHolidayResponseMultiCentre
+    to: Transfer_Info
+    kind: has_one
+    via: Transfer_Info
+  - from: ValHolidayResponseMultiCentre
+    to: ValHolidayResponseMultiCentreProduct
+    kind: has_one
+    via: MC_Prd
+  - from: ValHolidayResponseMultiCentre
+    to: ValHolidayResponseRoomCode
+    kind: has_one
+    via: Rm_Cd
+  - from: ValHolidayResponseMultiCentre
+    to: ValHolidayResponseOfferChoice
+    kind: has_many
+    via: Offer_Choice
+  - from: ValHolidayRequestMultiCentreProduct
+    to: Prom
+    kind: has_one
+    via: Prom
+  - from: ValHolidayResponseMultiCentreProduct
+    to: ValHolidayResponseProm
+    kind: has_one
+    via: Prom
+  - from: ValHolidayResponseRoomCode
+    to: SubServicePassengers
+    kind: has_one
+    via: SubServPaxs
+  - from: ValHolidayResponseRoomCode
+    to: Prices
+    kind: has_one
+    via: Prices
+  - from: ValHolidayRequestOfferChoice
+    to: ValHolidayRequestAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayResponseOfferChoice
+    to: ValHolidayResponseAccommodation
+    kind: has_one
+    via: Accom
+  - from: ValHolidayRequestAccommodation
+    to: ValHolidayRequestHotelProduct
+    kind: has_one
+    via: HtlPrd
+  - from: ValHolidayRequestAccommodation
+    to: RoomCode
+    kind: has_one
+    via: Rm_Cd
+  - from: ValHolidayResponseAccommodation
+    to: ValHolidayResponseHotelProduct
+    kind: has_one
+    via: HtlPrd
+  - from: ValHolidayResponseAccommodation
+    to: ValHolidayResponseRoomCode
+    kind: has_one
+    via: Rm_Cd
+  - from: ValHolidayResponseAccommodation
+    to: Memo
+    kind: has_one
+    via: Memo
+  - from: ValHolidayRequestHotelProduct
+    to: Prom
+    kind: has_one
+    via: Prom
+  - from: ValHolidayRequestRoute_List
+    to: ValHolidayRequestRouting
+    kind: has_one
+    via: Routing
+  - from: ValHolidayResponseRoute_List
+    to: ValHolidayResponseRouting
+    kind: has_one
+    via: Routing
+  - from: ValHolidayRequestRouting
+    to: ValHolidayRequestRoute
+    kind: has_many
+    via: Route
+  - from: ValHolidayResponseRouting
+    to: ValHolidayResponseRoute
+    kind: has_many
+    via: Route
+  - from: ValHolidayRequestRoute
+    to: ValHolidayRequestFlight_DateTime
+    kind: has_many
+    via: Flt_Dt_Tm
+  - from: ValHolidayRequestRoute
+    to: Prom
+    kind: has_one
+    via: Prom
+  - from: ValHolidayRequestRoute
+    to: ValHolidayRequestSec
+    kind: has_one
+    via: Sec
+  - from: ValHolidayRequestRoute
+    to: SubServPaxs
+    kind: has_one
+    via: SubServPaxs
+  - from: ValHolidayResponseRoute
+    to: ValHolidayResponseFlight_DateTime
+    kind: has_many
+    via: Flt_Dt_Tm
+  relationships_truncated: true
+- api: tui-group:tui-cruise-cabin-availability
+  openapi: openapi/tui-group-tui-cruise-cabin-availability-openapi.yml
+  schema_count: 53
+  relationship_count: 90
+  root_entities:
+  - Address
+  - Assignment
+  - Cabin
+  - CabinAvailabilityRequest
+  - CabinAvailabilityResponse
+  - CabinGrade
+  - CabinType
+  - ContactPoint
+  - Currency
+  - Item
+  - MasterCabinGrade
+  - Message
+  relationships:
+  - from: Assignment
+    to: Item
+    kind: has_one
+    via: item
+  - from: Cabin
+    to: CabinType
+    kind: has_one
+    via: cabinType
+  - from: Cabin
+    to: TravellerRef
+    kind: has_many
+    via: travellers
+  - from: Cabin
+    to: PriceDetail
+    kind: has_one
+    via: prices
+  - from: CabinAvailabilityRequest
+    to: MetaInformation
+    kind: has_one
+    via: metaInformation
+  - from: CabinAvailabilityRequest
+    to: Cruise
+    kind: has_one
+    via: cruise
+  - from: CabinAvailabilityRequest
+    to: Flight
+    kind: has_many
+    via: flights
+  - from: CabinAvailabilityRequest
+    to: CabinPackageInventory
+    kind: has_one
+    via: inventory
+  - from: CabinAvailabilityResponse
+    to: Cabin
+    kind: has_many
+    via: cabins
+  - from: CabinAvailabilityResponse
+    to: Message
+    kind: has_one
+    via: messages
+  - from: CabinGrade
+    to: MasterCabinGrade
+    kind: has_one
+    via: masterCabinGrade
+  - from: CabinType
+    to: CabinGrade
+    kind: has_one
+    via: cabinGrade
+  - from: Message
+    to: Assignment
+    kind: has_many
+    via: assignments
+  - from: Person
+    to: ContactPoint
+    kind: has_many
+    via: contactPoints
+  - from: Person
+    to: Address
+    kind: has_one
+    via: address
+  - from: Person
+    to: PhoneNumber
+    kind: has_one
+    via: phoneNumber
+  - from: Price
+    to: Currency
+    kind: has_one
+    via: currency
+  - from: Price
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: PriceBreakdown
+    to: Price
+    kind: has_many
+    via: fare
+  - from: PriceBreakdown
+    to: Price
+    kind: has_many
+    via: tax
+  - from: PriceBreakdown
+    to: Price
+    kind: has_many
+    via: discount
+  - from: PriceBreakdown
+    to: Price
+    kind: has_many
+    via: fee
+  - from: PriceBreakdown
+    to: Price
+    kind: has_many
+    via: total
+  - from: PriceDetail
+    to: PriceBreakdown
+    kind: has_one
+    via: breakdown
+  - from: PriceDetail
+    to: Price
+    kind: has_many
+    via: total
+  - from: Traveller
+    to: Person
+    kind: has_one
+    via: person
+  - from: Problem
+    to: Location
+    kind: has_one
+    via: location
+  - from: Problem
+    to: ParseState
+    kind: has_one
+    via: parseState
+  - from: ValidationProblem
+    to: Problem
+    kind: has_one
+    via: problem
+  - from: BaseOption
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: BaseOption
+    to: Price
+    kind: has_many
+    via: prices
+  - from: BaseOption
+    to: DownstreamRef
+    kind: has_many
+    via: downstreamRefs
+  - from: CabinBoardRate
+    to: CabinType
+    kind: has_one
+    via: cabinType
+  - from: CabinBoardRate
+    to: TravellerRef
+    kind: has_many
+    via: travellers
+  - from: CabinBoardRate
+    to: PriceDetail
+    kind: has_one
+    via: prices
+  - from: CabinBoardRate
+    to: Cabin
+    kind: has_many
+    via: cabins
+  - from: CapacityGroup
+    to: CapacityAssociation
+    kind: has_many
+    via: ssrAssociations
+  - from: Cruise
+    to: Sailing
+    kind: has_many
+    via: sailings
+  - from: Cruise
+    to: TravellerRef
+    kind: has_many
+    via: travellers
+  - from: Cruise
+    to: PriceDetail
+    kind: has_one
+    via: prices
+  - from: CruiseItinerary
+    to: CruiseItineraryGroup
+    kind: has_one
+    via: itineraryGroup
+  - from: CruiseItinerary
+    to: CruiseItineraryDay
+    kind: has_many
+    via: days
+  - from: CruiseItineraryDay
+    to: PortVisit
+    kind: has_many
+    via: portVisits
+  - from: Duration
+    to: LocalTime
+    kind: has_one
+    via: checkInTime
+  - from: Duration
+    to: LocalTime
+    kind: has_one
+    via: checkOutTime
+  - from: Event
+    to: TravellerRef
+    kind: has_many
+    via: travellers
+  - from: Event
+    to: Price
+    kind: has_many
+    via: prices
+  - from: Flight
+    to: FlightDirection
+    kind: has_many
+    via: directions
+  - from: Flight
+    to: PriceDetail
+    kind: has_one
+    via: prices
+  - from: FlightDirection
+    to: Traveller
+    kind: has_many
+    via: travellers
+  - from: FlightDirection
+    to: FlightSegment
+    kind: has_many
+    via: segments
+  - from: FlightDirection
+    to: DownstreamRef
+    kind: has_many
+    via: downstreamRefs
+  - from: FlightDirection
+    to: PriceDetail
+    kind: has_one
+    via: prices
+  - from: FlightSegment
+    to: LocalTime
+    kind: has_one
+    via: departureTime
+  - from: FlightSegment
+    to: LocalTime
+    kind: has_one
+    via: arrivalTime
+  - from: FlightSegment
+    to: Point
+    kind: has_one
+    via: departurePoint
+  - from: FlightSegment
+    to: Point
+    kind: has_one
+    via: arrivalPoint
+  - from: FlightSegment
+    to: Sector
+    kind: has_many
+    via: sectors
+  - from: FlightSegment
+    to: BaggageOption
+    kind: has_many
+    via: specialServiceRequests
+  - from: FlightSegment
+    to: BaseOption
+    kind: has_many
+    via: specialServiceRequests
+  relationships_truncated: true
+- api: tui-group:tui-supply
+  openapi: openapi/tui-group-tui-supply-openapi.yml
+  schema_count: 46
+  relationship_count: 53
+  root_entities:
+  - Supply
+  - Control
+  - SupplyResponse
+  - SupplyPackage
+  - SupplyTransportToFrom
+  - DepartureArrivalInfo
+  - Point
+  - SupplyTransportInfo
+  - Route
+  - SupplyAccoInfo
+  - SupplyUnitInfo
+  - SupplyTransferInfo
+  relationships:
+  - from: Supply
+    to: VersionID
+    kind: has_one
+    via: VersionID
+  - from: Supply
+    to: Control
+    kind: has_one
+    via: Control
+  - from: Supply
+    to: SupplyResponse
+    kind: has_one
+    via: SupplyResponse
+  - from: Control
+    to: Language
+    kind: has_one
+    via: Language
+  - from: Control
+    to: YesNoValue
+    kind: has_one
+    via: Test
+  - from: SupplyResponse
+    to: SupplyPackage
+    kind: has_many
+    via: SupplyPackage
+  - from: SupplyPackage
+    to: MutationType
+    kind: has_one
+    via: MutationType
+  - from: SupplyPackage
+    to: ProductInfo
+    kind: has_one
+    via: ProductInfo
+  - from: SupplyPackage
+    to: SupplyTransportInfo
+    kind: has_one
+    via: SupplyTransportInfo
+  - from: SupplyPackage
+    to: SupplyAccoInfo
+    kind: has_one
+    via: SupplyAccoInfo
+  - from: SupplyPackage
+    to: SupplyTransferInfo
+    kind: has_one
+    via: SupplyTransferInfo
+  - from: SupplyPackage
+    to: SupplyPriceAvailabilityInfo
+    kind: has_one
+    via: SupplyPriceAvailabilityInfo
+  - from: SupplyTransportToFrom
+    to: TransportType
+    kind: has_one
+    via: TransportType
+  - from: SupplyTransportToFrom
+    to: DepartureArrivalInfo
+    kind: has_one
+    via: DepartureInfo
+  - from: SupplyTransportToFrom
+    to: DepartureArrivalInfo
+    kind: has_one
+    via: ArrivalInfo
+  - from: DepartureArrivalInfo
+    to: Point
+    kind: has_one
+    via: Point
+  - from: Point
+    to: PointType
+    kind: has_one
+    via: PointType
+  - from: SupplyTransportInfo
+    to: Route
+    kind: has_many
+    via: Route
+  - from: Route
+    to: SupplyTransportToFrom
+    kind: has_one
+    via: SupplyTransportTo
+  - from: Route
+    to: SupplyTransportToFrom
+    kind: has_one
+    via: SupplyTransportFrom
+  - from: SupplyAccoInfo
+    to: AccommodationType
+    kind: has_one
+    via: AccommodationType
+  - from: SupplyAccoInfo
+    to: SupplyUnitInfo
+    kind: has_many
+    via: SupplyUnitInfo
+  - from: SupplyUnitInfo
+    to: UnitType
+    kind: has_one
+    via: UnitType
+  - from: SupplyUnitInfo
+    to: Occupation
+    kind: has_many
+    via: Occupation
+  - from: SupplyUnitInfo
+    to: Board
+    kind: has_many
+    via: BoardInfo
+  - from: SupplyTransferInfo
+    to: SupplyTransfer
+    kind: has_many
+    via: SupplyTransfer
+  - from: SupplyTransfer
+    to: SupplyTransferToFrom
+    kind: has_one
+    via: SupplyTransferTo
+  - from: SupplyTransfer
+    to: SupplyTransferToFrom
+    kind: has_one
+    via: SupplyTransferFrom
+  - from: SupplyPriceAvailabilityInfo
+    to: SupplyPriceAvailability
+    kind: has_many
+    via: SupplyPriceAvailability
+  - from: SupplyPriceAvailability
+    to: Duration
+    kind: has_one
+    via: Duration
+  - from: SupplyPriceAvailability
+    to: Duration
+    kind: has_one
+    via: TripDuration
+  - from: Unit
+    to: BoardPrice
+    kind: has_many
+    via: BoardPrice
+  - from: BoardPrice
+    to: BoardType
+    kind: has_one
+    via: BoardType
+  - from: BoardPrice
+    to: Price
+    kind: has_many
+    via: Price
+  - from: Price
+    to: Currency
+    kind: has_one
+    via: Currency
+  - from: Price
+    to: PricePer
+    kind: has_one
+    via: PricePer
+  - from: Price
+    to: PriceType
+    kind: has_one
+    via: PriceType
+  - from: Transfer
+    to: YesNoValue
+    kind: has_one
+    via: Included
+  - from: Duration
+    to: DurationType
+    kind: has_one
+    via: Duration
+  - from: ProductInfo
+    to: StartAndEndDate
+    kind: has_one
+    via: PublicationPeriod
+  - from: ProductInfo
+    to: Reference
+    kind: has_one
+    via: Reference
+  - from: ProductInfo
+    to: FacilityGroup
+    kind: has_one
+    via: FacilityGroup
+  - from: ProductInfo
+    to: CommissionGroup
+    kind: has_one
+    via: CommissionGroup
+  - from: Occupation
+    to: OccupancyRules
+    kind: has_many
+    via: OccupancyRules
+  - from: Occupation
+    to: OccupancyRestrictions
+    kind: has_many
+    via: OccupancyRestrictions
+  - from: Occupation
+    to: StartAndEndDate
+    kind: has_one
+    via: OccupancyPeriod
+  - from: OccupancyRules
+    to: AgeType
+    kind: has_many
+    via: AgeCondition
+  - from: OccupancyRules
+    to: YesNoValue
+    kind: has_one
+    via: OccupancyIncluded
+  - from: OccupancyRules
+    to: PaxType
+    kind: has_one
+    via: PaxType
+  - from: CommissionGroup
+    to: Commission
+    kind: has_many
+    via: Commission
+  - from: Commission
+    to: StartAndEndDate
+    kind: has_one
+    via: TravelPeriod
+  - from: Commission
+    to: StartAndEndDate
+    kind: has_one
+    via: BookPeriod
+  - from: Board
+    to: BoardType
+    kind: has_one
+    via: BoardType
+  relationships_truncated: false
+- api: tui-group:tui-flight-ota-api
+  openapi: openapi/tui-group-tui-flight-ota-api-openapi.yml
+  schema_count: 38
+  relationship_count: 18
+  root_entities:
+  - getflightsResponse
+  - flight
+  - flightavailabilityResponse
+  - direction
+  - flightLeg
+  - includedLuggageResponse
+  - directionIncludedLuggage
+  - includedLuggageInformation
+  - luggageResponse
+  - ancillariesResponse
+  - handluggageResponse
+  - directionHandluggage
+  relationships:
+  - from: getflightsResponse
+    to: flight
+    kind: has_many
+    via: flights
+  - from: flight
+    to: flightkey
+    kind: has_one
+    via: key
+  - from: flight
+    to: locationCode
+    kind: has_one
+    via: depcode
+  - from: flight
+    to: locationCode
+    kind: has_one
+    via: arrcode
+  - from: flightLeg
+    to: flightkey
+    kind: has_one
+    via: key
+  - from: flightLeg
+    to: mealCode
+    kind: has_one
+    via: defaultMeal
+  - from: includedLuggageResponse
+    to: directionIncludedLuggage
+    kind: has_one
+    via: OUT
+  - from: includedLuggageResponse
+    to: directionIncludedLuggage
+    kind: has_one
+    via: RET
+  - from: luggageResponse
+    to: directionLuggage
+    kind: has_one
+    via: OUT
+  - from: luggageResponse
+    to: directionLuggage
+    kind: has_one
+    via: RET
+  - from: ancillariesResponse
+    to: directionAncillaries
+    kind: has_one
+    via: OUT
+  - from: ancillariesResponse
+    to: directionAncillaries
+    kind: has_one
+    via: RET
+  - from: handluggageInformation
+    to: dimensions
+    kind: has_one
+    via: dimensions
+  - from: priceCalculationPrice
+    to: detailsArray
+    kind: has_many
+    via: lines
+  - from: priceCalculationPrice
+    to: detailsObject
+    kind: has_many
+    via: lines
+  - from: detailsObject
+    to: priceObjectPriceCheck
+    kind: has_one
+    via: price
+  - from: flightLegPriceCheck
+    to: flightkey
+    kind: has_one
+    via: key
+  - from: flightLegCheckout
+    to: flightkey
+    kind: has_one
+    via: key
+  relationships_truncated: false
+- api: tui-group:tui-search-walldy-api
+  openapi: openapi/tui-group-tui-search-walldy-api-openapi.yml
+  schema_count: 29
+  relationship_count: 25
+  root_entities:
+  - AlternativeBoardsRequest
+  - Anite
+  - AvailabilityGroup
+  - AvailabilityResponse
+  - AvailabilityWrapper
+  - CalendarRequest
+  - CalendarResponse
+  - Date
+  - DateAvailability
+  - Dates
+  - Dates_1
+  - Dc
+  relationships:
+  - from: Anite
+    to: YesNo
+    kind: has_one
+    via: dreamLiner
+  - from: Anite
+    to: YesNo
+    kind: has_one
+    via: direct
+  - from: Anite
+    to: YesNo
+    kind: has_one
+    via: inDirect
+  - from: Anite
+    to: Dc
+    kind: has_many
+    via: dc
+  - from: Anite
+    to: YesNo
+    kind: has_one
+    via: charter
+  - from: Anite
+    to: YesNo
+    kind: has_one
+    via: nonCharter
+  - from: AvailabilityGroup
+    to: AvailabilityResponse
+    kind: has_many
+    via: offers
+  - from: AvailabilityResponse
+    to: FilterResponse
+    kind: has_many
+    via: filters
+  - from: AvailabilityResponse
+    to: LocalTaxResponse
+    kind: has_one
+    via: localTax
+  - from: AvailabilityWrapper
+    to: Filters
+    kind: has_one
+    via: filters
+  - from: AvailabilityWrapper
+    to: AvailabilityGroup
+    kind: has_many
+    via: availabilityGroups
+  - from: CalendarResponse
+    to: Dates_1
+    kind: has_one
+    via: dates
+  - from: Dates
+    to: Date
+    kind: has_many
+    via: dates
+  - from: Dates_1
+    to: DateAvailability
+    kind: has_many
+    via: dates
+  - from: Dc
+    to: YesNo
+    kind: has_one
+    via: value
+  - from: Filters
+    to: MultiSelect
+    kind: has_many
+    via: multiSelect
+  - from: Filters
+    to: SingleSelect
+    kind: has_many
+    via: singleSelect
+  - from: Filters
+    to: Durations
+    kind: has_one
+    via: durationsList
+  - from: Filters
+    to: Anite
+    kind: has_one
+    via: aniteLists
+  - from: Filters
+    to: Dates
+    kind: has_one
+    via: datesList
+  - from: Filters
+    to: MonthsList
+    kind: has_one
+    via: monthsList
+  - from: MonthsList
+    to: Month
+    kind: has_many
+    via: months
+  - from: MultiSelect
+    to: MultiSelectItem
+    kind: has_many
+    via: items
+  - from: OfferRequest
+    to: RoomAllocation
+    kind: has_many
+    via: roomAllocations
+  - from: SingleSelect
+    to: SingleSelectItem
+    kind: has_many
+    via: items
+  relationships_truncated: false
+- api: tui-group:tui-partner-content-api
+  openapi: openapi/tui-group-tui-partner-content-api-openapi.yml
+  schema_count: 17
+  relationship_count: 18
+  root_entities:
+  - Size
+  - Image
+  - ImageConfiguration
+  - AccommodationImagesResponse
+  - Classification
+  - Event
+  - Period
+  - ServiceLevel
+  - TopFact
+  - AccommodationConfiguration
+  - Coordinates
+  - CustomerRating
+  relationships:
+  - from: Image
+    to: Size
+    kind: has_many
+    via: sizes
+  - from: ImageConfiguration
+    to: Image
+    kind: has_many
+    via: images
+  - from: ImageConfiguration
+    to: Image
+    kind: has_one
+    via: mainImage
+  - from: AccommodationImagesResponse
+    to: ImageConfiguration
+    kind: has_many
+    via: configurations
+  - from: AccommodationConfiguration
+    to: Classification
+    kind: has_one
+    via: classification
+  - from: AccommodationConfiguration
+    to: Event
+    kind: has_one
+    via: event
+  - from: AccommodationConfiguration
+    to: Period
+    kind: has_one
+    via: period
+  - from: AccommodationConfiguration
+    to: ServiceLevel
+    kind: has_one
+    via: serviceLevel
+  - from: AccommodationConfiguration
+    to: TopFact
+    kind: has_many
+    via: topFacts
+  - from: FactGroup
+    to: Fact
+    kind: has_many
+    via: facts
+  - from: GeoStructure
+    to: Geo
+    kind: has_one
+    via: country
+  - from: GeoStructure
+    to: Geo
+    kind: has_one
+    via: destination
+  - from: GeoStructure
+    to: Geo
+    kind: has_one
+    via: resort
+  - from: AccommodationProductResponse
+    to: AccommodationConfiguration
+    kind: has_many
+    via: configurations
+  - from: AccommodationProductResponse
+    to: Coordinates
+    kind: has_one
+    via: coordinates
+  - from: AccommodationProductResponse
+    to: CustomerRating
+    kind: has_one
+    via: customerRating
+  - from: AccommodationProductResponse
+    to: FactGroup
+    kind: has_many
+    via: factGroups
+  - from: AccommodationProductResponse
+    to: GeoStructure
+    kind: has_one
+    via: geoStructure
+  relationships_truncated: false
+- api: tui-group:tui-meta-partner-packages-flights
+  openapi: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml
+  schema_count: 11
+  relationship_count: 10
+  root_entities:
+  - FlightsRoute
+  - ApiAccommodation
+  - ApiFlightLeg
+  - ApiPrice
+  - ApiPackage
+  - ApiPackages
+  - ApiFlightPrice
+  - ApiFlightOnly
+  - ApiFlightsOnly
+  - LocationModel
+  - LocationResponseModel
+  relationships:
+  - from: ApiPackage
+    to: ApiAccommodation
+    kind: has_one
+    via: accommodation
+  - from: ApiPackage
+    to: ApiFlightLeg
+    kind: has_many
+    via: outboundFlightLegs
+  - from: ApiPackage
+    to: ApiFlightLeg
+    kind: has_many
+    via: homeboundFlightLegs
+  - from: ApiPackage
+    to: ApiPrice
+    kind: has_many
+    via: prices
+  - from: ApiPackages
+    to: ApiPackage
+    kind: has_many
+    via: items
+  - from: ApiFlightOnly
+    to: ApiFlightLeg
+    kind: has_many
+    via: outboundFlightLegs
+  - from: ApiFlightOnly
+    to: ApiFlightLeg
+    kind: has_many
+    via: homeboundFlightLegs
+  - from: ApiFlightOnly
+    to: ApiFlightPrice
+    kind: has_many
+    via: prices
+  - from: ApiFlightsOnly
+    to: ApiFlightOnly
+    kind: has_many
+    via: items
+  - from: LocationResponseModel
+    to: LocationModel
+    kind: has_many
+    via: items
+  relationships_truncated: false
+- api: tui-group:tui-meta-search-generic-api
+  openapi: openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+  schema_count: 10
+  relationship_count: 6
+  root_entities:
+  - Address
+  - Hotel
+  - HotelInventoryResponse
+  - Problem
+  - Party
+  - HotelAvailabilityRequest
+  - Room
+  - Offer
+  - Hotels
+  - HotelAvailabilityResponse
+  relationships:
+  - from: Hotel
+    to: Address
+    kind: has_one
+    via: address
+  - from: HotelInventoryResponse
+    to: Hotel
+    kind: has_many
+    via: hotels
+  - from: HotelAvailabilityRequest
+    to: Party
+    kind: has_many
+    via: party
+  - from: Room
+    to: Party
+    kind: has_one
+    via: party
+  - from: Offer
+    to: Room
+    kind: has_many
+    via: rooms
+  - from: HotelAvailabilityResponse
+    to: Hotels
+    kind: has_many
+    via: hotels
+  relationships_truncated: false
+- api: tui-group:tui-flight-availability-search-api
+  openapi: openapi/tui-group-tui-flight-availability-search-api-openapi.yml
+  schema_count: 9
+  relationship_count: 4
+  root_entities:
+  - Error
+  - Fare
+  - Flight
+  - FlightGroup
+  - GroupBy
+  - SearchResponse
+  - StopOverFlight
+  - TripType
+  - UnauthorizedError
+  relationships:
+  - from: Flight
+    to: StopOverFlight
+    kind: has_many
+    via: stopOverFlights
+  - from: Flight
+    to: Fare
+    kind: has_many
+    via: fares
+  - from: FlightGroup
+    to: Flight
+    kind: has_many
+    via: flights
+  - from: SearchResponse
+    to: FlightGroup
+    kind: has_many
+    via: groups
+  relationships_truncated: false
+- api: tui-group:tui-meta-partner-package-live-search
+  openapi: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  schema_count: 9
+  relationship_count: 7
+  root_entities:
+  - LocationModel
+  - LocationResponseModel
+  - ApiAccommodation
+  - ApiFlightLeg
+  - ApiPrice
+  - ApiPackage
+  - ApiPackages
+  - AccommodationModel
+  - AccommodationResponseModel
+  relationships:
+  - from: LocationResponseModel
+    to: LocationModel
+    kind: has_many
+    via: items
+  - from: ApiPackage
+    to: ApiAccommodation
+    kind: has_one
+    via: accommodation
+  - from: ApiPackage
+    to: ApiFlightLeg
+    kind: has_many
+    via: outboundFlightLegs
+  - from: ApiPackage
+    to: ApiFlightLeg
+    kind: has_many
+    via: homeboundFlightLegs
+  - from: ApiPackage
+    to: ApiPrice
+    kind: has_many
+    via: prices
+  - from: ApiPackages
+    to: ApiPackage
+    kind: has_many
+    via: items
+  - from: AccommodationResponseModel
+    to: AccommodationModel
+    kind: has_many
+    via: items
+  relationships_truncated: false
+- api: tui-group:tui-ota-content-api
+  openapi: openapi/tui-group-tui-ota-content-api-openapi.yml
+  schema_count: 9
+  relationship_count: 8
+  root_entities:
+  - ContentResponse
+  - BoardBasisData
+  - BoardBasisFeatures
+  - AccomFeatures
+  - GalleryMediaData
+  - FacilityData
+  - ReviewData
+  - ContentGeoHierarchy
+  - RoomData
+  relationships:
+  - from: ContentResponse
+    to: AccomFeatures
+    kind: has_one
+    via: featureCodesAndValues
+  - from: ContentResponse
+    to: GalleryMediaData
+    kind: has_one
+    via: galleryImages
+  - from: ContentResponse
+    to: RoomData
+    kind: has_many
+    via: roomsData
+  - from: ContentResponse
+    to: BoardBasisData
+    kind: has_many
+    via: boardBasis
+  - from: ContentResponse
+    to: FacilityData
+    kind: has_many
+    via: facilities
+  - from: ContentResponse
+    to: ReviewData
+    kind: has_many
+    via: review
+  - from: BoardBasisData
+    to: BoardBasisFeatures
+    kind: has_one
+    via: featureCodesAndValues
+  - from: RoomData
+    to: GalleryMediaData
+    kind: has_one
+    via: galleryImages
+  relationships_truncated: false
+- api: tui-group:tui-checkinhandler-service-api
+  openapi: openapi/tui-group-tui-checkinhandler-service-api-openapi.yml
+  schema_count: 4
+  relationship_count: 2
+  root_entities:
+  - CheckInStatus
+  - CheckInValidation
+  - LoginStatus
+  - RecordLocatorResponse
+  relationships:
+  - from: CheckInValidation
+    to: LoginStatus
+    kind: has_one
+    via: loginStatus
+  - from: CheckInValidation
+    to: CheckInStatus
+    kind: has_one
+    via: checkInStatus
+  relationships_truncated: false
+- api: tui-group:tui-ship-content-api
+  openapi: openapi/tui-group-tui-ship-content-api-openapi.yml
+  schema_count: 1
+  relationship_count: 0
+  root_entities:
+  - Ship
+  relationships: []
+  relationships_truncated: false

@@ -1,0 +1,77 @@
+generated: '2026-07-28'
+method: derived
+source: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml, openapi/tui-group-tui-flight-ota-api-openapi.yml,
+  openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml, openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml,
+  openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+docs: https://developer.tui/docs/general/oauth2
+search:
+  performed: '2026-07-28'
+  probes:
+  - {url: 'https://developer.tui/docs/general/scopes', status: 404}
+  - {url: 'https://developer.tui/docs/general/permissions', status: 404}
+  - {url: 'https://developer.tui/docs/scopes', status: 404}
+  - {url: 'https://developer.tui/docs/general/oauth2', status: 200}
+  - {url: 'https://developer.tui/docs/general/authentication', status: 200}
+  conclusion: >-
+    TUI publishes no scopes or permissions reference page. The OAuth 2.0 page documents the
+    client-credentials grant against https://{env}.api.tui/oauth2/token and shows a token response
+    carrying a scope field, but the sample value is the literal placeholder "scope1 scope2" and no
+    scope name, meaning or requirement is documented anywhere on the portal. Authorisation at TUI is
+    not scope-driven: what a token can reach is decided by which API products a partner manager
+    approved for the app, plus the Navitaire New Skies agent role behind the flight products. The
+    single real scope below is the only one declared in any of the 21 published specs. Recorded as
+    derived because the docs search added nothing the specs did not already carry.
+schemes:
+- name: oAuth2ClientCredentials
+  source: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+  description: This API uses OAuth 2 with the implicit grant flow.
+- name: oAuth2ClientCredentials
+  source: openapi/tui-group-tui-flight-ota-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+- name: tsoa_auth_prod
+  source: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+  description: Production OAuth2
+- name: tsoa_auth_preprod
+  source: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://pre-prod.api.tui/oauth2/token
+  description: Pre-production OAuth2
+- name: tsoa_auth_prod
+  source: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+  description: Production OAuth2
+- name: tsoa_auth_preprod
+  source: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://pre-prod.api.tui/oauth2/token
+  description: Pre-production OAuth2
+- name: OAuth2PreProdPublic
+  source: openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://pre-prod.api.tui/oauth2/token
+- name: OAuth2ProdPublic
+  source: openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+scopes:
+- scope: read:sales-meta-package
+  description: Read access
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  - openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml

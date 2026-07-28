@@ -1,0 +1,75 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: TUI Group
+providerId: tui-group
+generated: '2026-07-28'
+method: searched
+created: '2026-07-28'
+modified: '2026-07-28'
+tags:
+  - Rate Limiting
+  - Travel
+  - Apigee
+description: >-
+  TUI publishes its quota tiers openly on the technical-integration guidelines page, but assignment
+  to a tier is a commercial decision made by a partner manager, not a self-serve entitlement. Every
+  new app starts on the development plan; a production plan is assigned only after TUI assesses the
+  partner's estimated usage against its own capacity model. Enforcement is at the Apigee X gateway.
+sources:
+  - https://developer.tui/docs/getting-started_technical-integration
+  - https://developer.tui/docs/getting-started_environments
+headers:
+  correlationId: x-correlation-id
+  requestId: x-request-id
+responseCodes:
+  throttled: null
+signalling: >-
+  TUI documents no rate-limit response headers and no 429 behaviour, and none of the 21 published
+  OpenAPI documents declares a 429 response or an X-RateLimit-* / RateLimit-* header. A consumer has
+  no published way to observe remaining quota or a retry-after hint.
+limits:
+  - name: Development access plan
+    scope: app
+    metric: requests_per_day
+    limit: 500
+    timeFrame: day
+    note: Initial plan assigned to most apps.
+  - name: Development access plan
+    scope: app
+    metric: requests_per_second
+    limit: 1
+    timeFrame: second
+  - name: Bronze (production)
+    scope: app
+    metric: requests_per_second
+    limit: 3
+    timeFrame: second
+  - name: Silver (production)
+    scope: app
+    metric: requests_per_second
+    limit: 6
+    timeFrame: second
+  - name: Gold (production)
+    scope: app
+    metric: requests_per_second
+    limit: 9
+    timeFrame: second
+  - name: Platinum (production)
+    scope: app
+    metric: requests_per_second
+    limit: 12
+    timeFrame: second
+notes:
+  - >-
+    Verbatim: "Some APIs support different partner tier levels on quota. Your partner manager will
+    support you getting the appropriate quota set for your app subscription."
+  - >-
+    Verbatim: "When you've completed your development and are ready to go live we'll assess your
+    estimated usage against our capacity model and assign you to one of the following production
+    plans."
+  - >-
+    Verbatim: "Some APIs may be exposed with special plans and quotas. Please refer to the
+    documentation of each API." Product-specific quotas are not published in one place.
+  - >-
+    The NDC Gateway, Digital API and GoNow production workflow validation additionally requires the
+    partner to declare "expected requests per minute" before go-live.

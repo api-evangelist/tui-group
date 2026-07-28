@@ -1,0 +1,479 @@
+openapi: 3.0.0
+components:
+  examples: {}
+  headers: {}
+  parameters: {}
+  requestBodies: {}
+  responses: {}
+  schemas:
+    Size:
+      properties:
+        width:
+          type: number
+          format: double
+        height:
+          type: number
+          format: double
+        href:
+          type: string
+      required:
+        - width
+        - height
+        - href
+      type: object
+      additionalProperties: false
+    Image:
+      properties:
+        sortOrder:
+          type: number
+          format: double
+        caption:
+          type: string
+          nullable: true
+        setting: {}
+        href:
+          type: string
+        templateHref:
+          type: string
+        sizes:
+          items:
+            $ref: "#/components/schemas/Size"
+          type: array
+      required:
+        - sortOrder
+        - caption
+        - setting
+        - href
+        - templateHref
+        - sizes
+      type: object
+      additionalProperties: false
+    ImageConfiguration:
+      properties:
+        id:
+          type: string
+        images:
+          items:
+            $ref: "#/components/schemas/Image"
+          type: array
+        mainImage:
+          $ref: "#/components/schemas/Image"
+        backgroundImage: {}
+      required:
+        - id
+        - images
+        - mainImage
+        - backgroundImage
+      type: object
+      additionalProperties: false
+    AccommodationImagesResponse:
+      properties:
+        id:
+          type: string
+        href:
+          type: string
+        internal:
+          type: string
+        type:
+          type: string
+        configurations:
+          items:
+            $ref: "#/components/schemas/ImageConfiguration"
+          type: array
+      required:
+        - id
+        - href
+        - internal
+        - type
+        - configurations
+      type: object
+      additionalProperties: false
+    Classification:
+      properties:
+        max:
+          type: number
+          format: double
+        min:
+          type: number
+          format: double
+          nullable: true
+        text:
+          type: string
+      required:
+        - max
+        - min
+        - text
+      type: object
+      additionalProperties: false
+    Event:
+      properties:
+        href:
+          type: string
+      required:
+        - href
+      type: object
+      additionalProperties: false
+    Period:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+      type: object
+      additionalProperties: false
+    ServiceLevel:
+      properties:
+        description:
+          type: string
+        headline:
+          type: string
+        image:
+          type: string
+        level:
+          type: number
+          format: double
+      required:
+        - description
+        - headline
+        - level
+      type: object
+      additionalProperties: false
+    TopFact:
+      properties:
+        header:
+          type: string
+        tag:
+          type: string
+        text:
+          type: string
+      required:
+        - header
+        - tag
+        - text
+      type: object
+      additionalProperties: false
+    AccommodationConfiguration:
+      properties:
+        classification:
+          $ref: "#/components/schemas/Classification"
+        concept: {}
+        conceptInformation:
+          items: {}
+          type: array
+        description:
+          type: string
+        displayName:
+          type: string
+        event:
+          $ref: "#/components/schemas/Event"
+        id:
+          type: string
+        information:
+          items: {}
+          type: array
+        keywords: {}
+        label: {}
+        mainImage:
+          type: string
+        metaDescription:
+          type: string
+        myHolidayCountdown:
+          type: string
+        myHolidayIdeas:
+          type: string
+        name:
+          type: string
+        newsPush:
+          type: boolean
+        period:
+          $ref: "#/components/schemas/Period"
+        preamble:
+          type: string
+        priority:
+          type: number
+          format: double
+        rooms:
+          items: {}
+          type: array
+        serviceLevel:
+          $ref: "#/components/schemas/ServiceLevel"
+        siteUrl:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+        topFacts:
+          items:
+            $ref: "#/components/schemas/TopFact"
+          type: array
+        usp:
+          type: string
+      required:
+        - classification
+        - conceptInformation
+        - description
+        - displayName
+        - event
+        - id
+        - information
+        - label
+        - mainImage
+        - metaDescription
+        - myHolidayCountdown
+        - myHolidayIdeas
+        - name
+        - newsPush
+        - period
+        - preamble
+        - priority
+        - rooms
+        - serviceLevel
+        - siteUrl
+        - tags
+        - topFacts
+        - usp
+      type: object
+      additionalProperties: false
+    Coordinates:
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+      required:
+        - latitude
+        - longitude
+      type: object
+      additionalProperties: false
+    CustomerRating:
+      properties:
+        answers:
+          type: number
+          format: double
+        name:
+          type: string
+        score:
+          type: number
+          format: double
+      required:
+        - answers
+        - name
+        - score
+      type: object
+      additionalProperties: false
+    Fact:
+      properties:
+        name:
+          type: string
+        parentTag: {}
+        tag:
+          type: string
+        value:
+          type: string
+      required:
+        - name
+        - tag
+        - value
+      type: object
+      additionalProperties: false
+    FactGroup:
+      properties:
+        facts:
+          items:
+            $ref: "#/components/schemas/Fact"
+          type: array
+        group:
+          type: string
+        name:
+          type: string
+      required:
+        - facts
+        - group
+        - name
+      type: object
+      additionalProperties: false
+    Geo:
+      properties:
+        href:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - href
+        - id
+        - name
+      type: object
+      additionalProperties: false
+    GeoStructure:
+      properties:
+        country:
+          $ref: "#/components/schemas/Geo"
+        destination:
+          $ref: "#/components/schemas/Geo"
+        resort:
+          $ref: "#/components/schemas/Geo"
+      required:
+        - country
+        - resort
+      type: object
+      additionalProperties: false
+    AccommodationProductResponse:
+      properties:
+        configurations:
+          items:
+            $ref: "#/components/schemas/AccommodationConfiguration"
+          type: array
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+        countryCode:
+          type: string
+        customerRating:
+          $ref: "#/components/schemas/CustomerRating"
+        dynamicAccommodationProduct:
+          type: boolean
+        factGroups:
+          items:
+            $ref: "#/components/schemas/FactGroup"
+          type: array
+        geoStructure:
+          $ref: "#/components/schemas/GeoStructure"
+        giataId: {}
+        hotelName:
+          type: string
+        href:
+          type: string
+        id:
+          type: string
+        locationCategory: {}
+        name:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+        - configurations
+        - countryCode
+        - dynamicAccommodationProduct
+        - factGroups
+        - giataId
+        - hotelName
+        - href
+        - id
+        - locationCategory
+        - name
+        - tags
+      type: object
+      additionalProperties: false
+  securitySchemes: {}
+info:
+  title: Partner Content API
+  description: The Partner Content API allows partners to access content for
+    accommodations, through a set of RESTful endpoints.
+  version: 1.0.0
+paths:
+  /markets/{market}/accommodations/{accommodationId}/images:
+    get:
+      operationId: GetAccommodationImages
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccommodationImagesResponse"
+      description: This endpoint returns the images for specific accommodation.
+      tags:
+        - Partner Content Api (Beta)
+      security: []
+      parameters:
+        - description: "The source market code.\r
+
+            \r
+
+            Accepted values: dk, fi, no, se."
+          in: path
+          name: market
+          required: true
+          schema:
+            type: string
+        - description: "The accommodation id.\r
+
+            \r
+
+            Example - P-500004311"
+          in: path
+          name: accommodationId
+          required: true
+          schema:
+            type: string
+        - description: "Your agent code. Use the same for every request made.\r
+
+            \r
+
+            Example - tui"
+          in: query
+          name: agent
+          required: true
+          schema:
+            type: string
+            pattern: ^\w+$
+  /markets/{market}/accommodations/{accommodationId}:
+    get:
+      operationId: GetAccommodationContent
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccommodationProductResponse"
+      description: This endpoint returns the content of a specific accommodation.
+      tags:
+        - Partner Content Api (Beta)
+      security: []
+      parameters:
+        - description: "The source market code.\r
+
+            \r
+
+            Accepted values: dk, fi, no, se."
+          in: path
+          name: market
+          required: true
+          schema:
+            type: string
+        - description: "The accommodation id.\r
+
+            \r
+
+            Example - P-500004311"
+          in: path
+          name: accommodationId
+          required: true
+          schema:
+            type: string
+        - description: "Your agent code. Use the same for every request made.\r
+
+            \r
+
+            Example - tui"
+          in: query
+          name: agent
+          required: true
+          schema:
+            type: string
+            pattern: ^\w+$
+servers:
+  - url: https://prod.api.tui/sales/pip-package/content/v1-beta
+    description: Prod Server
+  - url: https://pre-prod.api.tui/sales/pip-package/content/v1-beta
+    description: Pre-prod Server

@@ -1,0 +1,161 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  Derived from the 21 harvested OpenAPI documents (securitySchemes, response media types, message
+  names, path shapes) and from explicit claims published on developer.tui — chiefly
+  https://developer.tui/api-catalog/newskies-payment-api/api-description (PCI DSS),
+  https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/ndc-workflow (NDC 21.3),
+  https://developer.tui/api-catalog/b2bota-g7/api-description (ANVR G7 3.1),
+  https://developer.tui/api-catalog/supply/api-description (TUI XML Supply 1.5.1) — plus live
+  probes of prod.api.tui/.well-known/*.
+standards:
+  - id: oauth2-client-credentials
+    name: OAuth 2.0 client credentials grant (RFC 6749)
+    conforms: true
+    evidence: >-
+      Documented at https://developer.tui/docs/general/oauth2 and declared as
+      securitySchemes.oAuth2ClientCredentials / tsoa_auth_prod / tsoa_auth_preprod /
+      OAuth2ProdPublic / OAuth2PreProdPublic across five specs, all with tokenUrl
+      https://{env}.api.tui/oauth2/token. Confirmed live — an unauthenticated POST returns
+      {"error":"invalid_client"}.
+  - id: rfc6750-bearer
+    name: OAuth 2.0 Bearer token usage (RFC 6750)
+    conforms: true
+    evidence: token_type "Bearer" in the documented token response; http/bearer securitySchemes in four specs.
+  - id: rfc8414-oauth-authorization-server-metadata
+    name: OAuth 2.0 Authorization Server Metadata
+    conforms: partial
+    evidence: >-
+      https://prod.api.tui/.well-known/oauth-authorization-server returns a real metadata document,
+      but as served it is invalid JSON (trailing comma after
+      token_endpoint_auth_signing_alg_values_supported). Saved verbatim at
+      well-known/tui-group-oauth-authorization-server.json.
+  - id: oidc-discovery
+    name: OpenID Connect Discovery 1.0
+    conforms: partial
+    evidence: >-
+      https://prod.api.tui/.well-known/openid-configuration is live and parses, advertising
+      authorization, token, userinfo and jwks endpoints, RS256, subject_types public and scopes
+      openid + email. But no OIDC flow is documented for partners anywhere on the portal and the
+      only documented grant is client_credentials, so the discovery document describes an Apigee
+      capability rather than a partner-facing identity contract.
+  - id: rfc7517-jwks
+    name: JSON Web Key Set
+    conforms: true
+    evidence: https://prod.api.tui/oauth2/jwks returns one RSA signing key (alg RS256, kid 2026-06-29T09:47:30Z).
+  - id: rfc9116-security-txt
+    name: security.txt
+    conforms: true
+    evidence: >-
+      https://www.tui.com/.well-known/security.txt with Contact, Policy, Expires 2028-12-09 and
+      Preferred-Languages. Not present on developer.tui or tuigroup.com.
+  - id: rfc9457-problem-details
+    name: Problem Details for HTTP APIs
+    conforms: partial
+    evidence: >-
+      47 error responses across five Apigee-native products (WallDy, HolidayOffersController,
+      Meta-Search-Generic, Cruise Price and Availability, Cruise Cabin Availability) return
+      application/problem+json. The Navitaire products, the G7 XML channel and the Apigee fault
+      envelope do not.
+  - id: openapi-3
+    name: OpenAPI Specification 3.0.x
+    conforms: true
+    evidence: >-
+      All 21 API products publish a public OpenAPI 3.0.0–3.0.3 document via the portal's Swagger UI
+      (https://developer.tui/system/files/<yyyy-mm>/<id>-openapi-spec.yml). 1,261 operations total.
+  - id: iata-ndc
+    name: IATA New Distribution Capability 21.3
+    conforms: partial
+    version: '21.3'
+    evidence: >-
+      The NDC Gateway implements the standard Shopping / Selling / Servicing message set
+      (AirShopping, OfferPrice, OrderCreate, ServiceList, SeatAvailability, OrderChange,
+      OrderRetrieve, OrderReshop, OrderQuote, AirlineProfile) at
+      /x3/ndc/api/{Shopping|Selling|Servicing}/r3.x/v21.3/{Operation}, and the harvested spec
+      re-exports 544 Navitaire.Ndc.*.v213.IataMessages schemas.
+    caveats:
+      - >-
+        TUI describes the gateway as a routing layer to Navitaire, not its own NDC stack — "the
+        single point of access to route all the traffic to a third party vendor (Navitaire)
+        implementing the features defined in the standard."
+      - The path is TUI-specific (/flight/ndc/x3/… where x3 is the IATA code of TUI fly Deutschland).
+      - Auth is a proprietary two-layer x-apikey plus New Skies JWT, not anything in the NDC spec.
+      - A parallel /r3.x/v2 family routes to the proprietary Navitaire Digital API instead.
+    certification_claimed: false
+    certification_note: >-
+      No IATA NDC certification level (Level 3 / Level 4) is claimed anywhere on developer.tui and no
+      IATA NDC Registry entry is linked.
+  - id: anvr-g7-travelmessage
+    name: ANVR G7 standard for ANVR XML-message flow / TravelMessage
+    conforms: partial
+    version: '3.1'
+    evidence: >-
+      "this follows the standard ANVR G7 Standard version 3.1", with dialogues Availability, Sell,
+      Assign, Book, AddProAvailability, Break, Receipt and Recap. XSD harvested to
+      schemas/tui-b2bota-g7-travelmessage-v31.xsd.
+    caveats:
+      - >-
+        TUI states verbatim that "Because for TUI things were missing in the the structure of the
+        3.1 xsd, the xsd was changed to fit our needs" — the harvested XSD is TUI's variant, not the
+        pristine ANVR original.
+      - >-
+        Several standard behaviours are "not (yet) implemented at TUI" — roundtrip and cruise data
+        in Sell; both standard AddProAvailability approaches, replaced by a TUI-only
+        AddProAvailabilityTransportRequest; changes between Assign and Book are ignored.
+      - Some fields are stated as conforming to ANVR v3.2.2 rather than 3.1 (PriceIncluded, PriceLocalIncluded).
+  - id: pci-dss
+    name: Payment Card Industry Data Security Standard
+    conforms: claimed
+    evidence: >-
+      "This API is designed to be PCI-DSS (Payment Card Industry Data Security Standard) compliant"
+      — https://developer.tui/api-catalog/newskies-payment-api/api-description, with a published
+      description of the control areas (cardholder data protection, network segmentation, access
+      control, monitoring, security policies, vulnerability management).
+    caveats:
+      - >-
+        The wording is "designed to be compliant". No Attestation of Compliance, no QSA, no
+        compliance level and no validation date is published, and TUI publishes no trust centre.
+  - id: soap-1-1
+    name: SOAP 1.1
+    conforms: true
+    evidence: >-
+      The Payment API exposes a legacy /soap channel requiring a SOAPAction header of
+      http://schemas.navitaire.com/WebServices/IBookingManager/AddPaymentToBooking.
+  - id: graphql
+    name: GraphQL
+    conforms: true
+    evidence: >-
+      The Ship Content API declares POST /graphql (servers https://prod.api.tui/cruises/ship). Live
+      introspection is auth-gated — an anonymous {__schema{queryType{name}}} POST returns the Apigee
+      fault oauth.v2.InvalidAccessToken — so no SDL could be captured.
+  - id: rfc8594-sunset-header
+    name: Sunset HTTP header
+    conforms: false
+    evidence: No Sunset or Deprecation header is documented or declared in any spec; 79 in-spec deprecations carry no sunset date.
+  - id: rfc9727-api-catalog
+    name: '.well-known/api-catalog'
+    conforms: false
+    evidence: 404 on developer.tui and tuigroup.com; empty 200 catch-all on prod.api.tui.
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence: No AsyncAPI document, no webhooks block in any OpenAPI, no callbacks, no event catalogue.
+  - id: idempotency-key
+    name: Idempotency-Key header (draft-ietf-httpapi-idempotency-key)
+    conforms: false
+    evidence: No idempotency key appears in any of the 1,261 published operations or anywhere in the documentation.
+  - id: mcp
+    name: Model Context Protocol
+    conforms: false
+    evidence: No hosted MCP server found (mcp.tui.com and mcp.api.tui do not resolve; /mcp 404s on both the gateway and the portal).
+  - id: openid-connect
+    name: OpenID Connect (partner-facing)
+    conforms: false
+    evidence: Discovery metadata exists at the gateway but no OIDC flow, scope or ID-token contract is offered to partners.
+  - id: gdpr-data-portability
+    name: Data portability / bulk export
+    conforms: false
+    evidence: >-
+      No export, dump or portability operation exists in any of the 21 specs. The only bulk
+      operations (PriceFile download, Supply SFTP) flow TUI content outward to the partner and carry
+      no partner-owned data.

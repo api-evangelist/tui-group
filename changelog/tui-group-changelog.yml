@@ -1,0 +1,220 @@
+generated: '2026-07-28'
+method: searched
+source: https://developer.tui/api-catalog/*/release-notes
+description: >-
+  TUI has no provider-wide changelog. Change communication happens on a per-product "RELEASE NOTES"
+  tab on developer.tui, present on 8 of the 21 published API products. Each page carries a
+  "Last updated" date and a "Recent changes" line that leaks the underlying GitLab merge-request
+  subject from TUI's internal api-program/apigee monorepo — an unusual amount of engineering
+  transparency for a tour operator. Quality varies from a genuinely useful numbered patch log (the
+  ANVR G7 TravelMessage channel, going back to 2023 with explicit behavioural changes and their
+  effects on each dialogue) to unfilled lorem-ipsum placeholder text (HolidayOffersController). The
+  live pages are the source of truth; this artifact captures the recent window as read on
+  2026-07-28.
+scheme: per-product, numbered patch releases with calendar dates (no semantic version train)
+provider_wide_changelog: false
+rss: false
+feeds: []
+products:
+  - api: tui-group:tui-b2bota-g7-travelmessage
+    name: TravelMessage.v31 (ANVR G7)
+    url: https://developer.tui/api-catalog/b2bota-g7/release-notes
+    last_updated: '2026-07-21'
+    current: '3.1 patch 20'
+    quality: rich
+    entries:
+      - version: Patch 20
+        date: '2026-07-23'
+        planned: true
+        additions:
+          - Availability — RecomPrice added to the AdditionalProducts response, giving the recommended retail price directly (preferred over the textual PriceNotes).
+          - Recap — transport locations (airport names) now included in the TravelMessage travel overview.
+          - Supply processing — ArrivalDate on the accommodation is now processed and passed through from supply data.
+      - version: Patch 19
+        date: '2026-04-22'
+        breaking:
+          - >-
+            Infant age is now calculated from the return flight departure date rather than the
+            outbound departure date. A child turning 2 during the trip must now be booked as a
+            child for the whole booking.
+        additions:
+          - Several security patches.
+      - version: Patch 18
+        date: null
+        note: Middleware deployed, awaiting backend deployment.
+        breaking:
+          - >-
+            Transfers move from being auto-added as an "Extra" to being explicitly selected during
+            the book flow; default becomes OPT_OUT. Options OPT_OUT / SHARED / PRIVATE, carried at
+            Transport level, must be added in Receipt, Sell, Assign and Book, and appear in
+            Availability and Recap responses. In Recap they move from "Extra" to "TransportExtras".
+      - version: Patch 17
+        date: '2025-12-10'
+        breaking:
+          - Bookings are now capped at nine passengers; more returns ANVR message 1028. Affects Availability, AddProAvailability, Receipt and Sell.
+        additions:
+          - RequiredSeats implemented on AddProAvailability.
+      - version: Patch 16
+        date: '2025-10-02'
+        additions:
+          - Two new luggage codes for extra items — PBAG (personal item, under seat) and HBAG (small trolley / cabin bag). Where neither is used, BG00 is interpreted as HBAG.
+      - version: Patch 15
+        date: '2025-04-03'
+        additions:
+          - Supply full and delta delivery dates changed; first delta 30 minutes later.
+      - version: Patch 14
+        date: '2025-04-15'
+        additions:
+          - Extra cancellation information where a carrier has differing cancellation policies (Class Group in Transport), in AddProAvailability, Sell and RecapResponse.
+      - version: Patch 13
+        date: '2024-11-13'
+        additions:
+          - Discount code accepted on Receipt, Assign and BookRequest; discount price detail returned on Receipt, Assign and RecapResponse.
+      - version: Patch 12
+        date: '2024-11-13'
+        additions:
+          - Errata messages added to Receipt, Assign and RecapResponse.
+      - version: Patch 11
+        date: '2024-11-13'
+        additions:
+          - Board types UA and LD added.
+  - api: tui-group:tui-supply
+    name: Supply
+    url: https://developer.tui/api-catalog/supply/release-notes
+    last_updated: '2026-02-18'
+    current: 1.5.1 patch 9
+    quality: rich
+    entries:
+      - version: Patch 9
+        date: '2026-02-18'
+        additions:
+          - XSD — SupplyTransferInfo and TransferAvailability added.
+          - Reference documentation — the same additions carried into the OpenAPI specification.
+      - version: Patch 9
+        date: '2024-12-01'
+        note: Two entries are both numbered "Patch 9" on TUI's page; recorded as published.
+        additions:
+          - Board types LD (logies diner) and UA (Ultra All Inclusive) added to the XSD and the API specification.
+      - version: Patch 8
+        date: '2024-08-08'
+        additions:
+          - Optional OccupancyRestrictions group added to the XSD and the OpenAPI specification.
+      - version: Patch 7
+        date: '2024-04-10'
+        breaking:
+          - >-
+            For packages deleted in the delta flow the ProductInfo group is no longer sent;
+            mutation type "deletion" plus PackageID is now sufficient. ProductInfo became
+            non-mandatory in the XSD.
+      - version: Patch 5
+        date: '2024-04-10'
+        additions:
+          - Tripduration added (optional; duration in days from local departure to arrival back at origin).
+      - version: Patch 4
+        date: '2024-02-20'
+        breaking:
+          - Facility codes 80, 81 and 82 removed.
+        additions:
+          - CommissionGroup example added to the description page.
+      - version: Patch 3
+        date: '2023-09-06'
+        breaking:
+          - >-
+            Commission moved into a CommissionGroup structure keyed on travel period and booking
+            period, and is no longer carried as a facility. The group is not mandatory, so an XSD
+            check will not catch a consumer that missed the change.
+      - version: Patch 2
+        date: '2023-06-01'
+        additions:
+          - UnitContentID added to SupplyUnitInfo so the JSON content API can be matched to a supply unit.
+      - version: Patch 1
+        date: '2023-01-01'
+        additions:
+          - Initial setup.
+  - api: tui-group:tui-flight-availability-search-api
+    name: NSKCC Availability Search API
+    url: https://developer.tui/api-catalog/nskcc-availability-search-api/release-notes
+    last_updated: '2026-04-17'
+    current: 2.0.0
+    quality: rich
+    entries:
+      - version: 2.0.0
+        date: '2026-03'
+        breaking:
+          - 'Not backward compatible with v1. Base path /availability → /flight/newskies/availability/v2.'
+          - OAuth 2.0 now required.
+          - Response results are grouped rather than a flat array.
+          - 'Parameters renamed: passengerCount → PassengerCount, groupBy → GroupBy, limitGroups → LimitGroups.'
+          - Date format strictly enforced as yyyy-MM-dd.
+          - Trip type is now an integer enum (0 = Oneway, 1 = RoundTrip).
+        additions:
+          - Complete rewrite on .NET 8.0, migrated from AWS Lambda to ECS Fargate.
+          - Date-range search for outbound and inbound, multi-airport and country-level search, carrier filtering.
+          - Result grouping by origin-destination or date; LimitGroups and LimitFlights parameters.
+          - Gross/net fare detail with separate pricing for adults, children and infants; encrypted journey and fare keys; up to two stopovers.
+          - Health check at /health; OpenAPI/Swagger documentation published.
+  - api: tui-group:tui-newskies-pricefile-api
+    name: TUI NewSkies PriceFile API
+    url: https://developer.tui/api-catalog/tui-newskies-pricefile-api/release-notes
+    last_updated: '2026-06-26'
+    current: '1.0'
+    quality: thin
+    entries:
+      - version: '1.0'
+        date: null
+        additions:
+          - Initial release on the TUI Developer Portal.
+          - 'Endpoints: download, timestamp, delta, delta/timestamp, download by filename.'
+        note: File format is a base64-encoded ZIP containing CSV pricing data.
+      - version: null
+        date: '2026-06-26'
+        note: >-
+          The "Recent changes" line records the change that made this product public — "docs: change
+          API product access to public, update postman collection" (NSK-75610).
+  - api: tui-group:tui-search-walldy-api
+    name: WallDy API
+    url: https://developer.tui/api-catalog/walldy-api/release-notes
+    last_updated: '2026-07-28'
+    current: 1.0.0
+    quality: thin
+    entries:
+      - version: 1.0.0
+        date: null
+        additions:
+          - Initial release. Holiday Offers search exposed via POST /offers.
+          - OAuth 2.0 secured access through Apigee X.
+  - api: tui-group:tui-ota-content-api
+    name: OTA Content API
+    url: https://developer.tui/api-catalog/ota-content-api/release-notes
+    last_updated: '2023-06-13'
+    current: '2.0'
+    quality: empty
+    note: The page exists and carries a heading "RELEASE NOTES V2.0" but no entries beneath it.
+  - api: tui-group:tui-checkinhandler-service-api
+    name: CheckInHandler Service API
+    url: https://developer.tui/api-catalog/checkinhandler-service-api/release-notes
+    quality: empty
+  - api: tui-group:tui-holiday-offers-controller-api
+    name: HolidayOffersController API
+    url: https://developer.tui/api-catalog/holidayofferscontroller-api/release-notes
+    last_updated: '2025-11-10'
+    quality: placeholder
+    note: >-
+      The page publishes three fabricated-looking entries (v1.0 01.01.2018, v1.1 01.05.2018,
+      v1.2 01.07.2018) whose bodies are unfilled lorem-ipsum ("Nam porttitor blandit accumsan…")
+      and whose bullet lists read "first element / second / third element". This is the portal's
+      unfilled template, not a real change history — recorded so it is not mistaken for one.
+products_without_release_notes:
+  - flight-ndc-gateway-navitaire
+  - newskies-digital-api
+  - newskies-gonow-api
+  - newskies-payment-api
+  - tui-flight-ota-api
+  - meta-search-generic-api
+  - meta-partner-packages-flights
+  - meta-partner-package-live-search
+  - partner-content-api
+  - tui-cruise-price-and-availability
+  - tui-cruise-booking-apis
+  - cruise-cabin-availability
+  - ship-content-api

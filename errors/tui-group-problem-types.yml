@@ -1,0 +1,314 @@
+generated: '2026-07-28'
+method: derived
+source: openapi/*.yml (4xx/5xx responses across all 21 harvested TUI OpenAPI documents), plus https://developer.tui/api-catalog/newskies-payment-api/api-description
+  (error-handling section), https://developer.tui/api-catalog/b2bota-g7/release-notes (ANVR message numbers)
+  and live gateway probes.
+format: mixed
+description: 'TUI publishes no single cross-product error reference. Error semantics are per-API and per-backend:
+  the Apigee-native search / cruise / meta products return RFC 9457 application/problem+json; the Navitaire
+  New Skies products (Digital API, GoNow) return a proprietary ErrorResponse / Exception envelope as application/json;
+  the ANVR G7 TravelMessage channel returns numbered ANVR message codes inside the XML dialogue rather
+  than HTTP problem bodies; and the Apigee gateway itself returns its own fault envelope for auth failures
+  before a request ever reaches a backend.'
+envelopes:
+- name: RFC 9457 problem details
+  media_type: application/problem+json
+  response_count: 47
+  used_by:
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-holiday-offers-controller-api
+  - tui-meta-search-generic-api
+  fields:
+  - type
+  - title
+  - status
+  - detail
+  - instance
+  note: The HolidayOffersController and Meta-Search-Generic specs additionally declare Problem / ValidationProblem
+    schemas in components.
+- name: Navitaire New Skies error envelope
+  media_type: application/json
+  used_by:
+  - tui-newskies-digital-api
+  - tui-newskies-gonow-api
+  fields:
+  - errors
+  - exception
+  - message
+  - messageStatus
+  - messageDebug
+  note: components.schemas ErrorResponse / Exception / Message / MessageStatus / MessageDebug.
+- name: Apigee gateway fault
+  media_type: application/json
+  used_by:
+  - all products (pre-backend)
+  fields:
+  - fault.faultstring
+  - fault.detail.errorcode
+  evidence: Unauthenticated probe of https://prod.api.tui/search-walldy returned {"fault":{"faultstring":"Invalid
+    access token","detail":{"errorcode":"oauth.v2.InvalidAccessToken"}}} (HTTP 401, 2026-07-28).
+- name: ANVR G7 numbered messages
+  media_type: application/xml
+  used_by:
+  - tui-b2bota-g7-travelmessage
+  note: Errors travel as ANVR XML standard message numbers inside the dialogue response (e.g. 1028 for
+    more than nine passengers, 104 for an unknown ANVR code), documented on the release-notes page.
+- name: SOAP 1.1 fault
+  media_type: text/xml
+  used_by:
+  - tui-newskies-payment-api (/soap channel)
+  note: 'Payment API description page: "SOAP endpoints: XML SOAP fault responses".'
+problems:
+- status: 400
+  title: Bad request
+  occurrences: 456
+  apis:
+  - tui-b2bota-g7-travelmessage
+  - tui-cruise-booking-apis
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-flight-availability-search-api
+  - tui-flight-ndc-gateway
+  - tui-holiday-offers-controller-api
+  - tui-meta-search-generic-api
+  - tui-newskies-digital-api
+  - tui-newskies-gonow-api
+  - tui-newskies-payment-api
+  - tui-search-walldy-api
+  - tui-ship-content-api
+  media_types:
+  - application/json
+  - application/xml
+  - text/plain
+  - text/xml
+  - text/json
+  - application/problem+json
+  descriptions:
+  - There was a problem with the request and it could not be completed.
+  - Bad Request
+  - Bad request
+  - Missing elements in Request
+  - Invalid input parameters
+  - Bad request.
+  sample_operations:
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#validateHoliday
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#confirmHoliday
+  - openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+- status: 401
+  title: Unauthorized
+  occurrences: 186
+  apis:
+  - tui-cruise-booking-apis
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-flight-availability-search-api
+  - tui-newskies-digital-api
+  - tui-newskies-gonow-api
+  - tui-newskies-payment-api
+  media_types:
+  - application/json
+  - application/problem+json
+  descriptions:
+  - Authorization Not Allowed.
+  - Unauthorized - Invalid API key
+  - Unauthorized
+  - Authentication is required for this request.
+  - No token provided or the token type (typically anonymous type) has insufficient access.
+  - Your token is unauthorized to use this endpoint.
+  sample_operations:
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#validateHoliday
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#confirmHoliday
+  - openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+- status: 403
+  title: Forbidden
+  occurrences: 33
+  apis:
+  - tui-newskies-digital-api
+  media_types:
+  - application/json
+  descriptions:
+  - Role permissions are not met.
+  - There was a problem authorizing the request.
+  sample_operations:
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v4_availability_search_post
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v2_availability_search_ssr_post
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#dcs_v2_boarding_recordLocator_legs_legKey_passengers_passengerKey_post
+- status: 404
+  title: Not found
+  occurrences: 548
+  apis:
+  - tui-checkinhandler-service-api
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-flight-availability-search-api
+  - tui-flight-ota-api
+  - tui-holiday-offers-controller-api
+  - tui-meta-search-generic-api
+  - tui-newskies-digital-api
+  - tui-newskies-payment-api
+  media_types:
+  - application/json
+  - application/problem+json
+  - text/xml
+  descriptions:
+  - The item was not found.
+  - Not found.
+  - Not Found
+  - Not found
+  - Resource not found.
+  - Not Found - The requested resource could not be found.
+  sample_operations:
+  - openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getCruisePackagePrices
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getUniqueCruisePackagePrices
+- status: 409
+  title: Conflict
+  occurrences: 181
+  apis:
+  - tui-newskies-digital-api
+  - tui-newskies-payment-api
+  media_types:
+  - application/json
+  descriptions:
+  - Concurrent changes were being made in the same session.
+  - Concurrent changes
+  sample_operations:
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#dcs_v1_baggage_post
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#dcs_v1_baggage_delete
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#dcs_v1_baggage_byLegKey_delete
+- status: 415
+  title: Unsupported media type
+  occurrences: 1
+  apis:
+  - tui-newskies-digital-api
+  media_types:
+  - application/json
+  descriptions:
+  - Unsupported media type.
+  sample_operations:
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v1_resources_settings_data_post
+- status: 440
+  title: Session expired (non-standard code emitted by the New Skies stack)
+  occurrences: 2
+  apis:
+  - tui-newskies-digital-api
+  media_types:
+  - application/json
+  descriptions: []
+  sample_operations:
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#v1_token_put
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml#v1_token_delete
+- status: 500
+  title: Internal server error
+  occurrences: 189
+  apis:
+  - tui-b2bota-g7-travelmessage
+  - tui-checkinhandler-service-api
+  - tui-cruise-booking-apis
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-flight-availability-search-api
+  - tui-flight-ndc-gateway
+  - tui-holiday-offers-controller-api
+  - tui-meta-search-generic-api
+  - tui-newskies-digital-api
+  - tui-newskies-gonow-api
+  - tui-search-walldy-api
+  - tui-ship-content-api
+  media_types:
+  - application/json
+  - application/xml
+  - text/plain
+  - text/xml
+  - text/json
+  - application/problem+json
+  descriptions:
+  - A server error occurred.
+  - Internal Server Error
+  - Internal server error
+  - Server Error
+  - Internal Server Error - An unexpected occurred while processing the request.
+  - InternalServerError
+  sample_operations:
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#validateHoliday
+  - openapi/tui-group-tui-cruise-booking-apis-openapi.yml#confirmHoliday
+  - openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+- status: 501
+  title: Not implemented
+  occurrences: 4
+  apis:
+  - tui-newskies-payment-api
+  media_types:
+  - application/json
+  descriptions:
+  - Not Implemented
+  sample_operations:
+  - openapi/tui-group-tui-newskies-payment-api-openapi.yml#ndcPaymentGet
+  - openapi/tui-group-tui-newskies-payment-api-openapi.yml#ndcPaymentPost
+  - openapi/tui-group-tui-newskies-payment-api-openapi.yml#ndcPaymentPut
+- status: 502
+  title: Bad gateway
+  occurrences: 13
+  apis:
+  - tui-cruise-cabin-availability
+  - tui-cruise-price-and-availability
+  - tui-holiday-offers-controller-api
+  - tui-newskies-digital-api
+  media_types:
+  - application/problem+json
+  - application/json
+  descriptions:
+  - Bad Gateway
+  - Bad gateway.
+  - One or more backend systems not available
+  - Bad Gateway. One or more backend systems not available
+  sample_operations:
+  - openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getCruisePackagePrices
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getUniqueCruisePackagePrices
+- status: 504
+  title: Gateway timeout
+  occurrences: 7
+  apis:
+  - tui-cruise-price-and-availability
+  - tui-holiday-offers-controller-api
+  media_types:
+  - application/problem+json
+  descriptions:
+  - Gateway Timed Out
+  sample_operations:
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getCruisePackagePrices
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getUniqueCruisePackagePrices
+  - openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getAlternateCabinAndBoards
+known_codes:
+- code: '1028'
+  family: ANVR G7
+  meaning: More than nine passengers per reservation is rejected by TUI backend systems.
+  affects:
+  - Availability
+  - AddProAvailability
+  - Receipt
+  - Sell
+  source: https://developer.tui/api-catalog/b2bota-g7/release-notes (Patch 17, 2025-12-10)
+- code: '104'
+  family: ANVR G7
+  meaning: G7 authorisation message returned when the anvrcode header carries an unknown ANVR code (previously
+    a generic "Error in backend system").
+  source: https://developer.tui/api-catalog/b2bota-g7/release-notes (Patch 6)
+- code: oauth.v2.InvalidAccessToken
+  family: Apigee
+  meaning: Bearer token missing, expired, or not valid for the subscribed product/environment.
+  source: live probe of https://prod.api.tui/search-walldy, 2026-07-28
+- code: invalid_client
+  family: OAuth 2.0 token endpoint
+  meaning: '"Please provide valid client credentials" — client_id / client_secret rejected at https://prod.api.tui/oauth2/token.'
+  source: live probe of https://prod.api.tui/oauth2/token, 2026-07-28
+- code: messaging.adaptors.http.flow.ApplicationNotFound
+  family: Apigee
+  meaning: No API proxy is bound to the requested host + path.
+  source: live probe of https://playground.api.tui/.well-known/openid-configuration, 2026-07-28
+- code: No price file mapped to ApiKey <AppName>
+  family: PriceFile API
+  meaning: The consumer app has no TUI-side pricefile mapping; request one from api.flightproduction@tui.com.
+  source: https://developer.tui/api-catalog/tui-newskies-pricefile-api/technical-integration

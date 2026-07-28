@@ -1,0 +1,1098 @@
+openapi: 3.0.3
+info:
+  title: Supply
+  description: |
+    This document only describes the SupplyResponse and is a translation of the supply.xsd.
+    Because not all items in xsd schema can be translated to open API definition it is important to also use the examples.  
+    For example the Price Group:     
+    &lt;Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF"&gt;303400&lt;/Price&gt;  
+    The Price element has attributes, but also contains the price itself. This cannot be defined in API Specification (json).
+    The price will be a group and a group can not contain a value, only items.
+  version: 1.5.1
+  contact:
+    name: G7-OTA-TEAM
+    email: b2bota.g7.support@tui.nl
+servers:
+  - url: prod.sftp.tui-b2bota-g7.nl
+    description: Production
+  - url: playground.sftp.tui-b2bota-g7.nl
+    description: Playground for testing
+
+paths:
+  /supply:
+    get:
+      tags:
+        - Supply
+      summary: SupplyResponse
+      description: |
+        The SupplyResponse is here defined as a GET oparation, but in real time a (xml) file is created and placed on 
+        a server from which third parties can retrieve them via download. Each file contains the supply for a certain 
+        accommodation.  
+        It contains information about the package:
+        - General information  
+          Like PackageID, Description, BookPeriod and content location
+        - Transport information  
+          Like Route information (from/to)
+        - Accommodation/room information  
+          Like AccommodationID and AccommodationType,  
+          UnitID, Type, Board and Occupation (rules) 
+        - Transfer information  
+          Included transfer, that could be "No Transfer" or "Standard Transfer"
+        - Price information  
+          Price for each Departuredate, Duration, Route, Unit, Board and Occupation
+      security:
+        - oAuth2ClientCredentials: [ ]
+      responses:
+        '200':
+          description: Contents of supply file
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Supply'
+              examples:
+                SupplyResponse:
+                  $ref: '#/components/examples/SupplyResponseExample'
+components:
+  schemas:
+    Supply:
+      type: object
+      properties:
+        VersionID:
+          $ref: '#/components/schemas/VersionID'
+        Control:
+          $ref: '#/components/schemas/Control'
+        SupplyResponse:
+          $ref: '#/components/schemas/SupplyResponse'
+      required:
+        - Control
+        - VersionID
+        - SupplyResponse
+    Control:
+      type: object
+      properties:
+        Language:
+          allOf:
+            - $ref: '#/components/schemas/Language'
+          example: 'NL'
+        Test:
+          allOf:
+            - $ref: '#/components/schemas/YesNoValue'
+          example: 'nee'
+        SenderSessionID:
+          type: string
+        ReceiverSessionID:
+          type: string
+        Date:
+          type: string
+          format: 'YYYY-MM-DD'
+        Time:
+          type: string
+          format: 'HH:MM'
+        MessageSequence:
+          type: number
+        SenderID:
+          type: string
+        ReceiverID:
+          type: string
+        EmployeeID:
+          type: string
+        RequestID:
+          type: string
+        ResponseID:
+          type: string
+      required:
+        - Language
+        - SenderSessionID
+        - ReceiverSessionID
+        - Date
+        - Time
+        - MessageSequence
+        - SenderID
+        - ReceiverID
+        - RequestID
+        - ResponseID
+    SupplyResponse:
+      type: object
+      properties:
+        SupplyPackage:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyPackage'
+    SupplyPackage:
+      type: object
+      properties:
+        MutationType:
+          $ref: '#/components/schemas/MutationType'
+        OfferType:
+          type: integer
+        Brand:
+          type: string
+        PackageID:
+          type: string
+        ProductInfo:
+          $ref: '#/components/schemas/ProductInfo'
+        SupplyTransportInfo:
+          $ref: '#/components/schemas/SupplyTransportInfo'
+        SupplyAccoInfo:
+          $ref: '#/components/schemas/SupplyAccoInfo'
+        SupplyTransferInfo:
+          $ref: '#/components/schemas/SupplyTransferInfo'          
+        SupplyPriceAvailabilityInfo:
+          $ref: '#/components/schemas/SupplyPriceAvailabilityInfo'
+      required:
+        - MutationType
+        - OfferType
+        - Brand
+        - PackageID
+        - ProductInfo
+    SupplyTransportToFrom:
+      type: object
+      properties:
+        TransportType:
+          $ref: '#/components/schemas/TransportType'
+        DepartureInfo:
+          $ref: '#/components/schemas/DepartureArrivalInfo'
+        ArrivalInfo:
+          $ref: '#/components/schemas/DepartureArrivalInfo'
+      required:
+        - TransportType
+        - DepartureInfo
+        - ArrivalInfo
+    DepartureArrivalInfo:
+      type: object
+      properties:
+        Point:
+          $ref: '#/components/schemas/Point'
+      required:
+        - Point
+    Point:
+      type: object
+      properties:
+        PointType:
+          $ref: '#/components/schemas/PointType'
+        PointID:
+          type: string
+        Description:
+          type: string
+      required:
+        - PointType
+        - PointID
+        - Description
+    SupplyTransportInfo:
+      type: object
+      properties:
+        Route:
+          type: array
+          items:
+            $ref: '#/components/schemas/Route'
+      required:
+        - Route
+    Route:
+      type: object
+      properties:
+        RouteID:
+          type: string
+          xml:
+            attribute: true
+        SupplyTransportTo:
+          $ref: '#/components/schemas/SupplyTransportToFrom'
+        SupplyTransportFrom:
+          $ref: '#/components/schemas/SupplyTransportToFrom'
+        PriceNote:
+          type: integer
+      required:
+        - RouteID
+    SupplyAccoInfo:
+      type: object
+      properties:
+        AccommodationID:
+          type: string
+        AccommodationType:
+          $ref: '#/components/schemas/AccommodationType'
+        Name:
+          type: string
+        Location:
+          type: object
+          properties:
+            Country:
+              type: string
+            Area:
+              type: string
+            Place:
+              type: string
+          required:
+            - Country
+            - Place
+        SupplyUnitInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyUnitInfo'
+      required:
+        - AccommodationID
+        - AccommodationType
+        - Name
+        - SupplyUnitInfo
+    SupplyUnitInfo:
+      type: object
+      properties:
+        UnitID:
+          type: string
+        UnitType:
+          $ref: '#/components/schemas/UnitType'
+        Description:
+          type: string
+        Occupation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Occupation'
+        BoardInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/Board'
+        UnitContentID:
+          type: string
+      required:
+        - UnitID
+        - UnitType
+        - Occupation
+        - BoardInfo
+        - UnitContentID
+    SupplyTransferInfo:
+      type: object
+      properties:
+        SupplyTransfer:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyTransfer'
+      required:
+        - SupplyTransfer
+    SupplyTransfer:
+      type: object
+      properties:
+        TransferID:
+          type: string
+          xml:
+            attribute: true
+        SupplyTransferTo:
+          $ref: '#/components/schemas/SupplyTransferToFrom'
+        SupplyTransferFrom:
+          $ref: '#/components/schemas/SupplyTransferToFrom'
+      required:
+        - TransferID          
+    SupplyTransferToFrom:
+      type: object
+      properties:
+        TransferCategory:
+          type: string
+        Description:
+          type: string
+      required:
+        - TransferCategory
+        - Description
+    SupplyPriceAvailabilityInfo:
+      type: object
+      properties:
+        SupplyPriceAvailability:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyPriceAvailability'
+      required:
+        - SupplyPriceAvailability
+    SupplyPriceAvailability:
+      type: object
+      properties:
+        DepartureDate:
+          type: string
+          format: "YYYY-MM-DD"
+        Duration:
+          $ref: '#/components/schemas/Duration'
+        TripDuration:
+          $ref: '#/components/schemas/Duration'
+        TransportAvailability:
+          type: object
+          properties:
+            Route:
+              type: object
+              properties:
+                RouteID:
+                  type: string
+                  xml:
+                    attribute: true
+                PriceNote:
+                  type: integer
+              required:
+                - RouteID
+        UnitGroup:
+          type: object
+          properties:
+            Unit:
+              type: array
+              items:
+                $ref: '#/components/schemas/Unit'
+          required:
+            - Unit
+        TransferAvailability:
+          type: object
+          properties:
+            Transfer:
+              type: array
+              items:
+                $ref: '#/components/schemas/Transfer'
+      required:
+        - DepartureDate
+        - Duration
+    Unit:
+      type: object
+      properties:
+        UnitID:
+          type: string
+        Status:
+          type: string
+        BoardPrice:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardPrice'
+      required:
+        - UnitID
+        - Status
+        - BoardPrice
+    BoardPrice:
+      type: object
+      properties:
+        BoardType:
+          $ref: '#/components/schemas/BoardType'
+        Price:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+      required:
+        - BoardType
+        - Price
+    Price:
+      type: object
+      properties:
+        Currency:
+          $ref: '#/components/schemas/Currency'
+        Occupation:
+          type: integer
+          xml:
+            attribute: true
+        PricePer:
+          $ref: '#/components/schemas/PricePer'
+        PriceType:
+          $ref: '#/components/schemas/PriceType'
+      required:
+        - Currency
+        - Occupation
+        - PricePer
+        - PriceType
+    Transfer:
+      type: object
+      properties:
+        TransferID:
+          type: string
+          xml:
+            attribute: true          
+        Included:
+          $ref: '#/components/schemas/YesNoValue'
+      required:
+        - TransferID
+    Duration:
+      type: object
+      title: Duration
+      properties:
+        Duration:
+          $ref: '#/components/schemas/DurationType'
+    ProductInfo:
+      type: object
+      properties:
+        Description:
+          type: string
+        PublicationPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+        Category:
+          type: integer
+        Reference:
+          $ref: '#/components/schemas/Reference'
+        ImageLocation:
+          type: array
+          items:
+            type: string
+        TextLocation:
+          type: string
+        FacilityGroup:
+          $ref: '#/components/schemas/FacilityGroup'
+        CommissionGroup:
+          $ref: '#/components/schemas/CommissionGroup'
+      required:
+        - Description
+        - PublicationPeriod
+        - Category
+    Occupation:
+      type: object
+      properties:
+        MinOccupancy:
+          type: integer
+        MaxOccupancy:
+          type: integer
+        OccupancyRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/OccupancyRules'
+        OccupancyRestrictions:
+          type: array
+          items:
+            $ref: '#/components/schemas/OccupancyRestrictions'
+        OccupancyPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+      required:
+        - MinOccupancy
+        - MaxOccupancy
+    OccupancyRules:
+      type: object
+      properties:
+        MinOccupancy:
+          type: integer
+        MaxOccupancy:
+          type: integer
+        AgeCondition:
+          type: array
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/AgeType'
+        OccupancyIncluded:
+          allOf:
+            - $ref: '#/components/schemas/YesNoValue'
+        PaxType:
+            $ref: '#/components/schemas/PaxType'
+      required:
+        - MinOccupancy
+        - MaxOccupancy
+        - AgeCondition
+    OccupancyRestrictions:
+      type: object
+      properties: 
+        Adult:
+          type: integer
+        Child:
+          type: integer
+      required:
+        - Adult
+        - Child
+    Reference:
+      type: object
+      properties:
+        ReferenceID:
+          type: integer
+        Description:
+          type: string
+    FacilityGroup:
+      type: object
+      properties:
+        Facility:
+          type: array
+          items:
+            type: integer
+    CommissionGroup:
+      type: object
+      properties:
+        Commission:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commission'
+    Commission:
+      type: object
+      properties:
+        CommissionCategory:
+          type: string
+        TravelPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+        BookPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+      required:
+        - CommissionCategory
+        - TravelPeriod
+    StartAndEndDate:
+      type: object
+      properties:
+        StartDate:
+          type: string
+          format: 'YYYY-MM-DD'
+        EndDate:
+          type: string
+          format: 'YYYY-MM-DD'
+      required:
+        - StartDate
+        - EndDate
+    Board:
+      type: object
+      properties:
+        BoardType:
+          $ref: '#/components/schemas/BoardType'
+        Description:
+          type: string
+      required:
+        - BoardType
+        - Description
+    VersionID:
+      type: string
+      enum:
+        - '1.5.1'
+      xml:
+        attribute: true
+    Language:
+      type: string
+      enum:
+        - NL
+      xml:
+        attribute: true
+    YesNoValue:
+      type: string
+      enum:
+        - ja
+        - nee
+      xml:
+        attribute: true
+    PointType:
+      type: string
+      enum:
+        - IATAcode
+        - Postcode
+        - Internal
+        - ANVRLandStreek
+      xml:
+        attribute: true
+    TransportType:
+      type: string
+      enum:
+        - vl
+        - bu
+        - tr
+        - fe
+        - bo
+        - ev
+        - VL
+        - BU
+        - TR
+        - FE
+        - BO
+        - EV
+      example: 'VL'
+    AccommodationType:
+      type: string
+      enum:
+        - alb
+        - apo
+        - app
+        - bnb
+        - bng
+        - bry
+        - cam
+        - car
+        - cha
+        - cpr
+        - cru
+        - est
+        - ghf
+        - gue
+        - hos
+        - hot
+        - hui
+        - kas
+        - mai
+        - mot
+        - pen
+        - pou
+        - res
+        - rh
+        - ron
+        - sch
+        - tnt
+        - vak
+        - vil
+        - wng
+        - ALB
+        - APO
+        - APP
+        - BNB
+        - BNG
+        - BRY
+        - CAM
+        - CAR
+        - CHA
+        - CPR
+        - CRU
+        - EST
+        - GHF
+        - GUE
+        - HOS
+        - HOT
+        - HUI
+        - KAS
+        - MAI
+        - MOT
+        - PEN
+        - POU
+        - RES
+        - RH
+        - RON
+        - SCH
+        - TNT
+        - VAK
+        - VIL
+        - WNG
+      example: 'HOT'
+    AgeType:
+      type: string
+      enum:
+        - Max
+        - Min
+        - MAX
+        - MIN
+        - max
+        - min
+      xml:
+        attribute: true
+    BoardType:
+      type: string
+      enum:
+        - lg
+        - lo
+        - hp
+        - vp
+        - ab
+        - bb
+        - cb
+        - br
+        - vb
+        - ai
+        - dv
+        - ph
+        - pv
+        - pa
+        - ua
+        - ld
+        - LG
+        - LO
+        - HP
+        - VP
+        - AB
+        - BB
+        - CB
+        - BR
+        - VB
+        - AI
+        - DV
+        - PH
+        - PV
+        - PA
+        - UA
+        - LD
+      example: 'LO'
+    UnitType:
+      type: string
+      pattern: '(\d+pk)|(\d+PK)|(\d+ka)|(\d+KA)|(\d+kb)|(\d+KB)|(\d+kw)|(\d+KW)|(\d+kv)|(\d+KV)|(\d+ph)|(\d+PH)|(\d+pt)|(\d+PT)|(\d+pc)|(\d+PC)|(\d+ks)|(\d+KS)|(\d+pl)|(\d+PL)|(\d+ps)|(\d+PS)|(\d+pz)|(\d+PZ)|(\d+gk)|(\d+GK)|(\d+tc)|(\d+TC)|(div)|(DIV)|(stn)|(STN)'
+    DurationType:
+      type: string
+      enum:
+        - dagen
+        - nachten
+      xml:
+        attribute: true
+    PaxType:
+      type: string
+      enum:
+        - Adult
+        - Child
+        - Infant
+      xml:
+        attribute: true        
+    PricePer:
+      type: string
+      enum:
+        - pn
+        - pw
+        - pa
+        - kn
+        - kw
+        - ka
+        - tp
+        - PN
+        - PW
+        - PA
+        - KN
+        - KW
+        - KA
+        - TP
+      example: 'PA'
+      xml:
+        attribute: true
+    PriceType:
+      type: string
+      enum:
+        - OFF
+        - SPO
+      example: 'OFF'
+      xml:
+        attribute: true
+    Currency:
+      type: string
+      enum:
+        - EUR
+      xml:
+        attribute: true
+    MutationType:
+      type: string
+      enum:
+        - New
+        - Mutation
+        - Deletion
+        - Reset
+      example: Reset
+  examples:
+    SupplyResponseExample:
+      value: >
+        <?xml version="1.0" encoding="utf-16"?>
+        <Supply xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" VersionID="0">
+          <Control Language="NL" Test="nee">
+            <SenderSessionID>1</SenderSessionID>
+            <ReceiverSessionID>1</ReceiverSessionID>
+            <Date>2022-12-14</Date>
+            <Time>12:11</Time>
+            <MessageSequence>1</MessageSequence>
+            <SenderID>TUINL</SenderID>
+            <ReceiverID>OTA</ReceiverID>
+            <EmployeeID>TUI-ICT</EmployeeID>
+            <RequestID />
+            <ResponseID>SupplyResponse</ResponseID>
+          </Control>
+          <SupplyResponse>
+            <SupplyPackage>
+              <MutationType>Reset</MutationType>
+              <OfferType>1</OfferType>
+              <Brand>NL</Brand>
+              <PackageID>949102bc-b9fb-4aff-83a4-986111d7c7b2</PackageID>
+              <ProductInfo>
+                <Description>HOTEL 1926</Description>
+                <PublicationPeriod>
+                  <StartDate>2022-05-16</StartDate>
+                  <EndDate>2023-11-01</EndDate>
+                </PublicationPeriod>
+                <Category>02</Category>
+                <CommissionGroup>
+                  <Commission>
+                    <CommissionCategory>A</CommissionCategory>
+                    <TravelPeriod>
+                      <StartDate>2022-07-11</StartDate>
+                      <EndDate>2023-04-01</EndDate>
+                    </TravelPeriod>
+                    <BookPeriod>
+                      <StartDate>2022-07-11</StartDate>
+                      <EndDate>2023-02-01</EndDate>
+                    </BookPeriod>
+                  </Commission>
+                </CommissionGroup>        
+                <ImageLocation>https://dev.api.tui/sales-ota-content/v2/accommodations/A1027761?relevantBrand=G7_NL&brand=NL</ImageLocation>
+                <TextLocation>https://dev.api.tui/sales-ota-content/v2/accommodations/A1027761?relevantBrand=G7_NL&brand=NL</TextLocation>
+              </ProductInfo>
+              <SupplyTransportInfo>
+                <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                  <SupplyTransportTo>
+                    <TransportType>VL</TransportType>
+                    <DepartureInfo>
+                      <Point PointType="IATAcode">
+                        <PointID>AMS</PointID>
+                        <Description>Amsterdam</Description>
+                      </Point>
+                    </DepartureInfo>
+                    <ArrivalInfo>
+                    <Point PointType="IATAcode">
+                      <PointID>MLA</PointID>
+                      <Description>Malta</Description>
+                    </Point>
+                    </ArrivalInfo>
+                  </SupplyTransportTo>
+                  <SupplyTransportFrom>
+                    <TransportType>VL</TransportType>
+                    <DepartureInfo>
+                      <Point PointType="IATAcode">
+                        <PointID>MLA</PointID>
+                        <Description>Malta</Description>
+                      </Point>
+                    </DepartureInfo>
+                    <ArrivalInfo>
+                      <Point PointType="IATAcode">
+                        <PointID>AMS</PointID>
+                        <Description>Amsterdam</Description>
+                      </Point>
+                    </ArrivalInfo>
+                  </SupplyTransportFrom>
+                </Route>
+              </SupplyTransportInfo>
+              <SupplyAccoInfo>
+                <AccommodationID>A1027761</AccommodationID>
+                <AccommodationType>HOT</AccommodationType>
+                <Name>HOTEL 1926</Name>
+                <Location>
+                  <Country>Malta</Country>
+                  <Area>Malta</Area>
+                  <Place>Sliema</Place>
+                </Location>
+                <SupplyUnitInfo>
+                  <UnitID>ebcde0b6-c813-4ead-85b4-8fe4c712ea71</UnitID>
+                  <UnitType>2PK</UnitType>
+                  <Occupation>
+                    <MinOccupancy>1</MinOccupancy>
+                    <MaxOccupancy>2</MaxOccupancy>
+                    <OccupancyRules>
+                      <MinOccupancy>1</MinOccupancy>
+                      <MaxOccupancy>2</MaxOccupancy>
+                      <AgeCondition AgeType="MIN">12</AgeCondition>
+                      <AgeCondition AgeType="MAX">200</AgeCondition>
+                    </OccupancyRules>
+                    <OccupancyRules>
+                      <MinOccupancy>0</MinOccupancy>
+                      <MaxOccupancy>1</MaxOccupancy>
+                      <AgeCondition AgeType="MIN">2</AgeCondition>
+                      <AgeCondition AgeType="MAX">11</AgeCondition>
+                    </OccupancyRules>
+                    <OccupancyPeriod>
+                      <StartDate>2022-11-01</StartDate>
+                      <EndDate>2023-10-31</EndDate>
+                    </OccupancyPeriod>
+                  </Occupation>
+                  <BoardInfo>
+                    <BoardType>LO</BoardType>
+                    <Description>LO</Description>
+                  </BoardInfo>
+                  <UnitContentID>64c03f54-758e-4edd-b6ac-a8a968767fb9</UnitContentID>
+                </SupplyUnitInfo>
+                <SupplyUnitInfo>
+                  <UnitID>fbcde0b6-c813-4ead-85b4-8fe4c712ea70</UnitID>
+                  <UnitType>4PK</UnitType>
+                  <Occupation>
+                    <MinOccupancy>1</MinOccupancy>
+                    <MaxOccupancy>4</MaxOccupancy>
+                    <OccupancyRules PaxType="Adult">
+                      <MinOccupancy>1</MinOccupancy>
+                      <MaxOccupancy>3</MaxOccupancy>
+                      <AgeCondition AgeType="MIN">15</AgeCondition>
+                      <AgeCondition AgeType="MAX">200</AgeCondition>
+                    </OccupancyRules>
+                    <OccupancyRules PaxType="Child">
+                      <MinOccupancy>0</MinOccupancy>
+                      <MaxOccupancy>3</MaxOccupancy>
+                      <AgeCondition AgeType="MIN">2</AgeCondition>
+                      <AgeCondition AgeType="MAX">14</AgeCondition>
+                    </OccupancyRules>
+                    <OccupancyRestrictions>
+                      <Adult>3</Adult>
+                      <Child>1</Child>
+                    </OccupancyRestrictions>
+                    <OccupancyPeriod>
+                      <StartDate>2022-11-01</StartDate>
+                      <EndDate>2023-10-31</EndDate>
+                    </OccupancyPeriod>
+                  </Occupation>
+                  <BoardInfo>
+                    <BoardType>LO</BoardType>
+                    <Description>LO</Description>
+                  </BoardInfo>
+                  <UnitContentID>74c03f54-758e-4edd-b6ac-a8a968767fb7</UnitContentID>
+                </SupplyUnitInfo>        
+              </SupplyAccoInfo>
+              <SupplyTransferInfo>
+                <SupplyTransfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">
+        	      <SupplyTransferTo>
+        		    <TransferCategory>SHARED</TransferCategory>
+        		    <Description>Standaard transfer</Description>
+        	      </SupplyTransferTo>
+        	      <SupplyTransferFrom>
+        		    <TransferCategory>SHARED</TransferCategory>
+        		    <Description>Standaard transfer</Description>			
+        	      </SupplyTransferFrom>			
+                </SupplyTransfer>
+                <SupplyTransfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d">
+        	      <SupplyTransferTo>
+        		    <TransferCategory>OPT_OUT</TransferCategory>
+        		    <Description>Geen transfer</Description>
+        	      </SupplyTransferTo>
+        	      <SupplyTransferFrom>
+        		    <TransferCategory>OPT_OUT</TransferCategory>
+        		    <Description>Geen transfer</Description>			
+        	      </SupplyTransferFrom>			
+                </SupplyTransfer>		
+                <SupplyTransfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">
+        	      <SupplyTransferTo>
+        		    <TransferCategory>PRIVATE</TransferCategory>
+        		    <Description>Prive transfer</Description>
+        	      </SupplyTransferTo>
+        	      <SupplyTransferFrom>
+        		    <TransferCategory>PRIVATE</TransferCategory>
+        		    <Description>Prive Transfer</Description>			
+        	      </SupplyTransferFrom>			
+                </SupplyTransfer>				
+              </SupplyTransferInfo>	  
+              <SupplyPriceAvailabilityInfo>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2022-12-27</DepartureDate>
+                  <Duration DurationType="nachten">7</Duration>
+                  <TripDuration>8</TripDuration>        
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>ebcde0b6-c813-4ead-85b4-8fe4c712ea71</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">160300</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">123600</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>        
+                </SupplyPriceAvailability>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2022-12-27</DepartureDate>
+                  <Duration DurationType="nachten">14</Duration>
+                  <TripDuration>15</TripDuration>
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>ebcde0b6-c813-4ead-85b4-8fe4c712ea71</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">258400</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">184900</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>
+                </SupplyPriceAvailability>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2023-01-03</DepartureDate>
+                  <Duration DurationType="nachten">7</Duration>
+                  <TripDuration>8</TripDuration>
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>ebcde0b6-c813-4ead-85b4-8fe4c712ea71</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">154700</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">117900</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>        
+                </SupplyPriceAvailability>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2023-01-03</DepartureDate>
+                  <Duration DurationType="nachten">14</Duration>
+                  <TripDuration>15</TripDuration>
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>ebcde0b6-c813-4ead-85b4-8fe4c712ea71</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">252600</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">179100</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>
+                </SupplyPriceAvailability>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2023-01-03</DepartureDate>
+                  <Duration DurationType="nachten">7</Duration>
+                  <TripDuration>8</TripDuration>
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>fbcde0b6-c813-4ead-85b4-8fe4c712ea70</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">154700</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">117900</Price>
+                        <Price Currency="EUR" Occupation="3" PricePer="PA" PriceType="OFF">107900</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>
+                </SupplyPriceAvailability>
+                <SupplyPriceAvailability>
+                  <DepartureDate>2023-01-03</DepartureDate>
+                  <Duration DurationType="nachten">14</Duration>
+                  <TripDuration>15</TripDuration>
+                  <TransportAvailability>
+                    <Route RouteID="d87ea4b6-686b-3fa3-ba8d-c3caa201d0b5">
+                      <PriceNote>0</PriceNote>
+                    </Route>
+                  </TransportAvailability>
+                  <UnitGroup>
+                    <Unit>
+                      <UnitID>fbcde0b6-c813-4ead-85b4-8fe4c712ea70</UnitID>
+                      <Status>OK</Status>
+                      <BoardPrice>
+                        <BoardType>LO</BoardType>
+                        <Price Currency="EUR" Occupation="1" PricePer="PA" PriceType="OFF">252600</Price>
+                        <Price Currency="EUR" Occupation="2" PricePer="PA" PriceType="OFF">179100</Price>
+                        <Price Currency="EUR" Occupation="3" PricePer="PA" PriceType="OFF">107900</Price>
+                      </BoardPrice>
+                    </Unit>
+                  </UnitGroup>
+                  <TransferAvailability>
+                    <Transfer TransferID="068f4639-206d-369b-ba24-22cb947a85a8">1000</Transfer>
+                    <Transfer TransferID="fd42a212-0f9a-3fba-81a8-6e8b0eb1d45d" Included="ja">0</Transfer>
+                    <Transfer TransferID="8ce44c50-3b8f-331b-b978-f24f67c9b6ea">10000</Transfer>
+                  </TransferAvailability>
+                </SupplyPriceAvailability>
+              </SupplyPriceAvailabilityInfo>
+            </SupplyPackage>
+          </SupplyResponse>
+        </Supply>

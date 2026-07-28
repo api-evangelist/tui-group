@@ -1,0 +1,138 @@
+generated: '2026-07-28'
+method: derived
+source: >-
+  mcp/tui-group-mcp.yml (candidate tool surface) bound to openapi/*.yml operationIds, plus the
+  GraphQL surface declared by openapi/tui-group-tui-ship-content-api-openapi.yml.
+description: >-
+  TUI ships no MCP server, so this crosswalk binds the API Evangelist candidate tool surface to the
+  backing OpenAPI operations rather than reconciling a published tool list. Confidence is high
+  throughout because every row is a 1:1 binding to an operationId verified in the harvested spec —
+  there is no name-matching guesswork. The value of the crosswalk here is the divergence it records:
+  a GraphQL surface whose schema cannot be read anonymously, and 1,230 REST operations with no tool
+  at all, almost all of them inside two Navitaire products that a tour operator re-exposes rather
+  than authors.
+surfaces:
+  openapi:
+    location: openapi/*.yml
+    documents: 21
+    operations: 1261
+    gated: false
+    note: >-
+      All 21 documents are publicly downloadable from the portal's Swagger UI at
+      https://developer.tui/system/files/<yyyy-mm>/<id>-openapi-spec.yml. The runtime behind them is
+      not public — every call needs an OAuth 2.0 client-credentials token plus an approved product
+      subscription.
+  graphql:
+    endpoint: https://prod.api.tui/cruises/ship/graphql
+    declared_in: openapi/tui-group-tui-ship-content-api-openapi.yml (POST /graphql)
+    gated: true
+    note: >-
+      Introspection is auth-gated. An anonymous POST of {__schema{queryType{name}}} returns the
+      Apigee fault {"fault":{"faultstring":"Invalid access token","detail":{"errorcode":"oauth.v2.InvalidAccessToken"}}}
+      (HTTP 401, probed 2026-07-28), so no SDL could be captured. The OpenAPI wrapper declares a
+      single Ship response schema covering cabin types, board types and deck plans; the field-level
+      query surface is unknown without credentials.
+  mcp:
+    url: null
+    gated: n/a
+    note: No hosted MCP server exists. See the probe record in mcp/tui-group-mcp.yml.
+crosswalk:
+  - {tool: search_flight_availability, category: flights, rest: [SearchAvailability], binding: rest, confidence: high}
+  - {tool: search_holiday_offers, category: packages, rest: [checkAvailabilityRange], binding: rest, confidence: high}
+  - {tool: get_holiday_price_offer, category: packages, rest: [getPriceOffer], binding: rest, confidence: high}
+  - {tool: get_holiday_price_calendar, category: packages, rest: [getPriceCalendarUSL], binding: rest, confidence: high}
+  - {tool: get_cruise_offers, category: cruise, rest: [getCruisePackagePrices], binding: rest, confidence: high}
+  - {tool: get_unique_cruise_offer, category: cruise, rest: [getUniqueCruisePackagePrices], binding: rest, confidence: high}
+  - {tool: get_cruise_cabin_and_board_variants, category: cruise, rest: [getAlternateCabinAndBoards], binding: rest, confidence: high}
+  - {tool: get_cruise_flight_variants, category: cruise, rest: [getAlternateFlightVariants], binding: rest, confidence: high}
+  - {tool: get_cruise_stay_variants, category: cruise, rest: [getAlternateStayVariants], binding: rest, confidence: high}
+  - {tool: get_cruise_stay_upsell, category: cruise, rest: [addAStay], binding: rest, confidence: high}
+  - {tool: get_cruise_cabin_availability, category: cruise, rest: [getCabinSelection], binding: rest, confidence: high}
+  - {tool: validate_cruise_holiday, category: cruise, rest: [validateHoliday], binding: rest, confidence: high}
+  - {tool: confirm_cruise_holiday, category: cruise, rest: [confirmHoliday], binding: rest, confidence: high,
+     note: 'Booking creation. No idempotency key is published, so a retried call has undefined replay semantics.'}
+  - {tool: get_hotel_inventory, category: metasearch, rest: [getHotelInventory], binding: rest, confidence: high}
+  - {tool: check_hotel_availability, category: metasearch, rest: [getHotelAvailability], binding: rest, confidence: high}
+  - {tool: get_partner_packages, category: metasearch, rest: [GetPackages], binding: rest, confidence: high}
+  - {tool: search_partner_flights, category: metasearch, rest: [GetFlights], binding: rest, confidence: high}
+  - {tool: get_partner_flight_route_feed, category: metasearch, rest: [GetFlightsRouteFeed], binding: rest, confidence: high}
+  - {tool: live_search_partner_packages, category: metasearch, rest: [GetLiveSearch], binding: rest, confidence: medium,
+     note: 'GetLiveSearch and GetLocations appear in BOTH the meta-partner-packages-flights and meta-partner-package-live-search specs with the same operationId and different paths; the live-search spec is the binding used here.'}
+  - {tool: get_partner_search_locations, category: metasearch, rest: [GetLocations], binding: rest, confidence: medium,
+     note: 'Same duplicate-operationId caveat as live_search_partner_packages.'}
+  - {tool: get_partner_accommodations, category: metasearch, rest: [GetAccommodations], binding: rest, confidence: high}
+  - {tool: get_accommodation_content, category: content, rest: [GetAccommodationContent], binding: rest, confidence: high}
+  - {tool: get_accommodation_images, category: content, rest: [GetAccommodationImages], binding: rest, confidence: high}
+  - {tool: get_ota_flights, category: flights, rest: [getflights], binding: rest, confidence: high}
+  - {tool: check_ota_flight_availability, category: flights, rest: [flightavailablity], binding: rest, confidence: high,
+     note: 'operationId is misspelled in TUI''s published spec ("flightavailablity"); bound verbatim.'}
+  - {tool: get_ota_price_calculation, category: flights, rest: [pricecalculcation], binding: rest, confidence: high,
+     note: 'operationId is misspelled in TUI''s published spec ("pricecalculcation"); bound verbatim.'}
+  - {tool: get_ota_included_luggage, category: flights, rest: [includdedluggage], binding: rest, confidence: high,
+     note: 'operationId is misspelled in TUI''s published spec ("includdedluggage"); bound verbatim.'}
+  - {tool: pay_ota_booking, category: flights, rest: [post_pay], binding: rest, confidence: high,
+     note: 'Payment submission. GET /ota/pay (operationId "pay") is a separate read operation on the same path.'}
+  - {tool: download_pricefile, category: fares, rest: [get-download-filename], binding: rest, confidence: high}
+  - {tool: download_pricefile_delta, category: fares, rest: [getpricefiledelta], binding: rest, confidence: high}
+  - {tool: get_pricefile_delta_timestamp, category: fares, rest: [getpricefiledeltatimestamp], binding: rest, confidence: high}
+mcp_only: []
+graphql_only:
+  - field: ship
+    endpoint: https://prod.api.tui/cruises/ship/graphql
+    reason: >-
+      Ship reference content (cabin types, board types, deck plans) is available only through the
+      GraphQL surface; there is no REST operation for it anywhere in the 21 documents. The exact
+      query fields cannot be enumerated because introspection is auth-gated.
+rest_only:
+  - capability: New Skies reservation and operations surface
+    api: tui-group:tui-newskies-digital-api
+    operations: 1060
+    reason: Navitaire product re-exposed under TUI paths; booking mutation, payments, refunds, reversals, 3-D Secure, manifests, queues.
+  - capability: Departure Control System
+    api: tui-group:tui-newskies-gonow-api
+    operations: 88
+    reason: Check-in, bag tags, boarding passes, disruption handling, printers, DCS settings.
+  - capability: NDC 21.3 Shopping / Selling / Servicing
+    api: tui-group:tui-flight-ndc-gateway
+    operations: 30
+    reason: >-
+      Viable as tools but the published operationIds contain spaces and duplicate across the v21.3
+      and v2 families, so they cannot be used as tool names without curation.
+  - capability: PCI-scoped payment proxy
+    api: tui-group:tui-newskies-payment-api
+    operations: 24
+    reason: Excluded from any agent surface.
+  - capability: ANVR G7 TravelMessage dialogues
+    api: tui-group:tui-b2bota-g7-travelmessage
+    operations: 10
+    reason: Stateful XML session flow with no operationIds declared in the spec.
+  - capability: Bulk package supply feed
+    api: tui-group:tui-supply
+    operations: 1
+    reason: SFTP file drop described by an OpenAPI wrapper; not an HTTP call.
+  - capability: Accommodation content (OTA G7 channel)
+    api: tui-group:tui-ota-content-api
+    operations: 1
+    reason: No operationId declared in the spec.
+  - capability: Check-in status lookup
+    api: tui-group:tui-checkinhandler-service-api
+    operations: 2
+    reason: No operationIds declared in the spec.
+  - capability: Metasearch inventory file push
+    api: tui-group:tui-meta-search-generic-api
+    operations: 1
+    reason: sendHotelInventory pushes the portfolio to an SFTP server; an operational job, not an agent tool.
+coverage:
+  tools_named: 31
+  tools_bound: 31
+  mcp_only: 0
+  graphql_only: 1
+  rest_operations_total: 1261
+  rest_operations_with_a_tool: 31
+  rest_operations_without_a_tool: 1230
+  operations_missing_an_operation_id: 16
+  note: >-
+    16 of the 1,261 published operations declare no operationId at all (the whole G7 TravelMessage
+    document, the CheckInHandler pair, OTA Content, Supply, Ship Content and one
+    HolidayOffersController operation), which is why those capabilities appear under rest_only
+    rather than in the crosswalk.

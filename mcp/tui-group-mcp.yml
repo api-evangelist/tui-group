@@ -1,0 +1,220 @@
+generated: '2026-07-28'
+method: derived
+status: candidate
+source: >-
+  Derived from the 21 harvested OpenAPI documents in openapi/. No hosted or remote MCP server was
+  found for TUI.
+search:
+  performed: '2026-07-28'
+  probes:
+    - {url: 'https://mcp.tui.com', status: '000 (does not resolve)'}
+    - {url: 'https://mcp.api.tui', status: '000 (does not resolve)'}
+    - {url: 'https://prod.api.tui/mcp', status: 404}
+    - {url: 'https://developer.tui/mcp', status: 404}
+    - {registry: 'npm @modelcontextprotocol / tui', result: 'no first-party TUI package'}
+    - {registry: 'github.com/tuigroup', result: 'organisation exists, zero public repositories'}
+  conclusion: TUI publishes no MCP server. The tools below are an API Evangelist candidate surface, not a TUI product.
+server:
+  name: tui-group
+  transport: http
+  url: null
+notes:
+  - >-
+    Every candidate tool inherits its real input contract from the backing OpenAPI operation's
+    parameters and requestBody. No input schema is invented here.
+  - >-
+    All of these operations sit behind an OAuth 2.0 client-credentials token from
+    https://prod.api.tui/oauth2/token plus a partner-manager-approved product subscription, and
+    several additionally require a Navitaire New Skies agent profile and a production IP allowlist
+    entry. An MCP server over this estate would be a partner-credentialed server, never a public one.
+  - >-
+    Read-only shopping and content operations are the agent-safe subset. The booking, payment and
+    departure-control operations are not: TUI publishes no idempotency contract, so a retried tool
+    call has no defined safe-replay behaviour (see conventions/tui-group-conventions.yml).
+tools:
+  - name: search_flight_availability
+    description: Search TUI fly flight availability and fares by station, country, date window and carrier.
+    category: flights
+    consequence: read
+    source_operation: openapi/tui-group-tui-flight-availability-search-api-openapi.yml#SearchAvailability
+  - name: search_holiday_offers
+    description: Retrieve holiday offers for given accommodation IDs and a travel window (WallDy).
+    category: packages
+    consequence: read
+    source_operation: openapi/tui-group-tui-search-walldy-api-openapi.yml#checkAvailabilityRange
+  - name: get_holiday_price_offer
+    description: Get a unique package offer with current pricing.
+    category: packages
+    consequence: read
+    source_operation: openapi/tui-group-tui-holiday-offers-controller-api-openapi.yml#getPriceOffer
+  - name: get_holiday_price_calendar
+    description: Region-agnostic package price calendar for a filter set.
+    category: packages
+    consequence: read
+    source_operation: openapi/tui-group-tui-holiday-offers-controller-api-openapi.yml#getPriceCalendarUSL
+  - name: get_cruise_offers
+    description: Cruise price and availability across itineraries, date ranges and durations.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getCruisePackagePrices
+  - name: get_unique_cruise_offer
+    description: Price and availability for one specific cruise itinerary.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getUniqueCruisePackagePrices
+  - name: get_cruise_cabin_and_board_variants
+    description: Alternate cabin grades and board types for a selected cruise package.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getAlternateCabinAndBoards
+  - name: get_cruise_flight_variants
+    description: Alternate flight variants for a selected cruise package.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getAlternateFlightVariants
+  - name: get_cruise_stay_variants
+    description: Alternate stay variants for a selected cruise package.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#getAlternateStayVariants
+  - name: get_cruise_stay_upsell
+    description: Stay upsell options to cross-sell onto a cruise package.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml#addAStay
+  - name: get_cruise_cabin_availability
+    description: Physical cabins available on a cruise for an itinerary, duration, cabin type, occupancy and board.
+    category: cruise
+    consequence: read
+    source_operation: openapi/tui-group-tui-cruise-cabin-availability-openapi.yml#getCabinSelection
+  - name: validate_cruise_holiday
+    description: Validate a cruise booking with customer and travel details and return the latest prices.
+    category: cruise
+    consequence: write
+    source_operation: openapi/tui-group-tui-cruise-booking-apis-openapi.yml#validateHoliday
+  - name: confirm_cruise_holiday
+    description: Create the cruise booking. Not safely retryable — TUI publishes no idempotency key.
+    category: cruise
+    consequence: physical
+    human_in_the_loop: recommended
+    source_operation: openapi/tui-group-tui-cruise-booking-apis-openapi.yml#confirmHoliday
+  - name: get_hotel_inventory
+    description: Retrieve the TUI hotels portfolio for the German metasearch channel.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-search-generic-api-openapi.yml#getHotelInventory
+  - name: check_hotel_availability
+    description: Check hotel availability against search criteria (German metasearch channel).
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-search-generic-api-openapi.yml#getHotelAvailability
+  - name: get_partner_packages
+    description: Nordic metasearch package feed for a market and party composition.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml#GetPackages
+  - name: search_partner_flights
+    description: Nordic metasearch flight search for a market and agent.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml#GetFlights
+  - name: get_partner_flight_route_feed
+    description: Nordic metasearch route feed for a market and agent.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml#GetFlightsRouteFeed
+  - name: live_search_partner_packages
+    description: Real-time Nordic package search with live pricing and availability.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml#GetLiveSearch
+  - name: get_partner_search_locations
+    description: Location reference data for the Nordic live package search.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml#GetLocations
+  - name: get_partner_accommodations
+    description: Accommodations available to a Nordic live package search.
+    category: metasearch
+    consequence: read
+    source_operation: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml#GetAccommodations
+  - name: get_accommodation_content
+    description: Accommodation content for a Nordic partner market.
+    category: content
+    consequence: read
+    source_operation: openapi/tui-group-tui-partner-content-api-openapi.yml#GetAccommodationContent
+  - name: get_accommodation_images
+    description: Accommodation image set for a Nordic partner market.
+    category: content
+    consequence: read
+    source_operation: openapi/tui-group-tui-partner-content-api-openapi.yml#GetAccommodationImages
+  - name: get_ota_flights
+    description: TUI fly Benelux flight list for OTA resellers.
+    category: flights
+    consequence: read
+    source_operation: openapi/tui-group-tui-flight-ota-api-openapi.yml#getflights
+  - name: check_ota_flight_availability
+    description: Price and availability check with fare basis and fare conditions (TUI fly Benelux).
+    category: flights
+    consequence: read
+    source_operation: openapi/tui-group-tui-flight-ota-api-openapi.yml#flightavailablity
+  - name: get_ota_price_calculation
+    description: Calculate the price of a TUI fly Benelux itinerary with selected extras.
+    category: flights
+    consequence: read
+    source_operation: openapi/tui-group-tui-flight-ota-api-openapi.yml#pricecalculcation
+  - name: get_ota_included_luggage
+    description: Included luggage allowance for a TUI fly Benelux itinerary.
+    category: flights
+    consequence: read
+    source_operation: openapi/tui-group-tui-flight-ota-api-openapi.yml#includdedluggage
+  - name: pay_ota_booking
+    description: Submit payment for a TUI fly Benelux booking. Not safely retryable — no idempotency key is published.
+    category: flights
+    consequence: physical
+    human_in_the_loop: required
+    source_operation: openapi/tui-group-tui-flight-ota-api-openapi.yml#post_pay
+  - name: download_pricefile
+    description: Download the mapped fare pricefile as a base64-encoded ZIP of CSV.
+    category: fares
+    consequence: read
+    source_operation: openapi/tui-group-tui-newskies-pricefile-api-openapi.yml#get-download-filename
+  - name: download_pricefile_delta
+    description: Download the delta pricefile mapped to the calling credential.
+    category: fares
+    consequence: read
+    source_operation: openapi/tui-group-tui-newskies-pricefile-api-openapi.yml#getpricefiledelta
+  - name: get_pricefile_delta_timestamp
+    description: Timestamp of the currently available pricefile delta.
+    category: fares
+    consequence: read
+    source_operation: openapi/tui-group-tui-newskies-pricefile-api-openapi.yml#getpricefiledeltatimestamp
+excluded_surfaces:
+  - api: tui-group:tui-newskies-digital-api
+    operations: 1060
+    reason: >-
+      Navitaire New Skies reservation and operations surface re-exposed under TUI paths. Far too
+      large and too consequential (booking mutation, payments, refunds, reversals, 3-D Secure) to
+      expose as agent tools without a per-operation governance pass — see
+      agentic-access/tui-group-agentic-access.yml.
+  - api: tui-group:tui-newskies-gonow-api
+    operations: 88
+    reason: >-
+      Departure Control System — check-in, bag tags, boarding passes, disruption handling. Physical,
+      safety-adjacent airport operations; not an agent surface.
+  - api: tui-group:tui-newskies-payment-api
+    operations: 24
+    reason: PCI-DSS scoped payment proxy. Excluded on principle.
+  - api: tui-group:tui-flight-ndc-gateway
+    operations: 30
+    reason: >-
+      NDC 21.3 message set is viable as tools, but the published operationIds contain spaces
+      ("POST OfferPriceRQ v21.3") and are duplicated across the v21.3 and v2 families, so they are
+      not usable as MCP tool names without a curation pass.
+  - api: tui-group:tui-b2bota-g7-travelmessage
+    operations: 10
+    reason: >-
+      Session-based XML dialogue with no operationIds in the spec; a stateful flow rather than
+      independent tool calls.
+  - api: tui-group:tui-ship-content-api
+    reason: Single GraphQL endpoint; would be exposed as a query tool, not as REST-shaped tools.

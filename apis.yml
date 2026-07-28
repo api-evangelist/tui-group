@@ -16,13 +16,16 @@ description: >-
   partners. On the API front TUI runs a real, publicly readable developer portal at developer.tui
   fronted by Apigee X, with 21 documented API products covering flight shopping and booking,
   departure control, packages, accommodation content, cruise and metasearch distribution. The
-  documentation is genuinely open — base URLs, endpoints, auth flows, quota tiers and downloadable
-  Postman collections are all published without a login — but the runtime is not: every API product
-  requires a partner-manager approval, most airline APIs additionally require a Navitaire New Skies
-  agent profile and a production IP whitelist, and the TUI fly OTA API states plainly that step one
-  is to conclude a contract. There is no self-serve key, no published developer terms of use (the
-  portal's terms page is still unfilled lorem-ipsum placeholder text), no OpenAPI definitions, and
-  no documented bulk-export or data-portability operation for a departing partner.
+  documentation is genuinely open — base URLs, endpoints, auth flows, quota tiers, downloadable
+  Postman collections and a public OpenAPI 3.0 document for every one of the 21 products (1,261
+  operations in total, served from the portal's Swagger UI) are all published without a login — but
+  the runtime is not: every API product requires a partner-manager approval, most airline APIs
+  additionally require a Navitaire New Skies agent profile and a production IP whitelist, and the
+  TUI fly OTA API states plainly that step one is to conclude a contract. There is no self-serve
+  key, no published developer terms of use (the portal's terms page is still unfilled lorem-ipsum
+  placeholder text), no idempotency contract on any booking or payment operation, no status page,
+  no event or webhook surface, and no documented bulk-export or data-portability operation for a
+  departing partner.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
 tags:
 - Travel
@@ -61,6 +64,10 @@ apis:
   - Booking
   - Servicing
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-flight-ndc-gateway-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-flight-ndc-gateway-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/api-description
   - type: Documentation
@@ -85,6 +92,10 @@ apis:
   - Reservations
   - PSS
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-newskies-digital-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-newskies-digital-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/newskies-digital-api/api-description
   - type: Documentation
@@ -114,6 +125,10 @@ apis:
   - Baggage
   - Boarding
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-newskies-gonow-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-newskies-gonow-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/newskies-gonow-api/api-description
   - type: Documentation
@@ -132,12 +147,17 @@ apis:
     future IATA NDC payment support and currently returns 501 Not Implemented. Authenticated with an
     API key passed as an apikey query parameter. No base URL is published on the portal.
   humanURL: https://developer.tui/api-catalog/newskies-payment-api
+  baseURL: https://prod.api.tui/flight/newskies/payment
   tags:
   - Flights
   - Payment
   - PCI-DSS
   - Booking
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-newskies-payment-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-newskies-payment-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/newskies-payment-api/api-description
   - type: Documentation
@@ -158,6 +178,10 @@ apis:
   - Search
   - Pricing
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-flight-availability-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-flight-availability-search-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/nskcc-availability-search-api/description
   - type: Documentation
@@ -184,6 +208,10 @@ apis:
   - Bulk
   - Fares
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-newskies-pricefile-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-newskies-pricefile-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/tui-newskies-pricefile-api/description
   - type: Documentation
@@ -207,6 +235,10 @@ apis:
   - Flights
   - Check-in
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-checkinhandler-service-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-checkinhandler-service-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/checkinhandler-service-api/api-description
   - type: Documentation
@@ -231,6 +263,10 @@ apis:
   - Payment
   - Baggage
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-flight-ota-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-flight-ota-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/tui-flight-ota-api/api-description
 - aid: tui-group:tui-b2bota-g7-travelmessage
@@ -251,6 +287,10 @@ apis:
   - Booking
   - ANVR G7
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-b2bota-g7-travelmessage-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/b2bota-g7/api-description
   - type: Documentation
@@ -277,6 +317,10 @@ apis:
   - OTA
   - Travel Agencies
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-ota-content-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-ota-content-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/ota-content-api/api-description
   - type: Documentation
@@ -294,6 +338,7 @@ apis:
     loads and intraday delta loads — and TUI states each OTA must eventually switch to delta because
     full loads will be switched off.
   humanURL: https://developer.tui/api-catalog/supply
+  baseURL: sftp://prod.sftp.tui-b2bota-g7.nl
   tags:
   - Packages
   - Supply
@@ -301,6 +346,10 @@ apis:
   - SFTP
   - OTA
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-supply-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-supply-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/supply/api-description
   - type: Documentation
@@ -324,6 +373,10 @@ apis:
   - Offers
   - Availability
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-search-walldy-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-search-walldy-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/walldy-api/api-description
   - type: Documentation
@@ -347,6 +400,10 @@ apis:
   - Offers
   - Packages
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-holiday-offers-controller-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-holiday-offers-controller-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/holidayofferscontroller-api/api-description
   - type: Documentation
@@ -368,6 +425,10 @@ apis:
   - Availability
   - Germany
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-meta-search-generic-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/meta-search-generic-api/api-description
 - aid: tui-group:tui-meta-partner-packages-flights
@@ -385,6 +446,10 @@ apis:
   - Flights
   - Nordic
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-meta-partner-packages-flights-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/meta-partner-packages-flights/api-description
 - aid: tui-group:tui-meta-partner-package-live-search
@@ -400,6 +465,10 @@ apis:
   - Live Search
   - Nordic
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-meta-partner-package-live-search-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/meta-partner-package-live-search/api-description
 - aid: tui-group:tui-partner-content-api
@@ -415,6 +484,10 @@ apis:
   - Metasearch
   - Nordic
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-partner-content-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-partner-content-api-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/partner-content-api/api-description
 - aid: tui-group:tui-cruise-price-and-availability
@@ -432,6 +505,10 @@ apis:
   - Availability
   - Search
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-cruise-price-and-availability-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/tui-cruise-price-and-availability/api-description
 - aid: tui-group:tui-cruise-booking-apis
@@ -449,6 +526,10 @@ apis:
   - Booking
   - OTA
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-cruise-booking-apis-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-cruise-booking-apis-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/tui-cruise-booking-apis/api-description
 - aid: tui-group:tui-cruise-cabin-availability
@@ -463,6 +544,10 @@ apis:
   - Availability
   - Cabins
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-cruise-cabin-availability-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-cruise-cabin-availability-overlay.yaml
   - type: Documentation
     url: https://developer.tui/api-catalog/cruise-cabin-availability/api-description
 - aid: tui-group:tui-ship-content-api
@@ -478,9 +563,63 @@ apis:
   - GraphQL
   - Ships
   properties:
+  - type: OpenAPI
+    url: openapi/tui-group-tui-ship-content-api-openapi.yml
+  - type: Overlay
+    url: overlays/tui-group-tui-ship-content-api-overlay.yaml
+  - type: GraphQL
+    url: https://prod.api.tui/cruises/ship/graphql
+  - type: ToolCrosswalk
+    url: mcp/tui-group-tool-crosswalk.yml
   - type: Documentation
     url: https://developer.tui/api-catalog/ship-content-api/api-description
 common:
+- type: AgenticAccess
+  url: agentic-access/tui-group-agentic-access.yml
+- type: VulnerabilityDisclosure
+  url: security/tui-group-vulnerability-disclosure.yml
+- type: Security
+  url: https://vdp.tui.com/p/Policy
+- type: DomainSecurity
+  url: security/tui-group-domain-security.yml
+- type: OAuthScopes
+  url: scopes/tui-group-scopes.yml
+- type: Authentication
+  url: authentication/tui-group-authentication.yml
+- type: Conventions
+  url: conventions/tui-group-conventions.yml
+- type: ErrorCatalog
+  url: errors/tui-group-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/tui-group-lifecycle.yml
+- type: ChangeLog
+  url: changelog/tui-group-changelog.yml
+- type: Conformance
+  url: conformance/tui-group-conformance.yml
+- type: DataModel
+  url: data-model/tui-group-data-model.yml
+- type: Sandbox
+  url: sandbox/tui-group-sandbox.yml
+- type: RateLimits
+  url: rate-limits/tui-group-rate-limits.yml
+- type: WellKnown
+  url: well-known/tui-group-well-known.yml
+- type: SecurityTxt
+  url: well-known/tui-group-security.txt
+- type: ToolCrosswalk
+  url: mcp/tui-group-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/tui-group-llms.txt
+- type: Packages
+  url: packages/tui-group-packages.yml
+- type: Components
+  url: components/tui-group-components.yml
+- type: Postman
+  url: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/postman-collection
+- type: XMLSchema
+  url: schemas/tui-b2bota-g7-travelmessage-v31.xsd
 - type: Website
   url: https://www.tuigroup.com/en
 - type: DeveloperPortal

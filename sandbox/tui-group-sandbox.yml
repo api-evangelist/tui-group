@@ -1,0 +1,117 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://developer.tui/docs/getting-started_environments,
+  https://developer.tui/docs/general/oauth2,
+  https://developer.tui/docs/general/authentication,
+  https://developer.tui/api-catalog/tui-flight-ota-api/api-description,
+  https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/api-description, plus the harvested
+  Postman collections and environments in collections/.
+description: >-
+  TUI runs a real named test environment — "playground" — alongside production, on the same host
+  pattern and the same OAuth 2.0 credential model. What it does not run is a self-serve sandbox:
+  even the playground requires a portal account that a TUI product or partner-management team member
+  approves, and the flight products additionally need a Navitaire New Skies agent profile before any
+  call succeeds. TUI publishes no test card numbers, no magic identifiers, no fixture or trigger
+  tooling and no time simulation. The one hard test-vs-live rule TUI does publish is a prohibition,
+  not a convenience: calling production from a non-production system is explicitly forbidden.
+self_serve: false
+environments:
+  - name: playground
+    host: https://playground.api.tui
+    token_endpoint: https://playground.api.tui/oauth2/token
+    nature: >-
+      "a mocked or special production-lookalike playground". Behaviour differs per product; TUI warns
+      "There might be API specific differences on the use of playground or test environments."
+    access: >-
+      "Most API products will allow developers to subscribe to the playground environment without any
+      further approval process" — but only after the portal account itself has been approved.
+  - name: production
+    host: https://prod.api.tui
+    token_endpoint: https://prod.api.tui/oauth2/token
+    access: >-
+      "For production access manual approval is needed, in some cases specific partner agreements or
+      technical certifications must be provided upfront."
+  - name: pre-prod
+    host: https://pre-prod.api.tui
+    nature: Declared in servers[] by the cruise and metasearch specs; not documented on the portal.
+  - name: dev / test / preprod (CheckInHandler only)
+    host: https://dev.api.tui, https://test.api.tui, https://preprod.api.tui
+    nature: >-
+      Declared in servers[] of the CheckInHandler spec only. Internal environment names surfaced
+      through a published document; not offered as a partner surface.
+test_vs_live_separation:
+  mechanism: separate hostnames, same credential model
+  key_prefixes: none — Apigee consumer key/secret carry no test/live prefix
+  cross_environment: >-
+    A single app can subscribe to both playground and production products, and TUI states that
+    "you can use playground app credentials to access a production API endpoint" — the credential
+    is not what separates the environments, the subscription is.
+  prohibitions:
+    - quote: >-
+        Access to the Digital API production environment must be done only from your own production
+        system. The access of to the production environment from a lower environment (dev, test, ...)
+        is absolutely prohibited.
+      source: https://developer.tui/api-catalog/newskies-digital-api/api-description
+    - quote: >-
+        Also, please take in account that accessing the NDC Gateway API production environment from
+        any non-production environment is forbidden.
+      source: https://developer.tui/api-catalog/flight-ndc-gateway-navitaire/api-description
+    - note: >-
+        Production access to the NDC Gateway, Digital API and GoNow is enforced by an IP allowlist
+        that denies every unlisted source.
+promotion_to_production:
+  - step: Complete development against playground.
+  - step: >-
+      For the TUI fly OTA API — make at least one successful test booking on the playground.
+      Verbatim: "we can only grant you access to the production environment after you've tried out
+      the test environment and you've made at least 1 test booking."
+  - step: >-
+      For the NDC Gateway, Digital API and GoNow — submit a written workflow validation including
+      company contacts, app name, production and non-production IP ranges, use-case description,
+      endpoints used and the purpose of each request, an overall workflow diagram, expected requests
+      per minute, and evidence of playground test cases with correlation IDs and time ranges.
+  - step: Get production IPs allowlisted (email api.flightproduction@tui.com).
+  - step: TUI assesses estimated usage against its capacity model and assigns a production quota tier.
+test_data:
+  test_cards: none published
+  magic_identifiers: none published
+  test_accounts: none published
+  fixtures_or_triggers: none published
+  time_simulation: none published
+  note: >-
+    TUI publishes no synthetic test values of any kind. Working playground data (station codes,
+    accommodation IDs, ANVR codes, agent profiles, pricefile names) is issued by a TUI business
+    partner or partner manager per integration, out of band.
+starter_artifacts:
+  - type: PostmanCollection
+    file: collections/tui-flight-ndc-gateway.postman_collection.json
+    note: >-
+      18 named NDC flow folders — one-way, return, multi-pax, promo code, credit card approved and
+      declined, SSR and seat by OfferID, order change, full cancel — with complete NDC 21.3 request
+      bodies. The closest thing TUI publishes to a fixture set, though the credentials and identifiers
+      are left blank.
+  - type: PostmanCollection
+    file: collections/tui-b2bota-g7-travelmessage.postman_collection.json
+    note: 'ANVR G7 TravelMessage 3.1 booking scenario: two adults, one room (Scenario_2A_1R_SS).'
+  - type: PostmanEnvironment
+    file: collections/tui-b2bota-g7-travelmessage.postman_environment.json
+    note: >-
+      Named "Playground_ApiGee". Ships OAuth_Url https://prod.api.tui/oauth2/token and OTA_URL
+      https://playground.api.tui with empty clientid/clientsecret — the partner supplies its own.
+  - type: PostmanCollection
+    file: collections/tui-newskies-pricefile-api.postman_collection.json
+  - type: PostmanEnvironment
+    file: collections/tui-newskies-pricefile-api.postman_environment.json
+    note: >-
+      Defaults env=playground, authURL=.api.tui/oauth2/token,
+      baseUrl=.api.tui/flight/newskies/pricefile, with clientAPIKey / clientSecret / filename left
+      empty. The filename variable is documented as "needs to be mapped to API-Key".
+  - type: RunInPostman
+    note: >-
+      Every API product page renders a "Run in Postman" button generated from the product's OpenAPI
+      document by the portal's Swagger UI.
+health_endpoints:
+  - path: /health
+    api: tui-group:tui-flight-availability-search-api
+    note: Added in the v2.0.0 rewrite (March 2026); the only health check declared in any published spec.

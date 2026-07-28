@@ -1,0 +1,104 @@
+generated: '2026-07-28'
+method: searched
+source: live probes of every apis.yml baseURL host, every OpenAPI servers[] host and the docs host
+description: >-
+  TUI's .well-known surface is split across three hosts. The Apigee X API gateway at prod.api.tui
+  serves real RFC 8414 / OIDC discovery documents, which is the single most useful machine-readable
+  auth artifact TUI publishes and is not linked from anywhere on the developer portal. The developer
+  portal itself (developer.tui, a Drupal 10 / Pronovix site) serves no .well-known documents at all.
+  The consumer domain www.tui.com carries the RFC 9116 security.txt that points at TUI's
+  vulnerability disclosure programme. Note that prod.api.tui answers HTTP 200 with an empty body
+  (content-length 0) for unmatched .well-known paths, so a 200 alone is not proof of a document —
+  only the two entries below returned real payloads.
+hosts:
+  - host: https://prod.api.tui
+    role: Apigee X API gateway (production)
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: tui-group-openid-configuration.json
+        bytes: 683
+        parses: true
+        note: OIDC discovery. issuer https://prod.api.tui, RS256, client_secret_basic.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: tui-group-oauth-authorization-server.json
+        bytes: 602
+        parses: false
+        note: >-
+          RFC 8414 authorization server metadata. Saved verbatim. As served it is NOT valid JSON —
+          the document ends with a trailing comma after
+          "token_endpoint_auth_signing_alg_values_supported": ["RS256"], so a strict JSON parser
+          rejects it. Recorded as found; this is a real defect on TUI's side, not a harvest error.
+      - path: /oauth2/jwks
+        status: 200
+        file: tui-group-jwks.json
+        parses: true
+        note: >-
+          Not a .well-known path but the jwks_uri the discovery documents advertise. One RSA signing
+          key, alg RS256, kid 2026-06-29T09:47:30Z.
+      - path: /.well-known/security.txt
+        status: 200
+        result: empty
+        note: 200 with content-length 0 — Apigee catch-all, not a document.
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        result: empty
+      - path: /.well-known/api-catalog
+        status: 200
+        result: empty
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        result: empty
+  - host: https://playground.api.tui
+    role: Apigee X API gateway (playground)
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 404
+        note: >-
+          Returns the Apigee fault "Unable to identify proxy for host: tui-secure and url:
+          /.well-known/openid-configuration". The playground gateway does not expose discovery.
+      - path: /.well-known/security.txt
+        status: 404
+  - host: https://developer.tui
+    role: developer portal (Drupal 10 / Pronovix)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /robots.txt
+        status: 200
+        note: Stock Drupal robots.txt. No sitemap directive, no AI-preference directives.
+  - host: https://www.tui.com
+    role: consumer domain
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        file: tui-group-security.txt
+        parses: true
+        note: >-
+          RFC 9116. Contact https://vdp.tui.com/p/Send-a-report, Policy https://vdp.tui.com/p/Policy,
+          Expires 2028-12-09T14:08:19Z, Preferred-Languages en. No Encryption, Acknowledgments,
+          Hiring or Canonical fields.
+  - host: https://www.tuigroup.com
+    role: corporate site
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+gaps:
+  - No /.well-known/api-catalog (RFC 9727) anywhere, despite a 21-product public API catalogue.
+  - No security.txt on the developer portal or the corporate domain — only on the consumer domain.
+  - No AI-preference / content-signal declarations on any host.
+  - The OIDC discovery documents are unlinked from the portal; a developer following the published
+    auth docs would never learn they exist.

@@ -1,0 +1,4008 @@
+openapi: 3.0.3
+info:
+  title: TUI Cruise Booking APIs
+  description: APIs for validating cruise holidays and create bookings for cruises within the TUI system
+  version: "1.0.0"
+  contact:
+    email: NRCruiseTeam@TUIGroup.onmicrosoft.com
+    name: "Cruise NR API Support"
+  x-header: |
+    APIs for validating cruise holidays and create bookings for cruises within the TUI system
+  x-summary: |
+    APIs for validating cruise holidays and create bookings for cruises within the TUI system
+
+  
+
+servers:
+  - url: https://prod.api.tui/cruise-ota-book
+    description: Production server
+  - url: https://pre-prod.api.tui/cruise-ota-book
+    description: Non-production server
+
+
+paths:
+  /validate-holiday:
+    parameters:
+
+      - name: x-business-relationship
+        in: header
+        required: false
+        schema:
+          type: string
+          example: 'InfoBooking_v3_Action'
+        description: Validate holiday for cruises
+
+    post:
+      summary: Validate holiday for cruises
+      description: Validates the booking details in the system with customer and travel details
+      operationId: validateHoliday
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateHolidayRequest'
+      responses:
+        '200':
+          description: Booking validated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateHolidayResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /confirm-holiday:
+    parameters:
+
+      - name: x-business-relationship
+        in: header
+        required: false
+        schema:
+          type: string
+          example: 'CreateBooking_v3_Action'
+        description: Confirm to book holiday for cruises
+
+    post:
+      summary: Confirm to book holiday for cruises
+      description: Creates a new booking in the system with customer and travel details
+      operationId: confirmHoliday
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmHolidayRequest'
+      responses:
+        '200':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmHolidayResponse'
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+components:
+  schemas:
+
+    ConfirmHolidayRequest:
+      type: object
+      properties:
+        CreateBookingRequest:
+          type: object
+          required:
+            - Adm
+            - CusDet
+          properties:
+            Adm:
+              type: object
+              required:
+                - SessId
+                - ReqId
+              properties:
+                SessId:
+                  type: string
+                  description: Session identifier
+                  example: "497dcaf8-e113-454b-902c-5dc924c51b1f@0"
+                ReqId:
+                  type: string
+                  description: Request identifier
+                  example: "node1-db9HGCGi"
+
+            CusDet:
+              type: object
+              required:
+                - Person
+                - TrvDox
+              properties:
+                Person:
+                  type: object
+                  properties:
+                    Add:
+                      type: object
+                      properties:
+                        Name:
+                          type: string
+                          example: "T U I Wigmore House,"
+                        Street:
+                          type: string
+                          example: "Wigmore Lane"
+                        ZipCode:
+                          type: string
+                          example: "LU2 9TN"
+                        City:
+                          type: string
+                          example: "LUTON"
+                        CountryISOCode:
+                          type: string
+                          example: "GB"
+                    Comm:
+                      type: object
+                      properties:
+                        CommType:
+                          type: string
+                          example: "TYPE_MOBILE"
+                        Sphere:
+                          type: string
+                          example: "SPHERE_PRIVATE"
+                        AreaCode:
+                          type: string
+                          example: ""
+                        Num:
+                          type: string
+                          example: "07555889000"
+                    Email:
+                      type: object
+                      properties:
+                        Address:
+                          type: string
+                          format: email
+                          example: "sudharshan.mb@tui.co.uk"
+                        Sphere:
+                          type: string
+                          example: "SPHERE_PRIVATE"
+                    Marketing:
+                      type: object
+                      properties:
+                        Mailshot:
+                          type: string
+                          example: "true"
+                        Tel:
+                          type: string
+                          example: "true"
+                        By_Email:
+                          type: string
+                          example: "true"
+                        By_SMS:
+                          type: string
+                          example: "true"
+                TrvDox:
+                  type: object
+                  properties:
+                    DocumentReceiver:
+                      type: string
+                      example: "AGENCY"
+                    DoxLang:
+                      type: string
+                      example: "en_EN"
+
+    ConfirmHolidayResponse:
+      type: object
+      properties:
+        TILCreateBookingResponse:
+          type: object
+          properties:
+            TUITILResponse:
+              type: object
+              properties:
+                Result:
+                  type: object
+                  properties:
+                    ResponseCode:
+                      type: string
+                      example: '0000'
+                    Description:
+                      type: string
+                      example: 'SUCCESS'
+                    CorrelationID:
+                      type: string
+                      example: '03e47977-eb73-41e9-97eb-7be3d13eee4a'
+                    Service_version:
+                      type: string
+                      example: 'v3'
+                    Xsd_version:
+                      type: string
+                      example: 'T3.22.19.1'
+            CreateBookingResponse:
+              type: object
+              properties:
+                Adm:
+                  type: object
+                  properties:
+                    "Debug":
+                      type: boolean
+                      description: Debug flag
+                      example: false
+                    "IncludeDetailedPerfStats":
+                      type: boolean
+                      description: Flag to include detailed performance statistics
+                      example: false
+                    "Xsd_Ver":
+                      type: string
+                      description: XSD version
+                      example: "T3.22.20.1"
+                    ReqId:
+                      type: string
+                      description: Request identifier
+                      example: "node1-db9HGCGi"
+                    Tm:
+                      type: string
+                      format: date-time
+                      description: Timestamp
+                      example: "2025-04-29T10:45:40.362918+01:00"
+                    Trk:
+                      type: object
+                      properties:
+                        "From":
+                          type: string
+                          description: Source system
+                          example: "atcomres"
+                        "To":
+                          type: string
+                          description: Target system
+                          example: "phoenix"
+                        TEXT:
+                          type: string
+                          description: Additional text information
+                          example: "NULL"
+                CltInfo:
+                  type: object
+                  properties:
+                    Locale:
+                      type: string
+                      description: Client locale
+                      example: "en_EN"
+                    CltSysContext:
+                      type: integer
+                      description: Client system context
+                      example: 3
+                    Agt_No:
+                      type: string
+                      description: Agent number
+                      example: "MARCR"
+                    TermCode:
+                      type: string
+                      description: Terminal code
+                      example: "VTX"
+                    User_Name:
+                      type: string
+                      description: Username
+                      example: "MCUSER"
+                    Chan:
+                      type: integer
+                      description: Channel number
+                      example: 1100
+                    Channel_Type:
+                      type: string
+                      description: Channel type
+                      example: "VRP"
+                    User_Role:
+                      type: string
+                      description: User role
+                      example: "INTERNAL"
+                    Payment_VTID:
+                      type: integer
+                      description: Payment VTID
+                      example: 99000140
+                    Bkg_Owner_Tp_Mth:
+                      type: string
+                      description: Booking owner type method
+                      example: "TO"
+                    Payment_OrgID:
+                      type: string
+                      description: Payment organization ID
+                      example: "ba96ae31Ace67A4004Aa78aAdae2eec844a2"
+                BkgNum:
+                  type: object
+                  properties:
+                    BkgId:
+                      type: integer
+                      example: 43005201
+                    CurrentVersion:
+                      type: integer
+                      example: 1
+                    AtcomresBkgVersion:
+                      type: integer
+                      example: 557769208
+                    DH_Queue_Sts:
+                      type: string
+                      example: WAIT
+                BkgSts:
+                  type: string
+                  example: "BOOKING"
+                ResSts:
+                  type: string
+                  example: "CONFIRMED"
+                HasAgt_Notice:
+                  type: boolean
+                  description: Flag indicating if there are agent notices
+                  example: false
+                His:
+                  type: object
+                  description: Booking history information
+                  properties:
+                    Bkg_Dt_Tm:
+                      type: string
+                      format: date-time
+                      description: Booking date and time
+                      example: "2025-04-29T10:45:20+01:00"
+                    Bkg_User:
+                      type: string
+                      description: User who created the booking
+                      example: "MCUSER"
+                    Bkg_Term_Code:
+                      type: string
+                      description: Terminal code used for booking
+                      example: "VTX"
+                    Bkg_Chan:
+                      type: integer
+                      description: Booking channel
+                      example: 1100
+                Bkg_Ent:
+                  type: object
+                  properties:
+                    "Amend_Mth":
+                      type: string
+                      description: Amendment method
+                      example: "ALL"
+                    Package:
+                      type: object
+                      properties:
+                        Accom:
+                          type: object
+                          properties:
+                            "Is_Adhoc":
+                              type: boolean
+                              description: Flag indicating if accommodation is ad-hoc
+                              example: false
+                            "Error":
+                              type: boolean
+                              description: Error flag
+                              example: false
+                            Id:
+                              type: integer
+                              description: Accommodation ID
+                              example: 1
+                            St_Dt:
+                              type: string
+                              format: date
+                              description: Start date
+                              example: "2026-08-01"
+                            End_Dt:
+                              type: string
+                              format: date
+                            HtlPrd:
+                              type: object
+                              description: Hotel product information
+                              properties:
+                                Name:
+                                  type: string
+                                  description: Hotel product name
+                                  example: "Mediterranean Medley (Explorer)"
+                                Prom:
+                                  type: object
+                                  description: Promotion information
+                                  properties:
+                                    "Code":
+                                      type: string
+                                      description: Promotion code
+                                      example: "BGCR"
+                                    "Issue":
+                                      type: integer
+                                      description: Issue number
+                                      example: 1
+                                    "Name":
+                                      type: string
+                                      description: Promotion name
+                                      example: "Marella Cruises"
+                                    "Brand":
+                                      type: string
+                                      description: Brand code
+                                      example: "S"
+                                    TEXT:
+                                      type: string
+                                      description: Additional text information
+                                      example: "NULL"
+                                Acc_Cd:
+                                  type: object
+                                  description: Accommodation code
+                                  properties:
+                                    "Accom_Id":
+                                      type: string
+                                      description: Accommodation ID
+                                      example: "6311920741/3"
+                                    TEXT:
+                                      type: string
+                                      description: Accommodation code text
+                                      example: "XXXX0028/078"
+                                Acc_InvState:
+                                  type: string
+                                  description: Accommodation inventory state
+                                  example: "INTERNAL"
+                                Hotel:
+                                  type: object
+                                  description: Hotel information
+                                  properties:
+                                    Add:
+                                      type: object
+                                      description: Hotel address
+                                      properties:
+                                        Name:
+                                          type: string
+                                          description: Hotel name
+                                          example: "Mediterranean Medley (Explorer)"
+                                        City:
+                                          type: string
+                                          description: City
+                                          example: "Palma Port"
+                                        Region:
+                                          type: string
+                                          description: Region
+                                          example: "Majorca"
+                                        CountryISOCode:
+                                          type: string
+                                          description: ISO country code
+                                          example: "ES"
+                                    Comm:
+                                      type: object
+                                      description: Communication information
+                                      properties:
+                                        CommType:
+                                          type: string
+                                          description: Communication type
+                                          example: "TYPE_PHONE"
+                                        Sphere:
+                                          type: string
+                                          description: Communication sphere
+                                          example: "SPHERE_BUSINESS"
+                                        AreaCode:
+                                          type: string
+                                          description: Area code
+                                          example: "NULL"
+                                        Num:
+                                          type: string
+                                          description: Phone number
+                                          example: "01234567890"
+                                    Loc:
+                                      type: object
+                                      description: Location information
+                                      properties:
+                                        Loc_Cd:
+                                          type: string
+                                          description: Location code
+                                          example: "ESMJPB"
+                                        Loc_Tp:
+                                          type: string
+                                          description: Location type
+                                          example: "CITY"
+                                        Loc_Name:
+                                          type: string
+                                          description: Location name
+                                          example: "Palma Port"
+                                Cat_Page:
+                                  type: object
+                                  description: Catalog page information
+                                  properties:
+                                    Catalog:
+                                      type: object
+                                      description: Catalog information
+                                      properties:
+                                        "Code":
+                                          type: string
+                                          description: Catalog code
+                                          example: "GCR"
+                                        "Name":
+                                          type: string
+                                          description: Catalog name
+                                          example: "Marella Cruises UK NEW"
+                                        TEXT:
+                                          type: string
+                                          description: Additional text information
+                                          example: "NULL"
+                                    Cat_Page_No:
+                                      type: integer
+                                      description: Catalog page number
+                                      example: 0
+                                    Prc_Cat_Page_No:
+                                      type: integer
+                                      description: Price catalog page number
+                                      example: 0
+                                Ship_Cd:
+                                  type: string
+                                  description: Ship code
+                                  example: "XXXX0028"
+                                Ship_Name:
+                                  type: string
+                                  description: Ship name
+                                  example: "Marella Explorer"
+                                Corporate_Cd:
+                                  type: integer
+                                  description: Corporate code
+                                  example: 101762
+                            Rm_Cd:
+                              type: object
+                              description: Room code information
+                              properties:
+                                "Is_Adhoc":
+                                  type: boolean
+                                  description: Flag indicating if room is ad-hoc
+                                  example: false
+                                Rm_No:
+                                  type: integer
+                                  description: Room number
+                                  example: 1
+                                Code:
+                                  type: string
+                                  description: Room code
+                                  example: "ZI01"
+                                Desc:
+                                  type: string
+                                  description: Room description
+                                  example: "Decks 4/5 Inside Cabin"
+                                Fac_List:
+                                  type: string
+                                  description: Facility list text
+                                  example: "Decks 4/5, Shower, WC"
+                                Facility_List:
+                                  type: object
+                                  description: Detailed facility list
+                                  properties:
+                                    Facility:
+                                      type: array
+                                      description: List of facilities
+                                      items:
+                                        type: object
+                                        properties:
+                                          "Code":
+                                            type: string
+                                            description: Facility code
+                                            example: "DK5"
+                                          "Name":
+                                            type: string
+                                            description: Facility name
+                                            example: "Decks 4/5"
+                                          TEXT:
+                                            type: string
+                                            description: Additional text information
+                                            example: "NULL"
+                                StopSaleOverridden:
+                                  type: boolean
+                                  description: Flag indicating if stop sale is overridden
+                                  example: false
+                                Inf_Inc_Occ:
+                                  type: boolean
+                                  description: Flag indicating if infants are included in occupancy
+                                  example: true
+                                Min_Pax:
+                                  type: integer
+                                  description: Minimum number of passengers
+                                  example: 1
+                                Max_Pax:
+                                  type: integer
+                                  description: Maximum number of passengers
+                                  example: 2
+                                Max_Adu:
+                                  type: integer
+                                  description: Maximum number of adults
+                                  example: 2
+                                Max_Chd:
+                                  type: integer
+                                  description: Maximum number of children
+                                  example: 2
+                                Max_Inf:
+                                  type: integer
+                                  description: Maximum number of infants
+                                  example: 1
+                                BB_Cd:
+                                  type: string
+                                  description: Board basis code
+                                  example: "AI"
+                                BB_Name:
+                                  type: string
+                                  description: Board basis name
+                                  example: "All Inclusive"
+                                Alt_BB_Cd:
+                                  type: string
+                                  description: Alternative board basis code
+                                  example: "PI"
+                                Ser_Sts:
+                                  type: string
+                                  description: Service status
+                                  example: "FIX"
+                                SubServPaxs:
+                                  type: object
+                                  description: Sub-service passengers information
+                                  properties:
+                                    SubServPax:
+                                      type: array
+                                      description: List of sub-service passengers
+                                      items:
+                                        type: object
+                                        properties:
+                                          Pax_Id:
+                                            type: integer
+                                            description: Passenger ID
+                                            example: 1
+                                          Pax_Tp:
+                                            type: string
+                                            description: Passenger type
+                                            example: "ADULT"
+                                          Pax_Srv_Prc_Ex:
+                                            type: object
+                                            description: Passenger service price excluding taxes
+                                            properties:
+                                              "CurISO":
+                                                type: string
+                                                description: Currency ISO code
+                                                example: "GBP"
+                                              TEXT:
+                                                type: number
+                                                format: float
+                                                description: Price amount
+                                                example: 1724.16
+                                Prices:
+                                  type: object
+                                  description: Price information
+                                  properties:
+                                    Price:
+                                      type: array
+                                      description: List of prices
+                                      items:
+                                        type: object
+                                        properties:
+                                          Prc_Cd:
+                                            type: string
+                                            description: Price code
+                                            example: "AA"
+                                          Prc_Cd_Name:
+                                            type: string
+                                            description: Price code name
+                                            example: "Adult Package Price"
+                                          Prc_Cd_Tp:
+                                            type: string
+                                            description: Price code type
+                                            example: "ACRMAD"
+                                          Qty:
+                                            type: integer
+                                            description: Quantity
+                                            example: 2
+                                          Prc:
+                                            type: object
+                                            description: Price information
+                                            properties:
+                                              "CurISO":
+                                                type: string
+                                                description: Currency ISO code
+                                                example: "GBP"
+                                              TEXT:
+                                                type: number
+                                                format: float
+                                                description: Price amount
+                                                example: 1796.0
+                                          Prc_Dt:
+                                            type: string
+                                            format: date-time
+                                            description: Price date
+                                            example: "2025-04-29T10:45:20+01:00"
+                                          PricePaxs:
+                                            type: object
+                                            description: Price passengers information
+                                            properties:
+                                              Pax_Id:
+                                                type: array
+                                                description: List of passenger IDs
+                                                items:
+                                                  type: integer
+                                                  example: 1
+                                          Visible:
+                                            type: boolean
+                                            description: Visibility flag
+                                            example: true
+                                          Prc_Sts:
+                                            type: string
+                                            description: Price status
+                                            example: "STK"
+                                No_Free_Chd:
+                                  type: integer
+                                  description: Number of free children
+                                  example: 0
+                            Memo:
+                              type: array
+                              description: Memo information
+                              items:
+                                type: object
+                                properties:
+                                  Memo_Dt:
+                                    type: string
+                                    format: date-time
+                                    description: Memo date and time
+                                    example: "2025-04-29T10:45:21+01:00"
+                                  Memo_Cd:
+                                    type: string
+                                    description: Memo code
+                                    example: "ERR"
+                                  Memo_Name:
+                                    type: string
+                                    description: Memo name
+                                    example: "Geography Errata"
+                                  Memo_Des:
+                                    type: string
+                                    description: Memo description (may contain HTML)
+                                    example: "<br/><br/>For access to up-to-date travel advice, see Travel Aware – Staying Safe and Healthy Abroad.<br/>"
+                                  Memo_User_Name:
+                                    type: string
+                                    description: Username of memo creator
+                                    example: "MCUSER"
+                                  Memo_Key:
+                                    type: integer
+                                    description: Memo key/ID
+                                    example: 1
+                                  Memo_Rights:
+                                    type: string
+                                    description: Memo access rights
+                                    example: "READ"
+                            Transfer_Info:
+                              type: array
+                              description: Transfer information
+                              items:
+                                type: object
+                                properties:
+                                  "Dir":
+                                    type: string
+                                    description: Transfer direction (inbound/outbound)
+                                    enum: [ "inbound", "outbound" ]
+                                    example: "inbound"
+                                  Transfer_Code:
+                                    type: string
+                                    description: Transfer code
+                                    example: "TFR"
+                                  Desc:
+                                    type: string
+                                    description: Transfer description
+                                    example: "Coach Transfer Included"
+                            Ref_Prd_Id:
+                              type: integer
+                              description: Reference product ID
+                              example: 2
+
+                            Free_Car_Rental_Poss:
+                              type: boolean
+                              description: Flag indicating if free car rental is possible
+                              example: false
+
+                            Child_Price_Reduction:
+                              type: object
+                              description: Child price reduction information
+                              properties:
+                                "Cd":
+                                  type: string
+                                  description: Child price reduction code
+                                  example: "ALOW"
+                                TEXT:
+                                  type: string
+                                  description: Additional text information
+                                  example: "NULL"
+
+                            Atol_Mth:
+                              type: string
+                              description: ATOL (Air Travel Organiser's Licence) method
+                              example: "APP"
+                        Route_List:
+                          type: object
+                          description: Route list information
+                          properties:
+                            Routing:
+                              type: object
+                              description: Routing information
+                              properties:
+                                "Routing_Type":
+                                  type: string
+                                  description: Routing type
+                                  example: "OW"
+                                Routing_Id:
+                                  type: integer
+                                  description: Routing ID
+                                  example: 2
+                                Route:
+                                  type: array
+                                  description: List of routes
+                                  items:
+                                    type: object
+                                    properties:
+                                      "Rt_Dir":
+                                        type: string
+                                        description: Route direction
+                                        enum: [ "outbound", "inbound" ]
+                                        example: "outbound"
+                                      "Is_Adhoc":
+                                        type: boolean
+                                        description: Flag indicating if route is ad-hoc
+                                        example: false
+                                      "Error":
+                                        type: boolean
+                                        description: Error flag
+                                        example: false
+                                      Route_Id:
+                                        type: integer
+                                        description: Route ID
+                                        example: 2
+                                      RouteCd:
+                                        type: string
+                                        description: Route code
+                                        example: "PMILGW6CLGWPMI"
+                                      Flt_Inv_Id:
+                                        type: object
+                                        description: Flight inventory ID
+                                        properties:
+                                          "Box_Id":
+                                            type: integer
+                                            description: Box ID
+                                            example: 6726296
+                                          TEXT:
+                                            type: integer
+                                            description: Flight inventory ID text
+                                            example: 6194160332
+                                      Rt_InvState:
+                                        type: string
+                                        description: Route inventory state
+                                        example: "INTERNAL"
+                                      Dep_Air_Cd:
+                                        type: string
+                                        description: Departure airport code
+                                        example: "LGW"
+                                      Arr_Air_Cd:
+                                        type: string
+                                        description: Arrival airport code
+                                        example: "PMI"
+                                      Flt_Dt_Tm:
+                                        type: array
+                                        description: Flight date and time information
+                                        items:
+                                          type: object
+                                          properties:
+                                            "DirType":
+                                              type: string
+                                              description: Direction type
+                                              enum: [ "DEPARTURE", "ARRIVAL" ]
+                                              example: "DEPARTURE"
+                                            Local:
+                                              type: string
+                                              format: date-time
+                                              description: Local date and time
+                                              example: "2026-08-01T06:00:00+01:00"
+                                      Duration:
+                                        type: integer
+                                        description: Duration in days
+                                        example: 7
+                                      Cycle_Dt:
+                                        type: string
+                                        format: date
+                                        description: Cycle date
+                                        example: "2026-08-01"
+                                      JnyDur:
+                                        type: string
+                                        description: Journey duration (HH:MM)
+                                        example: "02:15"
+                                      Prom:
+                                        type: object
+                                        description: Promotion information
+                                        properties:
+                                          "Code":
+                                            type: string
+                                            description: Promotion code
+                                            example: "ACPK"
+                                          "Issue":
+                                            type: integer
+                                            description: Issue number
+                                            example: 1
+                                          "Name":
+                                            type: string
+                                            description: Promotion name
+                                            example: "Cruise UK Package"
+                                          TEXT:
+                                            type: string
+                                            description: Additional text information
+                                            example: "NULL"
+                                      Car_Cd:
+                                        type: string
+                                        description: Carrier code
+                                        example: "TOM"
+                                      Flt_No:
+                                        type: integer
+                                        description: Flight number
+                                        example: 4618
+                                      Bkg_Cls:
+                                        type: object
+                                        description: Booking class
+                                        properties:
+                                          "Code":
+                                            type: string
+                                            description: Booking class code
+                                            example: "Y"
+                                          TEXT:
+                                            type: string
+                                            description: Additional text information
+                                            example: "NULL"
+                                      Cab_Cls:
+                                        type: object
+                                        description: Cabin class
+                                        properties:
+                                          "Code":
+                                            type: string
+                                            description: Cabin class code
+                                            example: "Y"
+                                          "Name":
+                                            type: string
+                                            description: Cabin class name
+                                            example: "Economy "
+                                          TEXT:
+                                            type: string
+                                            description: Additional text information
+                                            example: "NULL"
+                                      Flt_Seq_Cd:
+                                        type: string
+                                        description: Flight sequence code
+                                        example: "C"
+                                      Sec:
+                                        type: object
+                                        description: Sector information
+                                        properties:
+                                          Id:
+                                            type: integer
+                                            description: Sector ID
+                                            example: 2
+                                          SecId:
+                                            type: integer
+                                            description: Sector sequence ID
+                                            example: 1
+                                          Dep_Air_Cd:
+                                            type: string
+                                            description: Departure airport code
+                                            example: "LGW"
+                                          Arr_Air_Cd:
+                                            type: string
+                                            description: Arrival airport code
+                                            example: "PMI"
+                                          Flt_Dt_Tm:
+                                            type: array
+                                            description: Flight date and time information
+                                            items:
+                                              type: object
+                                              properties:
+                                                "DirType":
+                                                  type: string
+                                                  description: Direction type
+                                                  enum: [ "DEPARTURE", "ARRIVAL" ]
+                                                  example: "DEPARTURE"
+                                                Local:
+                                                  type: string
+                                                  format: date-time
+                                                  description: Local date and time
+                                                  example: "2026-08-01T06:00:00+01:00"
+                                          JnyDur:
+                                            type: string
+                                            description: Journey duration (HH:MM)
+                                            example: "02:15"
+                                          Car_Cd:
+                                            type: string
+                                            description: Carrier code
+                                            example: "TOM"
+                                          Flt_No:
+                                            type: integer
+                                            description: Flight number
+                                            example: 4618
+                                          Bkg_Cls:
+                                            type: object
+                                            description: Booking class
+                                            properties:
+                                              "Code":
+                                                type: string
+                                                description: Booking class code
+                                                example: "Y"
+                                              TEXT:
+                                                type: string
+                                                description: Additional text information
+                                                example: "NULL"
+                                          Cab_Cls:
+                                            type: object
+                                            description: Cabin class
+                                            properties:
+                                              "Code":
+                                                type: string
+                                                description: Cabin class code
+                                                example: "Y"
+                                              "Name":
+                                                type: string
+                                                description: Cabin class name
+                                                example: "Economy "
+                                              TEXT:
+                                                type: string
+                                                description: Additional text information
+                                                example: "NULL"
+                                          Eqmt:
+                                            type: string
+                                            description: Equipment
+                                            example: "B738-189"
+                                          EqmtDescription:
+                                            type: string
+                                            description: Equipment description
+                                            example: "Boeing 738-189"
+                                          Seat_Res_Possible:
+                                            type: string
+                                            description: Seat reservation possibility
+                                            enum: [ "YES", "NO" ]
+                                            example: "NO"
+                                      Ser_Sts:
+                                        type: string
+                                        description: Service status
+                                        example: "FIX"
+                                      SubServPaxs:
+                                        type: object
+                                        description: Sub-service passengers information
+                                        properties:
+                                          SubServPax:
+                                            type: array
+                                            description: List of sub-service passengers
+                                            items:
+                                              type: object
+                                              properties:
+                                                Pax_Id:
+                                                  type: integer
+                                                  description: Passenger ID
+                                                  example: 1
+                                                Pax_Tp:
+                                                  type: string
+                                                  description: Passenger type
+                                                  example: "ADULT"
+                                                Pax_Srv_Prc_Ex:
+                                                  type: object
+                                                  description: Passenger service price excluding taxes
+                                                  properties:
+                                                    "CurISO":
+                                                      type: string
+                                                      description: Currency ISO code
+                                                      example: "GBP"
+                                                    TEXT:
+                                                      type: number
+                                      Seat_Res_Possible:
+                                        type: string
+                                        description: Seat reservation possibility
+                                        enum: [ "YES", "NO" ]
+                                        example: "NO"
+
+                                      Check_In:
+                                        type: object
+                                        description: Check-in information
+                                        properties:
+                                          "Dir":
+                                            type: string
+                                            description: Check-in direction
+                                            example: "DEPARTURE"
+                                          TEXT:
+                                            type: string
+                                            description: Check-in location/terminal
+                                            example: "Main Terminal"
+
+                                      Atol_Mth:
+                                        type: string
+                                        description: ATOL (Air Travel Organiser's Licence) method
+                                        example: "APP"
+
+                                      SSR_Possible:
+                                        type: boolean
+                                        description: Flag indicating if special service requests are possible
+                                        example: false
+
+                                      Online_Chk_In_Mth:
+                                        type: string
+                                        description: Online check-in method
+                                        example: "DIS"
+                    Item:
+                      type: object
+                      description: Item information
+                      properties:
+                        "Is_Adhoc":
+                          type: boolean
+                          description: Flag indicating if item is ad-hoc
+                          example: false
+                        "Code":
+                          type: string
+                          description: Item code
+                          example: "WCF1/A"
+                        "Name":
+                          type: string
+                          description: Item name
+                          example: "TUI Care Foundation"
+                        "Is_Default":
+                          type: boolean
+                          description: Flag indicating if item is default
+                          example: false
+                        "Auto_Inc":
+                          type: boolean
+                          description: Flag indicating if item is auto-included
+                          example: true
+                        "Short_Name":
+                          type: string
+                          description: Item short name
+                          example: "TUI Care Foundation"
+                        "Error":
+                          type: boolean
+                          description: Error flag
+                          example: false
+                        Id:
+                          type: integer
+                          description: Item ID
+                          example: 4
+                        St_Dt:
+                          type: string
+                          format: date
+                          description: Start date
+                          example: "2026-08-01"
+                        Set_Type:
+                          type: string
+                          description: Set type
+                          example: "EXTRA"
+                        Item_Type:
+                          type: object
+                          description: Item type information
+                          properties:
+                            "Code":
+                              type: string
+                              description: Item type code
+                              example: "WC"
+                            Item_Type_Desc:
+                              type: object
+                              description: Item type description
+                              properties:
+                                Locale:
+                                  type: string
+                                  description: Locale
+                                  example: "EN_EN"
+                                Desc:
+                                  type: string
+                                  description: Description
+                                  example: "TUI Care Foundation"
+                        Prom:
+                          type: object
+                          description: Promotion information
+                          properties:
+                            "Code":
+                              type: string
+                              description: Promotion code
+                              example: "AUCI"
+                            "Issue":
+                              type: integer
+                              description: Issue number
+                              example: 1
+                            "Name":
+                              type: string
+                              description: Promotion name
+                              example: "TUI UK Common Items"
+                            "Brand":
+                              type: string
+                              description: Brand code
+                              example: "NULL"
+                            TEXT:
+                              type: string
+                              description: Additional text information
+                              example: "NULL"
+                        Bkg_Qty:
+                          type: integer
+                          description: Booking quantity
+                          example: 2
+                        Ser_Sts:
+                          type: string
+                          description: Service status
+                          example: "FIX"
+                        MinPrice:
+                          type: string
+                          description: Minimum price
+                          example: "NULL"
+                        MaxPrice:
+                          type: string
+                          description: Maximum price
+                          example: "NULL"
+                        Price:
+                          type: string
+                          description: Price
+                          example: "NULL"
+                        SubServPaxs:
+                          type: object
+                          description: Sub-service passengers information
+                          properties:
+                            SubServPax:
+                              type: array
+                              description: List of sub-service passengers
+                              items:
+                                type: object
+                                properties:
+                                  Pax_Id:
+                                    type: integer
+                                    description: Passenger ID
+                                    example: 1
+                                  Pax_Tp:
+                                    type: string
+                                    description: Passenger type
+                                    example: "ADULT"
+                                  Pax_Srv_Prc_Ex:
+                                    type: object
+                                    description: Passenger service price excluding taxes
+                                    properties:
+                                      "CurISO":
+                                        type: string
+                                        description: Currency ISO code
+                                        example: "GBP"
+                                      TEXT:
+                                        type: number
+                                        format: float
+                                        description: Price amount
+                                        example: 1.0
+                        Prices:
+                          type: object
+                          description: Price information
+                          properties:
+                            Price:
+                              type: object
+                              description: Price details
+                              properties:
+                                Prc_Cd:
+                                  type: string
+                                  description: Price code
+                                  example: "EWC"
+                                Prc_Cd_Name:
+                                  type: string
+                                  description: Price code name
+                                  example: "TUI Care Foundation"
+                                Prc_Cd_Tp:
+                                  type: string
+                                  description: Price code type
+                                  example: "WCFND"
+                                Qty:
+                                  type: integer
+                                  description: Quantity
+                                  example: 2
+                                Prc:
+                                  type: object
+                                  description: Price information
+                                  properties:
+                                    "CurISO":
+                                      type: string
+                                      description: Currency ISO code
+                                      example: "GBP"
+                                    TEXT:
+                                      type: number
+                                      format: float
+                                      description: Price amount
+                                      example: 1.0
+                                Prc_Dt:
+                                  type: string
+                                  format: date-time
+                                  description: Price date
+                                  example: "2025-04-29T10:45:20+01:00"
+                                PricePaxs:
+                                  type: object
+                                  description: Price passengers information
+                                  properties:
+                                    Pax_Id:
+                                      type: array
+                                      description: List of passenger IDs
+                                      items:
+                                        type: integer
+                                        example: 1
+                                Visible:
+                                  type: boolean
+                                  description: Visibility flag
+                                  example: true
+                                Prc_Sts:
+                                  type: string
+                                  description: Price status
+                                  example: "STK"
+                        Ref_Prd_Id:
+                          type: integer
+                          description: Reference product ID
+                          example: 1
+                        Rate_Rule:
+                          type: string
+                          description: Rate rule
+                          example: "DAY"
+                        Item_Method:
+                          type: string
+                          description: Item method
+                          example: "PP"
+                        Atol_Mth:
+                          type: string
+                          description: ATOL method
+                          example: "APP"
+                        Corporate_Cd:
+                          type: string
+                          description: Corporate code
+                          example: "L33008"
+                    Flt_Extra_Cat_List:
+                      type: array
+                      description: Flight extra category list
+                      items:
+                        type: object
+                        properties:
+                          Flt_Inv_Id:
+                            type: integer
+                            description: Flight inventory ID
+                            example: 6194160332
+                          Flt_Extra_Cat:
+                            type: object
+                            description: Flight extra category information
+                            properties:
+                              "Code":
+                                type: string
+                                description: Category code
+                                example: "BAG"
+                              "Name":
+                                type: string
+                                description: Category name
+                                example: "Baggage"
+                              "Method":
+                                type: string
+                                description: Category method
+                                example: "BAG"
+                              Flt_Extra:
+                                type: object
+                                description: Flight extra information
+                                properties:
+                                  "Code":
+                                    type: string
+                                    description: Extra code
+                                    example: "BAG"
+                                  "Name":
+                                    type: string
+                                    description: Extra name
+                                    example: "Baggage Allowance"
+                                  "Error":
+                                    type: boolean
+                                    description: Error flag
+                                    example: false
+                                  "AllowComment":
+                                    type: boolean
+                                    description: Flag indicating if comments are allowed
+                                    example: false
+                                  Class:
+                                    type: string
+                                    description: Class
+                                    example: "Y"
+                                  Baggage:
+                                    type: object
+                                    description: Baggage information
+                                    properties:
+                                      Weight:
+                                        type: object
+                                        description: Weight information
+                                        properties:
+                                          "Cd":
+                                            type: integer
+                                            description: Weight code/value in kg
+                                            example: 20
+                                          Piece:
+                                            type: object
+                                            description: Piece information
+                                            properties:
+                                              "Cd":
+                                                type: integer
+                                                description: Piece code/count
+                                                example: 1
+                                              TEXT:
+                                                type: integer
+                                                description: Additional piece information
+                                                example: 0
+                                  SubServPaxs:
+                                    type: object
+                                    description: Sub-service passengers information
+                                    properties:
+                                      SubServPax:
+                                        type: array
+                                        description: List of sub-service passengers
+                                        items:
+                                          type: object
+                                          properties:
+                                            Pax_Id:
+                                              type: integer
+                                              description: Passenger ID
+                                              example: 1
+                                            Pax_Tp:
+                                              type: string
+                                              description: Passenger type
+                                              example: "ADULT"
+                                            Pax_Srv_Prc_Ex:
+                                              type: object
+                                              description: Passenger service price excluding taxes
+                                              properties:
+                                                "CurISO":
+                                                  type: string
+                                                  description: Currency ISO code
+                                                  example: "GBP"
+                                                TEXT:
+                                                  type: number
+                                                  format: float
+                                                  description: Price amount
+                                                  example: 0.0
+                                  Atol_Mth:
+                                    type: string
+                                    description: ATOL method
+                                    example: "NONE"
+                                  Corporate_Cd:
+                                    type: string
+                                    description: Corporate code
+                                    example: "L31422"
+                    CurISO:
+                      type: string
+                      description: Currency ISO code
+                      example: "GBP"
+                    Fast_Seller:
+                      type: string
+                      description: Fast seller indicator
+                      example: "S"
+                    Acc_Prc_Zero_Fg:
+                      type: boolean
+                      description: Flag indicating if accommodation price is zero
+                      example: false
+                    Acc_Cost_Zero_Fg:
+                      type: boolean
+                      description: Flag indicating if accommodation cost is zero
+                      example: false
+                    Atol_Prot_Tp:
+                      type: string
+                      description: ATOL protection type
+                      example: "PKG"
+                    Atol_Prot_By:
+                      type: string
+                      description: ATOL protection provider
+                      example: "TO"
+                    Atol_Prot_Issuer:
+                      type: string
+                      description: ATOL protection issuer
+                      example: "TO"
+                    Summary_Prices:
+                      type: object
+                      description: Summary of prices
+                      properties:
+                        Summary_Price:
+                          type: array
+                          description: List of summary prices
+                          items:
+                            type: object
+                            properties:
+                              Prc_Tp_Cd:
+                                type: string
+                                description: Price type code
+                                example: "ACRMAD"
+                              Prc_Tp_Name:
+                                type: string
+                                description: Price type name
+                                example: "Adult Package Price"
+                              Qty:
+                                type: integer
+                                description: Quantity
+                                example: 2
+                              Prc:
+                                type: number
+                                format: float
+                                description: Price amount
+                                example: 1796.0
+                Agt_No:
+                  type: string
+                  description: Agent number
+                  example: "MARCR"
+                CusDet:
+                  type: object
+                  description: Customer details information
+                  properties:
+                    "New_Cus":
+                      type: boolean
+                      description: Flag indicating if this is a new customer
+                      example: false
+                    Person:
+                      type: object
+                      description: Person information
+                      properties:
+                        Add:
+                          type: object
+                          description: Address information
+                          properties:
+                            Name:
+                              type: string
+                              description: Name or company name
+                              example: "T U I Wigmore House,"
+                            Street:
+                              type: string
+                              description: Street address
+                              example: "Wigmore Lane"
+                            ZipCode:
+                              type: string
+                              description: Postal/ZIP code
+                              example: "LU2 9TN"
+                            City:
+                              type: string
+                              description: City name
+                              example: "LUTON"
+                            CountryISOCode:
+                              type: string
+                              description: ISO country code
+                              example: "GB"
+                        Comm:
+                          type: object
+                          description: Communication information
+                          properties:
+                            CommType:
+                              type: string
+                              description: Communication type
+                              example: "TYPE_MOBILE"
+                            Sphere:
+                              type: string
+                              description: Communication sphere (private/business)
+                              example: "SPHERE_PRIVATE"
+                            AreaCode:
+                              type: string
+                              description: Area code
+                              example: "NULL"
+                            Num:
+                              type: string
+                              description: Phone number
+                              example: "07555889000"
+                        Email:
+                          type: object
+                          description: Email information
+                          properties:
+                            Address:
+                              type: string
+                              format: email
+                              description: Email address
+                              example: "sudharshan.mb@tui.co.uk"
+                            Sphere:
+                              type: string
+                              description: Email sphere (private/business)
+                              example: "SPHERE_PRIVATE"
+                        Marketing:
+                          type: object
+                          description: Marketing preferences
+                          properties:
+                            Mailshot:
+                              type: boolean
+                              description: Consent for mail marketing
+                              example: true
+                            Tel:
+                              type: boolean
+                              description: Consent for telephone marketing
+                              example: true
+                            By_Email:
+                              type: boolean
+                              description: Consent for email marketing
+                              example: true
+                            By_SMS:
+                              type: boolean
+                              description: Consent for SMS marketing
+                              example: true
+                TrvDox:
+                  type: object
+                  description: Travel documents information
+                  properties:
+                    DocumentReceiver:
+                      type: string
+                      description: Entity that receives the documents (e.g., PAYER, AGENCY)
+                      example: "PAYER"
+                    DoxLang:
+                      type: string
+                      description: Document language
+                      example: "en_EN"
+                    Next_Travel_Dox_Prt_Dt:
+                      type: string
+                      format: date-time
+                      description: Next travel document print date
+                      example: "2026-07-04T23:59:59+01:00"
+                    ConfPrt:
+                      type: boolean
+                      description: Confirmation printed flag
+                      example: false
+                    Travel_Dox_Stop:
+                      type: boolean
+                      description: Flag to stop travel document generation
+                      example: false
+                    Conf_Stop:
+                      type: boolean
+                      description: Flag to stop confirmation generation
+                      example: false
+                    Travel_Dox_No_Price:
+                      type: boolean
+                      description: Flag to exclude prices from travel documents
+                      example: false
+                    Travel_Dox_Per_Person:
+                      type: boolean
+                      description: Flag to generate per-person travel documents
+                      example: false
+                    Print_Voucher_Immed:
+                      type: boolean
+                      description: Flag to print vouchers immediately
+                      example: false
+                PayData:
+                  type: object
+                  description: Payment data information
+                  properties:
+                    Dpt:
+                      type: array
+                      description: Deposit information
+                      items:
+                        type: object
+                        properties:
+                          "Type":
+                            type: string
+                            description: Deposit type (LOW/HIGH)
+                            example: "LOW"
+                          CurISO:
+                            type: string
+                            description: Currency ISO code
+                            example: "GBP"
+                          Amt:
+                            type: number
+                            format: float
+                            description: Deposit amount
+                            example: 250.0
+                          Dep_Dt:
+                            type: string
+                            format: date
+                            description: Deposit date
+                            example: "2025-04-29"
+                    Bkg_Prc_Ex:
+                      type: object
+                      description: Booking price excluding taxes/fees
+                      properties:
+                        CurISO:
+                          type: string
+                          description: Currency ISO code
+                          example: "GBP"
+                        Amt:
+                          type: number
+                          format: float
+                          description: Amount
+                          example: 3450.32
+                    Bkg_Prc_Inc:
+                      type: object
+                      description: Booking price including taxes/fees
+                      properties:
+                        CurISO:
+                          type: string
+                          description: Currency ISO code
+                          example: "GBP"
+                        Amt:
+                          type: number
+                          format: float
+                          description: Total amount
+                          example: 3450.32
+                        Bal_Due_Amt:
+                          type: number
+                          format: float
+                          description: Balance due amount
+                          example: 3450.32
+                        Bal_Due_Dt:
+                          type: string
+                          format: date
+                          description: Balance due date
+                          example: "2026-05-09"
+                    Tot_Amt:
+                      type: number
+                      format: float
+                      description: Total amount
+                      example: 3450.32
+                    Agt_Com:
+                      type: number
+                      format: float
+                      description: Agent commission
+                      example: 0.0
+                    Comm_Inc_VAT:
+                      type: number
+                      format: float
+                      description: Commission including VAT
+                      example: 0.0
+                    VAT:
+                      type: number
+                      format: float
+                      description: VAT amount
+                      example: 0.0
+                    Payment_Received:
+                      type: number
+                      format: float
+                      description: Payment received amount
+                      example: 0.0
+                    Tot_Refund_Amt:
+                      type: number
+                      format: float
+                      description: Total refund amount
+                      example: 0.0
+                    Tot_Dpt:
+                      type: number
+                      format: float
+                      description: Total deposit amount
+                      example: 600.0
+                Pax:
+                  type: array
+                  description: Passenger information
+                  items:
+                    type: object
+                    properties:
+                      "Age":
+                        type: integer
+                        description: Passenger age
+                        example: 30
+                      "Index":
+                        type: integer
+                        description: Passenger index/position
+                        example: 1
+                      Person:
+                        type: object
+                        description: Person details
+                        properties:
+                          FirstName:
+                            type: string
+                            description: First name
+                            example: "TEST"
+                          LastName:
+                            type: string
+                            description: Last name
+                            example: "PASSENGER"
+                          Title:
+                            type: string
+                            description: Title (Mr, Mrs, Ms, etc.)
+                            example: "Mr"
+                          Sex:
+                            type: string
+                            description: Gender
+                            enum: [ "SEX_MALE", "SEX_FEMALE" ]
+                            example: "SEX_MALE"
+                          PersonType:
+                            type: string
+                            description: Person type
+                            enum: [ "TYPE_NATURAL", "TYPE_LEGAL" ]
+                            example: "TYPE_NATURAL"
+                      Pax_Tp:
+                        type: string
+                        description: Passenger type
+                        enum: [ "ADULT", "CHILD", "INFANT" ]
+                        example: "ADULT"
+                      Lead_Pax:
+                        type: boolean
+                        description: Flag indicating if this is the lead passenger
+                        example: true
+                DD_Marketing_Sts:
+                  type: string
+                  description: Direct debit marketing status
+                  example: "V0"
+                Prom:
+                  type: object
+                  description: Promotion information
+                  properties:
+                    "Code":
+                      type: string
+                      description: Promotion code
+                      example: "BGCR"
+                    "Issue":
+                      type: integer
+                      description: Issue number
+                      example: 1
+                    "Name":
+                      type: string
+                      description: Promotion name
+                      example: "Marella Cruises"
+                    "Prom_Group_Code":
+                      type: string
+                      description: Promotion group code
+                      example: "CRMP"
+                    "Brand":
+                      type: string
+                      description: Brand code
+                      example: "S"
+                    TEXT:
+                      type: string
+                      description: Additional text information
+                      example: "NULL"
+                Source:
+                  type: object
+                  description: Booking source information
+                  properties:
+                    "Cd":
+                      type: string
+                      description: Source code
+                      example: "AGEN"
+                    "Name":
+                      type: string
+                      description: Source name
+                      example: "Shop Booking"
+                    TEXT:
+                      type: string
+                      description: Additional text information
+                      example: "NULL"
+                Sub_Source:
+                  type: object
+                  description: Booking sub-source information
+                  properties:
+                    "Cd":
+                      type: string
+                      description: Sub-source code
+                      example: "ZWEB"
+                    "Name":
+                      type: string
+                      description: Sub-source name
+                      example: "Web Booking"
+                    TEXT:
+                      type: string
+                      description: Additional text information
+                      example: "NULL"
+                Incident_Sts:
+                  type: string
+                  description: Incident status
+                  example: "NA"
+                Insurance_Method:
+                  type: string
+                  description: Insurance method
+                  example: "EXT"
+                Retail_Bkg_Id:
+                  type: integer
+                  description: Retail booking ID
+                  example: -1
+                Ext_Pay_Ref:
+                  type: string
+                  description: External payment reference
+                  example: "430 05201"
+                Bkg_Type_Mth:
+                  type: string
+                  description: Booking type method
+                  example: "RET"
+                Credited_User:
+                  type: object
+                  description: Credited user information
+                  properties:
+                    "Code":
+                      type: string
+                      description: User code
+                      example: "MCUSER"
+                    "Name":
+                      type: string
+                      description: User name
+                      example: "Marella Cruises (Sys Default)"
+                    TEXT:
+                      type: string
+                      description: Additional text information
+                      example: "NULL"
+                Market:
+                  type: object
+                  description: Market information
+                  properties:
+                    "Code":
+                      type: string
+                      description: Market code
+                      example: "BCTH"
+                    TEXT:
+                      type: string
+                      description: Market description
+                      example: "B2C TUI UK (£)"
+                Agent_Group:
+                  type: object
+                  description: Agent group information
+                  properties:
+                    "Code":
+                      type: string
+                      description: Agent group code
+                      example: "MARELLA"
+                    "Name":
+                      type: string
+                      description: Agent group name
+                      example: "Marella Websites"
+                    TEXT:
+                      type: string
+                      description: Additional text information
+                      example: "NULL"
+
+    ValidateHolidayRequest:
+      type: object
+      required:
+        - InfoBookingRequest
+      properties:
+        InfoBookingRequest:
+          $ref: '#/components/schemas/InfoBookingRequest'
+
+    ValidateHolidayResponse:
+      type: object
+      required:
+        - TILInfoBookingResponse
+      properties:
+        TILInfoBookingResponse:
+          $ref: '#/components/schemas/TILInfoBookingResponse'
+
+    InfoBookingRequest:
+      type: object
+      required:
+        - DiscardSession
+        - Adm
+        - BkgSts
+        - BkgEnt
+        - Pax
+        - Source
+        - SubSource
+      properties:
+        DiscardSession:
+          type: string
+          description: Flag to indicate if the session should be discarded
+          example: "true"
+        Adm:
+          $ref: '#/components/schemas/ValHolidayRequestAdm'
+        BkgSts:
+          type: string
+          description: Status of the booking
+          example: "BOOKING"
+        Bkg_Ent:
+          $ref: '#/components/schemas/ValHolidayRequestBkg_Ent'
+        Pax:
+          type: array
+          description: List of passengers in the booking
+          items:
+            $ref: '#/components/schemas/Pax'
+        Source:
+          $ref: '#/components/schemas/ValHolidayRequestSource'
+        Sub_Source:
+          $ref: '#/components/schemas/ValHolidayRequestSub_Source'
+
+    TILInfoBookingResponse:
+      type: object
+      required:
+        - TUITILResponse
+        - InfoBookingResponse
+      properties:
+        TUITILResponse:
+          $ref: '#/components/schemas/TUITILResponse'
+        InfoBookingResponse:
+          $ref: '#/components/schemas/InfoBookingResponse'
+
+    TUITILResponse:
+      type: object
+      required:
+        - Result
+      properties:
+        Result:
+          type: object
+          required:
+            - ResponseCode
+            - Description
+            - CorrelationID
+          properties:
+            ResponseCode:
+              type: string
+              description: Response code indicating the status of the request
+              example: "0000"
+            Description:
+              type: string
+              description: Description of the response status
+              example: "SUCCESS"
+            CorrelationID:
+              type: string
+              description: Unique identifier for correlating the request and response
+              example: "fdd8c683-cf4e-4256-8cf6-f5b134145167"
+            Service_version:
+              type: string
+              description: Version of the service
+              example: "v3"
+            Xsd_version:
+              type: string
+              description: Version of the XSD schema
+              example: "T3.22.19.1"
+
+    InfoBookingResponse:
+      type: object
+      required:
+        - Adm
+        - BkgSts
+        - Bkg_Ent
+        - Pax
+      properties:
+        Adm:
+          $ref: '#/components/schemas/ValHolidayResponseAdm'
+        CltInfo:
+          $ref: '#/components/schemas/ValHolidayResponseCltInfo'
+        BkgSts:
+          type: string
+          description: Status of the booking
+          example: "BOOKING"
+        ResSts:
+          type: string
+          description: Reservation status
+          example: "CONFIRMED"
+        Super_Ref2:
+          type: string
+          description: Super reference 2
+          example: "NULL"
+        HasAgt_Notice:
+          type: boolean
+          description: Has agent notice flag
+          example: false
+        StsExpDateMax:
+          type: string
+          format: date-time
+          description: Status expiration date maximum
+          example: "2026-08-04T00:00:00+01:00"
+        His:
+          type: object
+          properties:
+            Bkg_Dt_Tm:
+              type: string
+              format: date-time
+              description: Booking date and time
+              example: "2025-05-01T14:02:01+01:00"
+        Bkg_Ent:
+          $ref: '#/components/schemas/ValHolidayResponseBkg_Ent'
+        Agt_No:
+          type: string
+          description: Agent number
+          example: "MARCR"
+        PayData:
+          $ref: '#/components/schemas/PayData'
+        Pax:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pax'
+        DD_Marketing_Sts:
+          type: string
+          description: Direct debit marketing status
+          example: "V0"
+        DD_Mandate:
+          type: object
+          properties:
+            'Apply_Sts':
+              type: string
+              description: Apply status
+              example: "DISA"
+            TEXT:
+              type: string
+              description: Additional text
+              example: "NULL"
+        Prom:
+          $ref: '#/components/schemas/ValHolidayResponseProm'
+        Source:
+          $ref: '#/components/schemas/ValHolidayResponseSource'
+        Sub_Source:
+          $ref: '#/components/schemas/ValHolidayResponseSub_Source'
+        Incident_Sts:
+          type: string
+          example: "NA"
+          description: Incident status
+        Insurance_Method:
+          type: string
+          example: "EXT"
+          description: Insurance method
+        Retail_Bkg_Id:
+          type: integer
+          example: -1
+          description: Retail booking ID
+        Bkg_Type_Mth:
+          type: string
+          example: "RET"
+          description: Booking type method
+        Market:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "BCTH"
+              description: Market code
+            TEXT:
+              type: string
+              example: "B2C TUI UK (£)"
+              description: Market description
+        Agent_Group:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "MARELLA"
+              description: Agent group code
+            "Name":
+              type: string
+              example: "Marella Websites"
+              description: Agent group name
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+
+    ValHolidayRequestAdm:
+      type: object
+      properties:
+        ReqId:
+          type: string
+          description: Request identifier
+          example: "node1-6eaY7EbD"
+
+    ValHolidayResponseAdm:
+      type: object
+      properties:
+        "Debug":
+          type: boolean
+          example: false
+        "IncludeDetailedPerfStats":
+          type: boolean
+          example: false
+        "Xsd_Ver":
+          type: string
+          example: "T3.22.20.1"
+        ReqId:
+          type: string
+          example: "node1-6eaY7EbD"
+        Tm:
+          type: string
+          format: date-time
+          example: "2025-05-01T14:02:04.070882+01:00"
+        Trk:
+          type: object
+          properties:
+            "From":
+              type: string
+              example: "atcomres"
+            "To":
+              type: string
+              example: "phoenix"
+            TEXT:
+              type: string
+              example: "NULL"
+
+    ValHolidayRequestBkg_Ent:
+      type: object
+      properties:
+        Accom:
+          $ref: '#/components/schemas/ValHolidayRequestAccommodation'
+        Package:
+          $ref: '#/components/schemas/ValHolidayRequestPackage'
+        Item:
+          type: array
+          description: List of additional items in the booking
+          items:
+            $ref: '#/components/schemas/Item'
+
+    ValHolidayResponseBkg_Ent:
+      type: object
+      properties:
+        'Amend_Mth':
+          type: string
+          description: Amendment method
+          example: "ALL"
+        Accom:
+          $ref: '#/components/schemas/ValHolidayResponseAccommodation'
+        Package:
+          $ref: '#/components/schemas/ValHolidayResponsePackage'
+        Item:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValHolidayResponseItem_Element'
+        Flt_Extra_Cat_List:
+          $ref: '#/components/schemas/Flt_Extra_Cat_List'
+        CurISO:
+          type: string
+          description: Currency ISO code
+          example: "GBP"
+        Fast_Seller:
+          type: string
+          description: Fast seller indicator
+          example: "S"
+        Acc_Prc_Zero_Fg:
+          type: boolean
+          description: Accommodation price zero flag
+          example: false
+        Acc_Cost_Zero_Fg:
+          type: boolean
+          description: Accommodation cost zero flag
+          example: false
+        Atol_Prot_Tp:
+          type: string
+          description: ATOL protection type
+          example: "PKG"
+        Atol_Prot_By:
+          type: string
+          description: ATOL protection by
+          example: "TO"
+        Atol_Prot_Issuer:
+          type: string
+          description: ATOL protection issuer
+          example: "TO"
+        Summary_Prices:
+          $ref: '#/components/schemas/Summary_Prices'
+
+    ValHolidayRequestPackage:
+      type: object
+      properties:
+        Accom:
+          $ref: '#/components/schemas/ValHolidayRequestAccommodation'
+        MultiCentre:
+          $ref: '#/components/schemas/ValHolidayRequestMultiCentre'
+        Route_List:
+          $ref: '#/components/schemas/ValHolidayRequestRoute_List'
+
+    ValHolidayResponsePackage:
+      type: object
+      properties:
+        Accom:
+          $ref: '#/components/schemas/ValHolidayResponseAccommodation'
+        MultiCentre:
+          $ref: '#/components/schemas/ValHolidayResponseMultiCentre'
+        Route_List:
+          $ref: '#/components/schemas/ValHolidayResponseRoute_List'
+
+    ValHolidayRequestMultiCentre:
+      type: object
+      required:
+        - id
+        - stDt
+        - endDt
+        - mcPrd
+        - rmCd
+      properties:
+        Id:
+          type: string
+          description: Multi-center identifier
+          example: "1"
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: End date
+          example: "2026-08-18"
+        MC_Prd:
+          $ref: '#/components/schemas/ValHolidayRequestMultiCentreProduct'
+        Rm_Cd:
+          $ref: '#/components/schemas/RoomCode'
+        Offer_Choice:
+          type: array
+          description: List of accommodation offers
+          items:
+            $ref: '#/components/schemas/ValHolidayRequestOfferChoice'
+        "#attrs":
+          type: object
+          properties:
+            "Is_Adhoc":
+              type: string
+              description: Multi-center identifier
+              example: 'false'
+
+    ValHolidayResponseMultiCentre:
+      type: object
+      required:
+        - id
+        - stDt
+        - endDt
+        - mcPrd
+        - rmCd
+      properties:
+        "Is_Adhoc":
+          type: boolean
+          example: false
+          description: Indicates if this is an ad-hoc item
+        "Error":
+          type: boolean
+          example: false
+          description: Indicates if there is an error with this item
+        Id:
+          type: string
+          description: Multi-center identifier
+          example: "1"
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: End date
+          example: "2026-08-18"
+        Memo:
+          $ref: '#/components/schemas/Memo'
+        Transfer_Info:
+          $ref: '#/components/schemas/Transfer_Info'
+        MC_Prd:
+          $ref: '#/components/schemas/ValHolidayResponseMultiCentreProduct'
+        Rm_Cd:
+          $ref: '#/components/schemas/ValHolidayResponseRoomCode'
+        Offer_Choice:
+          type: array
+          description: List of accommodation offers
+          items:
+            $ref: '#/components/schemas/ValHolidayResponseOfferChoice'
+
+    ValHolidayRequestMultiCentreProduct:
+      type: object
+      required:
+        - mcCode
+      properties:
+        MC_Code:
+          type: string
+          description: Multi-center product code
+          example: "ESMJ0466"
+        Prom:
+          $ref: '#/components/schemas/Prom'
+        Itin_Cd:
+          type: string
+          description: Itinerary code
+          example: "6339173891"
+
+    ValHolidayResponseMultiCentreProduct:
+      type: object
+      required:
+        - mcCode
+      properties:
+        MC_Code:
+          type: string
+          description: Multi-center product code
+          example: "ESMJ0466"
+        Prom:
+          $ref: '#/components/schemas/ValHolidayResponseProm'
+        Itin_Cd:
+          type: string
+          description: Itinerary code
+          example: "6339173891"
+        Itin_Name:
+          type: string
+          example: "Marella Discovery 2 Cruise & Stay PMI 14"
+          description: Itinerary name
+        Corporate_Cd:
+          type: integer
+          example: 101752
+          description: Corporate code
+
+    ValHolidayResponseProm:
+      type: object
+      description: Promotion information
+      properties:
+        "Code":
+          type: string
+          description: Promotion code
+          example: "BGCR"
+        "Issue":
+          type: integer
+          description: Issue number
+          example: 1
+        "Name":
+          type: string
+          description: Promotion name
+          example: "Marella Cruises"
+        "Brand":
+          type: string
+          description: Brand code
+          example: "S"
+        TEXT:
+          type: string
+          description: Additional text information
+          example: "NULL"
+
+    ValHolidayResponseRoomCode:
+      type: object
+      required:
+        - Rm_No
+        - Code
+        - BB_Cd
+      properties:
+        "Is_Adhoc":
+          type: boolean
+          example: false
+          description: Indicates if this is an ad-hoc room
+        Rm_No:
+          type: integer
+          example: 1
+          description: Room number
+        Code:
+          type: string
+          example: "ZI01"
+          description: Room code
+        Desc:
+          type: string
+          example: "Decks 2/3 Inside Cabin"
+          description: Room description
+        Fac_List:
+          type: string
+          example: "Decks 2/3, Air-conditioning, Shower, WC"
+          description: Facility list as text
+        Facility_List:
+          type: object
+          properties:
+            Facility:
+              type: array
+              items:
+                type: object
+                properties:
+                  "Code":
+                    type: string
+                    example: "DK12"
+                    description: Facility code
+                  "Name":
+                    type: string
+                    example: "Decks 2/3"
+                    description: Facility name
+                  TEXT:
+                    type: string
+                    example: "NULL"
+                    description: Additional text information
+        StopSaleOverridden:
+          type: boolean
+          example: false
+          description: Indicates if stop sale has been overridden
+        Inf_Inc_Occ:
+          type: boolean
+          example: true
+          description: Indicates if infants are included in occupancy
+        Min_Pax:
+          type: integer
+          example: 1
+          description: Minimum number of passengers
+        Max_Pax:
+          type: integer
+          example: 2
+          description: Maximum number of passengers
+        Max_Adu:
+          type: integer
+          example: 2
+          description: Maximum number of adults
+        Max_Chd:
+          type: integer
+          example: 2
+          description: Maximum number of children
+        Max_Inf:
+          type: integer
+          example: 1
+          description: Maximum number of infants
+        BB_Cd:
+          type: string
+          example: "AI"
+          description: Board basis code
+        BB_Name:
+          type: string
+          example: "All Inclusive"
+          description: Board basis name
+        Alt_BB_Cd:
+          type: string
+          example: "PI"
+          description: Alternative board basis code
+        Ser_Sts:
+          type: array
+          description: Available service statuses
+          items:
+            type: string
+            enum: [ "FIX", "OPTION", "QUOTE" ]
+          example: [ "FIX", "OPTION", "QUOTE" ]
+        SubServPaxs:
+          $ref: '#/components/schemas/SubServicePassengers'
+        Prices:
+          $ref: '#/components/schemas/Prices'
+        No_Free_Chd:
+          type: integer
+          example: 0
+          description: Number of free children
+
+    ValHolidayRequestOfferChoice:
+      type: object
+      required:
+        - accom
+      properties:
+        Accom:
+          $ref: '#/components/schemas/ValHolidayRequestAccommodation'
+        "#attrs":
+          type: object
+          properties:
+            selectedOffer:
+              type: string
+              description: Flag indicating if this offer is selected
+              example: "1"
+
+    ValHolidayResponseOfferChoice:
+      type: object
+      required:
+        - accom
+      properties:
+        "selectedOffer":
+          type: integer
+          example: 1
+          description: Selected offer ID
+        "isSelectionMandatory":
+          type: boolean
+          example: true
+          description: Indicates if selection is mandatory
+        Accom:
+          $ref: '#/components/schemas/ValHolidayResponseAccommodation'
+        "#attrs":
+          type: object
+          properties:
+            selectedOffer:
+              type: string
+              description: Flag indicating if this offer is selected
+              example: "1"
+
+    ValHolidayRequestAccommodation:
+      type: object
+      required:
+        - Id
+        - stDt
+        - endDt
+        - htlPrd
+        - rmCd
+      properties:
+        Id:
+          type: string
+          description: Accommodation identifier
+          example: "2"
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: End date
+          example: "2026-08-11"
+        HtlPrd:
+          $ref: '#/components/schemas/ValHolidayRequestHotelProduct'
+        Rm_Cd:
+          $ref: '#/components/schemas/RoomCode'
+
+    ValHolidayResponseAccommodation:
+      type: object
+      required:
+        - Id
+        - stDt
+        - endDt
+        - htlPrd
+        - rmCd
+      properties:
+        "Is_Adhoc":
+          type: boolean
+          example: false
+          description: Indicates if this is an ad-hoc item
+        "Error":
+          type: boolean
+          example: false
+          description: Indicates if there is an error with this item
+        Id:
+          type: string
+          description: Accommodation identifier
+          example: "2"
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: End date
+          example: "2026-08-11"
+        HtlPrd:
+          $ref: '#/components/schemas/ValHolidayResponseHotelProduct'
+        Rm_Cd:
+          $ref: '#/components/schemas/ValHolidayResponseRoomCode'
+        Memo:
+          $ref: '#/components/schemas/Memo'
+        Ref_Prd_Id:
+          type: integer
+          example: 1
+          description: Reference product ID
+        Free_Car_Rental_Poss:
+          type: boolean
+          example: false
+          description: Free car rental possibility
+        Child_Price_Reduction:
+          type: object
+          properties:
+            "Cd":
+              type: string
+              example: "ALOW"
+              description: Child price reduction code
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+        Atol_Mth:
+          type: string
+          example: "APP"
+          description: ATOL method
+
+    ValHolidayRequestHotelProduct:
+      type: object
+      required:
+        - Name
+        - Acc_Cd
+      properties:
+        Name:
+          type: string
+          description: Name of the accommodation
+          example: "Ship"
+        Prom:
+          $ref: '#/components/schemas/Prom'
+        Acc_Cd:
+          type: string
+          description: Accommodation code
+          example: "XXXX0013/025"
+
+    ValHolidayResponseHotelProduct:
+      type: object
+      required:
+        - Name
+        - Acc_Cd
+      properties:
+        HtlPrd:
+          type: object
+          properties:
+            Name:
+              type: string
+              example: "Highlights of the Mediterranean (Discovery 2)"
+              description: Product name
+            Prom:
+              type: object
+              properties:
+                "Code":
+                  type: string
+                  example: "CGCR"
+                  description: Promotion code
+                "Issue":
+                  type: integer
+                  example: 1
+                  description: Issue number
+                "Name":
+                  type: string
+                  example: "Marella Cruises"
+                  description: Promotion name
+                "Brand":
+                  type: string
+                  example: "NULL"
+                  description: Brand information
+                TEXT:
+                  type: string
+                  example: "NULL"
+                  description: Additional text information
+            Acc_Cd:
+              type: object
+              properties:
+                "Accom_Id":
+                  type: string
+                  example: "1174396007/3"
+                  description: Accommodation ID
+                TEXT:
+                  type: string
+                  example: "XXXX0013/025"
+                  description: Accommodation code text
+            Acc_InvState:
+              type: string
+              example: "INTERNAL"
+              description: Accommodation inventory state
+            Hotel:
+              type: object
+              properties:
+                Add:
+                  type: object
+                  properties:
+                    Name:
+                      type: string
+                      example: "Highlights of the Mediterranean (Discovery 2)"
+                      description: Hotel name
+                    City:
+                      type: string
+                      example: "Palma Port"
+                      description: City name
+                    Region:
+                      type: string
+                      example: "Majorca"
+                      description: Region name
+                    CountryISOCode:
+                      type: string
+                      example: "ES"
+                      description: Country ISO code
+                Comm:
+                  type: object
+                  properties:
+                    CommType:
+                      type: string
+                      example: "TYPE_PHONE"
+                      description: Communication type
+                    Sphere:
+                      type: string
+                      example: "SPHERE_BUSINESS"
+                      description: Communication sphere
+                    AreaCode:
+                      type: string
+                      example: "NULL"
+                      description: Area code
+                    Num:
+                      type: string
+                      example: "01234567890"
+                      description: Phone number
+                Loc:
+                  type: object
+                  properties:
+                    Loc_Cd:
+                      type: string
+                      example: "ESMJPB"
+                      description: Location code
+                    Loc_Tp:
+                      type: string
+                      example: "CITY"
+                      description: Location type
+                    Loc_Name:
+                      type: string
+                      example: "Palma Port"
+                      description: Location name
+            Cat_Page:
+              type: object
+              properties:
+                Catalog:
+                  type: object
+                  properties:
+                    "Code":
+                      type: string
+                      example: "GCR"
+                      description: Catalog code
+                    "Name":
+                      type: string
+                      example: "Marella Cruises UK NEW"
+                      description: Catalog name
+                    TEXT:
+                      type: string
+                      example: "NULL"
+                      description: Additional text information
+                Cat_Page_No:
+                  type: integer
+                  example: 0
+                  description: Catalog page number
+                Prc_Cat_Page_No:
+                  type: integer
+                  example: 0
+                  description: Price catalog page number
+            Ship_Cd:
+              type: string
+              example: "XXXX0013"
+              description: Ship code
+            Ship_Name:
+              type: string
+              example: "Marella Discovery 2"
+              description: Ship name
+            Corporate_Cd:
+              type: integer
+              example: 101752
+              description: Corporate code
+            Sub_Corporate_Cd:
+              type: string
+              example: "NULL"
+              description: Sub-corporate code
+
+    ValHolidayRequestRoute_List:
+      type: object
+      required:
+        - Routing
+      properties:
+        Routing:
+          $ref: '#/components/schemas/ValHolidayRequestRouting'
+
+    ValHolidayResponseRoute_List:
+      type: object
+      required:
+        - Routing
+      properties:
+        Routing:
+          $ref: '#/components/schemas/ValHolidayResponseRouting'
+
+    ValHolidayRequestRouting:
+      type: object
+      required:
+        - Routing_Id
+        - Route
+      properties:
+        Routing_Id:
+          type: string
+          description: Routing identifier
+          example: "2"
+        Route:
+          type: array
+          description: List of routes
+          items:
+            $ref: '#/components/schemas/ValHolidayRequestRoute'
+        '#attrs':
+          type: object
+          properties:
+            'Routing_Type':
+              type: string
+              description: Type of routing
+              example: "OWR"
+
+    ValHolidayResponseRouting:
+      type: object
+      required:
+        - Routing_Id
+        - Route
+      properties:
+        Routing_Id:
+          type: string
+          description: Routing identifier
+          example: "2"
+        Route:
+          type: array
+          description: List of routes
+          items:
+            $ref: '#/components/schemas/ValHolidayResponseRoute'
+
+    ValHolidayRequestRoute:
+      type: object
+      required:
+        - RouteCd
+        - Dep_Air_Cd
+        - Arr_Air_Cd
+        - Flt_Dt_Tm
+      properties:
+        RouteCd:
+          type: string
+          description: Route code
+          example: "PMILGW2ALGWPMI"
+        Flt_Inv_Id:
+          type: string
+          description: Flight inventory identifier
+          example: "6194153804"
+        Dep_Air_Cd:
+          type: string
+          description: Departure airport code (IATA code)
+          example: "LGW"
+        Arr_Air_Cd:
+          type: string
+          description: Arrival airport code (IATA code)
+          example: "PMI"
+        Flt_Dt_Tm:
+          type: array
+          description: Flight date and time information
+          items:
+            $ref: '#/components/schemas/ValHolidayRequestFlight_DateTime'
+        Prom:
+          $ref: '#/components/schemas/Prom'
+        Car_Cd:
+          type: string
+          description: Carrier code
+          example: "TOM"
+        Bkg_Cls:
+          type: string
+          description: Booking class
+          example: ""
+        Flt_Seq_Cd:
+          type: string
+          description: Flight sequence code
+          example: "A"
+        Sec:
+          $ref: '#/components/schemas/ValHolidayRequestSec'
+        Ser_Sts:
+          type: string
+          description: Service status
+          example: "FIX"
+        SubServPaxs:
+          $ref: '#/components/schemas/SubServPaxs'
+        '#attrs':
+          type: object
+          properties:
+            'Rt_Dir':
+              type: string
+              description: Route direction
+              enum: [ "outbound", "inbound" ]
+              example: "outbound"
+
+    ValHolidayResponseRoute:
+      type: object
+      required:
+        - RouteCd
+        - Dep_Air_Cd
+        - Arr_Air_Cd
+        - Flt_Dt_Tm
+      properties:
+        "Rt_Dir":
+          type: string
+          example: "outbound"
+          description: Route direction
+          enum: [ "outbound", "inbound" ]
+        "Is_Adhoc":
+          type: boolean
+          example: false
+          description: Indicates if this is an ad-hoc route
+        "Error":
+          type: boolean
+          example: false
+          description: Indicates if there is an error with this route
+        RouteId:
+          type: string
+          description: Route Id
+          example: "4"
+        RouteCd:
+          type: string
+          description: Route code
+          example: "PMILGW2ALGWPMI"
+        Flt_Inv_Id:
+          type: object
+          properties:
+            "Box_Id":
+              type: integer
+              example: 6724334
+              description: Box identifier
+            TEXT:
+              type: integer
+              example: 6194153804
+              description: Flight inventory identifier
+        Rt_InvState:
+          type: string
+          example: "INTERNAL"
+          description: Route inventory state
+        Dep_Air_Cd:
+          type: string
+          description: Departure airport code (IATA code)
+          example: "LGW"
+        Arr_Air_Cd:
+          type: string
+          description: Arrival airport code (IATA code)
+          example: "PMI"
+        Flt_Dt_Tm:
+          type: array
+          description: Flight date and time information
+          items:
+            $ref: '#/components/schemas/ValHolidayResponseFlight_DateTime'
+        Duration:
+          type: integer
+          example: 14
+          description: Duration in days
+        Cycle_Dt:
+          type: string
+          format: date
+          example: "2026-08-04"
+          description: Cycle date
+        JnyDur:
+          type: string
+          example: "02:15"
+          description: Journey duration in hours:minutes format
+        Prom:
+          $ref: '#/components/schemas/ValHolidayResponseProm'
+        Car_Cd:
+          type: string
+          description: Carrier code
+          example: "TOM"
+        Flt_No:
+          type: integer
+          example: 4230
+          description: Flight number
+        Bkg_Cls:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "Y"
+              description: Booking class code
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+        Cab_Cls:
+          type: object
+          properties:
+            Code":
+              type: string
+              example: "Y"
+              description: Cabin class code
+            "Name":
+              type: string
+              example: "Economy "
+              description: Cabin class name
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+        Flt_Seq_Cd:
+          type: string
+          description: Flight sequence code
+          example: "A"
+        Sec:
+          $ref: '#/components/schemas/ValHolidayResponseSec'
+        Ser_Sts:
+          type: string
+          description: Service status
+          example: "FIX"
+        SubServPaxs:
+          $ref: '#/components/schemas/SubServPaxs'
+        Memo:
+          $ref: '#/components/schemas/Memo'
+        Seat_Res_Possible:
+          type: string
+          example: "NO"
+          description: Seat reservation possibility
+          enum: [ "YES", "NO" ]
+        Check_In:
+          type: object
+          properties:
+            "Dir":
+              type: string
+              example: "DEPARTURE"
+              description: Check-in direction
+              enum: [ "DEPARTURE", "ARRIVAL" ]
+            TEXT:
+              type: string
+              example: "North Terminal"
+              description: Terminal information
+        Atol_Mth:
+          type: string
+          example: "APP"
+          description: ATOL method
+        SSR_Possible:
+          type: boolean
+          example: false
+          description: Special service request possibility
+        Online_Chk_In_Mth:
+          type: string
+          example: "DIS"
+          description: Online check-in method
+          enum: [ "DIS", "ENA" ]
+
+    ValHolidayRequestFlight_DateTime:
+      type: object
+      required:
+        - Local
+      properties:
+        '#attrs':
+          type: object
+          properties:
+            'DirType':
+              type: string
+              description: Direction type
+              enum: [ "DEPARTURE", "ARRIVAL" ]
+              example: "DEPARTURE"
+        Local:
+          type: string
+          format: date-time
+          description: Local date and time
+          example: "2026-08-04T06:15:00.000+01:00"
+
+    ValHolidayResponseFlight_DateTime:
+      type: object
+      required:
+        - Local
+      properties:
+        'DirType':
+          type: string
+          description: Direction type
+          enum: [ "DEPARTURE", "ARRIVAL" ]
+          example: "DEPARTURE"
+        Local:
+          type: string
+          format: date-time
+          description: Local date and time
+          example: "2026-08-04T06:15:00.000+01:00"
+
+    ValHolidayRequestSec:
+      type: object
+      required:
+        - Dep_Air_Cd
+        - Arr_Air_Cd
+        - Flt_Dt_Tm
+        - Car_Cd
+      properties:
+        Dep_Air_Cd:
+          type: string
+          description: Departure airport code (IATA code)
+          example: "LGW"
+        Arr_Air_Cd:
+          type: string
+          description: Arrival airport code (IATA code)
+          example: "PMI"
+        Flt_Dt_Tm:
+          type: array
+          description: Flight date and time information
+          items:
+            $ref: '#/components/schemas/ValHolidayRequestFlight_DateTime'
+        Car_Cd:
+          type: string
+          description: Carrier code
+          example: "TOM"
+        Flt_No:
+          type: string
+          description: Flight number
+          example: "4230"
+
+    ValHolidayResponseSec:
+      type: object
+      required:
+        - Dep_Air_Cd
+        - Arr_Air_Cd
+        - Flt_Dt_Tm
+        - Car_Cd
+      properties:
+        Id:
+          type: integer
+          example: 4
+          description: Primary identifier
+        SecId:
+          type: integer
+          example: 1
+          description: Section identifier
+        Dep_Air_Cd:
+          type: string
+          description: Departure airport code (IATA code)
+          example: "LGW"
+        Arr_Air_Cd:
+          type: string
+          description: Arrival airport code (IATA code)
+          example: "PMI"
+        Flt_Dt_Tm:
+          type: array
+          description: Flight date and time information
+          items:
+            $ref: '#/components/schemas/ValHolidayResponseFlight_DateTime'
+        JnyDur:
+          type: string
+          example: "02:15"
+          description: Journey duration in hours:minutes format
+        Car_Cd:
+          type: string
+          description: Carrier code
+          example: "TOM"
+        Flt_No:
+          type: string
+          description: Flight number
+          example: "4230"
+        Bkg_Cls:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "Y"
+              description: Booking class code
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+        Cab_Cls:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "Y"
+              description: Cabin class code
+            "Name":
+              type: string
+              example: "Economy "
+              description: Cabin class name
+            TEXT:
+              type: string
+              example: "NULL"
+              description: Additional text information
+        Eqmt:
+          type: string
+          example: "B787-300"
+          description: Equipment code
+        EqmtDescription:
+          type: string
+          example: "Boeing 787-300"
+          description: Equipment description
+        Seat_Res_Possible:
+          type: string
+          example: "NO"
+          description: Seat reservation possibility
+          enum: [ "YES", "NO" ]
+
+    ValHolidayResponseItem:
+      type: array
+      description: List of additional items in the booking
+      items:
+        $ref: '#/components/schemas/Item_Element'
+
+    ValHolidayResponseItem_Element:
+      type: object
+      required:
+        - St_Dt
+        - Set_Type
+        - Item_Type
+        - Bkg_Qty
+        - Ser_Sts
+      properties:
+        "Is_Adhoc":
+          type: boolean
+          example: false
+          description: Indicates if this is an ad-hoc item
+        "Code":
+          type: string
+          example: "S263025/3529"
+          description: Cabin code
+        "Name":
+          type: string
+          example: "Deck 2/3 Inside 2 berth 3529"
+          description: Cabin name
+        "Is_Default":
+          type: boolean
+          example: false
+          description: Indicates if this is the default option
+        "Auto_Inc":
+          type: boolean
+          example: false
+          description: Indicates if auto-increment is enabled
+        "Short_Name":
+          type: integer
+          example: 3529
+          description: Cabin number
+        "Error":
+          type: boolean
+          example: false
+          description: Indicates if there is an error with this item
+        Id:
+          type: integer
+          example: 7
+          description: Cabin identifier
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        Set_Type:
+          type: string
+          description: Set type
+          example: "EXTRA"
+        Item_Type:
+          type: object
+          properties:
+            "Code":
+              type: string
+              example: "PC"
+              description: Item type code
+            Item_Type_Desc:
+              type: object
+              properties:
+                Locale:
+                  type: string
+                  example: "EN_EN"
+                  description: Locale code
+                Desc:
+                  type: string
+                  example: "Pre Booked Cabin"
+                  description: Item type description
+        Prom:
+          $ref: '#/components/schemas/ValHolidayResponseProm'
+        Bkg_Qty:
+          type: string
+          description: Booking quantity
+          example: "1"
+        Ser_Sts:
+          type: array
+          description: Available service statuses
+          items:
+            type: string
+            enum: [ "FIX", "OPTION", "QUOTE" ]
+          example: [ "FIX", "OPTION", "QUOTE" ]
+        MinPrice:
+          type: string
+          example: "NULL"
+          description: Minimum price
+          nullable: true
+        MaxPrice:
+          type: string
+          example: "NULL"
+          description: Maximum price
+          nullable: true
+        Price:
+          type: string
+          example: "NULL"
+          description: Current price
+          nullable: true
+        SubServPaxs:
+          type: object
+          properties:
+            SubServPax:
+              oneOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/SubServPax'
+                - $ref: '#/components/schemas/SubServPax'
+        Prices:
+          $ref: '#/components/schemas/Prices'
+        Ref_Prd_Id:
+          type: string
+          example: "2"
+          description: Ref Prod Id
+        Rate_Rule:
+          type: string
+          example: "JOURNEY"
+          description: Rate rule type
+        Item_Method:
+          type: string
+          example: "PI"
+          description: Item method
+        Atol_Mth:
+          type: string
+          example: "APP"
+          description: ATOL method
+
+    ValHolidayRequestSource:
+      type: object
+      required:
+        - '#attrs'
+      properties:
+        '#attrs':
+          type: object
+          required:
+            - 'Cd'
+          properties:
+            'Cd':
+              type: string
+              description: Source code
+              example: "AGEN"
+
+    ValHolidayResponseSource:
+      type: object
+      properties:
+        "Cd":
+          type: string
+          example: "AGEN"
+          description: Source code
+        "Name":
+          type: string
+          example: "Shop Booking"
+          description: Source name
+        TEXT:
+          type: string
+          example: "NULL"
+          description: Additional text information
+
+    ValHolidayRequestSub_Source:
+      type: object
+      required:
+        - '#attrs'
+      properties:
+        '#attrs':
+          type: object
+          required:
+            - 'Cd'
+          properties:
+            'Cd':
+              type: string
+              description: Sub-source code
+              example: "ZWEB"
+
+    ValHolidayResponseSub_Source:
+      type: object
+      properties:
+        "Cd":
+          type: string
+          example: "ZWEB"
+          description: Sub-source code
+        "Name":
+          type: string
+          example: "Web Booking"
+          description: Sub-source name
+        TEXT:
+          type: string
+          example: "NULL"
+          description: Additional text information
+
+    ValHolidayResponseCltInfo:
+      type: object
+      properties:
+        Locale:
+          type: string
+          example: "en_EN"
+        CltSysContext:
+          type: integer
+          example: 3
+        Agt_No:
+          type: string
+          example: "MARCR"
+        TermCode:
+          type: string
+          example: "VTX"
+        User_Name:
+          type: string
+          example: "MCUSER"
+        Chan:
+          type: integer
+          example: 1100
+        Channel_Type:
+          type: string
+          example: "VRP"
+        User_Role:
+          type: string
+          example: "INTERNAL"
+        Payment_VTID:
+          type: integer
+          example: 99000140
+        Bkg_Owner_Tp_Mth:
+          type: string
+          example: "TO"
+        Payment_OrgID:
+          type: string
+          example: "ba96ae31Ace67A4004Aa78aAdae2eec844a2"
+
+    Item:
+      type: array
+      description: List of additional items in the booking
+      items:
+        $ref: '#/components/schemas/Item_Element'
+
+    Item_Element:
+      type: object
+      required:
+        - St_Dt
+        - Set_Type
+        - Item_Type
+        - Bkg_Qty
+        - Ser_Sts
+      properties:
+        St_Dt:
+          type: string
+          format: date
+          description: Start date
+          example: "2026-08-04"
+        End_Dt:
+          type: string
+          format: date
+          description: End date
+          example: "2026-08-10"
+        Set_Type:
+          type: string
+          description: Set type
+          example: "EXTRA"
+        Item_Type:
+          type: object
+          properties:
+            '#attrs':
+              type: object
+              properties:
+                'Code':
+                  type: string
+                  description: Item type code
+                  example: "WC"
+        Prom:
+          type: object
+          properties:
+            '#attrs':
+              type: object
+              properties:
+                'Code':
+                  type: string
+                  description: Promotion code
+                  example: "AUCI"
+        Bkg_Qty:
+          type: string
+          description: Booking quantity
+          example: "2"
+        Ser_Sts:
+          type: string
+          description: Service status
+          example: "FIX"
+        SubServPaxs:
+          type: object
+          properties:
+            SubServPax:
+              oneOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/SubServPax'
+                - $ref: '#/components/schemas/SubServPax'
+        Ref_Prd_Id:
+          type: string
+          description: Reference product ID
+          example: "1"
+        Item_Method:
+          type: string
+          description: Item method
+          example: "PP"
+        '#attrs':
+          type: object
+          properties:
+            'Code':
+              type: string
+              description: Item code
+              example: "WCF1/A"
+            'Name':
+              type: string
+              description: Item name
+              example: "Worldcare Fund"
+
+    SubServPaxs:
+      type: object
+      properties:
+        SubServPax:
+          type: array
+          description: List of passengers for this service
+          items:
+            $ref: '#/components/schemas/SubServPax'
+
+    SubServPax:
+      type: object
+      required:
+        - Pax_Id
+      properties:
+        Pax_Id:
+          type: string
+          description: Passenger identifier
+          example: "1"
+
+    Pax:
+      type: array
+      description: List of passengers in the booking
+      items:
+        $ref: '#/components/schemas/Pax_Element'
+
+    Pax_Element:
+      type: object
+      required:
+        - '#attrs'
+        - Person
+      properties:
+        '#attrs':
+          type: object
+          required:
+            - 'Age'
+            - 'Index'
+          properties:
+            'Age':
+              type: string
+              description: Passenger age
+              example: "30"
+            'Index':
+              type: string
+              description: Passenger index
+              example: "1"
+        Person:
+          $ref: '#/components/schemas/Person'
+        Lead_Pax:
+          type: string
+          description: Indicates if this is the lead passenger
+          example: "false"
+
+    Person:
+      type: object
+      required:
+        - FirstName
+        - LastName
+        - Title
+        - Sex
+        - PersonType
+      properties:
+        FirstName:
+          type: string
+          description: First name of the passenger
+          example: "TEST"
+        LastName:
+          type: string
+          description: Last name of the passenger
+          example: "PASSENGER"
+        Title:
+          type: string
+          description: Title of the passenger
+          example: "Mr"
+        Sex:
+          type: string
+          description: Gender of the passenger
+          enum: [ "SEX_MALE", "SEX_FEMALE" ]
+          example: "SEX_MALE"
+        PersonType:
+          type: string
+          description: Type of person
+          enum: [ "TYPE_NATURAL" ]
+          example: "TYPE_NATURAL"
+
+    PayData:
+      type: object
+      properties:
+        Dpt:
+          type: array
+          items:
+            type: object
+            properties:
+              "Type":
+                type: string
+                example: "LOW"
+              CurISO:
+                type: string
+                example: "GBP"
+              Amt:
+                type: number
+                format: float
+                example: 250.0
+              Dep_Dt:
+                type: string
+                example: "2025-05-01"
+        Bkg_Prc_Ex:
+          type: object
+          properties:
+            CurISO:
+              type: string
+              example: "GBP"
+            Amt:
+              type: number
+              format: float
+              example: 3970.0
+        Bkg_Prc_Inc:
+          type: object
+          properties:
+            CurISO:
+              type: string
+              example: "GBP"
+            Amt:
+              type: number
+              format: float
+              example: 3970.0
+            Bal_Due_Amt:
+              type: number
+              format: float
+              example: 3970.0
+            Bal_Due_Dt:
+              type: string
+              example: "2026-05-12"
+        Tot_Amt:
+          type: number
+          format: float
+          example: 3970.0
+        Agt_Com:
+          type: number
+          format: float
+          example: 0.0
+        Comm_Inc_VAT:
+          type: number
+          format: float
+          example: 0.0
+        VAT:
+          type: number
+          format: float
+          example: 0.0
+        Payment_Received:
+          type: number
+          format: float
+          example: 0.0
+        Tot_Refund_Amt:
+          type: number
+          format: float
+          example: 0.0
+        Tot_Dpt:
+          type: number
+          format: float
+          example: 600.0
+
+    Memo:
+      type: array
+      description: Memo information
+      items:
+        type: object
+        properties:
+          Memo_Dt:
+            type: string
+            format: date-time
+            description: Memo date and time
+            example: "2025-04-29T10:45:21+01:00"
+          Memo_Cd:
+            type: string
+            description: Memo code
+            example: "ERR"
+          Memo_Name:
+            type: string
+            description: Memo name
+            example: "Geography Errata"
+          Memo_Des:
+            type: string
+            description: Memo description (may contain HTML)
+            example: "<br/><br/>For access to up-to-date travel advice, see Travel Aware – Staying Safe and Healthy Abroad.<br/>"
+          Memo_User_Name:
+            type: string
+            description: Username of memo creator
+            example: "MCUSER"
+          Memo_Key:
+            type: integer
+            description: Memo key/ID
+            example: 1
+          Memo_Rights:
+            type: string
+            description: Memo access rights
+            example: "READ"
+
+    Transfer_Info:
+      type: array
+      description: Transfer information
+      items:
+        type: object
+        properties:
+          "Dir":
+            type: string
+            description: Transfer direction (inbound/outbound)
+            enum: [ "inbound", "outbound" ]
+            example: "inbound"
+          Transfer_Code:
+            type: string
+            description: Transfer code
+            example: "TFR"
+          Desc:
+            type: string
+            description: Transfer description
+            example: "Coach Transfer Included"
+
+    Flt_Extra_Cat_List:
+      type: array
+      items:
+        type: object
+        properties:
+          Flt_Inv_Id:
+            type: integer
+            example: 6194153804
+          Flt_Extra_Cat:
+            type: object
+            properties:
+              "Code":
+                type: string
+                example: "BAG"
+              "Name":
+                type: string
+                example: "Baggage"
+              "Method":
+                type: string
+                example: "BAG"
+              Flt_Extra:
+                type: object
+                properties:
+                  "Code":
+                    type: string
+                    example: "BAG"
+                  "Name":
+                    type: string
+                    example: "Baggage Allowance"
+                  "Error":
+                    type: boolean
+                    example: false
+                  "AllowComment":
+                    type: boolean
+                    example: false
+                  Class:
+                    type: string
+                    example: "Y"
+                  Baggage:
+                    type: object
+                    properties:
+                      Weight:
+                        type: object
+                        properties:
+                          "Cd":
+                            type: integer
+                            example: 20
+                          Piece:
+                            type: object
+                            properties:
+                              "Cd":
+                                type: integer
+                                example: 1
+                              TEXT:
+                                type: integer
+                                example: 0
+                  SubServPaxs:
+                    type: object
+                    properties:
+                      SubServPax:
+                        oneOf:
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/SubServPax'
+                          - $ref: '#/components/schemas/SubServPax'
+                  Atol_Mth:
+                    type: string
+                    example: "NONE"
+                  Corporate_Cd:
+                    type: string
+                    example: "L31422"
+
+    Prom:
+      type: object
+      description: "Promotion object with attributes"
+      properties:
+        "#attrs":
+          type: object
+          description: "Container for attribute-style properties"
+          properties:
+            "Code":
+              type: string
+              description: "Promotion code identifier"
+              example: "BGMC"
+
+            "Issue":
+              type: string
+              description: "Promotion code issue"
+              example: "1"
+
+          required:
+            - "Code"
+      required:
+        - "#attrs"
+
+    Summary_Prices:
+      type: object
+      properties:
+        Summary_Price:
+          type: array
+          items:
+            type: object
+            properties:
+              Prc_Tp_Cd:
+                type: string
+                example: "ACRMAD"
+                description: Price type code
+              Prc_Tp_Name:
+                type: string
+                example: "Adult Package Price"
+                description: Price type name
+              Qty:
+                type: integer
+                example: 2
+                description: Quantity
+              Prc:
+                type: number
+                format: float
+                example: 2075.0
+                description: Price amount
+
+
+    RoomCode:
+      type: object
+      required:
+        - Rm_No
+        - Code
+        - BB_Cd
+      properties:
+        Rm_No:
+          type: string
+          description: Room number
+          example: "1"
+        Code:
+          type: string
+          description: Room code
+          example: "MC"
+        BB_Cd:
+          type: string
+          description: Board basis code
+          example: "AB"
+        SubServPaxs:
+          $ref: '#/components/schemas/SubServicePassengers'
+
+    Prices:
+      type: object
+      properties:
+        Price:
+          type: array
+          items:
+            type: object
+            properties:
+              Prc_Cd:
+                type: string
+                example: "AA"
+                description: Price code
+              Prc_Cd_Name:
+                type: string
+                example: "Adult Package Price"
+                description: Price code name
+              Prc_Cd_Tp:
+                type: string
+                example: "ACRMAD"
+                description: Price code type
+              Qty:
+                type: integer
+                example: 2
+                description: Quantity
+              Prc:
+                type: object
+                properties:
+                  "CurISO":
+                    type: string
+                    example: "GBP"
+                    description: Currency ISO code
+                  TEXT:
+                    type: number
+                    format: float
+                    example: 525.0
+                    description: Price amount
+              Prc_Dt:
+                type: string
+                format: date-time
+                example: "2025-05-01T14:02:02+01:00"
+                description: Price date
+              PricePaxs:
+                type: object
+                properties:
+                  Pax_Id:
+                    type: array
+                    items:
+                      type: integer
+                    example: [ 1, 2 ]
+                    description: Passenger IDs
+              Visible:
+                type: boolean
+                example: true
+                description: Visibility flag
+              Prc_Sts:
+                type: string
+                example: "STK"
+                description: Price status
+
+    SubServicePassengers:
+      type: object
+      properties:
+        SubServPax:
+          type: array
+          description: List of passengers for this service
+          items:
+            $ref: '#/components/schemas/SubServicePassenger'
+
+    SubServicePassenger:
+      type: object
+      required:
+        - Pax_Id
+      properties:
+        Pax_Id:
+          type: string
+          description: Passenger identifier
+          example: "1"
+
+
+    Problem:
+      type: object
+      description: General error response object based on RFC 7807
+      properties:
+        type:
+          type: string
+          example: validation
+        title:
+          type: string
+          example: There was a problem validating the request
+        required:
+          - type
+          - title

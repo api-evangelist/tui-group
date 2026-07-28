@@ -1,0 +1,85 @@
+generated: '2026-07-28'
+method: generated
+source: >-
+  Grounded in the 21 OpenAPI documents harvested to openapi/ and in the published documentation on
+  developer.tui. Every operationId referenced was verified verbatim against the spec it is attributed
+  to. TUI publishes no AGENTS.md or provider-authored skills — searched 2026-07-28.
+description: >-
+  Packaged operating instructions for the marquee flows across TUI's API estate. TUI is not one API:
+  the gateway is common, the backends are not, so the skills are organised by channel rather than by
+  product. Start with the authentication skill — it applies to all 21 products.
+skills:
+  - file: tui-group-authenticate-apigee.md
+    name: Authenticate against the TUI API gateway
+    api: https://prod.api.tui/oauth2/token
+    operations: []
+    note: Prerequisite for every other skill. Covers the OAuth 2.0 layer and the four different second-credential layers.
+  - file: tui-group-search-package-holidays.md
+    name: Search TUI package holidays and flights
+    api: openapi/tui-group-tui-search-walldy-api-openapi.yml
+    operations:
+      - checkAvailabilityRange
+      - getPriceOffer
+      - getPriceCalendarUSL
+      - SearchAvailability
+      - getHotelInventory
+      - getHotelAvailability
+      - GetPackages
+      - GetFlights
+      - GetFlightsRouteFeed
+      - GetLiveSearch
+      - GetLocations
+      - GetAccommodations
+  - file: tui-group-search-and-book-cruise.md
+    name: Search and book a TUI cruise for an OTA partner
+    api: openapi/tui-group-tui-cruise-price-and-availability-openapi.yml
+    operations:
+      - getCruisePackagePrices
+      - getUniqueCruisePackagePrices
+      - getAlternateCabinAndBoards
+      - getAlternateFlightVariants
+      - getAlternateStayVariants
+      - addAStay
+      - getCabinSelection
+      - validateHoliday
+      - confirmHoliday
+  - file: tui-group-ndc-shop-and-order.md
+    name: Shop and order TUI fly flights over NDC 21.3
+    api: openapi/tui-group-tui-flight-ndc-gateway-openapi.yml
+    operations:
+      - Auth
+      - GET AirShoppingRQ v21.3
+      - POST AirShoppingRQ v21.3
+      - POST OfferPriceRQ v21.3
+      - POST ServiceListRQ v21.3
+      - POST SeatAvailabilityRQ v21.3
+      - POST OrderCreateRQ v21.3
+      - OrderRetrieveRQ
+      - OrderChangeRQ
+      - OrderReshopRQ
+      - OrderQuoteRQ
+      - GET AirlineProfileRQ v21.3
+    note: >-
+      operationIds in TUI's published NDC spec contain spaces and repeat across the v21.3 and v2
+      families; the skill reference them by method + path.
+  - file: tui-group-g7-travelmessage-booking.md
+    name: Book a TUI package over ANVR G7 TravelMessage 3.1
+    api: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml
+    operations: []
+    note: >-
+      TUI's G7 spec declares no operationIds, so this skill references every dialogue by path. Also
+      covers the OTA Content API and the Supply SFTP feed.
+cross_cutting_rules:
+  - >-
+    No operation in TUI's estate accepts an idempotency key. Never blind-retry a booking, order or
+    payment call; read the booking back (Recap, OrderRetrieve) before deciding.
+  - >-
+    Four incompatible error envelopes coexist — RFC 9457 problem+json, the Navitaire
+    ErrorResponse/Exception shape, the Apigee fault envelope, and ANVR numbered XML messages. See
+    errors/tui-group-problem-types.yml.
+  - >-
+    TUI publishes no rate-limit headers and no 429 contract. Throttle client-side to your assigned
+    quota tier (rate-limits/tui-group-rate-limits.yml).
+  - >-
+    Log x-correlation-id (search / check-in products) or x-Trace-Id (cruise products) on every call —
+    TUI's production workflow validation requires correlation IDs as evidence.

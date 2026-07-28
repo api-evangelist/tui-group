@@ -1,0 +1,61 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  npm registry metadata for the @tui scope (registry.npmjs.org), probed 2026-07-28, plus every
+  documentation page on https://developer.tui.
+description: >-
+  TUI publishes no embeddable components for API partners — there is no hosted booking widget, no
+  drop-in search element, no embedded dashboard and no JS loader offered anywhere on developer.tui.
+  What TUI does publish, and publishes openly on the public npm registry, is its internal front-end
+  design system: a CSS library plus an Atomico-based web-component set that powers TUI's consumer
+  websites. This is recorded because the packages are genuinely first-party, genuinely public and
+  genuinely client-side components — but their audience is TUI's own web teams, not the partners who
+  integrate the 21 API products. Nothing here is documented on the developer portal or referenced
+  from any API product page.
+audience: TUI internal / consumer web front-ends — not API partners
+documented_on_developer_portal: false
+partner_embeddables:
+  available: false
+  searched:
+    - https://developer.tui/docs/overview
+    - https://developer.tui/docs/getting-started
+    - https://developer.tui/api-catalog
+    - all 21 API product pages and their sub-tabs
+  finding: >-
+    No widget, element library, hosted checkout, embedded search or iframe surface is offered to
+    partners. Every published integration path is a server-side API call.
+families:
+  - name: TUI Design System
+    kind: css + web components
+    loader: npm package (no CDN loader script published)
+    packages:
+      - name: "@tui/design-system"
+        version: 1.8.0
+        url: https://www.npmjs.com/package/@tui/design-system
+        role: The design-system package itself. Exposes ./types and a wildcard export map.
+        last_published: '2026-07-23'
+      - name: "@tui/ui-library"
+        version: 4.21.0
+        url: https://www.npmjs.com/package/@tui/ui-library
+        role: TUI UI CSS library — the styling layer, on a v4 line since 2021 with a v5 beta open.
+        last_published: '2026-04-07'
+      - name: "@tui/cally"
+        version: 1.0.0
+        url: https://www.npmjs.com/package/@tui/cally
+        role: >-
+          TUI's fork of the Cally date-picker custom elements (WickyNilliams/cally), built on
+          Atomico. The only true web-component package in the set — relevant to travel because the
+          date range picker is the core of a holiday search UI.
+        license: MIT
+        upstream: https://github.com/WickyNilliams/cally
+        last_published: '2026-07-03'
+    source_repositories:
+      - git@ssh.source.tui:osp/browse/design-system/uilib.git
+      - git@ssh.source.tui:osp/tech-enablers/ui-library.git
+      - git@ssh.source.tui:osp/browse/design-system/cally.git
+    source_public: false
+    note: >-
+      The packages are public on npm; the repositories they point at are on TUI's private GitLab
+      (source.tui) and are not readable. There is no public design-system documentation site,
+      Storybook or component gallery.
+detail: packages/tui-group-packages.yml

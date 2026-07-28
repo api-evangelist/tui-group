@@ -1,0 +1,554 @@
+openapi: 3.0.3
+info:
+  title: NewSkies Payment API
+  description: |
+    NewSkies Payment Api (PCI-DSS)
+    
+    This API proxies payment endpoints from the Navitaire NewSkies Digital API.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api.flightproduction@tui.com
+servers:
+  - url: https://prod.api.tui/flight/newskies/payment
+    description: TUI Prod Payment Service
+  - url: https://playground.api.tui/flight/newskies/payment
+    description: TUI Playground (Test) Payment Service
+security:
+  - ApiKeyAuth: []
+paths:
+  /rest/api/nsk/v1/booking/payments:
+    get:
+      summary: Get booking payments
+      description: Retrieves the booking payments on the booking in state
+      operationId: getBookingPayments
+      tags:
+        - booking/payments
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not found
+  /rest/api/nsk/v5/booking/payments:
+    post:
+      summary: Create booking payment
+      description: |
+        Creates a new external payment or prepaid payment on the booking in state.
+        Supports Three D Secure and Direct Currency Conversion (DCC).
+        Note: This endpoint accepts wildcard paths like /rest/api/nsk/v5/booking/payments/*
+      operationId: createBookingPaymentV5
+      tags:
+        - booking/payments
+      parameters:
+        - name: termUrl
+          in: query
+          schema:
+            type: string
+          description: The term URL for 3DS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                currencyCode:
+                  type: string
+                paymentFields:
+                  type: object
+      responses:
+        '201':
+          description: Payment created successfully
+        '202':
+          description: 3DS or DCC offer required
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+        '409':
+          description: Concurrent changes
+  /rest/api/nsk/v1/booking/payments/{paymentKey}:
+    get:
+      summary: Get specific payment
+      description: Gets a specific payment by key
+      operationId: getPaymentByKey
+      tags:
+        - booking/payments
+      parameters:
+        - name: paymentKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not found
+    delete:
+      summary: Delete payment
+      description: Deletes the payment
+      operationId: deletePayment
+      tags:
+        - booking/payments
+      parameters:
+        - name: paymentKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+        '409':
+          description: Concurrent changes
+  /rest/api/nsk/v2/booking/payments/available:
+    get:
+      summary: Get available payment methods
+      description: Retrieves the booking payment methods available for the booking in state
+      operationId: getAvailablePaymentMethods
+      tags:
+        - booking/payments
+      parameters:
+        - name: currencyCode
+          in: query
+          schema:
+            type: string
+          description: Optional currency code
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v3/booking/payments/credit:
+    post:
+      summary: Add credit payment
+      description: Creates a new credit payment on the booking
+      operationId: addCreditPayment
+      tags:
+        - booking/payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Payment created
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v5/booking/payments/refunds:
+    get:
+      summary: Get payment refunds
+      description: Gets the payment refunds for the booking
+      operationId: getPaymentRefunds
+      tags:
+        - booking/payments
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+    post:
+      summary: Create payment refund
+      description: Creates a new payment refund
+      operationId: createPaymentRefund
+      tags:
+        - booking/payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Refund created
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v1/booking/payments/{paymentMethod}/dcc:
+    post:
+      summary: Get DCC offer
+      description: |
+        Gets the available direct currency codes offer for inline DCC payment.
+        This endpoint behaves like a GET but is masked as a POST.
+      operationId: getDccOffer
+      tags:
+        - booking/payments
+      parameters:
+        - name: paymentMethod
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The payment method code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: DCC availability request
+      responses:
+        '200':
+          description: DCC offer available
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not found
+  /rest/api/nsk/v6/booking/payments/dcc/{dccKey}:
+    post:
+      summary: Create DCC payment
+      description: |
+        Creates a new external payment with direct currency conversion.
+        This endpoint is used for inline DCC payments only.
+      operationId: createDccPayment
+      tags:
+        - booking/payments
+      parameters:
+        - name: dccKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The DCC key from the offer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Payment created
+        '202':
+          description: 3DS required
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v3/booking/payments/mcc:
+    get:
+      summary: Get MCC offers
+      description: Gets available multi-currency conversion offers
+      operationId: getMccOffers
+      tags:
+        - booking/payments
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v6/booking/payments/mcc/{currencyCode}:
+    post:
+      summary: Create MCC payment
+      description: Creates a new payment with multi-currency conversion
+      operationId: createMccPayment
+      tags:
+        - booking/payments
+      parameters:
+        - name: currencyCode
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The currency code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Payment created
+        '202':
+          description: 3DS required
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v1/booking/payments/fees/{feeCode}:
+    post:
+      summary: Add payment fee
+      description: Adds a payment fee to the booking
+      operationId: addPaymentFee
+      tags:
+        - booking/payments
+      parameters:
+        - name: feeCode
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The fee code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Fee added
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v1/booking/payments/fees/{feeCode}/storedPayment/{storedPaymentKey}:
+    get:
+      summary: Get fee for stored payment
+      description: Gets the payment fee for a stored payment method
+      operationId: getFeeForStoredPayment
+      tags:
+        - booking/payments
+      parameters:
+        - name: feeCode
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The fee code
+        - name: storedPaymentKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The stored payment key
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not found
+  /rest/api/nsk/v3/booking/payments/voucher:
+    get:
+      summary: Get voucher payment details
+      description: Gets the voucher payment details for the booking
+      operationId: getVoucherPayment
+      tags:
+        - booking/payments
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not found
+  /rest/api/nsk/v4/booking/payments/voucher:
+    post:
+      summary: Add voucher payment
+      description: Creates a new voucher payment on the booking
+      operationId: addVoucherPayment
+      tags:
+        - booking/payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                voucherCode:
+                  type: string
+                amount:
+                  type: number
+      responses:
+        '201':
+          description: Voucher payment created
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v2/booking/payments/voucher/{voucherPaymentReference}:
+    delete:
+      summary: Delete voucher payment
+      description: Deletes a voucher payment from the booking
+      operationId: deleteVoucherPayment
+      tags:
+        - booking/payments
+      parameters:
+        - name: voucherPaymentReference
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The voucher payment reference
+      responses:
+        '200':
+          description: Voucher payment deleted
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v1/booking/payments/voucher/passenger/{passengerKey}:
+    post:
+      summary: Add voucher payment for passenger
+      description: Creates a new voucher payment for a specific passenger
+      operationId: addVoucherPaymentForPassenger
+      tags:
+        - booking/payments
+      parameters:
+        - name: passengerKey
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The passenger key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Voucher payment created
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /rest/api/nsk/v1/booking/payments/voucher/reassess:
+    put:
+      summary: Reassess voucher payment
+      description: Reassesses the voucher payment on the booking
+      operationId: reassessVoucherPayment
+      tags:
+        - booking/payments
+      responses:
+        '200':
+          description: Voucher payment reassessed
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized - Invalid API key
+  /soap:
+    post:
+      summary: Add payment to booking (SOAP API)
+      description: Process payment for a booking using the SOAP API
+      operationId: addPaymentToBooking
+      parameters:
+        - name: SOAPAction
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - http://schemas.navitaire.com/WebServices/IBookingManager/AddPaymentToBooking
+          description: SOAP action header
+      requestBody:
+        required: true
+        content:
+          text/xml:
+            schema:
+              type: string
+              description: SOAP envelope with payment details
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            text/xml:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Resource not found
+          content:
+            text/xml:
+              schema:
+                type: string
+                example: |
+                  <?xml version="1.0" encoding="UTF-8"?>
+                  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                      <soap:Fault>
+                        <faultcode>soap:Server</faultcode>
+                        <faultstring>Resource not found</faultstring>
+                      </soap:Fault>
+                    </soap:Body>
+                  </soap:Envelope>
+  /ndc:
+    get:
+      summary: NDC payment endpoint (not available)
+      description: NDC payment functionality is not yet implemented
+      operationId: ndcPaymentGet
+      responses:
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: NDC payment is not yet available
+    post:
+      summary: NDC payment endpoint (not available)
+      description: NDC payment functionality is not yet implemented
+      operationId: ndcPaymentPost
+      responses:
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: NDC payment is not yet available
+    put:
+      summary: NDC payment endpoint (not available)
+      description: NDC payment functionality is not yet implemented
+      operationId: ndcPaymentPut
+      responses:
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: NDC payment is not yet available
+    delete:
+      summary: NDC payment endpoint (not available)
+      description: NDC payment functionality is not yet implemented
+      operationId: ndcPaymentDelete
+      responses:
+        '501':
+          description: Not Implemented
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: NDC payment is not yet available
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-apikey
+      description: API key for authentication

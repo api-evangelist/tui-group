@@ -1,0 +1,176 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://developer.tui/docs/general/oauth2, https://developer.tui/docs/general/authentication,
+  https://developer.tui/docs/getting-started_environments,
+  https://developer.tui/docs/getting-started_technical-integration,
+  https://developer.tui/api-catalog/newskies-payment-api/api-description, plus derivation from the
+  21 harvested OpenAPI documents in openapi/.
+description: >-
+  How TUI's API estate behaves across products. TUI is not one API — it is an Apigee X gateway in
+  front of at least four unrelated backends (Navitaire New Skies, the ANVR G7 B2B stack, the
+  Apigee-native search/cruise services, and the Nordic/German metasearch tsoa services), so the
+  cross-cutting conventions are thin and the per-product conventions diverge sharply. The gateway
+  layer is the only genuinely universal contract: one OAuth 2.0 client-credentials token endpoint,
+  one host pattern, one TLS floor, one quota model.
+base_url_pattern: https://{env}.api.tui/{API_NAME}
+environments:
+  - name: playground
+    host: https://playground.api.tui
+    access: >-
+      Most API products allow a developer to subscribe without further approval, giving a mocked or
+      production-lookalike surface.
+  - name: production
+    host: https://prod.api.tui
+    access: >-
+      Manual approval; for some products a partner agreement or technical certification must be
+      provided upfront.
+  - name: pre-prod
+    host: https://pre-prod.api.tui
+    note: Declared in servers[] by the cruise and metasearch specs; not documented on the portal.
+  - name: dev / test / preprod
+    host: https://dev.api.tui, https://test.api.tui, https://preprod.api.tui
+    note: >-
+      Declared in servers[] by the CheckInHandler spec only — internal environments leaked through a
+      published spec, not a documented partner surface.
+environments_docs: https://developer.tui/docs/getting-started_environments
+api_style: >-
+  Mixed. REST/JSON is the majority style (17 of 21 products). One product is GraphQL (Ship Content,
+  POST /graphql). One is session-based XML over HTTP (ANVR G7 TravelMessage 3.1). One is an SFTP
+  file drop with an OpenAPI wrapper describing the payload (Supply 1.5.1). The Payment API carries a
+  legacy SOAP 1.1 channel alongside REST.
+authentication:
+  scheme: OAuth 2.0 client credentials (RFC 6749) at the gateway
+  token_endpoint: https://prod.api.tui/oauth2/token
+  playground_token_endpoint: https://playground.api.tui/oauth2/token
+  client_authentication: >-
+    HTTP Basic (RFC 2617) with base64(consumer_id:consumer_secret) in the Authorization header, or
+    client_id / client_secret as form values. token_endpoint_auth_methods_supported in the discovery
+    document lists client_secret_basic only.
+  token_type: Bearer
+  token_lifetime_seconds: 3599
+  discovery:
+    openid_configuration: well-known/tui-group-openid-configuration.json
+    oauth_authorization_server: well-known/tui-group-oauth-authorization-server.json
+    jwks: well-known/tui-group-jwks.json
+    note: Real, live and completely unlinked from the developer portal documentation.
+  second_factor: >-
+    The flight products layer a second, backend-specific credential on top of the gateway token — a
+    Navitaire New Skies agent session token from /api/auth/v1/token/user (Digital API, GoNow,
+    PriceFile), or a New Skies agent JWT exchanged through the NDC Gateway Auth call. The Payment
+    API instead takes an API key as an `apikey` query parameter, and the G7 channel takes a
+    four-digit `anvrcode` header. There is no single credential that opens the estate.
+  detail: authentication/tui-group-authentication.yml
+  docs: https://developer.tui/docs/general/oauth2
+idempotency:
+  supported: false
+  evidence: >-
+    No Idempotency-Key (or any /idempoten/i) header, query parameter or request field appears in any
+    of the 1,261 operations across the 21 published OpenAPI documents, and no idempotency, retry or
+    replay guidance appears anywhere in the portal documentation — including on the booking and
+    payment flows where it matters most (OrderCreate, POST /rest/api/nsk/v5/booking/payments,
+    /cruise-ota-book/confirm-holiday, the G7 Book dialogue).
+  substitute_mechanisms:
+    - >-
+      The G7 channel is session-based (Availability -> Sell -> Assign -> Book -> Receipt/Recap), so
+      replay safety comes from holding a session rather than from a key.
+    - >-
+      The cruise OTA booking flow is a three-call reserve-then-confirm ladder (validate-holiday ->
+      checkout-holiday -> confirm-holiday) where checkout reserves inventory for a fixed period.
+    - >-
+      HTTP 409 is returned 181 times across the New Skies specs with the description "Concurrent
+      changes were being made in the same session" — optimistic concurrency, not idempotency.
+  assessment: >-
+    A retried booking or payment call has no published safe-replay contract. This is the single
+    largest agent-readiness gap in TUI's estate.
+pagination:
+  style: mixed, mostly absent
+  observed_parameters:
+    - name: PageSize
+      apis: [tui-newskies-digital-api, tui-newskies-gonow-api]
+    - name: limit
+      apis: [tui-meta-partner-packages-flights]
+    - name: offset
+      apis: [tui-meta-partner-packages-flights]
+  note: >-
+    Most TUI search operations return the full result set in one response and provide no paging
+    controls at all. The WallDy search offers an alternative to paging instead — the same POST
+    /offers can be requested as application/x-json-stream so a large result set is streamed rather
+    than paged.
+  response_fields: Not standardised; no envelope, no has_more/next-cursor convention anywhere.
+field_expansion:
+  supported: false
+  note: No expand / fields / include sparse-fieldset parameter appears in any published spec.
+metadata:
+  supported: false
+  note: No customer-writable metadata bag on any TUI object.
+request_tracing:
+  headers:
+    - name: x-correlation-id
+      apis: [tui-checkinhandler-service-api, tui-holiday-offers-controller-api, tui-search-walldy-api]
+      note: >-
+        Documented on the "technical integration" tab of several product pages and echoed by the
+        gateway — the live gateway returns x-correlation-id and x-request-id on every response,
+        including on 401s.
+    - name: x-Trace-Id
+      apis: [tui-cruise-price-and-availability, tui-cruise-booking-apis, tui-cruise-cabin-availability]
+    - name: x-b3-traceid / x-b3-spanid / x-b3-sampled
+      note: B3 propagation headers emitted by the gateway (observed on live responses, undocumented).
+  usage: >-
+    The NDC and New Skies workflow-validation process requires the partner to supply correlation IDs
+    and time ranges as evidence of successful playground test cases before production go-live, so
+    correlation IDs are operationally load-bearing at TUI even though they are not universally
+    documented.
+other_headers:
+  - name: Accept
+    note: >-
+      Several products use a versioned Accept header rather than a URI version segment (documented
+      on the CheckInHandler and HolidayOffersController technical-integration tabs).
+  - name: anvrcode
+    note: Mandatory four-digit ANVR agency code on every G7 TravelMessage request.
+  - name: env, x-environment
+    note: Environment selector headers on the cruise and CheckInHandler products.
+  - name: ordering-criteria
+    note: Result ordering on the WallDy POST /offers operation.
+  - name: SOAPAction
+    note: Required on the Payment API /soap channel to select AddPaymentToBooking.
+versioning:
+  scheme: mixed
+  mechanisms:
+    - URI path segment (NDC /r3.x/v21.3 vs /r3.x/v2; New Skies /rest/api/nsk/{version}/...; meta
+      /v1-beta)
+    - Versioned Accept header (CheckInHandler, HolidayOffersController)
+    - Document version in info.version only, with no wire-level selector (cruise, content, supply)
+  detail: lifecycle/tui-group-lifecycle.yml
+  note: >-
+    The New Skies Digital API carries many versions of the same resource side by side in one spec
+    (nsk/v1 through nsk/v7 on payments alone) and marks 79 operations deprecated in-spec.
+error_envelope:
+  summary: Four incompatible envelopes across the estate.
+  detail: errors/tui-group-problem-types.yml
+  rfc9457: partial — 47 responses across 5 Apigee-native products use application/problem+json
+rate_limits:
+  model: partner tier, assigned by a partner manager rather than self-serve
+  detail: rate-limits/tui-group-rate-limits.yml
+  signalling: >-
+    No X-RateLimit-* / RateLimit-* headers and no 429 response are documented on the portal or
+    declared in any of the 21 published specs. A consumer cannot tell how close to quota it is.
+  docs: https://developer.tui/docs/getting-started_technical-integration
+transport_security:
+  minimum_tls: TLS 1.2
+  preferred_ciphers:
+    - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+    - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+  observed: TLSv1.3 on prod.api.tui and developer.tui; HSTS max-age 63072000 with includeSubDomains and preload on the gateway.
+  ip_allowlisting: >-
+    Production access to the NDC Gateway, New Skies Digital API and GoNow is additionally gated by
+    an IP allowlist that denies every unlisted source.
+  detail: security/tui-group-domain-security.yml
+webhooks:
+  supported: false
+  note: >-
+    No webhooks block in any published OpenAPI document, no callbacks, no event catalogue and no
+    AsyncAPI anywhere on the portal. TUI's only push-shaped channel is the Supply SFTP file drop
+    (full and delta loads), which is a scheduled batch delivery, not an event stream.

@@ -1,0 +1,53 @@
+generated: '2026-07-28'
+method: derived
+source: openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml, openapi/tui-group-tui-flight-ndc-gateway-openapi.yml,
+  openapi/tui-group-tui-flight-ota-api-openapi.yml, openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml,
+  openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml, openapi/tui-group-tui-meta-search-generic-api-openapi.yml,
+  openapi/tui-group-tui-newskies-digital-api-openapi.yml, openapi/tui-group-tui-newskies-gonow-api-openapi.yml,
+  openapi/tui-group-tui-newskies-payment-api-openapi.yml, openapi/tui-group-tui-newskies-pricefile-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: oAuth2ClientCredentials
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://prod.api.tui/oauth2/token
+    scopes: 0
+  description: This API uses OAuth 2 with the implicit grant flow.
+  sources:
+  - openapi/tui-group-tui-b2bota-g7-travelmessage-openapi.yml
+  - openapi/tui-group-tui-flight-ota-api-openapi.yml
+  - openapi/tui-group-tui-meta-partner-package-live-search-openapi.yml
+  - openapi/tui-group-tui-meta-partner-packages-flights-openapi.yml
+  - openapi/tui-group-tui-meta-search-generic-api-openapi.yml
+- name: Bearer
+  type: http
+  scheme: Bearer
+  bearerFormat: JWT
+  description: Please enter into field the word 'Bearer' following by space and JWT
+  sources:
+  - openapi/tui-group-tui-flight-ndc-gateway-openapi.yml
+- name: JWT
+  type: http
+  scheme: bearer
+  bearerFormat: jwt
+  description: Paste your JWT token from the token endpoint.
+  sources:
+  - openapi/tui-group-tui-newskies-digital-api-openapi.yml
+  - openapi/tui-group-tui-newskies-gonow-api-openapi.yml
+  - openapi/tui-group-tui-newskies-pricefile-api-openapi.yml
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: x-apikey
+  description: API key for authentication
+  sources:
+  - openapi/tui-group-tui-newskies-payment-api-openapi.yml

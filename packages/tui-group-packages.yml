@@ -1,0 +1,107 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  npm registry search and package metadata (registry.npmjs.org), PyPI, Maven Central, NuGet,
+  Packagist, RubyGems, pkg.go.dev, plus every documentation page on https://developer.tui and the
+  GitHub organisation https://github.com/tuigroup. Probed 2026-07-28.
+description: >-
+  TUI Group ships NO client libraries for its APIs. Across 21 published API products and 1,261
+  operations there is not a single first-party SDK in any language, and no SDK, client-library or
+  code-generation page exists anywhere on developer.tui — the portal's only integration aids are
+  three downloadable Postman collections and a hand-written code-examples tab on one product. What
+  TUI does publish on a public registry is a design system: three first-party npm packages under the
+  @tui scope, maintained from TUI's own GitLab (ssh.source.tui) by TUI-badged maintainers. Those are
+  front-end packages for TUI's consumer websites, not API clients, so they are recorded here as
+  official packages but they deliberately do NOT earn an SDKs pointer — see sdk_assessment below.
+sdk_assessment:
+  api_client_sdks: 0
+  languages: []
+  finding: >-
+    No API client SDK exists in any registry or repository. A partner integrating TUI writes raw
+    HTTP against the OAuth 2.0 gateway, raw XML against the ANVR G7 channel, or generates a client
+    itself from the OpenAPI documents harvested to openapi/ in this repo.
+  note: >-
+    The three @tui packages below are a CSS/web-component design system, not API clients. Emitting
+    an SDKs pointer for them would misrepresent TUI's developer experience, so apis.yml carries a
+    Packages pointer and a Components pointer but no SDKs pointer.
+packages:
+  - language: javascript
+    registry: npm
+    name: "@tui/ui-library"
+    url: https://www.npmjs.com/package/@tui/ui-library
+    install: npm install @tui/ui-library
+    version: 4.21.0
+    description: TUI UI CSS library
+    repository: git@ssh.source.tui:osp/tech-enablers/ui-library.git
+    repository_public: false
+    maintainers: [mgs-tui, nicky.bliss.tui]
+    first_published: '2021-05-28'
+    last_published: '2026-04-07'
+    dist_tags: [latest 4.21.0, beta 5.0.1-beta.1, next 4.0.1-rc.7, wip 5.0.1-MR-95.0]
+    official: true
+    api_client: false
+    official_evidence: >-
+      Published under the @tui npm scope by maintainers mgs-tui / nicky.bliss.tui, with the
+      repository on ssh.source.tui — TUI Group's own GitLab on the same .tui brand TLD as
+      developer.tui and prod.api.tui.
+  - language: javascript
+    registry: npm
+    name: "@tui/design-system"
+    url: https://www.npmjs.com/package/@tui/design-system
+    install: npm install @tui/design-system
+    version: 1.8.0
+    description: TUI Design System
+    repository: git@ssh.source.tui:osp/browse/design-system/uilib.git
+    repository_public: false
+    maintainers: [tui-releases, nicky.bliss.tui, mgs-tui]
+    first_published: '2026-01-15'
+    last_published: '2026-07-23'
+    official: true
+    api_client: false
+    official_evidence: >-
+      Maintained by the tui-releases npm account; repository on TUI's ssh.source.tui GitLab. Active
+      — last published five days before this pass.
+  - language: javascript
+    registry: npm
+    name: "@tui/cally"
+    url: https://www.npmjs.com/package/@tui/cally
+    install: npm install @tui/cally
+    version: 1.0.0
+    description: TUI Design System — Cally fork (based on https://github.com/WickyNilliams/cally)
+    repository: git@ssh.source.tui:osp/browse/design-system/cally.git
+    repository_public: false
+    license: MIT
+    dependencies: [atomico]
+    maintainers: [tui-releases, nicky.bliss.tui, mgs-tui]
+    first_published: '2026-03-30'
+    last_published: '2026-07-03'
+    official: true
+    api_client: false
+    official_evidence: >-
+      TUI's fork of the Cally date-picker web component, published under the @tui scope by
+      tui-releases. Atomico-based custom elements — see components/tui-group-components.yml.
+registries_probed:
+  - registry: npm
+    result: >-
+      3 first-party packages found, all under the @tui scope (searched scope:tui, maintainer:mgs-tui,
+      maintainer:nicky.bliss.tui, plus free-text tui / tuifly / travelmessage / anvr-g7). Every other
+      npm result for "tui" belongs to unrelated terminal-UI projects or the NHN Toolkit UI libraries.
+  - registry: pypi
+    result: >-
+      None. pypi.org/project/tui/ is Joel Hedlund's python-tui terminal library; tui-api and
+      tuigroup do not exist as TUI packages.
+  - registry: maven-central
+    result: None. All 47 "tui" hits are terminal-UI or NHN webjar artifacts.
+  - registry: nuget
+    result: None first-party.
+  - registry: packagist
+    result: None.
+  - registry: rubygems
+    result: None.
+  - registry: pkg.go.dev
+    result: None.
+  - registry: github
+    org: https://github.com/tuigroup
+    result: >-
+      The organisation exists and returns HTTP 200, but the public repository list is empty (0
+      repos). TUI's code lives on its private GitLab at source.tui.

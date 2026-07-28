@@ -1,0 +1,138 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://developer.tui/api-catalog/*/release-notes (8 of 21 products publish a dated release-notes
+  tab), https://developer.tui/docs/getting-started_environments,
+  https://developer.tui/api-catalog/*/backwards-compatibility, plus deprecated operations derived
+  from the harvested OpenAPI documents.
+description: >-
+  TUI has no single, provider-wide lifecycle policy. Versioning, deprecation and change
+  communication are handled per product, and the quality varies from excellent (the ANVR G7
+  TravelMessage channel maintains a numbered patch log going back to 2024 with explicit behavioural
+  changes) to absent (11 of the 21 products publish no release notes at all). There is no status
+  page, no SLA, no RFC 8594 Sunset/Deprecation header support, and no deprecation window commitment
+  anywhere on the portal.
+versioning:
+  scheme: mixed, per product
+  mechanisms:
+    - scheme: uri-path
+      examples:
+        - NDC Gateway — /r3.x/v21.3/{Operation} (Navitaire NDC API) and /r3.x/v2/{Operation} (Navitaire Digital API)
+        - New Skies Digital API — /rest/api/nsk/{v1..v7}/... with several versions of the same resource live at once
+        - Meta partner APIs — /v1-beta path segment
+    - scheme: accept-header
+      examples:
+        - CheckInHandler Service API and HolidayOffersController document a versioned Accept header
+    - scheme: document-version-only
+      examples:
+        - Cruise, content and supply products carry info.version with no wire-level version selector
+  current_versions:
+    tui-flight-ndc-gateway: '21.3'
+    tui-newskies-digital-api: 4.8.6.23
+    tui-newskies-gonow-api: 5.2.6.69
+    tui-newskies-payment-api: 1.0.0
+    tui-flight-availability-search-api: 0.1.73
+    tui-newskies-pricefile-api: '1.0'
+    tui-checkinhandler-service-api: '1.0'
+    tui-flight-ota-api: '0.9'
+    tui-b2bota-g7-travelmessage: '3.1'
+    tui-ota-content-api: '2.0'
+    tui-supply: 1.5.1
+    tui-search-walldy-api: 1.0.0
+    tui-holiday-offers-controller-api: v1
+    tui-meta-search-generic-api: 0.3.1
+    tui-meta-partner-packages-flights: 1.0.0
+    tui-meta-partner-package-live-search: v1-beta
+    tui-partner-content-api: 1.0.0
+    tui-cruise-price-and-availability: '1.0'
+    tui-cruise-booking-apis: 1.0.0
+    tui-cruise-cabin-availability: '1.0'
+    tui-ship-content-api: 1.0.0
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  notice_period: not published
+  backwards_compatibility_pages:
+    - https://developer.tui/api-catalog/newskies-digital-api/backwards-compatibility
+    - https://developer.tui/api-catalog/newskies-gonow-api/backwards-compatibility
+  in_spec_deprecations:
+    count: 79
+    all_in: openapi/tui-group-tui-newskies-digital-api-openapi.yml
+    note: >-
+      Every in-spec `deprecated: true` flag in TUI's estate sits in the Navitaire New Skies Digital
+      API document — they are Navitaire's deprecations surfaced through TUI, not TUI-authored policy.
+      No sunset date accompanies any of them.
+  examples:
+    - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v4_booking_payments_refunds_post
+    - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v6_booking_payments_threeDSecure_post
+    - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v1_booking_payments_reversals_post
+    - openapi/tui-group-tui-newskies-digital-api-openapi.yml#dcs_v1_baggage_post
+    - openapi/tui-group-tui-newskies-digital-api-openapi.yml#nsk_v2_booking_queue_post
+  announced_removals:
+    - what: TUI Supply full-load workflow
+      status: scheduled for removal, no date given
+      quote: >-
+        "At a certain time, each OTA needs to switch to delta loads ... And also because the full
+        load will be switched off in the future."
+      source: https://developer.tui/api-catalog/supply/api-description
+      assessment: >-
+        A unilateral deprecation of the only bulk supply channel, announced in prose with no date,
+        no notice period and no deprecation header.
+    - what: NDC payment endpoint (/ndc on the Payment API)
+      status: reserved, returns 501 Not Implemented for all methods
+      source: https://developer.tui/api-catalog/newskies-payment-api/api-description
+sla:
+  published: false
+  url: null
+  uptime_target: null
+  note: >-
+    The portal authentication documentation refers to "possible existing agreements and SLAs" but
+    publishes none. No uptime target appears anywhere on developer.tui.
+status_page:
+  published: false
+  probed:
+    - {url: 'https://status.developer.tui', status: '000 (does not resolve)'}
+    - {url: 'https://status.api.tui', status: '000 (does not resolve)'}
+    - {url: 'https://developer.tui/status', status: 404}
+    - {url: 'https://status.tui.com', status: 403}
+  note: >-
+    TUI publishes no developer-facing status or incident page. status.tui.com returns 403 to an
+    anonymous probe and is not referenced from the developer portal.
+change_communication:
+  mechanism: per-product release-notes tab on developer.tui
+  detail: changelog/tui-group-changelog.yml
+  coverage: 8 of 21 products
+  products_with_release_notes:
+    - https://developer.tui/api-catalog/b2bota-g7/release-notes
+    - https://developer.tui/api-catalog/supply/release-notes
+    - https://developer.tui/api-catalog/walldy-api/release-notes
+    - https://developer.tui/api-catalog/holidayofferscontroller-api/release-notes
+    - https://developer.tui/api-catalog/ota-content-api/release-notes
+    - https://developer.tui/api-catalog/nskcc-availability-search-api/release-notes
+    - https://developer.tui/api-catalog/tui-newskies-pricefile-api/release-notes
+    - https://developer.tui/api-catalog/checkinhandler-service-api/release-notes
+  products_without_release_notes:
+    - flight-ndc-gateway-navitaire
+    - newskies-digital-api
+    - newskies-gonow-api
+    - newskies-payment-api
+    - tui-flight-ota-api
+    - meta-search-generic-api
+    - meta-partner-packages-flights
+    - meta-partner-package-live-search
+    - partner-content-api
+    - tui-cruise-price-and-availability
+    - tui-cruise-booking-apis
+    - cruise-cabin-availability
+    - ship-content-api
+  blog:
+    url: https://developer.tui/blog
+    status: 200
+    note: >-
+      The portal ships a Blog section but it is an empty template — no posts, and the category filter
+      still offers the placeholder values "Category 1" and "Category 2".
+  roadmap:
+    published: false
+    note: No roadmap page exists on developer.tui (/roadmap returns 404).

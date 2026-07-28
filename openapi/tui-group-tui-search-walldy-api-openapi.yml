@@ -1,0 +1,1366 @@
+openapi: 3.0.1
+info:
+  title: WallDy API
+  description: "API for retrieving holiday offers, calendar availability, and duration\
+    \ information"
+  contact:
+    name: WallDy Team
+    email: support@tui.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://prod.api.tui/search-walldy
+  description: Apigee X (prod)
+tags:
+- name: Offers
+  description: Operations for retrieving holiday offers and availability
+paths:
+  /offers:
+    post:
+      tags:
+      - Offers
+      summary: Retrieve holiday offers
+      description: Retrieves available holiday offers based on the specified criteria.
+        Returns pricing and availability information for accommodations matching the
+        search parameters.
+      operationId: checkAvailabilityRange
+      parameters:
+      - name: ordering-criteria
+        in: header
+        description: Ordering criteria for results
+        schema:
+          type: string
+          nullable: true
+        example: price-asc
+      - name: X-Trace-Id
+        in: header
+        description: Correlation ID for tracing requests
+        schema:
+          type: string
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OfferRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful retrieval of holiday offers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityWrapper"
+            application/x-json-stream:
+              schema:
+                $ref: "#/components/schemas/AvailabilityWrapper"
+        "400":
+          description: Invalid request parameters
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    AlternativeBoardsRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - startDate
+      type: object
+      properties:
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs (must contain exactly 1)
+          example:
+          - "12345"
+          items:
+            type: string
+        startDate:
+          type: string
+          description: Start date in YYYY-MM-DD format
+          example: 2024-06-15
+        endDate:
+          type: string
+          description: End date in YYYY-MM-DD format (inclusive)
+          example: 2024-06-22
+        adults:
+          type: integer
+          description: Number of adults
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: integer
+          description: Duration in nights
+          format: int32
+          nullable: true
+          example: 7
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        arrivalAirports:
+          type: array
+          description: Set of arrival airport codes
+          nullable: true
+          example:
+          - AYT
+          items:
+            type: string
+        carriers:
+          type: array
+          description: Set of airline carrier codes
+          nullable: true
+          example:
+          - BA
+          items:
+            type: string
+        outboundDepartureTime:
+          type: array
+          description: Set of outbound departure time preferences
+          nullable: true
+          example:
+          - A
+          - B
+          items:
+            type: string
+        inboundDepartureTime:
+          type: array
+          description: Set of inbound departure time preferences
+          nullable: true
+          example:
+          - C
+          - D
+          items:
+            type: string
+        maxPrice:
+          type: number
+          description: Maximum price filter in GBP
+          nullable: true
+          example: 1500
+        facilities:
+          type: object
+          additionalProperties:
+            type: string
+          description: Facility filters as key-value pairs
+          nullable: true
+        directFlight:
+          type: string
+          description: Direct flight preference (Y/N)
+          nullable: true
+          example: "N"
+      description: Request object for retrieving alternative board offers for a single
+        accommodation
+    Anite:
+      type: object
+      properties:
+        board:
+          type: string
+          nullable: true
+        departureAirport:
+          type: string
+          nullable: true
+        depPort:
+          type: string
+          nullable: true
+        stay:
+          type: string
+          nullable: true
+        outSlots:
+          type: string
+          nullable: true
+        inSlots:
+          type: string
+          nullable: true
+        cabinClass:
+          type: string
+          nullable: true
+        price:
+          type: string
+          nullable: true
+        pricePP:
+          type: string
+          nullable: true
+        discount:
+          type: string
+          nullable: true
+        deposit:
+          type: string
+          nullable: true
+        dreamLiner:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/YesNo"
+        direct:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/YesNo"
+        inDirect:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/YesNo"
+        dc:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Dc"
+        carrier:
+          type: string
+          nullable: true
+        charter:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/YesNo"
+        nonCharter:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/YesNo"
+    AvailabilityGroup:
+      required:
+      - accommodationId
+      - boardFilter
+      - offers
+      - priceFilter
+      - totalOffers
+      type: object
+      properties:
+        accommodationId:
+          type: string
+        totalOffers:
+          type: integer
+          format: int32
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AvailabilityResponse"
+        priceFilter:
+          type: array
+          items:
+            type: number
+            format: double
+        boardFilter:
+          type: array
+          items:
+            type: string
+    AvailabilityResponse:
+      required:
+      - accommodationId
+      - adults
+      - arrivalAirports
+      - board
+      - csp
+      - discount
+      - duration
+      - filters
+      - inboundArrivalAirport
+      - inboundArrivalDate
+      - inboundArrivalTime
+      - inboundBaggage
+      - inboundBookingClass
+      - inboundCabinClass
+      - inboundCarrier
+      - inboundDepartureAirport
+      - inboundDepartureDate
+      - inboundDepartureTime
+      - inboundFareBasis
+      - inboundFareType
+      - inboundFlightNo
+      - inboundFlightRouteKey
+      - inboundStops
+      - infant
+      - kids
+      - minRoomsAvailable
+      - offset
+      - outboundArrivalAirport
+      - outboundArrivalDate
+      - outboundArrivalTime
+      - outboundBaggage
+      - outboundBookingClass
+      - outboundCabinClass
+      - outboundCarrier
+      - outboundDepartureAirport
+      - outboundDepartureDate
+      - outboundDepartureTime
+      - outboundFareBasis
+      - outboundFareType
+      - outboundFlightNo
+      - outboundFlightRouteKey
+      - outboundStops
+      - price
+      - pricePerPerson
+      - pricePerPersonWithoutLocalTax
+      - priceWithoutLocalTax
+      - promoCode
+      - roomCode
+      - routeCd
+      - startDate
+      - tuiScore
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        accommodationId:
+          type: string
+        board:
+          type: string
+        adults:
+          type: integer
+          format: int32
+        kids:
+          type: integer
+          format: int32
+        infant:
+          type: integer
+          format: int32
+        startDate:
+          type: string
+          format: date
+        duration:
+          type: integer
+          format: int32
+        price:
+          type: number
+        pricePerPerson:
+          type: number
+        description:
+          type: string
+          nullable: true
+        csp:
+          type: integer
+          format: int32
+        tuiScore:
+          type: integer
+          format: int32
+        roomCode:
+          type: string
+        routeCd:
+          type: string
+        promoCode:
+          type: string
+        discount:
+          type: number
+        outboundDepartureAirport:
+          type: string
+        outboundDepartureDate:
+          type: string
+        outboundDepartureTime:
+          type: string
+        outboundArrivalAirport:
+          type: string
+        outboundArrivalDate:
+          type: string
+        outboundArrivalTime:
+          type: string
+        outboundFlightRouteKey:
+          type: string
+        outboundFareType:
+          type: string
+        outboundCarrier:
+          type: string
+        outboundFlightNo:
+          type: string
+        outboundBookingClass:
+          type: string
+        outboundCabinClass:
+          type: string
+        outboundStops:
+          type: integer
+          format: int32
+        outboundBaggage:
+          type: string
+        outboundFareBasis:
+          type: string
+        inboundDepartureAirport:
+          type: string
+        inboundDepartureDate:
+          type: string
+        inboundDepartureTime:
+          type: string
+        inboundArrivalAirport:
+          type: string
+        inboundArrivalDate:
+          type: string
+        inboundArrivalTime:
+          type: string
+        inboundFlightRouteKey:
+          type: string
+        inboundFareType:
+          type: string
+        inboundCarrier:
+          type: string
+        inboundFlightNo:
+          type: string
+        inboundBookingClass:
+          type: string
+        inboundCabinClass:
+          type: string
+        inboundStops:
+          type: integer
+          format: int32
+        inboundBaggage:
+          type: string
+        inboundFareBasis:
+          type: string
+        filters:
+          type: array
+          items:
+            $ref: "#/components/schemas/FilterResponse"
+        priceWithoutLocalTax:
+          type: number
+        pricePerPersonWithoutLocalTax:
+          type: number
+        localTax:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/LocalTaxResponse"
+        minRoomsAvailable:
+          type: integer
+          format: int32
+        arrivalAirports:
+          type: array
+          items:
+            type: string
+        pricePerPersonRaw:
+          type: number
+          nullable: true
+        markupPercentage:
+          type: number
+          nullable: true
+        agencyPercentage:
+          type: number
+          nullable: true
+        amountPerPerson:
+          type: number
+          nullable: true
+        fxRate:
+          type: number
+          nullable: true
+        flightPrice:
+          type: number
+          nullable: true
+        accommodationPrice:
+          type: number
+          nullable: true
+    AvailabilityWrapper:
+      required:
+      - availabilityGroups
+      - filters
+      - roomDescriptions
+      type: object
+      properties:
+        filters:
+          $ref: "#/components/schemas/Filters"
+        roomDescriptions:
+          type: array
+          items:
+            type: string
+        availabilityGroups:
+          type: array
+          items:
+            $ref: "#/components/schemas/AvailabilityGroup"
+    CalendarRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - startDate
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date for calendar search in YYYY-MM-DD format
+          example: 2024-06-01
+        endDate:
+          type: string
+          description: End date for calendar search in YYYY-MM-DD format
+          example: 2024-09-30
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs to search for
+          example:
+          - "12345"
+          - "67890"
+          items:
+            type: string
+        adults:
+          type: integer
+          description: Number of adults in the party
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in the party
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in the party
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children in the party (required when kids or infants
+            > 0)
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: array
+          description: List of durations to filter by
+          nullable: true
+          example:
+          - 7
+          - 14
+          items:
+            type: integer
+            format: int32
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        boardTypes:
+          type: array
+          description: Set of board types to filter by
+          nullable: true
+          example:
+          - BB
+          - HB
+          - FB
+          items:
+            type: string
+      description: Request object for retrieving calendar availability
+    CalendarResponse:
+      required:
+      - dates
+      - months
+      type: object
+      properties:
+        dates:
+          $ref: "#/components/schemas/Dates_1"
+        months:
+          type: object
+          additionalProperties:
+            type: object
+    Date:
+      required:
+      - available
+      - date
+      type: object
+      properties:
+        available:
+          type: boolean
+        date:
+          type: string
+    DateAvailability:
+      required:
+      - available
+      - date
+      type: object
+      properties:
+        available:
+          type: boolean
+        date:
+          type: string
+    Dates:
+      required:
+      - count
+      - dates
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        dates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Date"
+    Dates_1:
+      required:
+      - count
+      - dates
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        dates:
+          type: array
+          items:
+            $ref: "#/components/schemas/DateAvailability"
+    Dc:
+      required:
+      - date
+      - value
+      type: object
+      properties:
+        value:
+          $ref: "#/components/schemas/YesNo"
+        date:
+          type: string
+    Durations:
+      required:
+      - count
+      - durations
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        durations:
+          type: array
+          items:
+            type: integer
+            format: int32
+    DurationsRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - startDate
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date for duration search in YYYY-MM-DD format
+          example: 2024-06-01
+        endDate:
+          type: string
+          description: End date for duration search in YYYY-MM-DD format
+          example: 2024-09-30
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs to search for
+          example:
+          - "12345"
+          - "67890"
+          items:
+            type: string
+        adults:
+          type: integer
+          description: Number of adults in the party
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in the party
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in the party
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children in the party (required when kids or infants
+            > 0)
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: array
+          description: List of durations to filter by
+          nullable: true
+          example:
+          - 7
+          - 14
+          items:
+            type: integer
+            format: int32
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        boardTypes:
+          type: array
+          description: Set of board types to filter by
+          nullable: true
+          example:
+          - BB
+          - HB
+          - FB
+          items:
+            type: string
+      description: Request object for retrieving duration information
+    DurationsResponse:
+      required:
+      - count
+      - durations
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        durations:
+          type: array
+          items:
+            type: integer
+            format: int32
+    FilterResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        code:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+    Filters:
+      required:
+      - multiSelect
+      - name
+      - singleSelect
+      type: object
+      properties:
+        name:
+          type: string
+        multiSelect:
+          type: array
+          items:
+            $ref: "#/components/schemas/MultiSelect"
+        singleSelect:
+          type: array
+          items:
+            $ref: "#/components/schemas/SingleSelect"
+        durationsList:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/Durations"
+        aniteLists:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/Anite"
+        datesList:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/Dates"
+        monthsList:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/MonthsList"
+    LocalTaxResponse:
+      required:
+      - exchangeRate
+      - localCurrency
+      - perPersonInLocalCurrency
+      - perPersonInSourceMarketCurrency
+      - totalInLocalCurrency
+      - totalInSourceMarketCurrency
+      type: object
+      properties:
+        totalInSourceMarketCurrency:
+          type: number
+        totalInLocalCurrency:
+          type: number
+        perPersonInSourceMarketCurrency:
+          type: number
+        perPersonInLocalCurrency:
+          type: number
+        localCurrency:
+          type: string
+        exchangeRate:
+          type: number
+    Month:
+      type: object
+      properties:
+        month:
+          type: string
+          nullable: true
+        seasonType:
+          type: string
+          nullable: true
+        seasonYear:
+          type: string
+          nullable: true
+        available:
+          type: string
+          nullable: true
+    MonthsList:
+      type: object
+      properties:
+        months:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Month"
+    MultiSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MultiSelectItem"
+    MultiSelectItem:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        count:
+          type: string
+          nullable: true
+        min:
+          type: string
+          nullable: true
+        max:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+    OfferRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - searchType
+      - startDate
+      type: object
+      properties:
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs to search for
+          example:
+          - "12345"
+          - "67890"
+          items:
+            type: string
+        startDate:
+          type: string
+          description: Start date for the holiday search in YYYY-MM-DD format
+          example: 2024-06-15
+        endDate:
+          type: string
+          description: End date for the holiday search in YYYY-MM-DD format (inclusive)
+          example: 2024-06-22
+        boardTypes:
+          type: array
+          description: Set of board types to filter by (optional)
+          nullable: true
+          example:
+          - BB
+          - HB
+          - FB
+          items:
+            type: string
+        adults:
+          type: integer
+          description: Number of adults in the party
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in the party
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in the party
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children in the party (required when kids or infants
+            > 0)
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: integer
+          description: Duration of the holiday in nights
+          format: int32
+          nullable: true
+          example: 7
+        rooms:
+          type: integer
+          description: Number of rooms required
+          format: int32
+          nullable: true
+          example: 1
+        roomDescription:
+          type: string
+          description: Room description for filtering
+          nullable: true
+          example: Double Room with Sea View
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        arrivalAirports:
+          type: array
+          description: Set of arrival airport codes
+          nullable: true
+          example:
+          - AYT
+          - HRG
+          items:
+            type: string
+        searchType:
+          type: integer
+          description: Search type identifier
+          format: int32
+          example: 3
+        carriers:
+          type: array
+          description: Set of airline carrier codes to filter by
+          nullable: true
+          example:
+          - BA
+          - AF
+          items:
+            type: string
+        outboundDepartureTime:
+          type: array
+          description: "Set of outbound departure time preferences. A -> 06:00 - 11:59,\
+            \ B -> 12:00 - 17:59, C -> 18:00 - 20:59, D -> 21:00 - 05:59"
+          nullable: true
+          example:
+          - A
+          - B
+          - C
+          - D
+          items:
+            type: string
+        inboundDepartureTime:
+          type: array
+          description: "Set of inbound departure time preferences. A -> 06:00 - 11:59,\
+            \ B -> 12:00 - 17:59, C -> 18:00 - 20:59, D -> 21:00 - 05:59"
+          nullable: true
+          example:
+          - A
+          - B
+          - C
+          - D
+          items:
+            type: string
+        maxPrice:
+          type: number
+          description: Maximum price filter in GBP
+          nullable: true
+          example: 1500
+        facilities:
+          type: object
+          additionalProperties:
+            type: string
+          description: Facility filters as key-value pairs
+          nullable: true
+          example:
+            swimmingPool: "YES"
+            spa: "NO"
+        directFlight:
+          type: string
+          description: Direct flight preference (Y/N)
+          nullable: true
+          example: "Y"
+        roomAllocations:
+          type: array
+          description: "Customer-selected room allocations. When provided, each entry\
+            \ defines one room's occupancy."
+          nullable: true
+          items:
+            $ref: "#/components/schemas/RoomAllocation"
+      description: Request object for retrieving holiday offers
+    RoomAllocation:
+      required:
+      - adults
+      - infants
+      - kids
+      - kidsAge
+      type: object
+      properties:
+        adults:
+          type: integer
+          description: Number of adults in this room
+          format: int32
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in this room
+          format: int32
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in this room
+          format: int32
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children in this room
+          example:
+          - 5
+          items:
+            type: integer
+            format: int32
+      description: Per-room occupancy for customer-selected multi-room
+    RoomsRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - startDate
+      type: object
+      properties:
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs to search for
+          example:
+          - "12345"
+          items:
+            type: string
+        startDate:
+          type: string
+          description: Start date in YYYY-MM-DD format
+          example: 2024-06-15
+        endDate:
+          type: string
+          description: End date in YYYY-MM-DD format (inclusive)
+          example: 2024-06-22
+        boardTypes:
+          type: array
+          description: Set of board types to filter by
+          nullable: true
+          example:
+          - BB
+          - HB
+          items:
+            type: string
+        adults:
+          type: integer
+          description: Number of adults
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: integer
+          description: Duration in nights
+          format: int32
+          nullable: true
+          example: 7
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        arrivalAirports:
+          type: array
+          description: Set of arrival airport codes
+          nullable: true
+          example:
+          - AYT
+          items:
+            type: string
+        carriers:
+          type: array
+          description: Set of airline carrier codes
+          nullable: true
+          example:
+          - BA
+          items:
+            type: string
+        outboundDepartureTime:
+          type: array
+          description: Set of outbound departure time preferences
+          nullable: true
+          example:
+          - A
+          - B
+          items:
+            type: string
+        inboundDepartureTime:
+          type: array
+          description: Set of inbound departure time preferences
+          nullable: true
+          example:
+          - C
+          - D
+          items:
+            type: string
+        maxPrice:
+          type: number
+          description: Maximum price filter in GBP
+          nullable: true
+          example: 1500
+        facilities:
+          type: object
+          additionalProperties:
+            type: string
+          description: Facility filters as key-value pairs
+          nullable: true
+        directFlight:
+          type: string
+          description: Direct flight preference (Y/N)
+          nullable: true
+          example: "N"
+      description: Request object for retrieving room offers
+    SingleAccommodationRequest:
+      required:
+      - accommodationIds
+      - endDate
+      - startDate
+      type: object
+      properties:
+        accommodationIds:
+          type: array
+          description: Set of accommodation IDs (must contain exactly 1)
+          example:
+          - "12345"
+          items:
+            type: string
+        startDate:
+          type: string
+          description: Start date in YYYY-MM-DD format
+          example: 2024-06-15
+        endDate:
+          type: string
+          description: End date in YYYY-MM-DD format (inclusive)
+          example: 2024-06-22
+        boardTypes:
+          type: array
+          description: Set of board types to filter by
+          nullable: true
+          example:
+          - BB
+          - HB
+          items:
+            type: string
+        adults:
+          type: integer
+          description: Number of adults
+          format: int32
+          nullable: true
+          example: 2
+        kids:
+          type: integer
+          description: Number of children
+          format: int32
+          nullable: true
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants
+          format: int32
+          nullable: true
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children
+          nullable: true
+          example:
+          - 5
+          - 8
+          items:
+            type: integer
+            format: int32
+        duration:
+          type: integer
+          description: Duration in nights
+          format: int32
+          nullable: true
+          example: 7
+        departureAirports:
+          type: array
+          description: Set of departure airport codes
+          nullable: true
+          example:
+          - LGW
+          - LHR
+          items:
+            type: string
+        arrivalAirports:
+          type: array
+          description: Set of arrival airport codes
+          nullable: true
+          example:
+          - AYT
+          items:
+            type: string
+        carriers:
+          type: array
+          description: Set of airline carrier codes
+          nullable: true
+          example:
+          - BA
+          items:
+            type: string
+        outboundDepartureTime:
+          type: array
+          description: Set of outbound departure time preferences
+          nullable: true
+          example:
+          - A
+          - B
+          items:
+            type: string
+        inboundDepartureTime:
+          type: array
+          description: Set of inbound departure time preferences
+          nullable: true
+          example:
+          - C
+          - D
+          items:
+            type: string
+        maxPrice:
+          type: number
+          description: Maximum price filter in GBP
+          nullable: true
+          example: 1500
+        facilities:
+          type: object
+          additionalProperties:
+            type: string
+          description: Facility filters as key-value pairs
+          nullable: true
+        directFlight:
+          type: string
+          description: Direct flight preference (Y/N)
+          nullable: true
+          example: "N"
+      description: Request object for retrieving single accommodation offers
+    SingleSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SingleSelectItem"
+    SingleSelectItem:
+      required:
+      - code
+      - count
+      type: object
+      properties:
+        code:
+          type: string
+        count:
+          type: string
+        min:
+          type: string
+          nullable: true
+        max:
+          type: string
+          nullable: true
+    YesNo:
+      type: string
+      enum:
+      - "Y"
+      - "N"

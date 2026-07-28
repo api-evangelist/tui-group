@@ -1,0 +1,154 @@
+openapi: 3.0.2
+info:
+  title: TUI NewSkies PriceFile Api
+  version: '1.0'
+  description: Api providing pricefile handling
+  contact:
+    email: api.flightproduction@tui.com
+    name: Flight Production API Team
+servers:
+  - url: 'https://playground.api.tui/flight/newskies/pricefile'
+    description: Playground Environment
+  - url: 'https://prod.api.tui/flight/newskies/pricefile'
+    description: Prod Environment
+components:
+  responses:
+    PriceFileResponse:
+      description: |-
+        Response for a price file. The response body is base64 encoded 
+        and must be decoded before extracting the zip archive.
+      content:
+        application/zip:
+          schema:
+            type: string
+            format: binary
+      headers:
+        Content-Transfer-Encoding:
+          schema:
+            type: string
+          description: Will contain base64 on binary file response to indicate that the response is base64 encoded
+    ErrorResponse:
+      description: Response message in case of an error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errorMessage:
+                type: string
+                description: Error description message
+              exception:
+                type: string
+                description: Optional error details or null
+          examples:
+            ErrorMessage:
+              value:
+                errorMessage: No price file mapped to ApiKey YourAppName
+                exception: null
+    TimeStampResponse:
+      description: Timestamp response message
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              fileName:
+                type: string
+                description: Filename of your price file
+              timeStamp:
+                type: string
+                format: date-time
+                description: Creation timestamp of your price file
+          examples:
+            Response:
+              value:
+                fileName: pricefile.zip
+                timeStamp: '2026-06-15T09:25:36Z'
+  securitySchemes:
+    bearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth 2.0 client credentials token. Obtain your client ID and secret by registering an app in the TUI Developer Portal.
+paths:
+  '/download/{filename}':
+    summary: PriceFile download by filename
+    description: |-
+      Download a pricefile by given filename. 
+      This filename must be mapped to the authenticated (OAuth) user.
+    parameters:
+      - schema:
+          type: string
+        name: filename
+        in: path
+        required: true
+        description: Name of file for download e.g. prices_all.zip
+    get:
+      summary: Download pricefile by filename
+      description: Retrieve a pricefile with the given name
+      responses:
+        '200':
+          $ref: '#/components/responses/PriceFileResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      operationId: get-download-filename
+      tags:
+        - download
+  '/download/{filename}/timestamp':
+    summary: Retrieve timestamp of a given pricefile
+    description: Retrieve the creation timestamp of the given pricefile name, mapped to your authenticated user
+    parameters:
+      - schema:
+          type: string
+        name: filename
+        in: path
+        required: true
+        description: Name of file for timestamp retrieve e.g. prices_all.zip
+    get:
+      summary: Get timestamp for a specific pricefile
+      responses:
+        '200':
+          $ref: '#/components/responses/TimeStampResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      operationId: get-download-filename-timestamp
+      description: |-
+        Retrieve the timestamp for pricefile with the given name when the file has last been changed.
+        This will return the timestamp from the pricefile which is mapped to your credentials.
+      tags:
+        - timestamp
+  /download/delta:
+    summary: Delta PriceFile download endpoint
+    description: Download a pricefile-delta which is mapped to your authenticated (OAuth) user
+    get:
+      summary: Receive the delta price which is mapped to your OAuth Authentication key
+      description: |-
+        Retrieve the delta-pricefile which is mapped to your login credentials.
+        Please note that this method might become deprecated in the future.
+      operationId: getpricefiledelta
+      responses:
+        '200':
+          $ref: '#/components/responses/PriceFileResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      tags:
+        - download
+  /download/delta/timestamp:
+    summary: PriceFile Delta Timestamp Endpoint
+    description: Retrieve the timestamp of when the pricefile-delta has last been changed
+    get:
+      summary: Get the timestamp of the current available pricefile delta
+      description: |-
+        Retrieve the timestamp of when the pricefile-delta has last been changed.
+        This will return the timestamp from the pricefile which is mapped to your credentials.
+        Please note that this method might become deprecated in the future.
+      operationId: getpricefiledeltatimestamp
+      responses:
+        '200':
+          $ref: '#/components/responses/TimeStampResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      tags:
+        - timestamp
+security:
+  - bearerToken: []

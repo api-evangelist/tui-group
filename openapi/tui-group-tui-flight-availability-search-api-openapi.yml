@@ -1,0 +1,424 @@
+openapi: 3.0.3
+info:
+  title: NSKCC Availability Search API
+  description: Flight availability search API with pricing information
+  version: '0.1.73'
+tags:
+  - name: Health
+  - name: Search
+paths:
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Search for availability
+      operationId: SearchAvailability
+      parameters:
+        - name: carrierCodes
+          in: query
+          description: >-
+            Comma-separated list of airline carrier codes to filter flights
+            (e.g., TB,OR,X3)
+          schema:
+            type: array
+            items:
+              type: string
+            example: 'TB,OR,X3'
+          example: 'TB,OR,X3'
+        - name: departureStationCodes
+          in: query
+          description: >-
+            Comma-separated list of departure airport codes to filter flights
+            (e.g., BRU,LHR,MAN)
+          schema:
+            type: array
+            items:
+              type: string
+            example: 'BRU,LHR,MAN'
+          example: 'BRU,LHR,MAN'
+        - name: arrivalStationCodes
+          in: query
+          description: >-
+            Comma-separated list of arrival airport codes to filter flights
+            (e.g., ACE,LPA,PMI)
+          schema:
+            type: array
+            items:
+              type: string
+            example: 'ACE,LPA,PMI'
+          example: 'ACE,LPA,PMI'
+        - name: departureCountries
+          in: query
+          description: >-
+            Comma-separated list of departure country codes to filter flights
+            (e.g., GB,DE,BE)
+          schema:
+            type: array
+            items:
+              type: string
+            example: 'GB,DE,BE'
+          example: 'GB,DE,BE'
+        - name: arrivalCountries
+          in: query
+          description: >-
+            Comma-separated list of arrival country codes to filter flights
+            (e.g., ES,FR,IT)
+          schema:
+            type: array
+            items:
+              type: string
+            example: 'ES,FR,IT'
+          example: 'ES,FR,IT'
+        - name: outboundStartDate
+          in: query
+          description: >-
+            Start date of the search range for outbound flights. Use this with
+            OutboundEndDate to search flights within a date range. Format:
+            yyyy-MM-dd (e.g., 2024-06-01)
+          schema:
+            type: string
+            format: date
+            example: '2024-06-01'
+          example: '2024-06-01'
+        - name: outboundEndDate
+          in: query
+          description: >-
+            End date of the search range for outbound flights. Use this with
+            OutboundStartDate to search flights within a date range. Format:
+            yyyy-MM-dd (e.g., 2024-12-31)
+          schema:
+            type: string
+            format: date
+            example: '2024-12-31'
+          example: '2024-12-31'
+        - name: inboundStartDate
+          in: query
+          description: >-
+            Start date of the search range for inbound/return flights. Use this
+            with InboundEndDate to search return flights within a date range.
+            Format: yyyy-MM-dd (e.g., 2024-06-15)
+          schema:
+            type: string
+            format: date
+            example: '2024-06-15'
+          example: '2024-06-15'
+        - name: inboundEndDate
+          in: query
+          description: >-
+            End date of the search range for inbound/return flights. Use this
+            with InboundStartDate to search return flights within a date range.
+            Format: yyyy-MM-dd (e.g., 2024-07-31)
+          schema:
+            type: string
+            format: date
+            example: '2024-07-31'
+          example: '2024-07-31'
+        - name: PassengerCount
+          in: query
+          description: 'Number of passengers for availability check (default: 1)'
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            example: 1
+          example: 1
+        - name: LimitGroups
+          in: query
+          description: Maximum number of flight groups to return in the response
+          schema:
+            type: integer
+            format: int32
+            example: 10
+          example: 10
+        - name: LimitFlights
+          in: query
+          description: Maximum number of flights to return per group in the response
+          schema:
+            type: integer
+            format: int32
+            example: 5
+          example: 5
+        - name: AgentName
+          in: header
+          description: Agent name for role-based access control and pricing
+          schema:
+            type: string
+            example: AgentName
+          example: AgentName
+        - name: GroupBy
+          in: query
+          description: 'Grouping strategy for results: 0 = OriginDestination, 1 = Date'
+          schema:
+            $ref: '#/components/schemas/GroupBy'
+          example: 0
+        - name: tripType
+          in: query
+          description: 'Trip type: Oneway or RoundTrip'
+          schema:
+            $ref: '#/components/schemas/TripType'
+          example: Oneway
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        ErrorMessage:
+          type: string
+          nullable: true
+        StackTrace:
+          type: string
+          nullable: true
+      additionalProperties: false
+      description: Error response object for the Api.
+    Fare:
+      type: object
+      properties:
+        fareBasisCode:
+          type: string
+          description: Fare basis code identifying the fare type
+          nullable: true
+        ruleNumber:
+          type: string
+          description: Fare rule number
+          nullable: true
+        productClass:
+          type: string
+          description: 'Product class code (e.g., Y, C, F)'
+          nullable: true
+        classOfService:
+          type: string
+          description: Class of service code
+          nullable: true
+        fareKey:
+          type: string
+          description: Unique fare identifier
+          nullable: true
+        encryptedFareKey:
+          type: string
+          description: Encrypted fare identifier for secure operations
+          nullable: true
+        currencyCode:
+          type: string
+          description: 'Currency code (e.g., EUR, GBP, USD)'
+          nullable: true
+        priceGrossAdt:
+          type: number
+          description: Gross price for adult passenger
+          format: double
+        priceGrossChd:
+          type: number
+          description: Gross price for child passenger
+          format: double
+        priceGrossInf:
+          type: number
+          description: Gross price for infant passenger
+          format: double
+        priceNetAdt:
+          type: number
+          description: Net price for adult passenger
+          format: double
+        priceNetChd:
+          type: number
+          description: Net price for child passenger
+          format: double
+        taxes:
+          type: number
+          description: Total taxes amount
+          format: double
+        fees:
+          type: number
+          description: Total fees amount
+          format: double
+        surcharges:
+          type: number
+          description: Total surcharges amount
+          format: double
+      additionalProperties: false
+      description: Fare pricing and class information
+    Flight:
+      type: object
+      properties:
+        arrivalDateTime:
+          type: string
+          description: Flight arrival date and time
+          format: date-time
+        availability:
+          type: integer
+          description: Number of available seats for the requested passenger count
+          format: int32
+        carrierCode:
+          type: string
+          description: 'Airline carrier code (e.g., TB, OR, X3)'
+          nullable: true
+        departureDateTime:
+          type: string
+          description: Flight departure date and time
+          format: date-time
+        flightNumber:
+          type: string
+          description: Flight number
+          nullable: true
+        journeyKey:
+          type: string
+          description: Unique journey identifier
+          nullable: true
+        encryptedJourneyKey:
+          type: string
+          description: Encrypted journey identifier for secure operations
+          nullable: true
+        flightDuration:
+          type: integer
+          description: Flight duration in minutes
+          format: int32
+        departureStationCode:
+          type: string
+          description: 'Departure airport code (e.g., BRU, LHR, MAN)'
+          nullable: true
+        arrivalStationCode:
+          type: string
+          description: 'Arrival airport code (e.g., ACE, LPA, PMI)'
+          nullable: true
+        departureCountryCode:
+          type: string
+          description: 'Departure country code (e.g., GB, DE, BE)'
+          nullable: true
+        arrivalCountryCode:
+          type: string
+          description: 'Arrival country code (e.g., ES, FR, IT)'
+          nullable: true
+        operatingCarrierCode:
+          type: string
+          description: Operating carrier code if different from marketing carrier
+          nullable: true
+        stopOverFlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/StopOverFlight'
+          description: >-
+            List of stopover flights for multi-leg journeys (maximum 2
+            stopovers)
+          nullable: true
+        fares:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fare'
+          description: List of available fares with pricing details
+          nullable: true
+      additionalProperties: false
+      description: Flight availability and pricing information
+    FlightGroup:
+      required:
+        - flights
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: >-
+            Group identifier (e.g., 'BRU-ACE' for origin-destination or
+            '2024-07-15' for date grouping)
+          nullable: true
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flight'
+          description: List of flights within this group
+          nullable: true
+      additionalProperties: false
+      description: Group of flights organized by origin-destination or date
+    GroupBy:
+      enum:
+        - 0
+        - 1
+      type: integer
+      format: int32
+    SearchResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightGroup'
+          description: >-
+            Collection of flight groups organized by the specified grouping
+            strategy
+          nullable: true
+      additionalProperties: false
+      description: Search response containing grouped flight results
+    StopOverFlight:
+      type: object
+      properties:
+        stationCode:
+          type: string
+          description: 'Stopover airport code (e.g., MAD, CDG, AMS)'
+          nullable: true
+        carrierCode:
+          type: string
+          description: Marketing carrier code for the stopover leg
+          nullable: true
+        operatingCarrierCode:
+          type: string
+          description: Operating carrier code if different from marketing carrier
+          nullable: true
+        flightNumber:
+          type: string
+          description: Flight number for the stopover leg
+          nullable: true
+        sta:
+          type: string
+          description: Scheduled time of arrival at stopover station
+          format: date-time
+        std:
+          type: string
+          description: Scheduled time of departure from stopover station
+          format: date-time
+      additionalProperties: false
+      description: Stopover flight information for multi-leg journeys
+    TripType:
+      enum:
+        - 0
+        - 1
+      type: integer
+      format: int32
+    UnauthorizedError:
+      type: object
+      properties:
+        ErrorMessage:
+          type: string
+          nullable: true
+        StackTrace:
+          type: string
+          nullable: true
+      additionalProperties: false
+      description: Unauthorized error response object for the Api.
