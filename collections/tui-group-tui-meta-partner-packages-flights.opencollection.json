@@ -1,0 +1,398 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Meta Partner Packages & Flights",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Route Feed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetFlightsRouteFeed",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/partner/:market/flights/:agent/route-feed",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. This will be used for monitoring purposes."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns the current flights route feed."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Packages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetPackages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/partner/:market/packages/:pax",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "pax",
+                "value": "",
+                "type": "path",
+                "description": "The pax configuration. Accepted values: 2000 for two adults, 2010 for two adults and one child, 2020 for two adults and two children."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "query",
+                "description": "Your agent code. Use the same for every request made."
+              },
+              {
+                "name": "fromid",
+                "value": "",
+                "type": "query",
+                "description": "The package id to start from. Items retrieved will have an id that comes after the given value when sorted in ascending order."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The number of items to return. Default: 100, maximum: 1000."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Used for pagination. For performance reasons, do not use without adding other query parameters."
+              },
+              {
+                "name": "departurecode",
+                "value": "",
+                "type": "query",
+                "description": "Code of the departure airport. Any valid IATA airport code."
+              },
+              {
+                "name": "departuredate",
+                "value": "",
+                "type": "query",
+                "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredate=2035-01-31"
+              },
+              {
+                "name": "destinationcode",
+                "value": "",
+                "type": "query",
+                "description": "Code of the destination airport. Any valid IATA airport code."
+              },
+              {
+                "name": "duration",
+                "value": "",
+                "type": "query",
+                "description": "Number of nights in the accommodation."
+              },
+              {
+                "name": "accommodationid",
+                "value": "",
+                "type": "query",
+                "description": "The id of the accommodation to retrieve."
+              },
+              {
+                "name": "maxdaystodeparture",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of days to departure. Items returned will have a departure date that is equal or fewer days away from today."
+              },
+              {
+                "name": "departuredatefrom",
+                "value": "",
+                "type": "query",
+                "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredatefrom=2035-01-31"
+              },
+              {
+                "name": "departuredatetill",
+                "value": "",
+                "type": "query",
+                "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredatetill=2035-01-31"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns all available packages.\r\nVery important! Remember to add your own agent string {&agent=youragentstring} to the urlToBooking link in each package."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Flights",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetFlights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/partner/:market/flights/search/:agent",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. This will be used for generating the url for the next request."
+              },
+              {
+                "name": "adults",
+                "value": "",
+                "type": "query",
+                "description": "Mandatory. Number of adults. Any integer between 1 and 6."
+              },
+              {
+                "name": "childAges",
+                "value": "",
+                "type": "query",
+                "description": "A comma separated string with child ages. No space after comma. Example: childAges=0,5,14. Age ranges are, infant: 0-1, child: 2-12, youth: 13-17, adults: 18+."
+              },
+              {
+                "name": "departureCode",
+                "value": "",
+                "type": "query",
+                "description": "Code of the departure airport. Any valid IATA airport code."
+              },
+              {
+                "name": "departureDate",
+                "value": "",
+                "type": "query",
+                "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredate=2035-01-31."
+              },
+              {
+                "name": "destinationCode",
+                "value": "",
+                "type": "query",
+                "description": "Code of the destination airport. Any valid IATA airport code."
+              },
+              {
+                "name": "returnDate",
+                "value": "",
+                "type": "query",
+                "description": "Date of return. Date must be compatible with ISO 8601. Example: returnDate=2035-01-31."
+              },
+              {
+                "name": "duration",
+                "value": "",
+                "type": "query",
+                "description": "Number of nights between departure date and return date."
+              },
+              {
+                "name": "oneWay",
+                "value": "",
+                "type": "query",
+                "description": "If true then only one way flights are returned, if false then one way flights are not returned. If omitted then all flights are returned."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The number of items to return. Default: 100, maximum: 1000."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Used for pagination. For performance reasons, do not use without adding other query parameters."
+              },
+              {
+                "name": "tuiOnly",
+                "value": "",
+                "type": "query",
+                "description": "If true returns flights from TUIfly Nordic and TUI Airways. If false or omitted returns all airlines."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns available flights."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Live Search Packages (Beta)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetLocations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/partner/:market/live-search/packages/:agent/locations",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. Use the same for every request made."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get all locations for a specific market"
+        },
+        {
+          "info": {
+            "name": "GetLiveSearch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/partner/:market/live-search/packages/:agent",
+            "params": [
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+              },
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+              },
+              {
+                "name": "adults",
+                "value": "",
+                "type": "query",
+                "description": "Number of Adults in the request.\r\n\r\nAccepted Values - 1 to 6"
+              },
+              {
+                "name": "childages",
+                "value": "",
+                "type": "query",
+                "description": "Ages of Children in the request separated by comma. If no children are sent in the request, this parameter should not be sent (or sent as ?childAges=).\r\n\r\nFor 2 children with age 5 and 7, the value should be 5,7.\r\nAge ranges are, infant: 0-1, child: 2-12, youth: 13-17."
+              },
+              {
+                "name": "destinations",
+                "value": "",
+                "type": "query",
+                "description": "The G- code value for each destination that is mapped through the locations endpoint.\r\nMultiple destinations can be sent in the request separated by comma.\r\n\r\nExample: G-000000234,G-000000256,G-000000293,G-000000293"
+              },
+              {
+                "name": "arrivaldatefrom",
+                "value": "",
+                "type": "query",
+                "description": "Date of arrival from. Date must be compatible with ISO 8601. Example: arrivaldatefrom=2035-01-31"
+              },
+              {
+                "name": "arrivaldateto",
+                "value": "",
+                "type": "query",
+                "description": "Date of arrival to.\r\nDate must be compatible with ISO 8601.\r\n\r\nExample: arrivaldateto=2035-01-31"
+              },
+              {
+                "name": "durations",
+                "value": "",
+                "type": "query",
+                "description": "A list of one or more stay durations. Example: 3,5,7,14"
+              },
+              {
+                "name": "airportcodes",
+                "value": "",
+                "type": "query",
+                "description": "A list of airportcodes separated by comma that are requested by user as Departure locations.\r\n\r\nExample: ARN,GOT,CPH"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The number of items to return. Maximum: 100."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns available packages."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

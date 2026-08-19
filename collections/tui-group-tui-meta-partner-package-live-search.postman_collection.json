@@ -1,0 +1,502 @@
+{
+  "item": [
+    {
+      "id": "0e5293bb-61f9-4d39-b6c9-f6ab97252445",
+      "name": "Live Search Packages (Beta)",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e8e9250e-d9ab-4ef2-8fe7-1c0d42383ecf",
+          "name": "Get Locations",
+          "request": {
+            "name": "Get Locations",
+            "description": {
+              "content": "Get all locations for a specific market",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "packages",
+                ":agent",
+                "locations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. Use the same for every request made."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1db04821-1d20-41fb-8815-de8945eb757f",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "packages",
+                    ":agent",
+                    "locations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. Use the same for every request made."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 987.9003934800656,\n  \"items\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "44fc1c70-8329-4e74-a8d0-bb4fa063b22d",
+          "name": "Get Live Search",
+          "request": {
+            "name": "Get Live Search",
+            "description": {
+              "content": "This endpoint returns available packages.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "packages",
+                ":agent"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "adults",
+                  "value": "<integer>",
+                  "description": "(Required) Number of Adults in the request.\r\n\r\nAccepted Values - 1 to 6"
+                },
+                {
+                  "disabled": false,
+                  "key": "childages",
+                  "value": "",
+                  "description": "Ages of Children in the request separated by comma. If no children are sent in the request, this parameter should not be sent (or sent as ?childAges=).\r\n\r\nFor 2 children with age 5 and 7, the value should be 5,7.\r\nAge ranges are, infant: 0-1, child: 2-12, youth: 13-17."
+                },
+                {
+                  "disabled": false,
+                  "key": "destinations",
+                  "value": "<string>",
+                  "description": "(Required) The G-code value for each destination that is mapped through the locations endpoint.\r\nMultiple destinations can be sent in the request separated by comma.\r\n\r\nExample: G-000000234,G-000000256,G-000000293,G-000000293"
+                },
+                {
+                  "disabled": false,
+                  "key": "arrivaldatefrom",
+                  "value": "<string>",
+                  "description": "(Required) Date of arrival from. Date must be compatible with ISO 8601. Example: arrivaldatefrom=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "arrivaldateto",
+                  "value": "<string>",
+                  "description": "(Required) Date of arrival to.\r\nDate must be compatible with ISO 8601.\r\n\r\nExample: arrivaldateto=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "durations",
+                  "value": "<string>",
+                  "description": "(Required) A list of one or more stay durations. Example: 3,5,7,14"
+                },
+                {
+                  "disabled": false,
+                  "key": "airportcodes",
+                  "value": "",
+                  "description": "A list of airportcodes separated by comma that are requested by user as Departure locations.\r\n\r\nExample: ARN,GOT,CPH"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "The number of items to return. Maximum: 100."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d9bf9143-1166-46e2-aac9-b641f4b7535a",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "packages",
+                    ":agent"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "childages",
+                      "value": ""
+                    },
+                    {
+                      "key": "destinations",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "arrivaldatefrom",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "arrivaldateto",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "durations",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "airportcodes",
+                      "value": ""
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"next\": \"string\",\n  \"totalNumberOfItems\": 5481.28380656998,\n  \"version\": \"string\",\n  \"items\": [\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 3678.3743302606877,\n      \"youths\": 9207.374598518325,\n      \"children\": 1789.7554501578784,\n      \"infants\": 6243.202072206159,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": false\n      },\n      \"priority\": 3081.1892761652693,\n      \"flightClimateCompensated\": false,\n      \"charterFlight\": true,\n      \"outboundFlightLegs\": [\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 6477.741203786839\n        },\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 958.5934632680015\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 9966.81037075427\n        },\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 7859.308514850526\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 5885.874837179377,\n          \"currentPrice\": 1071.8146574220166,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\"\n        },\n        {\n          \"priceOriginal\": 2845.1478782041686,\n          \"currentPrice\": 2807.9779395015116,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\"\n        }\n      ]\n    },\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 1887.2888156685142,\n      \"youths\": 5675.610147319626,\n      \"children\": 1870.1962351927282,\n      \"infants\": 3103.6349481751845,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": false\n      },\n      \"priority\": 779.9344476989944,\n      \"flightClimateCompensated\": false,\n      \"charterFlight\": false,\n      \"outboundFlightLegs\": [\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 6715.041012411391\n        },\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 3434.0570805837056\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 2983.0631896643135\n        },\n        {\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 810.2197953702417\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 1534.658232575471,\n          \"currentPrice\": 4712.263575719193,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\"\n        },\n        {\n          \"priceOriginal\": 5802.986914155742,\n          \"currentPrice\": 4301.234749821022,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd2ec450-773a-418c-9aa5-93b50519920c",
+          "name": "Get Accommodations",
+          "request": {
+            "name": "Get Accommodations",
+            "description": {
+              "content": "Get all Accommodations for a specific market",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "packages",
+                ":agent",
+                "accommodations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. Use the same for every request made."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1c1fc80e-3aa8-4c30-8b02-251753f1158b",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "packages",
+                    ":agent",
+                    "accommodations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. Use the same for every request made."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 3224.667822121151,\n  \"items\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"locations\": \"string\",\n      \"tags\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"locations\": \"string\",\n      \"tags\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://prod.api.tui/sales/pip-package/live-search/v1-beta",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "af2f80c9-05f1-468f-95e1-487cf8dc49d0",
+    "name": "Meta Partner Package Live Search",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Partner Live Search API allows partners to access real-time travel packages, including live pricing and availability, through a set of RESTful endpoints.",
+      "type": "text/plain"
+    }
+  }
+}

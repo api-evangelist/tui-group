@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "NSKCC Availability Search API",
+    "version": "0.1.73"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search for availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/search",
+            "headers": [
+              {
+                "name": "AgentName",
+                "value": "AgentName"
+              }
+            ],
+            "params": [
+              {
+                "name": "carrierCodes",
+                "value": "TB,OR,X3",
+                "type": "query",
+                "description": "Comma-separated list of airline carrier codes to filter flights (e.g., TB,OR,X3)"
+              },
+              {
+                "name": "departureStationCodes",
+                "value": "BRU,LHR,MAN",
+                "type": "query",
+                "description": "Comma-separated list of departure airport codes to filter flights (e.g., BRU,LHR,MAN)"
+              },
+              {
+                "name": "arrivalStationCodes",
+                "value": "ACE,LPA,PMI",
+                "type": "query",
+                "description": "Comma-separated list of arrival airport codes to filter flights (e.g., ACE,LPA,PMI)"
+              },
+              {
+                "name": "departureCountries",
+                "value": "GB,DE,BE",
+                "type": "query",
+                "description": "Comma-separated list of departure country codes to filter flights (e.g., GB,DE,BE)"
+              },
+              {
+                "name": "arrivalCountries",
+                "value": "ES,FR,IT",
+                "type": "query",
+                "description": "Comma-separated list of arrival country codes to filter flights (e.g., ES,FR,IT)"
+              },
+              {
+                "name": "outboundStartDate",
+                "value": "2024-06-01",
+                "type": "query",
+                "description": "Start date of the search range for outbound flights. Use this with OutboundEndDate to search flights within a date range. Format: yyyy-MM-dd (e.g., 2024-06-01)"
+              },
+              {
+                "name": "outboundEndDate",
+                "value": "2024-12-31",
+                "type": "query",
+                "description": "End date of the search range for outbound flights. Use this with OutboundStartDate to search flights within a date range. Format: yyyy-MM-dd (e.g., 2024-12-31)"
+              },
+              {
+                "name": "inboundStartDate",
+                "value": "2024-06-15",
+                "type": "query",
+                "description": "Start date of the search range for inbound/return flights. Use this with InboundEndDate to search return flights within a date range. Format: yyyy-MM-dd (e.g., 2024-06-15)"
+              },
+              {
+                "name": "inboundEndDate",
+                "value": "2024-07-31",
+                "type": "query",
+                "description": "End date of the search range for inbound/return flights. Use this with InboundStartDate to search return flights within a date range. Format: yyyy-MM-dd (e.g., 2024-07-31)"
+              },
+              {
+                "name": "PassengerCount",
+                "value": "1",
+                "type": "query",
+                "description": "Number of passengers for availability check (default: 1)"
+              },
+              {
+                "name": "LimitGroups",
+                "value": "10",
+                "type": "query",
+                "description": "Maximum number of flight groups to return in the response"
+              },
+              {
+                "name": "LimitFlights",
+                "value": "5",
+                "type": "query",
+                "description": "Maximum number of flights to return per group in the response"
+              },
+              {
+                "name": "GroupBy",
+                "value": "0",
+                "type": "query",
+                "description": "Grouping strategy for results: 0 = OriginDestination, 1 = Date"
+              },
+              {
+                "name": "tripType",
+                "value": "Oneway",
+                "type": "query",
+                "description": "Trip type: Oneway or RoundTrip"
+              }
+            ]
+          },
+          "docs": "Search for availability"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

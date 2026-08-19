@@ -1,0 +1,2242 @@
+{
+  "item": [
+    {
+      "id": "61caf698-6ab6-4969-a119-4efbf077eb07",
+      "name": "TravelMessage",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "03e68f65-6b09-4e77-bdce-6096025d7e66",
+          "name": "Does an AvailabilityRequest",
+          "request": {
+            "name": "Does an AvailabilityRequest",
+            "description": {
+              "content": "The availability of a journey can be requested with the dialogue Availability.  \nFor this API the \"*Package approach*\" is used. This means that filling the \"*PackageDetails*\" in the request \nwill return a complete package (Transport, accommodation and/or additional products) in the response. These\ncomponents must be used in the next steps of the booking process\n\n**Request:** Besides the mandatory fields only filtering is possible for:\n * DeparturePoint\n * BoardType \n\n**Response:**\n * Happy flow: Transport, Accommodation and AdditionalProducts data for chosen product\n * No availability: Error message given \"No data found\"\n * Error: Response has an errormessage\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "availabilityrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <AvailabilityRequest>\n      <PackageDetails waitListCheck=\"(string)\" NumberOfAlternatives=\"(integer)\">\n        <PackageID>(string)</PackageID>\n        <Description>(string)</Description>\n        <Brand>(string)</Brand>\n        <NumberOfAdults>(integer)</NumberOfAdults>\n        <NumberOfChildren>(integer)</NumberOfChildren>\n        <NumberOfBabies>(integer)</NumberOfBabies>\n        <DepartureDate>(string)</DepartureDate>\n        <DeparturePoint>(string)</DeparturePoint>\n        <AccommodationType>(string)</AccommodationType>\n        <BoardType>(string)</BoardType>\n        <UnitType>(string)</UnitType>\n        <FacilityType>(string)</FacilityType>\n        <FacilityType>(string)</FacilityType>\n        <Duration>\n        </Duration>\n        <MultiMedia>\n        </MultiMedia>\n        <MultiMedia>\n        </MultiMedia>\n        <PackageType>(string)</PackageType>\n      </PackageDetails>\n    </AvailabilityRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cfb2b0f7-63f2-4556-a174-fdd7ea9a4232",
+              "name": "AvailabilityRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "availabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-27</Date>\n    <Time>12:23</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AvailabilityRequest</RequestID>\n    <ResponseID>AvailabilityResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AvailabilityRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <Brand>TUI_NL</Brand>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n    </AvailabilityRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "4d5c69d1-ba12-46ea-b91a-cc7443ce2d46",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "availabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-27</Date>\n    <Time>12:23</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AvailabilityRequest</RequestID>\n    <ResponseID>AvailabilityResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AvailabilityRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <Brand>TUI_NL</Brand>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n    </AvailabilityRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "37a4fcea-a61c-40f3-96b3-a12c3bdd3f56",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "availabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-27</Date>\n    <Time>12:23</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AvailabilityRequest</RequestID>\n    <ResponseID>AvailabilityResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AvailabilityRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <Brand>TUI_NL</Brand>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n    </AvailabilityRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a4990f6a-4c1b-4e70-8b50-8d1f844dc86e",
+          "name": "Does a ReceiptRequest",
+          "request": {
+            "name": "Does a ReceiptRequest",
+            "description": {
+              "content": "The ReceiptRequest message can be done to get an actual price of a chosen package and components. It's a kind \nof combination of Sell- and AssignRequest but without starting a transaction.\nThe response contains only a price breakdown for each passenger. If no prices are found an errormessage\nwill be returned with the message \"no data found\".\n\nThe price description can contain only a description or a description plus additional information. If a price\ncomponent relates to the package itself only a description is given, for example \"reissom\". If a price is related\nto a specific component additional information is given to trace the price back to the component. This information\nis in the following format seperated with a pipe \"|\":\n  1. Description\n  2. Type (T = Transport, A = Accommodation/Unit, TE = Transport Extra, E = Extra)\n  3. Relation (depending on type)  \n    T = TransportID  \n    A = AccommodationID, UnitID and ArrivalDate  \n    TE = TransportID, GroupID, ExtraID, StartDate  \n    E = GroupID, ExtraID, startDate  \n\nExamples:\n  - Package: \"Reissom\"\n  - Transport (T) : \"Luchthaventoeslag|T|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ\"\n  - Accommodation(A): \"Vroegboekkorting|A|A0192836|2919b8e9-7ae3-4883-9ecf-0377d8a8d202|11/03/2023\"\n  - Transport Extra (TE): \"Klasse (PWIM)|TE|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ|SEAT|PWIM|2023-11-03\"\n  - Extra (E): \"Transfer (TXX)|E|Transfer|TXX|2023-11-03\"\n\nFor this Request/Response the v3.1.xsd is changed to fit the needs for TUI. \n\n**Response:**\n * Happy flow: Price breakdown for each passenger\n * No data found: response has an errormessage with type info  \n * Error: response has an errormessage        \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "receiptrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <ReceiptRequest>\n      <PackageDetails>\n        <PackageID>(string)</PackageID>\n        <DepartureDate>(string)</DepartureDate>\n        <Duration>\n        </Duration>\n      </PackageDetails>\n      <PaxDetails>\n        <PaxID>(string)</PaxID>\n        <DateOfBirth>(string)</DateOfBirth>\n        <Discounts>\n        </Discounts>\n      </PaxDetails>\n      <Transport>\n        <TransportTo>\n        </TransportTo>\n        <TransportTo>\n        </TransportTo>\n        <TransportFrom>\n        </TransportFrom>\n        <TransportFrom>\n        </TransportFrom>\n        <PriceNotes>(string)</PriceNotes>\n        <PriceNotes>(string)</PriceNotes>\n        <AdditionalProducts>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>(string)</AccommodationID>\n        <ComponentID>(string)</ComponentID>\n        <AccommodationType>(string)</AccommodationType>\n        <Name>(string)</Name>\n        <Address>(string)</Address>\n        <ZipCode>(string)</ZipCode>\n        <Place>(string)</Place>\n        <CountryID>(string)</CountryID>\n        <GPSCode>\n          <Latitude>\n          </Latitude>\n          <Longitude>\n          </Longitude>\n        </GPSCode>\n        <Telephone>(string)</Telephone>\n        <ArrivalDate>(string)</ArrivalDate>\n        <DepartureDate>(string)</DepartureDate>\n        <Duration>\n        </Duration>\n        <Unit>\n        </Unit>\n        <Unit>\n        </Unit>\n        <Arrangement>\n        </Arrangement>\n        <Arrangement>\n        </Arrangement>\n        <Extras>\n        </Extras>\n        <Extras>\n        </Extras>\n        <MultiMedia>\n        </MultiMedia>\n        <MultiMedia>\n        </MultiMedia>\n      </Accommodation>\n      <AdditionalProducts>\n        <Extras>\n        </Extras>\n        <Extras>\n        </Extras>\n        <TransportRental>\n        </TransportRental>\n        <TransportRental>\n        </TransportRental>\n      </AdditionalProducts>\n      <Discounts>\n        <DiscountID>(string)</DiscountID>\n        <DiscountID>(string)</DiscountID>\n      </Discounts>\n    </ReceiptRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f4cd3610-b767-4244-83e8-d8b0dd1d8773",
+              "name": "ReceiptRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "receiptrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:54</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>ReceiptRequest</RequestID>\n    <ResponseID>ReceiptResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <ReceiptRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n      </PackageDetails>\n      <PaxDetails>\n        <PaxID>1</PaxID>\n        <DateOfBirth>1990-11-20</DateOfBirth>\n      </PaxDetails>\n      <PaxDetails>\n        <PaxID>2</PaxID>\n        <DateOfBirth>1990-11-21</DateOfBirth>\n      </PaxDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <RoomAssignment>\n            <Sequence>1</Sequence>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </RoomAssignment>\n        </Unit>\n      </Accommodation>\n    </ReceiptRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "7b509462-99e1-4c60-8431-bc05bc403068",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "receiptrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:54</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>ReceiptRequest</RequestID>\n    <ResponseID>ReceiptResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <ReceiptRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n      </PackageDetails>\n      <PaxDetails>\n        <PaxID>1</PaxID>\n        <DateOfBirth>1990-11-20</DateOfBirth>\n      </PaxDetails>\n      <PaxDetails>\n        <PaxID>2</PaxID>\n        <DateOfBirth>1990-11-21</DateOfBirth>\n      </PaxDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <RoomAssignment>\n            <Sequence>1</Sequence>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </RoomAssignment>\n        </Unit>\n      </Accommodation>\n    </ReceiptRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "2cb4e57f-764c-4d87-b805-d1fa2eb4931d",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "receiptrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:54</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>ReceiptRequest</RequestID>\n    <ResponseID>ReceiptResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <ReceiptRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <Duration DurationType=\"nachten\">7</Duration>\n      </PackageDetails>\n      <PaxDetails>\n        <PaxID>1</PaxID>\n        <DateOfBirth>1990-11-20</DateOfBirth>\n      </PaxDetails>\n      <PaxDetails>\n        <PaxID>2</PaxID>\n        <DateOfBirth>1990-11-21</DateOfBirth>\n      </PaxDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>Tui Fly</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n              <Quantity>2</Quantity>\n            </ExtrasPax>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <RoomAssignment>\n            <Sequence>1</Sequence>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </RoomAssignment>\n        </Unit>\n      </Accommodation>\n    </ReceiptRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6289f827-3062-4b0a-9f98-e75b0c232952",
+          "name": "Does a SellRequest",
+          "request": {
+            "name": "Does a SellRequest",
+            "description": {
+              "content": "The dialogue of Sell aims at indicating the package parts which have been selected for the subsequent\ndialogue. The message contains package information and optional information relating to Transport, \nAccommodation and Additional products (Roundtrip and Cruise information are not implemented yet).  \nFor TUI the SellRequest is used to create a new session. Some basic validation is taking place, \nand the response is more or less a copy of the request. It is important to put all the parts in the \nSellRequest, because they will be checked in the next step, the AssignRequest.  \nWhen parts are changed (for example rooms) or added (for example extra's) a new SellRequest has to be \ndone.  \n\n**Response:**\n * Happy flow: copy of request with status = \"OK\" \n * Error: response has an errormessage        \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "sellrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <SellRequest>\n      <PackageDetails waitListCheck=\"(string)\" NumberOfAlternatives=\"(integer)\">\n        <PackageID>(string)</PackageID>\n        <Description>(string)</Description>\n        <Brand>(string)</Brand>\n        <NumberOfAdults>(integer)</NumberOfAdults>\n        <NumberOfChildren>(integer)</NumberOfChildren>\n        <NumberOfBabies>(integer)</NumberOfBabies>\n        <DepartureDate>(string)</DepartureDate>\n        <DeparturePoint>(string)</DeparturePoint>\n        <AccommodationType>(string)</AccommodationType>\n        <BoardType>(string)</BoardType>\n        <UnitType>(string)</UnitType>\n        <FacilityType>(string)</FacilityType>\n        <FacilityType>(string)</FacilityType>\n        <Duration>\n        </Duration>\n        <MultiMedia>\n        </MultiMedia>\n        <MultiMedia>\n        </MultiMedia>\n        <PackageType>(string)</PackageType>\n      </PackageDetails>\n      <Transport>\n        <PriceNotes>(string)</PriceNotes>\n        <PriceNotes>(string)</PriceNotes>\n        <AdditionalProducts>\n        </AdditionalProducts>\n      </Transport>\n      <Transport>\n        <PriceNotes>(string)</PriceNotes>\n        <PriceNotes>(string)</PriceNotes>\n        <AdditionalProducts>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>(string)</AccommodationID>\n        <ComponentID>(string)</ComponentID>\n        <AccommodationType>(string)</AccommodationType>\n        <Name>(string)</Name>\n        <Address>(string)</Address>\n        <ZipCode>(string)</ZipCode>\n        <Place>(string)</Place>\n        <CountryID>(string)</CountryID>\n        <GPSCode>\n        </GPSCode>\n        <Telephone>(string)</Telephone>\n        <ArrivalDate>(string)</ArrivalDate>\n        <DepartureDate>(string)</DepartureDate>\n        <Duration>\n        </Duration>\n      </Accommodation>\n      <Accommodation>\n        <AccommodationID>(string)</AccommodationID>\n        <ComponentID>(string)</ComponentID>\n        <AccommodationType>(string)</AccommodationType>\n        <Name>(string)</Name>\n        <Address>(string)</Address>\n        <ZipCode>(string)</ZipCode>\n        <Place>(string)</Place>\n        <CountryID>(string)</CountryID>\n        <GPSCode>\n        </GPSCode>\n        <Telephone>(string)</Telephone>\n        <ArrivalDate>(string)</ArrivalDate>\n        <DepartureDate>(string)</DepartureDate>\n        <Duration>\n        </Duration>\n      </Accommodation>\n      <AdditionalProducts>\n        <Extras>\n        </Extras>\n        <Extras>\n        </Extras>\n        <TransportRental>\n        </TransportRental>\n        <TransportRental>\n        </TransportRental>\n      </AdditionalProducts>\n      <Responsibilities>\n        <SalesResponsibility>(string)</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d33f1bdc-d8b0-481f-b99e-4add6c90ad43",
+              "name": "SellRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "sellrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:50</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>SellRequest</RequestID>\n    <ResponseID>SellResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>EIN</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n              <ClassID>PNOM</ClassID>\n              <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <Allotment>1</Allotment>\n        </Unit>\n      </Accommodation>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>   \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "8c89e1b7-d4fa-445f-b329-6fc0190922e9",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "sellrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:50</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>SellRequest</RequestID>\n    <ResponseID>SellResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>EIN</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n              <ClassID>PNOM</ClassID>\n              <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <Allotment>1</Allotment>\n        </Unit>\n      </Accommodation>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>   \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "248d7629-9363-4522-8864-6967b13f1e41",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "sellrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-08</Date>\n    <Time>12:50</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>SellRequest</RequestID>\n    <ResponseID>SellResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>EIN</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n              <ClassID>PNOM</ClassID>\n              <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1653</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>EIN</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n        <AdditionalProducts>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n          <Extras>\n            <ExtraID>BG00</ExtraID>\n            <Description>BG00</Description>\n            <ExtrasCategory>bagage</ExtrasCategory>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <Allotment>2</Allotment>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n            <GroupID>baggage</GroupID>\n          </Extras>\n        </AdditionalProducts>\n      </Transport>\n      <Accommodation>\n        <AccommodationID>A0410459</AccommodationID>\n        <AccommodationType>HOT</AccommodationType>\n        <ArrivalDate>2024-01-27</ArrivalDate>\n        <DepartureDate>2024-02-03</DepartureDate>\n        <Unit>\n          <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n          <UnitType>4PK</UnitType>\n          <Board>\n            <BoardType>LG</BoardType>\n          </Board>\n          <Allotment>1</Allotment>\n        </Unit>\n      </Accommodation>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>   \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5d7804aa-eddf-4b3d-b812-87ed7563d3f7",
+          "name": "Does a AssignRequest",
+          "request": {
+            "name": "Does a AssignRequest",
+            "description": {
+              "content": "In the AssignRequest the passengers and there assignments to the package parts are given. The \"*SenderSessionID*\" \nof the SellResponse must be used as \"*ReceiverSessionID*\" in the AssignRequest to use the session created during\nthe SellRequest. Validation is done to check if the same parts are used as in SellRequest.  \nThe response may contain more elements then assigned (extras). These are default components which do not \ninfluence the price, like flight extra's as SeatsType, Meals, Luggage or default transfers. Usually upgrades \nfor these components are available. Because AssignResponse gives no description of these default components (just \nand ID and dates) the Extras itself will also be returned in te response. The means that the TResponse also \ncontains AdditionalProducts and Transport.TransportTo[From].AdditionalProducts.\n\nBesides these components also a price breakdown is returned. \nThe price description can contain only a description or a description plus additional information. If a price \ncomponent relates to the package itself only a description is given, for example \"reissom\". If a price is related \nto a specific component additional information is given to trace the price back to the component. This information \nis in the following format seperated with a pipe \"|\":\n1. Description \n2. Type (T = Transport, A = Accommodation/Unit, TE = Transport Extra, E = Extra)\n3. Relation (depending on type)  \n  T = TransportID  \n  A = AccommodationID, UnitID and ArrivalDate  \n  TE = TransportID, GroupID, ExtraID, StartDate  \n  E = GroupID, ExtraID, startDate  \n\nExamples:  \n  - Package: \"Reissom\"  \n  - Transport (T) : \"Luchthaventoeslag|T|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ\"    \n  - Accommodation(A): \"Vroegboekkorting|A|A0192836|2919b8e9-7ae3-4883-9ecf-0377d8a8d202|11/03/2023\"    \n  - Transport Extra (TE): \"Klasse (PWIM)|TE|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ|SEAT|PWIM|2023-11-03\"    \n  - Extra (E): \"Transfer (TXX)|E|Transfer|TXX|2023-11-03\"  \n\nChanges for passenger information (for example name) or a different assignment can be done without doing a new \nSellRequest.  \n\n**Response:**\n * Happy flow: Copy of assignment plus price breakdown \n * Error: response has an errormessage\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "assignrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <AssignRequest>\n      <PaxDetails>\n        <PaxDescription>\n        </PaxDescription>\n        <PaxDescription>\n        </PaxDescription>\n        <Contact>\n          <PaxID>(string)</PaxID>\n          <Initials>(string)</Initials>\n          <Infix>(string)</Infix>\n          <Name>(string)</Name>\n          <Address>(string)</Address>\n          <Zipcode>(string)</Zipcode>\n          <Place>(string)</Place>\n          <Country>(string)</Country>\n          <TelHome>(string)</TelHome>\n          <TelWork>(string)</TelWork>\n          <TelMobile>(string)</TelMobile>\n          <Email>(string)</Email>\n          <BankAccount>(string)</BankAccount>\n        </Contact>\n        <HomeStay>\n          <Initials>(string)</Initials>\n          <Infix>(string)</Infix>\n          <Name>(string)</Name>\n          <TelHome>(string)</TelHome>\n          <TelWork>(string)</TelWork>\n          <TelMobile>(string)</TelMobile>\n          <Email>(string)</Email>\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n        </TransportAssignment>\n        <TransportAssignment>\n        </TransportAssignment>\n        <AccoAssignment>\n        </AccoAssignment>\n        <AccoAssignment>\n        </AccoAssignment>\n        <PreferencesAndEssentials>\n        </PreferencesAndEssentials>\n        <PreferencesAndEssentials>\n        </PreferencesAndEssentials>\n        <APAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n        <SalesResponsibility>(string)</SalesResponsibility>\n      </Responsibilities>\n      <Discounts>\n        <DiscountID>(string)</DiscountID>\n        <DiscountID>(string)</DiscountID>\n      </Discounts>\n    </AssignRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bd87dcb5-230d-4f14-ae3c-2ccd1c51bdc3",
+              "name": "AssignRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "assignrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:53</Time>\n    <MessageSequence>3</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AssignRequest</RequestID>\n    <ResponseID>AssignResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AssignRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n          <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </AssignRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "5143c915-e4b4-4530-9fdc-3f17056cacf6",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "assignrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:53</Time>\n    <MessageSequence>3</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AssignRequest</RequestID>\n    <ResponseID>AssignResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AssignRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n          <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </AssignRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "83a15316-dc61-4d2f-be6c-4771d1e8aea2",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "assignrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:53</Time>\n    <MessageSequence>3</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AssignRequest</RequestID>\n    <ResponseID>AssignResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <AssignRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n          <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </AssignRequest>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0c8afe8b-6e56-4094-8969-86804f3d643d",
+          "name": "Does a BookRequest",
+          "request": {
+            "name": "Does a BookRequest",
+            "description": {
+              "content": "There can be made a booking with the dialogue of BookRequest. Although the xml data of the BookRequest is \nthe same as the AssignRequest and required in the G7 XML for TUI only the confirmation counts. So using \nthe same \"*ReceiverSessionID*\" as in the AssignRequest is enough. Changes made to passengers and assignments \nat this stage will be ignored. The information that was in the Assign stage will be used.\n\n**Request:**\n  * Same as AssignRequest, but changes are ignored. \n\n**Response:**\n * Happy flow: Confirmed Booking (with BookID) \n * Error: response has an errormessage        \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "bookrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <BookRequest>\n      <PaxDetails>\n        <PaxDescription>\n        </PaxDescription>\n        <PaxDescription>\n        </PaxDescription>\n        <Contact>\n          <PaxID>(string)</PaxID>\n          <Initials>(string)</Initials>\n          <Infix>(string)</Infix>\n          <Name>(string)</Name>\n          <Address>(string)</Address>\n          <Zipcode>(string)</Zipcode>\n          <Place>(string)</Place>\n          <Country>(string)</Country>\n          <TelHome>(string)</TelHome>\n          <TelWork>(string)</TelWork>\n          <TelMobile>(string)</TelMobile>\n          <Email>(string)</Email>\n          <BankAccount>(string)</BankAccount>\n        </Contact>\n        <HomeStay>\n          <Initials>(string)</Initials>\n          <Infix>(string)</Infix>\n          <Name>(string)</Name>\n          <TelHome>(string)</TelHome>\n          <TelWork>(string)</TelWork>\n          <TelMobile>(string)</TelMobile>\n          <Email>(string)</Email>\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n        </TransportAssignment>\n        <TransportAssignment>\n        </TransportAssignment>\n        <AccoAssignment>\n        </AccoAssignment>\n        <AccoAssignment>\n        </AccoAssignment>\n        <PreferencesAndEssentials>\n        </PreferencesAndEssentials>\n        <PreferencesAndEssentials>\n        </PreferencesAndEssentials>\n        <APAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <FulfilmentComponent>\n        <Document>\n        </Document>\n        <Document>\n        </Document>\n      </FulfilmentComponent>\n      <Responsibilities>\n        <SalesResponsibility>(string)</SalesResponsibility>\n      </Responsibilities>\n      <Discounts>\n        <DiscountID>(string)</DiscountID>\n        <DiscountID>(string)</DiscountID>\n      </Discounts>\n    </BookRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d39f42bb-d874-44ff-848a-0c674bbb4863",
+              "name": "BookRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "bookrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:55</Time>\n    <MessageSequence>5</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BookRequest</RequestID>\n    <ResponseID>BookResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <BookRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n        <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n      <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </BookRequest>\n  </TRequest>\n</TravelMessage>      \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "32f73ba9-bdd9-49ec-ad61-d72aafb6f108",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "bookrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:55</Time>\n    <MessageSequence>5</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BookRequest</RequestID>\n    <ResponseID>BookResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <BookRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n        <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n      <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </BookRequest>\n  </TRequest>\n</TravelMessage>      \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "851f37e9-69ff-4788-9f1d-c01f265447a8",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "bookrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\">\n    <SenderSessionID>99769a45-0d36-498d-b742-71a257d86c9e</SenderSessionID>\n    <ReceiverSessionID>83c221a7-5f2d-419d-9423-6882c3d49a45</ReceiverSessionID>\n    <Date>2024-01-08</Date>\n    <Time>12:55</Time>\n    <MessageSequence>5</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BookRequest</RequestID>\n    <ResponseID>BookResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <BookRequest>\n      <PaxDetails>\n        <PaxDescription>\n          <PaxID>1</PaxID>\n          <GivenNames>Saul</GivenNames>\n          <Initials>L</Initials>\n          <Infix>de</Infix>\n          <Name>Agustin</Name>\n          <DateOfBirth>1990-11-20</DateOfBirth>\n          <Gender>M</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MNL876543210</PassportNumber>\n        </PaxDescription>\n        <PaxDescription>\n        <PaxID>2</PaxID>\n          <GivenNames>Kavya</GivenNames>\n          <Initials>Z</Initials>\n          <Infix>van</Infix>\n          <Name>Wantjes</Name>\n          <DateOfBirth>1990-11-21</DateOfBirth>\n          <Gender>V</Gender>\n          <Nationality>NL</Nationality>\n          <PassportNumber>MFL876543210</PassportNumber>\n        </PaxDescription>\n        <Contact>\n          <PaxID>1</PaxID>\n          <Initials>L</Initials>\n          <Name>Agustin</Name>\n          <Gender>M</Gender>\n          <Address>Zijdehoenderlaan 162 </Address>\n          <Zipcode>3773 WW</Zipcode>\n          <Place>BARNEVELD</Place>\n          <Country>NL</Country>\n          <TelHome>0342123456</TelHome>\n          <TelWork>></TelWork>\n          <TelMobile>></TelMobile>\n          <Email>rudy.lodeweges@tui.nl</Email>\n        </Contact>\n        <HomeStay>\n          <Initials>K</Initials>\n          <Infix>care</Infix>\n          <Name>AtHome Name</Name>\n          <TelHome>06123456798</TelHome>\n          <TelWork />\n          <TelMobile />\n          <Email />\n        </HomeStay>\n      </PaxDetails>\n      <PaxAssignment>\n        <TransportAssignment>\n          <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n          <Sequence>1</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <TransportAssignment>\n          <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n          <Sequence>2</Sequence>\n          <ClassID>PNOM</ClassID>\n          <PaxID>1</PaxID>\n          <PaxID>2</PaxID>\n        </TransportAssignment>\n        <AccoAssignment>\n          <AccommodationID>A0410459</AccommodationID>\n          <Sequence>1</Sequence>\n          <ArrivalDate>2024-01-27</ArrivalDate>\n          <DepartureDate>2024-02-03</DepartureDate>\n          <BoardAssignment>\n            <BoardType>LG</BoardType>\n            <PaxID>1</PaxID>\n            <PaxID>2</PaxID>\n          </BoardAssignment>\n          <UnitAssignment>\n            <UnitID>bc35339c-3c6f-4e98-9afb-5235c8e8a287</UnitID>\n            <Quantity>1</Quantity>\n            <RoomAssignment>\n              <Sequence>1</Sequence>\n              <RoomNumber>101</RoomNumber>\n              <PaxID>1</PaxID>\n              <PaxID>2</PaxID>\n            </RoomAssignment>\n          </UnitAssignment>\n        </AccoAssignment>\n        <APAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>1</Sequence>\n            <From>\n              <Date>2024-01-27</Date>\n            </From>\n            <To>\n              <Date>2024-01-27</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>ec148e56-43a5-49bf-93d2-39750303da69#20240127 OR1653 EINTFS#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n          <ExtrasAssignment>\n            <ExtraID>BG00</ExtraID>\n            <Sequence>2</Sequence>\n            <From>\n              <Date>2024-02-03</Date>\n            </From>\n            <To>\n              <Date>2024-02-03</Date>\n            </To>\n            <Quantity>2</Quantity>\n            <ExtrasPax>\n              <PaxID>1</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <ExtrasPax>\n              <PaxID>2</PaxID>\n              <Quantity>1</Quantity>\n            </ExtrasPax>\n            <RelatedTransport>\n              <TransportID>65111533-fa95-47d0-ac8a-fa2c417c9357#20240203 OR1653 TFSEIN#CONTRACTED</TransportID>\n              <ClassID>PNOM</ClassID>\n            </RelatedTransport>\n          </ExtrasAssignment>\n        </APAssignment>\n      </PaxAssignment>\n      <Responsibilities>\n      <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </BookRequest>\n  </TRequest>\n</TravelMessage>      \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9f8d011a-b687-49ec-9888-4777494d8ce8",
+          "name": "Does a BreakRequest",
+          "request": {
+            "name": "Does a BreakRequest",
+            "description": {
+              "content": "The Break-dialogue allows the OTA to cut off a session between the travel agent and the tour operator decently.\nA new session can be started by sending a new SellRequest.                  \n\n**Response:**\n * Happy flow : Only a Control group is returned   \n * Error: response has an errormessage        \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "breakrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d1cb83eb-d5db-4bce-a404-9c46b5e65600",
+              "name": "BreakRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "breakrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID>9ad90b74-4fb4-40d8-a7cb-f355e3f51313</ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>10:48</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>1653</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BreakRequest</RequestID>\n    <ResponseID>BreakResponse</ResponseID>\n  </Control>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "c61ba92f-032f-4411-8645-2c342b0cb49b",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "breakrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID>9ad90b74-4fb4-40d8-a7cb-f355e3f51313</ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>10:48</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>1653</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BreakRequest</RequestID>\n    <ResponseID>BreakResponse</ResponseID>\n  </Control>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "d224f3e3-aefd-4cc6-8ee9-c122c13c6eff",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "breakrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID>9ad90b74-4fb4-40d8-a7cb-f355e3f51313</ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>10:48</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>1653</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>BreakRequest</RequestID>\n    <ResponseID>BreakResponse</ResponseID>\n  </Control>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dd366a7b-7748-4cfc-a5d2-462b56611fb2",
+          "name": "Does a AddProAvailabilityRequest",
+          "request": {
+            "name": "Does a AddProAvailabilityRequest",
+            "description": {
+              "content": "AddProAvailability is used to acquire summary information about additional products.  \nThere a two approaches defined in the ANVR documentation. With **overview** response, ResponseID is filled \nwith AvailabilityResponse. Only minimum information, ID and description are given in the response.   \nIf a **detailed** response is necessary ResponseID will be filled with AvailabilityDetailsResponse. Detailed \ninformation is given like prices, age restrictions allotment etc.  \n\nFor TUI both approaches are not implemented (yet) but a third approach is done.\nIf as RequestID/ResponseID \"*AddProAvailabilityTransportRequest/Response*\" is given with a Transportgroup \nthen detailed information is returned for extra's that are transport dependent. For example if flights \nare given extra's can be returned like luggage upgrades, meals upgrades and so on.  \n\nThe returned information can be used in the ReceiptRequest and the bookflow in Sell, Assign and BookRequest.  \n\n**Request:** \n * Overview, request only contains PackageDetails section and ResponseID is \"*AvailabilityResponse*\"  (not implemented)\n * Details, request only contains PackageDetails section and ResponseID is \"*AvailabilityDetailsResponse*\" (not implemented)\n * Transport, request contains PackageDetails and Transport section and RequestID/ResponseID is \n\"*AddProAvailabilityTransportRequest/Response*\"        \n\n**Response:** \n * Overview, only basic information is returned\n * Details, detailed information is returned \n * Transport, detailed information is returned for the given transports  \nThis information is grouped in Transport-AdditionalProducts-Extras and is related with the given transports \nby the group RelatedTransport\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "addproavailabilityrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <SellRequest>\n      <PackageDetails waitListCheck=\"(string)\" NumberOfAlternatives=\"(integer)\">\n        <PackageID>(string)</PackageID>\n        <Description>(string)</Description>\n        <Brand>(string)</Brand>\n        <NumberOfAdults>(integer)</NumberOfAdults>\n        <NumberOfChildren>(integer)</NumberOfChildren>\n        <NumberOfBabies>(integer)</NumberOfBabies>\n        <DepartureDate>(string)</DepartureDate>\n        <DeparturePoint>(string)</DeparturePoint>\n        <AccommodationType>(string)</AccommodationType>\n        <BoardType>(string)</BoardType>\n        <UnitType>(string)</UnitType>\n        <FacilityType>(string)</FacilityType>\n        <FacilityType>(string)</FacilityType>\n        <Duration>\n        </Duration>\n        <MultiMedia>\n        </MultiMedia>\n        <MultiMedia>\n        </MultiMedia>\n        <PackageType>(string)</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n        </TransportTo>\n        <TransportTo>\n        </TransportTo>\n        <TransportFrom>\n        </TransportFrom>\n        <TransportFrom>\n        </TransportFrom>\n        <PriceNotes>(string)</PriceNotes>\n        <PriceNotes>(string)</PriceNotes>\n        <AdditionalProducts>\n        </AdditionalProducts>\n      </Transport>\n      <AdditionalProducts>\n        <Extras>\n        </Extras>\n        <Extras>\n        </Extras>\n        <TransportRental>\n        </TransportRental>\n        <TransportRental>\n        </TransportRental>\n      </AdditionalProducts>\n      <Responsibilities>\n        <SalesResponsibility>(string)</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "95ce5fc2-0dfc-4158-8fd4-6a1cff2e36e3",
+              "name": "AddProAvailabilityRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addproavailabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>7f44c39a-d247-42ba-8605-d188f63dc264</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-09</Date>\n    <Time>09:20</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AddProAvailabilityTransportRequest</RequestID>\n    <ResponseID>AddProAvailabilityTransportResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>AMS</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>4d43a766-6507-46c4-984c-62084cb12be2#20240127 OR1661 AMSTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1661</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>f668f2ed-a972-4dc9-a09b-009189f62f32#20240203 OR1662 TFSAMS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1662</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-02-04</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n      </Transport>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>        \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "24228860-0090-4383-8e92-55621819da34",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addproavailabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>7f44c39a-d247-42ba-8605-d188f63dc264</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-09</Date>\n    <Time>09:20</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AddProAvailabilityTransportRequest</RequestID>\n    <ResponseID>AddProAvailabilityTransportResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>AMS</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>4d43a766-6507-46c4-984c-62084cb12be2#20240127 OR1661 AMSTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1661</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>f668f2ed-a972-4dc9-a09b-009189f62f32#20240203 OR1662 TFSAMS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1662</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-02-04</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n      </Transport>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>        \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "13d47c34-b8fb-47db-9a9e-0f2900b933bd",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addproavailabilityrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>7f44c39a-d247-42ba-8605-d188f63dc264</SenderSessionID>\n    <ReceiverSessionID />\n    <Date>2024-01-09</Date>\n    <Time>09:20</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>AddProAvailabilityTransportRequest</RequestID>\n    <ResponseID>AddProAvailabilityTransportResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SellRequest>\n      <PackageDetails>\n        <PackageID>8baccc9b-1a87-42fa-9e4e-866c3eb30020</PackageID>\n        <NumberOfAdults>2</NumberOfAdults>\n        <NumberOfChildren>0</NumberOfChildren>\n        <NumberOfBabies>0</NumberOfBabies>\n        <DepartureDate>2024-01-27</DepartureDate>\n        <DeparturePoint>AMS</DeparturePoint>\n        <BoardType>LG</BoardType>\n        <Duration DurationType=\"nachten\">7</Duration>\n        <PackageType>PAKK</PackageType>\n      </PackageDetails>\n      <Transport>\n        <TransportTo>\n          <TransportID>4d43a766-6507-46c4-984c-62084cb12be2#20240127 OR1661 AMSTFS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1661</FlightNumber>\n            <Stopovers NumberOfStops=\"0\">\n            </Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-01-27</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportTo>\n        <TransportFrom>\n          <TransportID>f668f2ed-a972-4dc9-a09b-009189f62f32#20240203 OR1662 TFSAMS#CONTRACTED</TransportID>\n          <TransportType>VL</TransportType>\n          <Carrier>\n            <CarrierID>OR</CarrierID>\n            <Description>TuiFlyNe</Description>\n            <FlightNumber>OR 1662</FlightNumber>\n            <Stopovers NumberOfStops=\"0\"></Stopovers>\n          </Carrier>\n          <Departure>\n            <Point PointType=\"IATAcode\">\n              <PointID>TFS</PointID>\n            </Point>\n            <Date>2024-02-03</Date>\n          </Departure>\n          <Arrival>\n            <Point PointType=\"IATAcode\">\n              <PointID>AMS</PointID>\n            </Point>\n            <Date>2024-02-04</Date>\n          </Arrival>\n          <Class>\n            <ClassID>PNOM</ClassID>\n            <Seats>2</Seats>\n          </Class>\n        </TransportFrom>\n      </Transport>\n      <Responsibilities>\n        <SalesResponsibility>Agent</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n</TravelMessage>        \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "42da4314-55a1-4b1c-aac2-62d0d9b655a1",
+          "name": "Does a AddProDetailsRequest",
+          "request": {
+            "name": "Does a AddProDetailsRequest",
+            "description": {
+              "content": "AddProDetails is used to acquire detailed information about additional products. It is a continuation of the  AddProAvailability overview request. It is possible to get separate information for each extra or transport  rental, just by adding the extra or transport rental in the request.  \n  **NOT IMPLEMENTED (YET)**\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "addprodetailsrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <SellRequest>\n      <PackageDetails waitListCheck=\"(string)\" NumberOfAlternatives=\"(integer)\">\n        <PackageID>(string)</PackageID>\n        <Description>(string)</Description>\n        <Brand>(string)</Brand>\n        <NumberOfAdults>(integer)</NumberOfAdults>\n        <NumberOfChildren>(integer)</NumberOfChildren>\n        <NumberOfBabies>(integer)</NumberOfBabies>\n        <DepartureDate>(string)</DepartureDate>\n        <DeparturePoint>(string)</DeparturePoint>\n        <AccommodationType>(string)</AccommodationType>\n        <BoardType>(string)</BoardType>\n        <UnitType>(string)</UnitType>\n        <FacilityType>(string)</FacilityType>\n        <FacilityType>(string)</FacilityType>\n        <Duration>\n        </Duration>\n        <MultiMedia>\n        </MultiMedia>\n        <MultiMedia>\n        </MultiMedia>\n        <PackageType>(string)</PackageType>\n      </PackageDetails>\n      <AdditionalProducts>\n        <Extras>\n        </Extras>\n        <Extras>\n        </Extras>\n        <TransportRental>\n        </TransportRental>\n        <TransportRental>\n        </TransportRental>\n      </AdditionalProducts>\n      <Responsibilities>\n        <SalesResponsibility>(string)</SalesResponsibility>\n      </Responsibilities>\n    </SellRequest>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "29b7b0c6-466b-4eee-a01b-b77a627d8d50",
+              "name": "AddProDetailsRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addprodetailsrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">NOT IMPLEMENTED</TravelMessage> \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "5ba470cd-a037-47bc-93ac-1e7c37cf9d7e",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addprodetailsrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">NOT IMPLEMENTED</TravelMessage> \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "4abe602d-1128-4cbd-b4c1-256b76efcc70",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "addprodetailsrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">NOT IMPLEMENTED</TravelMessage> \n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c9492452-9276-4dd6-9c6a-d19f01cc8300",
+          "name": "Does a RecapRequest",
+          "request": {
+            "name": "Does a RecapRequest",
+            "description": {
+              "content": "With the dialogue of Recap a recapitulation from the data stored at the Touroperator concerning the \ncurrent session or currently booked trip can be requested.     \n\nFor TUI only getting the requested booking is implemented.  \n\n**Request:**\n* Only \"*BookID*\" is required in the SecurityInfo group.  \n\n**Response:**\n* All information concerning the given booking like Passenger info, Transport, Accommodation Extra's, and Prices. \n* Error: if booking cannot be found with given request data\n\nThe price description can contain only a description or a description plus additional information. If a price\ncomponent relates to the package itself only a description is given, for example \"reissom\". If a price is related\nto a specific component additional information is given to trace the price back to the component. This information\nis in the following format seperated with a pipe \"|\":\n  1. Description\n  2. Type (T = Transport, A = Accommodation/Unit, TE = Transport Extra, E = Extra)\n  3. Relation (depending on type)  \n    T = TransportID  \n    A = AccommodationID, UnitID and ArrivalDate  \n    TE = TransportID, GroupID, ExtraID, StartDate  \n    E = GroupID, ExtraID, startDate  \n\nExamples:\n  - Package: \"Reissom\"\n  - Transport (T) : \"Luchthaventoeslag|T|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ\"\n  - Accommodation(A): \"Vroegboekkorting|A|A0192836|2919b8e9-7ae3-4883-9ecf-0377d8a8d202|11/03/2023\"\n  - Transport Extra (TE): \"Klasse (PWIM)|TE|f36627fe-b3ec-4a08-afba-820ff267a7e5#20231103 OR 503 AMSMBJ|SEAT|PWIM|2023-11-03\"\n  - Extra (E): \"Transfer (TXX)|E|Transfer|TXX|2023-11-03\"        \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "recaprequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <SecurityInfo>\n      <BookID>(string)</BookID>\n      <DepartureDate>(string)</DepartureDate>\n      <NumberOfAdults>(number)</NumberOfAdults>\n      <ContactName>(string)</ContactName>\n      <SenderID>(string)</SenderID>\n    </SecurityInfo>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0c23cc4b-8960-4479-8149-1811cf4f301c",
+              "name": "RecapRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "recaprequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID/>\n    <Date>2024-01-08</Date>\n    <Time>12:58</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>RecapRequest</RequestID>\n    <ResponseID>RecapResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200001563808</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "65d166fc-ddf2-4c8c-a620-451dbf01ad7c",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "recaprequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID/>\n    <Date>2024-01-08</Date>\n    <Time>12:58</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>RecapRequest</RequestID>\n    <ResponseID>RecapResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200001563808</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "dad20147-79dc-491c-a735-561a33432c3c",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "recaprequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"nee\">\n    <SenderSessionID>88bf7060-5852-44c7-8a51-eb1548952008</SenderSessionID>\n    <ReceiverSessionID/>\n    <Date>2024-01-08</Date>\n    <Time>12:58</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>RecapRequest</RequestID>\n    <ResponseID>RecapResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200001563808</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dcb6b583-31aa-49dc-93ad-d9670ccac73c",
+          "name": "Does a CancellationRequest",
+          "request": {
+            "name": "Does a CancellationRequest",
+            "description": {
+              "content": "Two messages will be send by cancelling a booking; a CancellationRequest followed by a CancellationConfirmedRequest. \nThis is because of the possible cancellation costs which require confirmation.\n\nFor TUI now only CancellationConfirmedRequest is implemented. No check yet for getting the cancellation cost \nfirst. \n\n**Request:**\n* \"*BookID*\", \"*DepartureDate*\" and \"*ContactName*\" are required in the SecurityInfo group.  \n\n**Response:**\n* Given back cancellation costs when cancellation is done. \n* Error: If booking is not found or booking is already cancelled\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "travelmessage",
+                "v3.1",
+                "cancellationrequest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"(string)\">\n  <TRequest>\n    <SecurityInfo>\n      <BookID>(string)</BookID>\n      <DepartureDate>(string)</DepartureDate>\n      <NumberOfAdults>(number)</NumberOfAdults>\n      <ContactName>(string)</ContactName>\n      <SenderID>(string)</SenderID>\n    </SecurityInfo>\n  </TRequest>\n  <Control Language=\"(string)\" Test=\"(string)\">\n    <SenderSessionID>(string)</SenderSessionID>\n    <ReceiverSessionID>(string)</ReceiverSessionID>\n    <Date>(string)</Date>\n    <Time Reliability=\"(string)\">\n    </Time>\n    <MessageSequence>(number)</MessageSequence>\n    <PreviousMessageSequence>(string)</PreviousMessageSequence>\n    <SenderID>(string)</SenderID>\n    <ReceiverID>(string)</ReceiverID>\n    <EmployeeID>(string)</EmployeeID>\n    <RequestID>(string)</RequestID>\n    <ResponseID>(string)</ResponseID>\n    <ResponseStatus>(string)</ResponseStatus>\n  </Control>\n</TravelMessage>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fdf9590e-ff23-4436-9808-214dbc73e028",
+              "name": "CancellationRequest Handled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "cancellationrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"ja\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID></ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>12:00:00</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>CancellationConfirmedRequest</RequestID>\n    <ResponseID>CancellationConfirmedResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200000354001</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "3439eb7f-35ee-4447-880e-b9fde7de7169",
+              "name": "Missing elements in Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "cancellationrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"ja\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID></ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>12:00:00</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>CancellationConfirmedRequest</RequestID>\n    <ResponseID>CancellationConfirmedResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200000354001</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            },
+            {
+              "id": "cdaccd6d-4fac-4a02-8790-b8cd34b22341",
+              "name": "Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "travelmessage",
+                    "v3.1",
+                    "cancellationrequest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TravelMessage VersionID=\"3.1\">\n  <Control Language=\"NL\" Test=\"ja\">\n    <SenderSessionID>1</SenderSessionID>\n    <ReceiverSessionID></ReceiverSessionID>\n    <Date>2024-01-10</Date>\n    <Time>12:00:00</Time>\n    <MessageSequence>1</MessageSequence>\n    <SenderID>9998</SenderID>\n    <ReceiverID>TUI</ReceiverID>\n    <RequestID>CancellationConfirmedRequest</RequestID>\n    <ResponseID>CancellationConfirmedResponse</ResponseID>\n  </Control>\n  <TRequest>\n    <SecurityInfo>\n      <BookID>200000354001</BookID>\n    </SecurityInfo>\n  </TRequest>\n</TravelMessage>\n",
+                  "options": {
+                    "raw": {
+                      "language": "xml"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<element>\n  <type>(string)</type>\n  <title>(string)</title>\n  <status>(integer)</status>\n  <detail>(string)</detail>\n  <instance>(string)</instance>\n</element>",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://prod.api.tui",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d1dba1e8-47d9-471f-992c-981b21009cd2",
+    "name": "TravelMessage.v31",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This API can be used to get availability and create bookings for TUI packages following the ANVR G7 standard.  \n\nWith the Supply feed OTA's get information of all the available TUI packages, along with other relevant details\nsuch as price, extras, etc. For Supply the TravelMessage 3.1 is not used. So this is defined on another page.\nBut it contains the necessary data to continue with the API's described here.  \n\nThe information from the Supply file can be used to do an AvailabilityRequest to get more detailed data. This data can \nbe used for getting a Price breakdown using the ReceiptRequest or start the bookflow transaction using the Sell, \nAssign and BookRequests to create a booking in tui.nl.   \nWith AddProAvailability and AddProDetails information can be requested for available extra's and transportrental \nand added to the Sell, Assign and BookRequests.  \nThe BreakRequest can be used After SellRequest but before BookRequest to cancel the current transaction.\n\nIf a booking is successfully created the RecapRequest can be used to get all information from that booking \nand CancellationRequest can be used to directly cancel a booking.  \n\nThe schema's are based on the travelmessage.xsd and translated to OpenAPI specification. Not all groups and/or \nfields are used in the defined api's. Also it is possible that fields that are **not mandatory** for G7 are in \nfact **mandatory** for TUI.    \nAll api's are based on the 3.1 G7 version with a few changes to support TUI packages. The Supply has a \ncustom defined schema.\n\n\nContact Support:\n Name: G7-OTA-TEAM\n Email: b2bota.g7.support@tui.nl",
+      "type": "text/plain"
+    }
+  }
+}

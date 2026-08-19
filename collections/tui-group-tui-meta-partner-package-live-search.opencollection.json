@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Meta Partner Package Live Search",
+    "version": "v1-beta"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Live Search Packages (Beta)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetLocations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/live-search/v1-beta/:market/packages/:agent/locations",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. Use the same for every request made."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get all locations for a specific market"
+        },
+        {
+          "info": {
+            "name": "GetLiveSearch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/live-search/v1-beta/:market/packages/:agent",
+            "params": [
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+              },
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+              },
+              {
+                "name": "adults",
+                "value": "",
+                "type": "query",
+                "description": "Number of Adults in the request.\r\n\r\nAccepted Values - 1 to 6"
+              },
+              {
+                "name": "childages",
+                "value": "",
+                "type": "query",
+                "description": "Ages of Children in the request separated by comma. If no children are sent in the request, this parameter should not be sent (or sent as ?childAges=).\r\n\r\nFor 2 children with age 5 and 7, the value should be 5,7.\r\nAge ranges are, infant: 0-1, child: 2-12, youth: 13-17."
+              },
+              {
+                "name": "destinations",
+                "value": "",
+                "type": "query",
+                "description": "The G-code value for each destination that is mapped through the locations endpoint.\r\nMultiple destinations can be sent in the request separated by comma.\r\n\r\nExample: G-000000234,G-000000256,G-000000293,G-000000293"
+              },
+              {
+                "name": "arrivaldatefrom",
+                "value": "",
+                "type": "query",
+                "description": "Date of arrival from. Date must be compatible with ISO 8601. Example: arrivaldatefrom=2035-01-31"
+              },
+              {
+                "name": "arrivaldateto",
+                "value": "",
+                "type": "query",
+                "description": "Date of arrival to.\r\nDate must be compatible with ISO 8601.\r\n\r\nExample: arrivaldateto=2035-01-31"
+              },
+              {
+                "name": "durations",
+                "value": "",
+                "type": "query",
+                "description": "A list of one or more stay durations. Example: 3,5,7,14"
+              },
+              {
+                "name": "airportcodes",
+                "value": "",
+                "type": "query",
+                "description": "A list of airportcodes separated by comma that are requested by user as Departure locations.\r\n\r\nExample: ARN,GOT,CPH"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The number of items to return. Maximum: 100."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns available packages."
+        },
+        {
+          "info": {
+            "name": "GetAccommodations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/sales/pip-package/live-search/v1-beta/:market/packages/:agent/accommodations",
+            "params": [
+              {
+                "name": "market",
+                "value": "",
+                "type": "path",
+                "description": "The source market code. Accepted values: dk, fi, no, se."
+              },
+              {
+                "name": "agent",
+                "value": "",
+                "type": "path",
+                "description": "Your agent code. Use the same for every request made."
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Get all Accommodations for a specific market"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

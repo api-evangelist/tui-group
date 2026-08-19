@@ -1,0 +1,432 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "NewSkies Payment API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-apikey",
+      "value": "{{x-apikey}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "booking/payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get booking payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments"
+          },
+          "docs": "Retrieves the booking payments on the booking in state"
+        },
+        {
+          "info": {
+            "name": "Create booking payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v5/booking/payments",
+            "params": [
+              {
+                "name": "termUrl",
+                "value": "",
+                "type": "query",
+                "description": "The term URL for 3DS"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new external payment or prepaid payment on the booking in state.\nSupports Three D Secure and Direct Currency Conversion (DCC).\nNote: This endpoint accepts wildcard paths like /rest/api/nsk/v5/booking/payments/*\n"
+        },
+        {
+          "info": {
+            "name": "Get specific payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/:paymentKey",
+            "params": [
+              {
+                "name": "paymentKey",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a specific payment by key"
+        },
+        {
+          "info": {
+            "name": "Delete payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/:paymentKey",
+            "params": [
+              {
+                "name": "paymentKey",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes the payment"
+        },
+        {
+          "info": {
+            "name": "Get available payment methods",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v2/booking/payments/available",
+            "params": [
+              {
+                "name": "currencyCode",
+                "value": "",
+                "type": "query",
+                "description": "Optional currency code"
+              }
+            ]
+          },
+          "docs": "Retrieves the booking payment methods available for the booking in state"
+        },
+        {
+          "info": {
+            "name": "Add credit payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v3/booking/payments/credit",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new credit payment on the booking"
+        },
+        {
+          "info": {
+            "name": "Get payment refunds",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v5/booking/payments/refunds"
+          },
+          "docs": "Gets the payment refunds for the booking"
+        },
+        {
+          "info": {
+            "name": "Create payment refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v5/booking/payments/refunds",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new payment refund"
+        },
+        {
+          "info": {
+            "name": "Get DCC offer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/:paymentMethod/dcc",
+            "params": [
+              {
+                "name": "paymentMethod",
+                "value": "",
+                "type": "path",
+                "description": "The payment method code"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Gets the available direct currency codes offer for inline DCC payment.\nThis endpoint behaves like a GET but is masked as a POST.\n"
+        },
+        {
+          "info": {
+            "name": "Create DCC payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v6/booking/payments/dcc/:dccKey",
+            "params": [
+              {
+                "name": "dccKey",
+                "value": "",
+                "type": "path",
+                "description": "The DCC key from the offer"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new external payment with direct currency conversion.\nThis endpoint is used for inline DCC payments only.\n"
+        },
+        {
+          "info": {
+            "name": "Get MCC offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v3/booking/payments/mcc"
+          },
+          "docs": "Gets available multi-currency conversion offers"
+        },
+        {
+          "info": {
+            "name": "Create MCC payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v6/booking/payments/mcc/:currencyCode",
+            "params": [
+              {
+                "name": "currencyCode",
+                "value": "",
+                "type": "path",
+                "description": "The currency code"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new payment with multi-currency conversion"
+        },
+        {
+          "info": {
+            "name": "Add payment fee",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/fees/:feeCode",
+            "params": [
+              {
+                "name": "feeCode",
+                "value": "",
+                "type": "path",
+                "description": "The fee code"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a payment fee to the booking"
+        },
+        {
+          "info": {
+            "name": "Get fee for stored payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/fees/:feeCode/storedPayment/:storedPaymentKey",
+            "params": [
+              {
+                "name": "feeCode",
+                "value": "",
+                "type": "path",
+                "description": "The fee code"
+              },
+              {
+                "name": "storedPaymentKey",
+                "value": "",
+                "type": "path",
+                "description": "The stored payment key"
+              }
+            ]
+          },
+          "docs": "Gets the payment fee for a stored payment method"
+        },
+        {
+          "info": {
+            "name": "Get voucher payment details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v3/booking/payments/voucher"
+          },
+          "docs": "Gets the voucher payment details for the booking"
+        },
+        {
+          "info": {
+            "name": "Add voucher payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v4/booking/payments/voucher",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new voucher payment on the booking"
+        },
+        {
+          "info": {
+            "name": "Delete voucher payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v2/booking/payments/voucher/:voucherPaymentReference",
+            "params": [
+              {
+                "name": "voucherPaymentReference",
+                "value": "",
+                "type": "path",
+                "description": "The voucher payment reference"
+              }
+            ]
+          },
+          "docs": "Deletes a voucher payment from the booking"
+        },
+        {
+          "info": {
+            "name": "Add voucher payment for passenger",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/voucher/passenger/:passengerKey",
+            "params": [
+              {
+                "name": "passengerKey",
+                "value": "",
+                "type": "path",
+                "description": "The passenger key"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new voucher payment for a specific passenger"
+        },
+        {
+          "info": {
+            "name": "Reassess voucher payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://prod.api.tui/flight/newskies/payment/rest/api/nsk/v1/booking/payments/voucher/reassess"
+          },
+          "docs": "Reassesses the voucher payment on the booking"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Default",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add payment to booking (SOAP API)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/soap",
+            "headers": [
+              {
+                "name": "SOAPAction",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Process payment for a booking using the SOAP API"
+        },
+        {
+          "info": {
+            "name": "NDC payment endpoint (not available)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/payment/ndc"
+          },
+          "docs": "NDC payment functionality is not yet implemented"
+        },
+        {
+          "info": {
+            "name": "NDC payment endpoint (not available)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/payment/ndc"
+          },
+          "docs": "NDC payment functionality is not yet implemented"
+        },
+        {
+          "info": {
+            "name": "NDC payment endpoint (not available)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://prod.api.tui/flight/newskies/payment/ndc"
+          },
+          "docs": "NDC payment functionality is not yet implemented"
+        },
+        {
+          "info": {
+            "name": "NDC payment endpoint (not available)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://prod.api.tui/flight/newskies/payment/ndc"
+          },
+          "docs": "NDC payment functionality is not yet implemented"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

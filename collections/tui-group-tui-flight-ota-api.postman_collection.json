@@ -1,0 +1,2078 @@
+{
+  "item": [
+    {
+      "id": "dbf07698-e564-4117-b261-e812ff07cc61",
+      "name": "getflights",
+      "request": {
+        "name": "getflights",
+        "description": {
+          "content": "Returns all available flight routes and their corresponding flight keys.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "getflights"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "4ce2514c-2542-4c80-a8b3-4777b57b6bfa",
+          "name": "200 response",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "getflights"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"flights\": [\n    {\n      \"key\": \"ACEBRU20220209202202091711TB\",\n      \"depcode\": \"ACE\",\n      \"depdate\": \"2027-01-12\",\n      \"deptime\": \"17:35\",\n      \"arrcode\": \"BRU\",\n      \"arrdate\": \"2027-01-12\",\n      \"arrtime\": \"21:10\",\n      \"carrier\": \"TB\",\n      \"carriername\": \"TUI fly\",\n      \"nr\": 1711,\n      \"stops\": 0\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "36fa49ab-f1ba-45ec-b750-265365b176f8",
+      "name": "flightavailablity",
+      "request": {
+        "name": "flightavailablity",
+        "description": {
+          "content": "Returns flight availability, pricing and seat information for a given route and travel dates.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "flightavailability"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "departuredate",
+              "value": "<date>",
+              "description": "(Required) Start date of the journey. Format yyyymmdd"
+            },
+            {
+              "disabled": false,
+              "key": "departureairport",
+              "value": "<string>",
+              "description": "(Required) IATA code of the departure location of the outward journey."
+            },
+            {
+              "disabled": false,
+              "key": "destinationairport",
+              "value": "<string>",
+              "description": "(Required) IATA code of the destination location of the outward journey."
+            },
+            {
+              "disabled": false,
+              "key": "returndate",
+              "value": "<date>",
+              "description": "Return date of the journey. Format yyyymmdd"
+            },
+            {
+              "disabled": false,
+              "key": "adults",
+              "value": "<integer>",
+              "description": "(Required) Amount of adults."
+            },
+            {
+              "disabled": false,
+              "key": "children",
+              "value": "<integer>",
+              "description": "Amount of children"
+            },
+            {
+              "disabled": false,
+              "key": "infant",
+              "value": "<integer>",
+              "description": "Amount of infants"
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "Locale to use for the query. en_GB by default."
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "8f603acc-1a4e-4d36-abc4-2e3f71eda501",
+          "name": "200 response",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "flightavailability"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "departuredate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "departureairport",
+                  "value": "BRU"
+                },
+                {
+                  "key": "destinationairport",
+                  "value": "TFS"
+                },
+                {
+                  "key": "returndate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "adults",
+                  "value": "1"
+                },
+                {
+                  "key": "children",
+                  "value": "0"
+                },
+                {
+                  "key": "infant",
+                  "value": "0"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"flights\": {\n    \"OUT\": {\n      \"aircrafttype\": \"\",\n      \"key\": \"BRUTFS20210401175141TB\",\n      \"accomodation\": {\n        \"date\": \"2027-01-18\"\n      },\n      \"totalFree\": 135,\n      \"seatsAtThisPrice\": 0,\n      \"infantsFree\": 18,\n      \"depart\": {\n        \"airport\": {\n          \"code\": \"BRU\",\n          \"name\": \"Brussel\"\n        },\n        \"datetime\": \"2027-01-18T06:15:00+02:00\"\n      },\n      \"arrival\": {\n        \"airport\": {\n          \"code\": \"TFS\",\n          \"name\": \"Tenerife\"\n        },\n        \"datetime\": \"2027-01-18T10:15:00+02:00\"\n      },\n      \"carrier\": \"TB\",\n      \"carrierOperatorCode\": \"\",\n      \"number\": 1751,\n      \"fppAvailable\": false,\n      \"fppDefault\": false,\n      \"daySequence\": 1,\n      \"availableMeals\": {\n        \"X\": {\n          \"code\": \"X\",\n          \"price\": 0,\n          \"priceChild\": 0\n        },\n        \"V\": {\n          \"code\": \"V\",\n          \"price\": 65,\n          \"priceChild\": 20\n        }\n      },\n      \"defaultMeal\": \"X\",\n      \"carrierName\": \"TUI fly\",\n      \"occupationMatch\": 1,\n      \"bestMatch\": 1\n    },\n    \"RET\": {\n      \"aircrafttype\": \"\",\n      \"key\": \"TFSBRU20210404175671TB\",\n      \"accomodation\": {\n        \"date\": \"2027-01-25\"\n      },\n      \"totalFree\": 166,\n      \"seatsAtThisPrice\": 0,\n      \"infantsFree\": 18,\n      \"depart\": {\n        \"airport\": {\n          \"code\": \"TFS\",\n          \"name\": \"Tenerife\"\n        },\n        \"datetime\": \"2027-01-25T17:35:00+02:00\"\n      },\n      \"arrival\": {\n        \"airport\": {\n          \"code\": \"BRU\",\n          \"name\": \"Brussel\"\n        },\n        \"datetime\": \"2027-01-25T23:25:00+02:00\"\n      },\n      \"carrier\": \"TB\",\n      \"carrierOperatorCode\": \"\",\n      \"number\": 1756,\n      \"fppAvailable\": false,\n      \"fppDefault\": false,\n      \"daySequence\": 1,\n      \"availableMeals\": {\n        \"X\": {\n          \"code\": \"X\",\n          \"price\": 0,\n          \"priceChild\": 0\n        },\n        \"V\": {\n          \"code\": \"V\",\n          \"price\": 65,\n          \"priceChild\": 20\n        }\n      },\n      \"defaultMeal\": \"X\",\n      \"carrierName\": \"TUI fly\",\n      \"occupationMatch\": 1,\n      \"bestMatch\": 1\n    }\n  },\n  \"messages\": [],\n  \"stopPreMeals\": {\n    \"OUT\": true,\n    \"RET\": true\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "186c7afb-e1fe-4586-9980-6e34905e05dd",
+          "name": "When there is not a possible route to satisfy the search criteria.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "flightavailability"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "departuredate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "departureairport",
+                  "value": "BRU"
+                },
+                {
+                  "key": "destinationairport",
+                  "value": "TFS"
+                },
+                {
+                  "key": "returndate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "adults",
+                  "value": "1"
+                },
+                {
+                  "key": "children",
+                  "value": "0"
+                },
+                {
+                  "key": "infant",
+                  "value": "0"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "e689790c-d44c-4542-9940-a07eba8a8da7",
+      "name": "includdedluggage",
+      "request": {
+        "name": "includdedluggage",
+        "description": {
+          "content": "Luggage that's included",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "includedluggage"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "pax",
+              "value": "<json+url encode>",
+              "description": "(Required) Url encoded list of passenger object, each item with Id and passenger type"
+            },
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key"
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Flight key of the return flight"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "09fef1f3-839b-4399-bfec-353155ba50c4",
+          "name": "type H = luggage that customer can carry on board(hand-luggage) - <br />type C = cargo luggage",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "includedluggage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "pax",
+                  "value": "[{\"id\":1,\"type\":\"a\"},{\"id\":2,\"type\":\"c\"},{\"id\":3,\"type\":\"i\"}]"
+                },
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"includedLuggage\": {\n    \"OUT\": [\n      {\n        \"paxId\": 1,\n        \"included\": 10,\n        \"maxPerBag\": 10,\n        \"type\": \"C\"\n      },\n      {\n        \"paxId\": 2,\n        \"included\": 10,\n        \"maxPerBag\": 10,\n        \"type\": \"H\"\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "657e550c-5e29-4576-820e-823492edd254",
+      "name": "luggage",
+      "request": {
+        "name": "luggage",
+        "description": {
+          "content": "Returns the available checked luggage (hold baggage) options and pricing for a specific flight.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "luggage"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Return flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "language code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "bd0e31fa-49ca-4c21-8a27-d20ebaea7426",
+          "name": "List of possible luggage options for the requested flight key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "luggage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"luggage\": {\n    \"OUT\": [\n      {\n        \"price\": 0,\n        \"weight\": 0\n      },\n      {\n        \"price\": 20,\n        \"weight\": 20\n      },\n      {\n        \"price\": 25,\n        \"weight\": 25\n      },\n      {\n        \"price\": 30,\n        \"weight\": 30\n      },\n      {\n        \"price\": 65,\n        \"weight\": 35\n      },\n      {\n        \"price\": 100,\n        \"weight\": 40\n      },\n      {\n        \"price\": 150,\n        \"weight\": 45\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "9a01065e-cbd9-4f35-9793-6fea2a3f33ca",
+      "name": "pricecalculcation",
+      "request": {
+        "name": "pricecalculcation",
+        "description": {
+          "content": "Calculates the total price for a flight including selected ancillaries. When the \"book\" parameter is set to 1, it also creates a reservation.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "pricecalculation"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "book",
+              "value": "<integer>",
+              "description": "Set to 0 for price calculation only. Set to 1 to create a reservation."
+            },
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<string>",
+              "description": "(Required) Flight key"
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<string>",
+              "description": "Return flight key"
+            },
+            {
+              "disabled": false,
+              "key": "luggage",
+              "value": "<string>",
+              "description": "json object for luggage"
+            },
+            {
+              "disabled": false,
+              "key": "handluggage",
+              "value": "<string>",
+              "description": "json object for handluggage"
+            },
+            {
+              "disabled": false,
+              "key": "sports",
+              "value": "<string>",
+              "description": "json object for sports equipment"
+            },
+            {
+              "disabled": false,
+              "key": "assistance",
+              "value": "<string>",
+              "description": "json object for assistance options"
+            },
+            {
+              "disabled": false,
+              "key": "pets",
+              "value": "<string>",
+              "description": "json object for pet transport"
+            },
+            {
+              "disabled": false,
+              "key": "pax",
+              "value": "<string>",
+              "description": "(Required) json object for pax(a=adult,c=child,i=infant)"
+            },
+            {
+              "disabled": false,
+              "key": "name",
+              "value": "<string>",
+              "description": "Surname of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "firstname",
+              "value": "<string>",
+              "description": "Firstname of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "email",
+              "value": "<email>",
+              "description": "Email address of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "phonePrefix",
+              "value": "<integer>",
+              "description": "Phone prefix of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "phone",
+              "value": "<string>",
+              "description": "Phone number of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "phonePrefix2",
+              "value": "<integer>",
+              "description": "Second phone prefix of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "phone2",
+              "value": "<string>",
+              "description": "Second phone number of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "bus",
+              "value": "<string>",
+              "description": "Mailbox of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "street",
+              "value": "<string>",
+              "description": "Streetname of the address of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "streetnr",
+              "value": "<string>",
+              "description": "House number of the address of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "city",
+              "value": "<string>",
+              "description": "City of the address of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "countrycode",
+              "value": "<string>",
+              "description": "Countrycode of the country of the customer(ISO 3166-1 alpha-2 code)"
+            },
+            {
+              "disabled": false,
+              "key": "price",
+              "value": "<string>",
+              "description": "Price that you receive when book=0 needs to be sent when book=1 so we are sure you have the same price"
+            },
+            {
+              "disabled": false,
+              "key": "zip",
+              "value": "<string>",
+              "description": "Zip code(postal code) of the city of the customer"
+            },
+            {
+              "disabled": false,
+              "key": "birthday",
+              "value": "<date>",
+              "description": "Date of birth of the customer yyyymmdd"
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "Locale"
+            },
+            {
+              "disabled": false,
+              "key": "servicebundle",
+              "value": "<string>",
+              "description": "servicebundle code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "2aa75f5d-e9fb-48d0-b885-b025a6280450",
+          "name": "200 response",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "pricecalculation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "book",
+                  "value": "<integer>"
+                },
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "luggage",
+                  "value": "[{\"paxId\":1,\"out\":20,\"ret\":20},{\"paxId\":2,\"out\":0,\"ret\":0},{\"paxId\":3,\"out\":0,\"ret\":0}]"
+                },
+                {
+                  "key": "handluggage",
+                  "value": "[{\"paxId\":1,\"out\":\"HBAG\",\"ret\":\"HBAG\"},{\"paxId\":2,\"out\":\"PBAG\",\"ret\":\"PBAG\"}]"
+                },
+                {
+                  "key": "sports",
+                  "value": "[{\"paxId\":1,\"out\":\"BICYCLE\",\"ret\":\"BICYCLE\"}]"
+                },
+                {
+                  "key": "assistance",
+                  "value": "[{\"paxId\":1,\"out\":\"WCHR\",\"ret\":\"WCHR\"}]"
+                },
+                {
+                  "key": "pets",
+                  "value": "[{\"paxId\":1,\"out\":\"PETC\",\"ret\":\"PETC\"}]"
+                },
+                {
+                  "key": "pax",
+                  "value": "book=0 [{\"id\":1,\"type\":\"a\"},{\"id\":2,\"type\":\"c\"},{\"id\":3,\"type\":\"i\"}] book=1 [{\"id\":1,firstname:\"John\",name:\"Doe\",title:1,birthday:\"19790825\",\"type\":\"a\"},{\"id\":2,firstname:\"Jane\",name:\"Doe\",title:2,birthday:\"20150825\",\"type\":\"c\"},{\"id\":3,firstname:\"Marcel\",name:\"Doe\",title:2,birthday:\"20210825\",\"type\":\"i\"}]"
+                },
+                {
+                  "key": "name",
+                  "value": "Doe"
+                },
+                {
+                  "key": "firstname",
+                  "value": "John"
+                },
+                {
+                  "key": "email",
+                  "value": "john.doe@gmail.com"
+                },
+                {
+                  "key": "phonePrefix",
+                  "value": "32"
+                },
+                {
+                  "key": "phone",
+                  "value": "<string>"
+                },
+                {
+                  "key": "phonePrefix2",
+                  "value": "32"
+                },
+                {
+                  "key": "phone2",
+                  "value": "<string>"
+                },
+                {
+                  "key": "bus",
+                  "value": "<string>"
+                },
+                {
+                  "key": "street",
+                  "value": "Main street"
+                },
+                {
+                  "key": "streetnr",
+                  "value": "<string>"
+                },
+                {
+                  "key": "city",
+                  "value": "Ostend"
+                },
+                {
+                  "key": "countrycode",
+                  "value": "BE"
+                },
+                {
+                  "key": "price",
+                  "value": "<string>"
+                },
+                {
+                  "key": "zip",
+                  "value": "<string>"
+                },
+                {
+                  "key": "birthday",
+                  "value": "<date>"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                },
+                {
+                  "key": "servicebundle",
+                  "value": "F"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"currency\": \"EUR\",\n  \"totalprice\": 379.99,\n  \"totaleuro\": 379.99,\n  \"airportTax\": 10.86,\n  \"exchangeRate\": 1,\n  \"lines\": [\n    {\n      \"type\": \"FLIGHT\",\n      \"code\": \"\",\n      \"description\": \"flight with 1 adult(s).\",\n      \"price\": 379.99,\n      \"details\": {\n        \"price\": {\n          \"OUT\": 379.99,\n          \"RET\": 0\n        },\n        \"formula\": \"\",\n        \"quantity\": 0,\n        \"pax\": 1\n      }\n    },\n    {\n      \"type\": \"LUGGAGE\",\n      \"code\": \"BG00\",\n      \"description\": \"00 kg ruimbagage\",\n      \"price\": 0,\n      \"details\": [\n        {\n          \"price\": 0,\n          \"formula\": \"X\",\n          \"quantity\": 1,\n          \"pax\": 1\n        }\n      ]\n    }\n  ],\n  \"flights\": {\n    \"OUT\": {\n      \"key\": \"TFSBRU20220907202209071661TB\",\n      \"totalFree\": 9,\n      \"seatsAtThisPrice\": 0,\n      \"infantsFree\": 9,\n      \"depart\": {\n        \"airport\": {\n          \"code\": \"TFS\",\n          \"name\": \"Tenerife\"\n        },\n        \"datetime\": \"2027-01-20T12:35:00\"\n      },\n      \"arrival\": {\n        \"airport\": {\n          \"code\": \"BRU\",\n          \"name\": \"Brussels\"\n        },\n        \"datetime\": \"2027-01-20T18:25:00\"\n      },\n      \"via\": {\n        \"airport\": {\n          \"code\": \"LPA\",\n          \"name\": \"LPA\"\n        }\n      },\n      \"carrier\": \"TB\",\n      \"carrierOperatorCode\": \"TB\",\n      \"number\": 1661,\n      \"fppAvailable\": false,\n      \"fppDefault\": false,\n      \"daySequence\": \"\",\n      \"price\": 102.99,\n      \"meal\": {\n        \"code\": \"X\"\n      },\n      \"includedLuggage\": [\n        {\n          \"paxId\": 1,\n          \"included\": 20,\n          \"maxPerBag\": 0,\n          \"type\": \"C\",\n          \"price\": 20\n        },\n        {\n          \"paxId\": 1,\n          \"included\": 10,\n          \"maxPerBag\": 10,\n          \"type\": \"H\"\n        },\n        {\n          \"paxId\": 2,\n          \"included\": 25,\n          \"maxPerBag\": 0,\n          \"type\": \"C\",\n          \"price\": 25\n        },\n        {\n          \"paxId\": 2,\n          \"included\": 10,\n          \"maxPerBag\": 10,\n          \"type\": \"H\"\n        }\n      ],\n      \"carrierName\": \"TUI fly\"\n    },\n    \"RET\": {\n      \"aircrafttype\": \"\",\n      \"key\": \"TFSBRU20210326175452TB\",\n      \"accomodation\": {\n        \"date\": \"2027-01-25\"\n      },\n      \"totalFree\": 9,\n      \"seatsAtThisPrice\": 0,\n      \"infantsFree\": 9,\n      \"depart\": {\n        \"airport\": {\n          \"code\": \"TFS\",\n          \"name\": \"Tenerife\"\n        },\n        \"datetime\": \"2027-01-25T14:30:00+01:00\"\n      },\n      \"arrival\": {\n        \"airport\": {\n          \"code\": \"BRU\",\n          \"name\": \"Brussel\"\n        },\n        \"datetime\": \"2027-01-25T20:30:00+01:00\"\n      },\n      \"carrier\": \"TB\",\n      \"carrierOperatorCode\": \"\",\n      \"number\": \"1754\",\n      \"fppAvailable\": false,\n      \"fppDefault\": false,\n      \"daySequence\": 2,\n      \"price\": 102.99,\n      \"meal\": {\n        \"code\": \"V\"\n      },\n      \"includedLuggage\": [\n        {\n          \"paxId\": 1,\n          \"included\": 25,\n          \"maxPerBag\": 32,\n          \"type\": \"C\",\n          \"price\": 0\n        },\n        {\n          \"paxId\": 1,\n          \"included\": 10,\n          \"maxPerBag\": 10,\n          \"type\": \"H\"\n        },\n        {\n          \"paxId\": 2,\n          \"included\": 25,\n          \"maxPerBag\": 32,\n          \"type\": \"C\",\n          \"price\": 0\n        },\n        {\n          \"paxId\": 2,\n          \"included\": 10,\n          \"maxPerBag\": 10,\n          \"type\": \"H\"\n        }\n      ],\n      \"carrierName\": \"TUI fly\"\n    }\n  },\n  \"fppCost\": \"\",\n  \"details\": \"\\n\\n\\n\\n\\n\\n\\n PRIJS\\n VR 19/03  TB 1753 BRU 0825 - LPA 1225 -//- LPA 1255 - TFS 1405 (seq:2)\\n VR 26/03  TB 1754 TFS 1430 - BRU 2030 (seq:2)\\n      TF.E    TUI fly                  7 NACHTEN  VR 19/03/2021   VR 26/03/2021\\n      02900 TUI FLY                    BRU-TFS    TFS-BRU\\n      MR.  JOHN DOE         30 jaar N: 102,99   + 102,99\\n      MRS. JANE DOE         30 jaar N                                    411,96\\n      AIRPORT\\n      BRU-TFS\\n      20 kg ruimbagage               : JOHN DOE                           20,00\\n      25 kg ruimbagage               : JANE DOE                           25,00\\n      TFS-BRU\\n      25 kg ruimbagage               : JOHN DOE                            0,00\\n      25 kg ruimbagage               : JANE DOE                            0,00\\n      Geen Standaardmaaltijd op heenreis BRU-TFS\\n      Flydeluxe op terugreis TFS-BRU :  65,00X 2                         130,00\\n      Geen verzekering\\n      Enkelvoudige prestatie\\n                                       05/03/2021  (W )     TOTAL....    586,96\\n                                                (Incl. Airporttax    40,15 p.p.)\\n\",\n  \"travelDirective\": \"CUSTOM\",\n  \"saldo\": 586.96,\n  \"vouchers\": null,\n  \"deposit\": 0,\n  \"advance\": 586.96,\n  \"tdaAvailable\": 1,\n  \"vehicles\": [],\n  \"messages\": [],\n  \"destinationInfo\": [\n    \"Belgische burgers: identiteitskaart (geldig vr de duur van het verblijf)\",\n    \"niet-Belgische burgers: Info bij hun Ambassade of Consulaat\",\n    \"-----------------------------------------------------------------------\",\n    \"COVID-19 info :\",\n    \"Meer informatie over de reisformaliteiten op de TUI fly website :\",\n    \"https://www.tuifly.be/nl/legal/reisformaliteiten\"\n  ],\n  \"flightErrata\": [\n    \"13/11/20-31/03/21\",\n    \"Een negatieve Covid-19 test dient bij aankomst voorgelegd te\",\n    \"worden. De test mag maximaal 72 uur voor aankomst in\",\n    \"Spanje afgenomen zijn en is verplicht voor volwassenen en\",\n    \"kinderen vanaf 6 jaar.\",\n    \"\"\n  ],\n  \"hotelErrata\": [],\n  \"indicTransferType\": \"N\",\n  \"indicHuurwagen\": \"\",\n  \"tax\": {\n    \"OUT\": [\n      {\n        \"paxId\": 1,\n        \"code\": \"BE1\",\n        \"price\": 35.14\n      },\n      {\n        \"paxId\": 1,\n        \"code\": \"S3\",\n        \"price\": 4\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"BE1\",\n        \"price\": 35.14\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"S3\",\n        \"price\": 4\n      }\n    ],\n    \"RET\": [\n      {\n        \"paxId\": 1,\n        \"code\": \"BE2\",\n        \"price\": 0.27\n      },\n      {\n        \"paxId\": 1,\n        \"code\": \"EG\",\n        \"price\": 7.75\n      },\n      {\n        \"paxId\": 1,\n        \"code\": \"EQ\",\n        \"price\": 1.82\n      },\n      {\n        \"paxId\": 1,\n        \"code\": \"JK\",\n        \"price\": 2.59\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"BE2\",\n        \"price\": 0.27\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"EG\",\n        \"price\": 7.75\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"EQ\",\n        \"price\": 1.82\n      },\n      {\n        \"paxId\": 2,\n        \"code\": \"JK\",\n        \"price\": 2.59\n      }\n    ]\n  },\n  \"insurance\": [\n    {\n      \"code\": \"N\",\n      \"price\": 0\n    }\n  ],\n  \"priceDetail\": [\n    {\n      \"description\": \"Flydeluxe op terugreis TFS-BRU\",\n      \"price\": 130,\n      \"type\": \"FLYDEL\",\n      \"code\": \"FMVR\"\n    },\n    {\n      \"description\": \"Geen verzekering\",\n      \"type\": \"INS\"\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "56452d74-15df-40ea-b98f-d3a27d3f8f09",
+      "name": "pay",
+      "request": {
+        "name": "pay",
+        "description": {
+          "content": "Submits a virtual card payment for an existing reservation. Supports two modes: standard payment (cardnumber, cvc, expirydate) or encrypted card payment (cardnumber).",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "pay"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "po",
+              "value": "<numeric>",
+              "description": "(Required) The reservation number you want to do a payment for."
+            },
+            {
+              "disabled": false,
+              "key": "cardnumber",
+              "value": "<numeric>",
+              "description": "(Required) Credit card number or encrypted card, no spaces."
+            },
+            {
+              "disabled": false,
+              "key": "cvc",
+              "value": "<numeric>",
+              "description": "Credit card cvc code. Required for standard payment, needs to be removed for encrypted card payment."
+            },
+            {
+              "disabled": false,
+              "key": "expirydate",
+              "value": "<date>",
+              "description": "Credit card expire date. Format: mmyy. Required for standard payment, needs to be removed for encrypted card payment."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "locale"
+            },
+            {
+              "disabled": false,
+              "key": "amount",
+              "value": "<integer>",
+              "description": "(Required) Total amount to pay for this reservation. This amount needs to be multiplied by 100."
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "243627d4-9a17-4fd8-b303-d6125e7c83ef",
+          "name": "When payment details have been received.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "pay"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "po",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "cardnumber",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "cvc",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "expirydate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                },
+                {
+                  "key": "amount",
+                  "value": "30000"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"status\": \"OK\",\n  \"code\": 9\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "ed4defd8-b5d6-4dc2-836f-69e813d88a44",
+      "name": "post pay",
+      "request": {
+        "name": "post pay",
+        "description": {
+          "content": "Submits a credit card payment for an existing reservation. Supports two modes: standard payment (cardnumber, cvc, expirydate) or encrypted card payment (cardnumber).",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "pay"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "po",
+              "value": "<numeric>",
+              "description": "(Required) The reservation number you want to do a payment for."
+            },
+            {
+              "disabled": false,
+              "key": "cardnumber",
+              "value": "<numeric>",
+              "description": "(Required) Credit card number or encrypted card, no spaces"
+            },
+            {
+              "disabled": false,
+              "key": "cvc",
+              "value": "<numeric>",
+              "description": "Credit card cvc code. Required for standard payment, needs to be removed for encrypted card payment."
+            },
+            {
+              "disabled": false,
+              "key": "expirydate",
+              "value": "<date>",
+              "description": "Credit card expire date. Format: mmyy. Required for standard payment, needs to be removed for encrypted card payment."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "locale"
+            },
+            {
+              "disabled": false,
+              "key": "amount",
+              "value": "<integer>",
+              "description": "(Required) Total amount to pay for this reservation. This amount needs to be multiplied by 100."
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "321f000c-4604-4c4b-9ba4-bcc315f4c290",
+          "name": "When payment details have been received.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "pay"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "po",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "cardnumber",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "cvc",
+                  "value": "<numeric>"
+                },
+                {
+                  "key": "expirydate",
+                  "value": "<date>"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                },
+                {
+                  "key": "amount",
+                  "value": "30000"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"status\": \"OK\",\n  \"code\": 9\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "f088432c-bbab-436a-98ad-b526a404df68",
+      "name": "bookinfo",
+      "request": {
+        "name": "bookinfo",
+        "description": {
+          "content": "Retrieves information about a specific reservation.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "bookinfo"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "po",
+              "value": "<numeric>",
+              "description": "(Required) PO number"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "b4c88e81-16a3-4bd8-89b9-66135a8636f0",
+          "name": "A booking information",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "bookinfo"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "po",
+                  "value": "<numeric>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"currency\": \"EUR\",\n  \"totalprice\": 73.99,\n  \"airportTax\": 26.94,\n  \"exchangeRate\": 1,\n  \"index\": 1,\n  \"lines\": [\n    {\n      \"type\": \"FLIGHT\",\n      \"code\": \"\",\n      \"description\": \"MR.  PASSENGER NAME   45 year N\",\n      \"price\": 73.99,\n      \"details\": [\n        {\n          \"price\": 73.99,\n          \"formula\": \"\",\n          \"quantity\": 0,\n          \"pax\": \"1\"\n        }\n      ]\n    },\n    {\n      \"type\": \"LUGGAGE\",\n      \"code\": \"U0K\",\n      \"description\": \"Only handluggage\",\n      \"price\": 0,\n      \"details\": []\n    },\n    {\n      \"type\": \"INS\",\n      \"code\": \"\",\n      \"description\": \"No Insurance\",\n      \"price\": 0,\n      \"details\": []\n    },\n    {\n      \"type\": \"\",\n      \"code\": \"\",\n      \"description\": \"Single performance\",\n      \"price\": 0,\n      \"details\": []\n    }\n  ],\n  \"serviceBundle\": {\n    \"type\": \"ssr-service-bundle\",\n    \"code\": \"F\",\n    \"description\": \"Service bundle : ssr-service-bundle\",\n    \"price\": 80\n  },\n  \"serviceMeal\": {\n    \"type\": \"meals\",\n    \"code\": \"MEAL_FLY_DELUXE\",\n    \"description\": \"Service bundle : meals\",\n    \"price\": 0\n  },\n  \"po\": \"XXXXXXXXXX\",\n  \"bookingChannel\": \"CHANNEL\",\n  \"datetime\": \"2027-01-10T16:25:00+01:00\",\n  \"bookDate\": \"2027-01-10T16:25:00+01:00\",\n  \"status\": {\n    \"code\": \"Y\",\n    \"description\": \"OK\"\n  },\n  \"paymethod\": \"C\",\n  \"flights\": {\n    \"OUT\": {\n      \"aircrafttype\": \"\",\n      \"key\": \"CMNBOD20201222710121TB\",\n      \"accomodation\": {\n        \"date\": \"2027-01-18\"\n      },\n      \"totalFree\": 0,\n      \"seatsAtThisPrice\": 0,\n      \"infantsFree\": 0,\n      \"depart\": {\n        \"airport\": {\n          \"code\": \"CMN\",\n          \"name\": \"Casablanca\"\n        },\n        \"datetime\": \"2027-01-18T13:00:00+01:00\"\n      },\n      \"arrival\": {\n        \"airport\": {\n          \"code\": \"BOD\",\n          \"name\": \"Bordeaux\"\n        },\n        \"datetime\": \"2027-01-18T15:45:00+01:00\"\n      },\n      \"carrier\": \"TB\",\n      \"carrierOperatorCode\": \"\",\n      \"number\": 7101,\n      \"fppAvailable\": false,\n      \"fppDefault\": false,\n      \"daySequence\": 1,\n      \"meal\": {\n        \"code\": \"X\"\n      },\n      \"bookedluggage\": [\n        {\n          \"code\": \"0K\",\n          \"pax\": 1\n        }\n      ],\n      \"carrierName\": \"TUI fly\"\n    }\n  },\n  \"totaleuro\": 73.99,\n  \"fppCost\": \"\",\n  \"details\": \"details\",\n  \"travelDirective\": \"CUSTOM\",\n  \"saldo\": 73.99,\n  \"vouchers\": [],\n  \"deposit\": 0,\n  \"advance\": 73.99,\n  \"tdaAvailable\": 1,\n  \"travelDirectiveDesc\": \"Enkelvoudige prestatie\",\n  \"vehicles\": [],\n  \"locale\": \"en_GB\",\n  \"languagecode\": \"en\",\n  \"version\": 0,\n  \"detail\": \"(Contains embed html code)\",\n  \"destinationInfo\": [\n    \"non- Belgian citizens: info at their embassy or consulate\"\n  ],\n  \"flightErrata\": [],\n  \"selfRegulatingAgent\": false,\n  \"customer\": {\n    \"id\": 0,\n    \"firstName\": \"Customer\",\n    \"name\": \"Dirk\",\n    \"gender\": \"M\",\n    \"title\": \"MR\",\n    \"addresses\": [\n      {\n        \"street\": \"Street name\",\n        \"nr\": \"0\",\n        \"bus\": \"\",\n        \"zip\": \"00404\",\n        \"city\": \"A city\",\n        \"country\": {\n          \"code\": \"FRA\"\n        },\n        \"type\": {\n          \"code\": \"PRV\",\n          \"name\": \"Private\"\n        }\n      }\n    ],\n    \"address\": {\n      \"street\": \"Street name\",\n      \"nr\": \"0\",\n      \"bus\": \"\",\n      \"zip\": \"00404\",\n      \"city\": \"Liposthey\",\n      \"country\": {\n        \"code\": \"FRA\"\n      },\n      \"type\": {\n        \"code\": \"PRV\",\n        \"name\": \"Private\"\n      }\n    },\n    \"phonenumbers\": [\n      {\n        \"prefix\": 1,\n        \"nr\": 123456789,\n        \"type\": {\n          \"code\": \"PRV\",\n          \"name\": \"Private\"\n        },\n        \"contact\": {\n          \"code\": \"EMR\",\n          \"name\": \"Emergency number\"\n        }\n      }\n    ],\n    \"phone\": {\n      \"prefix\": 1,\n      \"nr\": 123456789,\n      \"type\": {\n        \"code\": \"PRV\",\n        \"name\": \"Private\"\n      },\n      \"contact\": {\n        \"code\": \"EMR\",\n        \"name\": \"Emergency number\"\n      }\n    },\n    \"emailaddresses\": [\n      {\n        \"address\": \"mrcustomername@email.com\",\n        \"type\": {\n          \"code\": \"PRV\",\n          \"name\": \"Private\"\n        }\n      }\n    ],\n    \"email\": \"mrcustomername@email.com\",\n    \"emailReference\": \"booking\"\n  },\n  \"crmTypes\": {\n    \"NAC\": {\n      \"\": null,\n      \"DSC\": \"Deceased\",\n      \"NON\": \"Non-active\",\n      \"OBL\": \"Debtor\",\n      \"OFR\": \"Fraude\"\n    },\n    \"INY\": {\n      \"ALI\": \"All in\",\n      \"ANN\": \"Annulment\",\n      \"LUG\": \"Luggage\",\n      \"MBR\": \"Membership\",\n      \"TIN\": \"Travel insurance\"\n    },\n    \"PAY\": {\n      \"BNK\": \"Bank/Giro\",\n      \"CCR\": \"Credit Card\",\n      \"CGQ\": \"Cheque\",\n      \"TCH\": \"Travel cheque\",\n      \"TRF\": \"Transfer (remittance)\",\n      \"VIS\": \"Visa\",\n      \"VOU\": \"Voucher\"\n    },\n    \"CNT\": {\n      \"BSN\": \"Business\",\n      \"GRP\": \"Group\",\n      \"LEI\": \"Leisure\",\n      \"STF\": \"Staff\"\n    },\n    \"CNR\": {\n      \"CLP\": \"Mobile number\",\n      \"EMH\": \"Family\",\n      \"EMR\": \"Emergency number\",\n      \"FAX\": \"Fax\",\n      \"PHN\": \"Telephone number\"\n    },\n    \"ADR\": {\n      \"CMP\": \"Company\",\n      \"PRV\": \"Private\"\n    },\n    \"REL\": {\n      \"CMP\": \"Work\",\n      \"PRV\": \"Private\"\n    },\n    \"PAC\": {\n      \"D30\": \"Departure Date -30 days\",\n      \"I30\": \"Departure +30 days\"\n    },\n    \"CRL\": {\n      \"FAM\": \"Family\"\n    },\n    \"INN\": {\n      \"NOI\": \"Not interested\",\n      \"SWE\": \"Insurance somewhere else\"\n    }\n  },\n  \"pax\": {\n    \"1\": {\n      \"id\": 1,\n      \"type\": \"a\",\n      \"title\": 1,\n      \"firstName\": \"NAME\",\n      \"name\": \"CUSTOMER\",\n      \"birthday\": \"1975-12-31\",\n      \"age\": 0,\n      \"groupseq\": 0\n    }\n  },\n  \"agent\": {\n    \"code\": \"01234567\",\n    \"fullname\": \"Agent Name\",\n    \"street\": \"Agent Address\",\n    \"zip\": \"00404\",\n    \"city\": \"AgentCity\",\n    \"country\": \"AGENTCOUNTRY\",\n    \"countrycode\": \"XX\",\n    \"phone\": 123456789,\n    \"fax\": \"00\",\n    \"contact\": \"CONTACTPERSON\",\n    \"email\": \"contact.person@email.com\",\n    \"language\": \"EN\",\n    \"profpartner\": \"\",\n    \"vat\": \"vatnumber\",\n    \"saleschain\": \"JO\",\n    \"ttc\": false,\n    \"creditmarker\": \"0\",\n    \"epartner\": \"0\",\n    \"isDomiciled\": 1\n  },\n  \"insurance\": {\n    \"1\": {\n      \"paxId\": 1,\n      \"code\": \"N\",\n      \"text\": \"No insurance\"\n    }\n  },\n  \"pasportInfoRequired\": 0,\n  \"regioncode\": \"BOD\",\n  \"hasFlightComment\": 0,\n  \"comment\": null,\n  \"brochure\": \"JETAIR\",\n  \"typeVacation\": \"VLIEG\",\n  \"brand\": \"jetairfly\",\n  \"departureDate\": \"2027-01-18\",\n  \"returnDate\": \"2027-01-18\",\n  \"destinations\": [\n    \"BOD\"\n  ],\n  \"departureTime\": \"13:00\",\n  \"paymentOk\": 0,\n  \"paxtitles\": [\n    {\n      \"code\": \"1\",\n      \"translation\": \"mr\"\n    },\n    {\n      \"code\": \"2\",\n      \"translation\": \"mrs\"\n    },\n    {\n      \"code\": \"3\",\n      \"translation\": \"ms\"\n    },\n    {\n      \"code\": \"4\",\n      \"translation\": \"child\"\n    },\n    {\n      \"code\": \"5\",\n      \"translation\": \"infant\"\n    }\n  ],\n  \"travelDocuments\": [\n    {\n      \"type\": \"reservation\",\n      \"url\": \"\"\n    }\n  ],\n  \"payments\": [\n    {\n      \"payId\": \"0123456789\",\n      \"pspId\": \"pspid\",\n      \"brand\": \"MasterCard\",\n      \"amount\": \"7399\",\n      \"status\": \"9\"\n    }\n  ],\n  \"html\": \"(Contains embed html code)\"\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "9c52784e-ba97-48f8-a854-98fa44487aa9",
+          "name": "404 response when booking is not found in the system.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "bookinfo"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "po",
+                  "value": "<numeric>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "1ebaeba9-bb4a-4454-a208-23f79c74ac67",
+      "name": "servicebundle",
+      "request": {
+        "name": "servicebundle",
+        "description": {
+          "content": "Retrieves information about servicebundles.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "servicebundle"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<string>",
+              "description": "(Required) Flight key"
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<string>",
+              "description": "Return flight key"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "95d410da-f182-4b3c-80f1-251795d4a3a7",
+          "name": "Information about a servicebundle for a specific flight or flightcombination",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "servicebundle"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"servicebundle\": {\n    \"OUT\": [\n      {\n        \"price\": 80,\n        \"currency\": \"EUR\",\n        \"code\": \"F\",\n        \"type\": \"ADULT\"\n      },\n      {\n        \"price\": 35,\n        \"currency\": \"EUR\",\n        \"code\": \"F\",\n        \"type\": \"CHILD\"\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "fe78338d-6ecd-40de-b9be-c983bb388d5a",
+          "name": "404 response when flight or servicebundle is not found in the system.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "servicebundle"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "80ac6564-baf1-4263-9736-1c3f758f1248",
+      "name": "handluggage",
+      "request": {
+        "name": "handluggage",
+        "description": {
+          "content": "Returns the possible handluggage options for a specific flight. Codes: PBAG = Personal bag (max 2kg, 40x30x20 cm), HBAG = Hand baggage / cabin trolley (max 10kg, 55x40x20 cm).",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "handluggage"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Return flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "language code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "447637b3-d7e4-4831-93ce-86d46587d9ce",
+          "name": "List of possible handluggage options for the requested flight key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "handluggage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"handluggage\": {\n    \"OUT\": [\n      {\n        \"price\": 0,\n        \"weight\": 2,\n        \"code\": \"PBAG\",\n        \"dimensions\": {\n          \"unit\": \"cm\",\n          \"height\": 40,\n          \"length\": 30,\n          \"width\": 20\n        }\n      },\n      {\n        \"price\": 22,\n        \"weight\": 10,\n        \"code\": \"HBAG\",\n        \"dimensions\": {\n          \"unit\": \"cm\",\n          \"height\": 55,\n          \"length\": 40,\n          \"width\": 20\n        }\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "84ed1fe9-e24e-4b6e-bf51-e2e508f749ea",
+      "name": "sports",
+      "request": {
+        "name": "sports",
+        "description": {
+          "content": "Returns the possible sports equipment options for a specific flight. Codes: SURFBOARD = Surfboard, WINTER_SPORTS_EQUIPMENT = Winter sports equipment (skis, snowboard, etc.), PARAGLIDER_PARACHUTE = Paraglider or parachute, GOLF = Golf equipment, DIVE = Diving equipment, BICYCLE = Bicycle.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "sports"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Return flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "language code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "247f2a1b-e62f-4b54-934a-7b0e061f4354",
+          "name": "List of possible sport options for the requested flight key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "sports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"sports\": {\n    \"OUT\": [\n      {\n        \"price\": 55,\n        \"code\": \"SURFBOARD\"\n      },\n      {\n        \"price\": 40,\n        \"code\": \"WINTER_SPORTS_EQUIPMENT\"\n      },\n      {\n        \"price\": 55,\n        \"code\": \"PARAGLIDER_PARACHUTE\"\n      },\n      {\n        \"price\": 40,\n        \"code\": \"GOLF\"\n      },\n      {\n        \"price\": 55,\n        \"code\": \"DIVE\"\n      },\n      {\n        \"price\": 55,\n        \"code\": \"BICYCLE\"\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "098d3c73-38d7-4f61-aed9-4f9d49fb227d",
+      "name": "assistance",
+      "request": {
+        "name": "assistance",
+        "description": {
+          "content": "Returns the possible assistance options for a specific flight. Codes: YPTA = Young passenger travelling alone, WCHS = Wheelchair - cannot walk long distances or climb stairs but can walk to seat, WCHR = Wheelchair - cannot walk long distances but can climb stairs and walk to seat, WCHC = Wheelchair - wheelchair-dependent and unable to walk, WCH = Wheelchair - assistance for reduced mobility, UMNR = Unaccompanied minor, MAAS = Meet and assist at the airport, DPNA = Passengers with a learning or cognitive impairment, DEAF = Deaf or hearing impaired passenger, BLND = Blind or visually impaired passenger.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "assistance"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Return flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "language code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "1810497b-11cf-48d3-9264-679cfa31df65",
+          "name": "List of possible assistance options for the requested flight key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "assistance"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"assistance\": {\n    \"OUT\": [\n      {\n        \"price\": 85,\n        \"code\": \"YPTA\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"WCHS\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"WCHR\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"WCHC\"\n      },\n      {\n        \"price\": 85,\n        \"code\": \"UMNR\"\n      },\n      {\n        \"price\": 25,\n        \"code\": \"MAAS\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"DPNA\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"DEAF\"\n      },\n      {\n        \"price\": 0,\n        \"code\": \"BLND\"\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "96afb36c-7840-441b-9c55-708b0cfd3646",
+      "name": "pets",
+      "request": {
+        "name": "pets",
+        "description": {
+          "content": "Returns the possible pet transport options for a specific flight. Codes: PETC = Dog/cat up to 8kg (including bag) in the cabin, AVIH = Dog/cat in the heated cargo hold.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "ota",
+            "pets"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "flightkey",
+              "value": "<flightKey>",
+              "description": "(Required) Flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "returnflightkey",
+              "value": "<flightKey>",
+              "description": "Return flight key of the selected plane."
+            },
+            {
+              "disabled": false,
+              "key": "locale",
+              "value": "<string>",
+              "description": "language code"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": {
+          "type": "oauth2",
+          "oauth2": [
+            {
+              "key": "accessTokenUrl",
+              "value": "https://prod.api.tui/oauth2/token"
+            },
+            {
+              "key": "grant_type",
+              "value": "client_credentials"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "id": "ed2b2717-beba-45ef-9c6b-d5bd339e3759",
+          "name": "List of possible pet transport options for the requested flight key.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "ota",
+                "pets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "flightkey",
+                  "value": "BRUTFS20270118202701181751TB"
+                },
+                {
+                  "key": "returnflightkey",
+                  "value": "TFSBRU20270117202701171752TB"
+                },
+                {
+                  "key": "locale",
+                  "value": "en_GB"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"pets\": {\n    \"OUT\": [\n      {\n        \"price\": 60,\n        \"code\": \"PETC\"\n      },\n      {\n        \"price\": 90,\n        \"code\": \"AVIH\"\n      }\n    ]\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://prod.api.tui",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9175f3da-b259-453f-a75f-671972b8af5f",
+    "name": "TUI Flight OTA API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Flight only OTA Api\n\nContact Support:\n Name: OTA-TEAM\n Email: ota.support@tui.be",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,614 @@
+{
+  "item": [
+    {
+      "id": "6580e277-e34c-4ec5-b9c3-5e8c12d643cd",
+      "name": "download",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5d3af37d-8ec5-40ed-96f4-46b425bb371b",
+          "name": "Download pricefile by filename",
+          "request": {
+            "name": "Download pricefile by filename",
+            "description": {
+              "content": "Retrieve a pricefile with the given name",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download",
+                ":filename"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filename",
+                  "description": "(Required) Name of file for download e.g. prices_all.zip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/zip"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1c5aa9ae-5e83-4b6a-83bd-01e9383ad575",
+              "name": "Response for a price file. The response body is base64 encoded \nand must be decoded before extracting the zip archive.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    ":filename"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filename",
+                      "description": "(Required) Name of file for download e.g. prices_all.zip"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/zip"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Will contain base64 on binary file response to indicate that the response is base64 encoded",
+                  "key": "Content-Transfer-Encoding",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/zip"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b5e0fba9-086b-4241-be74-df7602327ee1",
+              "name": "Response message in case of an error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    ":filename"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filename",
+                      "description": "(Required) Name of file for download e.g. prices_all.zip"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessage\": \"No price file mapped to ApiKey YourAppName\",\n  \"exception\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4e1c35c6-6663-462a-bfe3-5aff0b9a4015",
+          "name": "Receive the delta price which is mapped to your OAuth Authentication key",
+          "request": {
+            "name": "Receive the delta price which is mapped to your OAuth Authentication key",
+            "description": {
+              "content": "Retrieve the delta-pricefile which is mapped to your login credentials.\nPlease note that this method might become deprecated in the future.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download",
+                "delta"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/zip"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f1f84979-4f49-4468-9609-fbeb7301cfd5",
+              "name": "Response for a price file. The response body is base64 encoded \nand must be decoded before extracting the zip archive.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    "delta"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/zip"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Will contain base64 on binary file response to indicate that the response is base64 encoded",
+                  "key": "Content-Transfer-Encoding",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/zip"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b7b76251-fc32-4765-9e4f-6208c15262f0",
+              "name": "Response message in case of an error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    "delta"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessage\": \"No price file mapped to ApiKey YourAppName\",\n  \"exception\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "87749f81-a03b-4abe-a763-c2768b5c506e",
+      "name": "timestamp",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "57d43e9e-fd67-481e-a9b8-e712adea5c7a",
+          "name": "Get timestamp for a specific pricefile",
+          "request": {
+            "name": "Get timestamp for a specific pricefile",
+            "description": {
+              "content": "Retrieve the timestamp for pricefile with the given name when the file has last been changed.\nThis will return the timestamp from the pricefile which is mapped to your credentials.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download",
+                ":filename",
+                "timestamp"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filename",
+                  "description": "(Required) Name of file for timestamp retrieve e.g. prices_all.zip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "946fd206-34b6-4128-a73b-14cbe454c188",
+              "name": "Timestamp response message",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    ":filename",
+                    "timestamp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filename",
+                      "description": "(Required) Name of file for timestamp retrieve e.g. prices_all.zip"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"fileName\": \"pricefile.zip\",\n  \"timeStamp\": \"2026-06-15T09:25:36Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78b264c7-0ba0-4f7f-8c24-699e77e1f20f",
+              "name": "Response message in case of an error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    ":filename",
+                    "timestamp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filename",
+                      "description": "(Required) Name of file for timestamp retrieve e.g. prices_all.zip"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessage\": \"No price file mapped to ApiKey YourAppName\",\n  \"exception\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f03cf6c0-bcbf-443c-89e7-7c3ad9ef97a7",
+          "name": "Get the timestamp of the current available pricefile delta",
+          "request": {
+            "name": "Get the timestamp of the current available pricefile delta",
+            "description": {
+              "content": "Retrieve the timestamp of when the pricefile-delta has last been changed.\nThis will return the timestamp from the pricefile which is mapped to your credentials.\nPlease note that this method might become deprecated in the future.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download",
+                "delta",
+                "timestamp"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d18d0a6e-8931-49b9-b94d-78090404edf4",
+              "name": "Timestamp response message",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    "delta",
+                    "timestamp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"fileName\": \"pricefile.zip\",\n  \"timeStamp\": \"2026-06-15T09:25:36Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "442c0b05-a901-41ef-af02-392ee1e2a968",
+              "name": "Response message in case of an error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download",
+                    "delta",
+                    "timestamp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessage\": \"No price file mapped to ApiKey YourAppName\",\n  \"exception\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://playground.api.tui/flight/newskies/pricefile",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e8609e46-d065-4319-a4d0-b4291137cb99",
+    "name": "TUI NewSkies PriceFile Api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Api providing pricefile handling\n\nContact Support:\n Name: Flight Production API Team\n Email: api.flightproduction@tui.com",
+      "type": "text/plain"
+    }
+  }
+}

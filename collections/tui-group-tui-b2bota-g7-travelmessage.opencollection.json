@@ -1,0 +1,218 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TravelMessage.v31",
+    "version": "3.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "TravelMessage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Does an AvailabilityRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/availabilityrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "The availability of a journey can be requested with the dialogue Availability.  \nFor this API the \"*Package approach*\" is used. This means that filling the \"*PackageDetails*\" in the request \nwill return a complete package (Transport, accommodation and/or additional products) in the response. These\ncomponents must be used in the next steps of the booking process\n\n**Request:** Besides the mandatory fields only filtering is possible for:\n * DeparturePoint\n * BoardType \n\n**Response:**\n * Happy flow:"
+        },
+        {
+          "info": {
+            "name": "Does a ReceiptRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/receiptrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "The ReceiptRequest message can be done to get an actual price of a chosen package and components. It's a kind \nof combination of Sell- and AssignRequest but without starting a transaction.\nThe response contains only a price breakdown for each passenger. If no prices are found an errormessage\nwill be returned with the message \"no data found\".\n\nThe price description can contain only a description or a description plus additional information. If a price\ncomponent relates to the package itself only "
+        },
+        {
+          "info": {
+            "name": "Does a SellRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/sellrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "The dialogue of Sell aims at indicating the package parts which have been selected for the subsequent\ndialogue. The message contains package information and optional information relating to Transport, \nAccommodation and Additional products (Roundtrip and Cruise information are not implemented yet).  \nFor TUI the SellRequest is used to create a new session. Some basic validation is taking place, \nand the response is more or less a copy of the request. It is important to put all the parts in the \n"
+        },
+        {
+          "info": {
+            "name": "Does a AssignRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/assignrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "In the AssignRequest the passengers and there assignments to the package parts are given. The \"*SenderSessionID*\" \nof the SellResponse must be used as \"*ReceiverSessionID*\" in the AssignRequest to use the session created during\nthe SellRequest. Validation is done to check if the same parts are used as in SellRequest.  \nThe response may contain more elements then assigned (extras). These are default components which do not \ninfluence the price, like flight extra's as SeatsType, Meals, Luggage or "
+        },
+        {
+          "info": {
+            "name": "Does a BookRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/bookrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "There can be made a booking with the dialogue of BookRequest. Although the xml data of the BookRequest is \nthe same as the AssignRequest and required in the G7 XML for TUI only the confirmation counts. So using \nthe same \"*ReceiverSessionID*\" as in the AssignRequest is enough. Changes made to passengers and assignments \nat this stage will be ignored. The information that was in the Assign stage will be used.\n\n**Request:**\n  * Same as AssignRequest, but changes are ignored. \n\n**Response:**\n * Hap"
+        },
+        {
+          "info": {
+            "name": "Does a BreakRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/breakrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "The Break-dialogue allows the OTA to cut off a session between the travel agent and the tour operator decently.\nA new session can be started by sending a new SellRequest.                  \n\n**Response:**\n * Happy flow : Only a Control group is returned   \n * Error: response has an errormessage        \n"
+        },
+        {
+          "info": {
+            "name": "Does a AddProAvailabilityRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/addproavailabilityrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "AddProAvailability is used to acquire summary information about additional products.  \nThere a two approaches defined in the ANVR documentation. With **overview** response, ResponseID is filled \nwith AvailabilityResponse. Only minimum information, ID and description are given in the response.   \nIf a **detailed** response is necessary ResponseID will be filled with AvailabilityDetailsResponse. Detailed \ninformation is given like prices, age restrictions allotment etc.  \n\nFor TUI both approaches "
+        },
+        {
+          "info": {
+            "name": "Does a AddProDetailsRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/addprodetailsrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "AddProDetails is used to acquire detailed information about additional products. It is a continuation of the  AddProAvailability overview request. It is possible to get separate information for each extra or transport  rental, just by adding the extra or transport rental in the request.  \n  **NOT IMPLEMENTED (YET)**\n"
+        },
+        {
+          "info": {
+            "name": "Does a RecapRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/recaprequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "With the dialogue of Recap a recapitulation from the data stored at the Touroperator concerning the \ncurrent session or currently booked trip can be requested.     \n\nFor TUI only getting the requested booking is implemented.  \n\n**Request:**\n* Only \"*BookID*\" is required in the SecurityInfo group.  \n\n**Response:**\n* All information concerning the given booking like Passenger info, Transport, Accommodation Extra's, and Prices. \n* Error: if booking cannot be found with given request data\n\nThe price"
+        },
+        {
+          "info": {
+            "name": "Does a CancellationRequest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/travelmessage/v3.1/cancellationrequest",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Two messages will be send by cancelling a booking; a CancellationRequest followed by a CancellationConfirmedRequest. \nThis is because of the possible cancellation costs which require confirmation.\n\nFor TUI now only CancellationConfirmedRequest is implemented. No check yet for getting the cancellation cost \nfirst. \n\n**Request:**\n* \"*BookID*\", \"*DepartureDate*\" and \"*ContactName*\" are required in the SecurityInfo group.  \n\n**Response:**\n* Given back cancellation costs when cancellation is done. \n*"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

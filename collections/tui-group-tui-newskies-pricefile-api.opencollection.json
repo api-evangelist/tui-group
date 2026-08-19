@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TUI NewSkies PriceFile Api",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "download",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download pricefile by filename",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://playground.api.tui/flight/newskies/pricefile/download/:filename",
+            "params": [
+              {
+                "name": "filename",
+                "value": "",
+                "type": "path",
+                "description": "Name of file for download e.g. prices_all.zip"
+              }
+            ]
+          },
+          "docs": "Retrieve a pricefile with the given name"
+        },
+        {
+          "info": {
+            "name": "Receive the delta price which is mapped to your OAuth Authentication key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://playground.api.tui/flight/newskies/pricefile/download/delta"
+          },
+          "docs": "Retrieve the delta-pricefile which is mapped to your login credentials.\nPlease note that this method might become deprecated in the future."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "timestamp",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get timestamp for a specific pricefile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://playground.api.tui/flight/newskies/pricefile/download/:filename/timestamp",
+            "params": [
+              {
+                "name": "filename",
+                "value": "",
+                "type": "path",
+                "description": "Name of file for timestamp retrieve e.g. prices_all.zip"
+              }
+            ]
+          },
+          "docs": "Retrieve the timestamp for pricefile with the given name when the file has last been changed.\nThis will return the timestamp from the pricefile which is mapped to your credentials."
+        },
+        {
+          "info": {
+            "name": "Get the timestamp of the current available pricefile delta",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://playground.api.tui/flight/newskies/pricefile/download/delta/timestamp"
+          },
+          "docs": "Retrieve the timestamp of when the pricefile-delta has last been changed.\nThis will return the timestamp from the pricefile which is mapped to your credentials.\nPlease note that this method might become deprecated in the future."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

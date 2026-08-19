@@ -1,0 +1,192 @@
+{
+  "item": [
+    {
+      "id": "d7906387-57f3-4d5a-bed7-077fb041f8df",
+      "name": "Get ship data",
+      "request": {
+        "name": "Get ship data",
+        "description": {
+          "content": "Ship Content API provides information about cabin types, boards, and deck plan. This graphQL endpoint can be used to execute queries to fetch the specific information related to ship.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "graphql"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"<string>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "b90916aa-a6bb-4857-9206-4af030ed6e86",
+          "name": "Successful response",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "graphql"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query MyQuery { getShip(code: 150103) { boardTypes { code title variants { composition { additionalInformation name type } } } cabins { bathroom { facts { key text } } bedroom { facts { key text } } cabinNumbers { deck { images { caption category order url } number } cabinNumber { number facts { key text } } } code general { facts { key text } occupancy { max } } images { caption category order url } name } code name decks { number } } }\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"getShip\": {\n      \"name\": \"string\",\n      \"code\": \"string\"\n    }\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "859703f8-5da8-4b44-9364-26b40dadab85",
+          "name": "Invalid request",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "graphql"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query MyQuery { getShip(code: 150103) { boardTypes { code title variants { composition { additionalInformation name type } } } cabins { bathroom { facts { key text } } bedroom { facts { key text } } cabinNumbers { deck { images { caption category order url } number } cabinNumber { number facts { key text } } } code general { facts { key text } occupancy { max } } images { caption category order url } name } code name decks { number } } }\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        },
+        {
+          "id": "e079abd7-6559-48da-8d24-2f80867ccaa2",
+          "name": "Server error",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "graphql"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query MyQuery { getShip(code: 150103) { boardTypes { code title variants { composition { additionalInformation name type } } } cabins { bathroom { facts { key text } } bedroom { facts { key text } } cabinNumbers { deck { images { caption category order url } number } cabinNumber { number facts { key text } } } code general { facts { key text } occupancy { max } } images { caption category order url } name } code name decks { number } } }\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {},\n  \"errors\": [\n    {\n      \"path\": \"string\",\n      \"locations\": [\n        {\n          \"line\": \"string\",\n          \"column\": \"string\",\n          \"sourceName\": \"string\"\n        },\n        {\n          \"line\": \"string\",\n          \"column\": \"string\",\n          \"sourceName\": \"string\"\n        }\n      ],\n      \"message\": \"error message\"\n    },\n    {\n      \"path\": \"string\",\n      \"locations\": [\n        {\n          \"line\": \"string\",\n          \"column\": \"string\",\n          \"sourceName\": \"string\"\n        },\n        {\n          \"line\": \"string\",\n          \"column\": \"string\",\n          \"sourceName\": \"string\"\n        }\n      ],\n      \"message\": \"error message\"\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://prod.api.tui/cruises/ship",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "92f4f2e8-67fb-48f3-b0b9-bb56725af5b2",
+    "name": "Ship Content API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API for querying ship details.\n\nContact Support:\n Name: Cruise NR API Support\n Email: NRCruiseTeam@TUIGroup.onmicrosoft.com",
+      "type": "text/plain"
+    }
+  }
+}

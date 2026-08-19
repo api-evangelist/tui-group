@@ -1,0 +1,1031 @@
+{
+  "item": [
+    {
+      "id": "9dda9d1e-eed4-4c96-b401-cd2995a6c789",
+      "name": "Route Feed",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "93c195b3-0d90-41e1-8fbf-6b830348e3d0",
+          "name": "Get Flights Route Feed",
+          "request": {
+            "name": "Get Flights Route Feed",
+            "description": {
+              "content": "This endpoint returns the current flights route feed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "flights",
+                ":agent",
+                "route-feed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. This will be used for monitoring purposes."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "188e4ff5-998e-4f4b-a80f-325552b53224",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "flights",
+                    ":agent",
+                    "route-feed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. This will be used for monitoring purposes."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"origin\": \"string\",\n    \"destination\": \"string\",\n    \"days_of_week\": \"string\",\n    \"effective_start\": \"string\",\n    \"effective_end\": \"string\"\n  },\n  {\n    \"origin\": \"string\",\n    \"destination\": \"string\",\n    \"days_of_week\": \"string\",\n    \"effective_start\": \"string\",\n    \"effective_end\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "17c1fd72-b47f-43b7-9f2b-6bd3bbb945a3",
+      "name": "Packages",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "132fe381-1350-4cea-abda-4b2466a36e28",
+          "name": "Get Packages",
+          "request": {
+            "name": "Get Packages",
+            "description": {
+              "content": "This endpoint returns all available packages.\r\nVery important! Remember to add your own agent string {&agent=youragentstring} to the urlToBooking link in each package.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "packages",
+                ":pax"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent",
+                  "value": "<string>",
+                  "description": "(Required) Your agent code. Use the same for every request made."
+                },
+                {
+                  "disabled": false,
+                  "key": "fromid",
+                  "value": "",
+                  "description": "The package id to start from. Items retrieved will have an id that comes after the given value when sorted in ascending order."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "The number of items to return. Default: 100, maximum: 1000."
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Used for pagination. For performance reasons, do not use without adding other query parameters."
+                },
+                {
+                  "disabled": false,
+                  "key": "departurecode",
+                  "value": "<string>",
+                  "description": "Code of the departure airport. Any valid IATA airport code."
+                },
+                {
+                  "disabled": false,
+                  "key": "departuredate",
+                  "value": "<string>",
+                  "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredate=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "destinationcode",
+                  "value": "<string>",
+                  "description": "Code of the destination airport. Any valid IATA airport code."
+                },
+                {
+                  "disabled": false,
+                  "key": "duration",
+                  "value": "<integer>",
+                  "description": "Number of nights in the accommodation."
+                },
+                {
+                  "disabled": false,
+                  "key": "accommodationid",
+                  "value": "<string>",
+                  "description": "The id of the accommodation to retrieve."
+                },
+                {
+                  "disabled": false,
+                  "key": "maxdaystodeparture",
+                  "value": "<integer>",
+                  "description": "Maximum number of days to departure. Items returned will have a departure date that is equal or fewer days away from today."
+                },
+                {
+                  "disabled": false,
+                  "key": "departuredatefrom",
+                  "value": "<string>",
+                  "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredatefrom=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "departuredatetill",
+                  "value": "<string>",
+                  "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredatetill=2035-01-31"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "pax",
+                  "description": "(Required) The pax configuration. Accepted values: 2000 for two adults, 2010 for two adults and one child, 2020 for two adults and two children."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "372944e8-dd96-4d56-bac5-5815e09b25de",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "packages",
+                    ":pax"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fromid",
+                      "value": ""
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "departurecode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "departuredate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "destinationcode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "duration",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "accommodationid",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "maxdaystodeparture",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "departuredatefrom",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "departuredatetill",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "pax",
+                      "description": "(Required) The pax configuration. Accepted values: 2000 for two adults, 2010 for two adults and one child, 2020 for two adults and two children."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"next\": \"string\",\n  \"totalNumberOfItems\": 7835.68507998255,\n  \"version\": \"string\",\n  \"items\": [\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 2141.7142234669095,\n      \"youths\": 2947.582814676545,\n      \"children\": 6596.584913820616,\n      \"infants\": 3013.7902972504626,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": false,\n        \"configurationId\": \"string\",\n        \"destinationName\": \"string\",\n        \"climateCompensated\": false\n      },\n      \"priority\": 3683.6338930025327,\n      \"flightClimateCompensated\": false,\n      \"charterFlight\": true,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 3381.634897843867,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 684.52050189859,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 2511.961960967536,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5623.226447724239,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 5925.502913155365,\n          \"currentPrice\": 1402.8702304101125,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 1390.00595222457,\n          \"seatsAvailable\": 1430.7537450601205,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 8891.590440345124,\n          \"numberOfExtraBeds\": 9479.12700740607,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 6498.338840086943,\n          \"currentPrice\": 2577.197956283365,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 9505.534707802744,\n          \"seatsAvailable\": 5804.145223852217,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 3663.283531199548,\n          \"numberOfExtraBeds\": 7936.847566706514,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"departureName\": \"string\",\n      \"countryName\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    },\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 9815.606090086794,\n      \"youths\": 2787.247525952997,\n      \"children\": 3676.568581520857,\n      \"infants\": 6972.688195960202,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": false,\n        \"configurationId\": \"string\",\n        \"destinationName\": \"string\",\n        \"climateCompensated\": true\n      },\n      \"priority\": 3274.543531074191,\n      \"flightClimateCompensated\": true,\n      \"charterFlight\": false,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 2028.7035887289085,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 7313.50264298718,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 7726.163242014025,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5300.623170528665,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 5322.08032272358,\n          \"currentPrice\": 2542.584492535658,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 1645.3821717086946,\n          \"seatsAvailable\": 8982.37342541907,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 5025.099794133125,\n          \"numberOfExtraBeds\": 2395.6809138956614,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 61.48781004173598,\n          \"currentPrice\": 4953.682567563556,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 6719.4956214321965,\n          \"seatsAvailable\": 6970.42453504319,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 5807.034448365076,\n          \"numberOfExtraBeds\": 4496.2456790652905,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"departureName\": \"string\",\n      \"countryName\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "2d77c96b-694c-43dd-9130-62752b209c06",
+      "name": "Flights",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f9acf76b-d73c-4473-a83d-2d8eb0660a29",
+          "name": "Get Flights",
+          "request": {
+            "name": "Get Flights",
+            "description": {
+              "content": "This endpoint returns available flights.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "flights",
+                "search",
+                ":agent"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "adults",
+                  "value": "<double>",
+                  "description": "(Required) Mandatory. Number of adults. Any integer between 1 and 6."
+                },
+                {
+                  "disabled": false,
+                  "key": "childAges",
+                  "value": "<string>",
+                  "description": "A comma separated string with child ages. No space after comma. Example: childAges=0,5,14. Age ranges are, infant: 0-1, child: 2-12, youth: 13-17, adults: 18+."
+                },
+                {
+                  "disabled": false,
+                  "key": "departureCode",
+                  "value": "<string>",
+                  "description": "Code of the departure airport. Any valid IATA airport code."
+                },
+                {
+                  "disabled": false,
+                  "key": "departureDate",
+                  "value": "<string>",
+                  "description": "Date of departure. Date must be compatible with ISO 8601. Example: departuredate=2035-01-31."
+                },
+                {
+                  "disabled": false,
+                  "key": "destinationCode",
+                  "value": "<string>",
+                  "description": "Code of the destination airport. Any valid IATA airport code."
+                },
+                {
+                  "disabled": false,
+                  "key": "returnDate",
+                  "value": "<string>",
+                  "description": "Date of return. Date must be compatible with ISO 8601. Example: returnDate=2035-01-31."
+                },
+                {
+                  "disabled": false,
+                  "key": "duration",
+                  "value": "<integer>",
+                  "description": "Number of nights between departure date and return date."
+                },
+                {
+                  "disabled": false,
+                  "key": "oneWay",
+                  "value": "<boolean>",
+                  "description": "If true then only one way flights are returned, if false then one way flights are not returned. If omitted then all flights are returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "The number of items to return. Default: 100, maximum: 1000."
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Used for pagination. For performance reasons, do not use without adding other query parameters."
+                },
+                {
+                  "disabled": false,
+                  "key": "tuiOnly",
+                  "value": "<boolean>",
+                  "description": "If true returns flights from TUIfly Nordic and TUI Airways. If false or omitted returns all airlines."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. This will be used for generating the url for the next request."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "852e1eb0-f550-478a-a8c9-9dff4b592013",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "flights",
+                    "search",
+                    ":agent"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "adults",
+                      "value": "<double>"
+                    },
+                    {
+                      "key": "childAges",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "departureCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "departureDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "destinationCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "returnDate",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "duration",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "oneWay",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "tuiOnly",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. This will be used for generating the url for the next request."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"last\": null,\n  \"previous\": null,\n  \"totalNumberOfItems\": 5665.641143549956,\n  \"first\": \"string\",\n  \"next\": \"string\",\n  \"items\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"href\": \"string\",\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"duration\": 9851.040809165079,\n      \"destinationCode\": \"string\",\n      \"isOneWay\": true,\n      \"adults\": 3552.0615456048763,\n      \"youths\": 5996.432859136712,\n      \"children\": 574.131738303637,\n      \"infants\": 6168.721155762026,\n      \"flightClimateCompensated\": false,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5043.773495605236,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 3120.7166438266986,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5344.656875384708,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 104.02008065958479,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 3271.592371907116,\n          \"currentPrice\": 9035.109204399441,\n          \"priceReduced\": 7053.917498270614,\n          \"currency\": \"string\",\n          \"available\": 7424.842638854195,\n          \"seatsAvailable\": 9142.084628273553,\n          \"flightClassCode\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 953.6921301206825,\n          \"currentPrice\": 5393.616031636642,\n          \"priceReduced\": 2887.483629048588,\n          \"currency\": \"string\",\n          \"available\": 9137.281431156545,\n          \"seatsAvailable\": 5821.617804060327,\n          \"flightClassCode\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"departureName\": \"string\",\n      \"returnDate\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"href\": \"string\",\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"duration\": 9162.49408973117,\n      \"destinationCode\": \"string\",\n      \"isOneWay\": true,\n      \"adults\": 7056.275750974668,\n      \"youths\": 3491.645646530218,\n      \"children\": 3147.599690873191,\n      \"infants\": 9623.855147760649,\n      \"flightClimateCompensated\": true,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 7291.275466946656,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 4171.33968314839,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 7333.065646880542,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 1444.8775877223575,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 7457.890689575284,\n          \"currentPrice\": 2204.432015915756,\n          \"priceReduced\": 47.21840715237291,\n          \"currency\": \"string\",\n          \"available\": 2209.321034672939,\n          \"seatsAvailable\": 5305.590554705734,\n          \"flightClassCode\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 5185.061211494553,\n          \"currentPrice\": 2638.134430751561,\n          \"priceReduced\": 4909.805993344484,\n          \"currency\": \"string\",\n          \"available\": 3523.734178285718,\n          \"seatsAvailable\": 2403.252243010401,\n          \"flightClassCode\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"departureName\": \"string\",\n      \"returnDate\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "e24cddb7-8a3f-4152-a3eb-6117f4e5a318",
+      "name": "Live Search Packages (Beta)",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "aa07d4b9-ffe8-4e35-bdf1-92bd4d3f2284",
+          "name": "Get Locations",
+          "request": {
+            "name": "Get Locations",
+            "description": {
+              "content": "Get all locations for a specific market",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "live-search",
+                "packages",
+                ":agent",
+                "locations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. Use the same for every request made."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "af5f7ae2-e83f-4627-a549-3560c1aff530",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "live-search",
+                    "packages",
+                    ":agent",
+                    "locations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code. Accepted values: dk, fi, no, se."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. Use the same for every request made."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 2104.415493009322,\n  \"items\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "513278db-2c4d-46f4-8b33-d10b0c4cdf15",
+          "name": "Get Live Search",
+          "request": {
+            "name": "Get Live Search",
+            "description": {
+              "content": "This endpoint returns available packages.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":market",
+                "live-search",
+                "packages",
+                ":agent"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "adults",
+                  "value": "<integer>",
+                  "description": "(Required) Number of Adults in the request.\r\n\r\nAccepted Values - 1 to 6"
+                },
+                {
+                  "disabled": false,
+                  "key": "childages",
+                  "value": "",
+                  "description": "Ages of Children in the request separated by comma. If no children are sent in the request, this parameter should not be sent (or sent as ?childAges=).\r\n\r\nFor 2 children with age 5 and 7, the value should be 5,7.\r\nAge ranges are, infant: 0-1, child: 2-12, youth: 13-17."
+                },
+                {
+                  "disabled": false,
+                  "key": "destinations",
+                  "value": "<string>",
+                  "description": "(Required) The G- code value for each destination that is mapped through the locations endpoint.\r\nMultiple destinations can be sent in the request separated by comma.\r\n\r\nExample: G-000000234,G-000000256,G-000000293,G-000000293"
+                },
+                {
+                  "disabled": false,
+                  "key": "arrivaldatefrom",
+                  "value": "<string>",
+                  "description": "(Required) Date of arrival from. Date must be compatible with ISO 8601. Example: arrivaldatefrom=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "arrivaldateto",
+                  "value": "<string>",
+                  "description": "(Required) Date of arrival to.\r\nDate must be compatible with ISO 8601.\r\n\r\nExample: arrivaldateto=2035-01-31"
+                },
+                {
+                  "disabled": false,
+                  "key": "durations",
+                  "value": "<string>",
+                  "description": "(Required) A list of one or more stay durations. Example: 3,5,7,14"
+                },
+                {
+                  "disabled": false,
+                  "key": "airportcodes",
+                  "value": "",
+                  "description": "A list of airportcodes separated by comma that are requested by user as Departure locations.\r\n\r\nExample: ARN,GOT,CPH"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "The number of items to return. Maximum: 100."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent",
+                  "description": "(Required) Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "market",
+                  "description": "(Required) The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "read:sales-meta-package"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c8def158-969d-4ef4-afc2-e5821beb30c6",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":market",
+                    "live-search",
+                    "packages",
+                    ":agent"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "adults",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "childages",
+                      "value": ""
+                    },
+                    {
+                      "key": "destinations",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "arrivaldatefrom",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "arrivaldateto",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "durations",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "airportcodes",
+                      "value": ""
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent",
+                      "description": "(Required) Your agent code. Use the same for every request made.\r\n\r\nExample - tui"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "market",
+                      "description": "(Required) The source market code.\r\n\r\nAccepted values: dk, fi, no, se."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"next\": \"string\",\n  \"totalNumberOfItems\": 2793.3292154983646,\n  \"version\": \"string\",\n  \"items\": [\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 149.52634792128828,\n      \"youths\": 3153.100018759739,\n      \"children\": 9726.654718918866,\n      \"infants\": 772.6284328736289,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": true,\n        \"configurationId\": \"string\",\n        \"destinationName\": \"string\",\n        \"climateCompensated\": false\n      },\n      \"priority\": 3585.014178011662,\n      \"flightClimateCompensated\": true,\n      \"charterFlight\": true,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 1524.5377540365846,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 4111.781051705944,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5537.541738995263,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 1809.2856202245166,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 3610.919014614441,\n          \"currentPrice\": 8777.278774479842,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 4858.199405081651,\n          \"seatsAvailable\": 2488.0548982905016,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 7235.375675310539,\n          \"numberOfExtraBeds\": 4630.355193804351,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 7047.557277093742,\n          \"currentPrice\": 7087.007521130454,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 8470.879145642297,\n          \"seatsAvailable\": 9131.753969012954,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 4483.428423076371,\n          \"numberOfExtraBeds\": 6147.463139096851,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"departureName\": \"string\",\n      \"countryName\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    },\n    {\n      \"departureCode\": \"string\",\n      \"departureDate\": \"string\",\n      \"departureTime\": \"string\",\n      \"returnDate\": \"string\",\n      \"duration\": \"string\",\n      \"destinationCode\": \"string\",\n      \"adults\": 6683.077845758339,\n      \"youths\": 2412.634908500655,\n      \"children\": 7573.795636858191,\n      \"infants\": 1740.644515984875,\n      \"accommodation\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"href\": \"string\",\n        \"imagesHref\": \"string\",\n        \"allInclusive\": true,\n        \"configurationId\": \"string\",\n        \"destinationName\": \"string\",\n        \"climateCompensated\": false\n      },\n      \"priority\": 323.40493872188625,\n      \"flightClimateCompensated\": false,\n      \"charterFlight\": false,\n      \"outboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 4179.415022633858,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 6710.689189347927,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"homeboundFlightLegs\": [\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 5455.305536574412,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        },\n        {\n          \"airlineCode\": \"string\",\n          \"flightCode\": \"string\",\n          \"arrivalTime\": \"string\",\n          \"arrivalDate\": \"string\",\n          \"arrivalCode\": \"string\",\n          \"departureTime\": \"string\",\n          \"departureDate\": \"string\",\n          \"departureCode\": \"string\",\n          \"legNumber\": 1842.7758017340411,\n          \"typeOfFlightName\": \"string\",\n          \"typeOfFlightCode\": \"string\",\n          \"airlineName\": \"string\",\n          \"flightNumber\": \"string\",\n          \"arrivalName\": \"string\",\n          \"departureName\": \"string\"\n        }\n      ],\n      \"prices\": [\n        {\n          \"priceOriginal\": 2447.0013283200065,\n          \"currentPrice\": 865.1497986532563,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 5943.370348869036,\n          \"seatsAvailable\": 6717.350930467827,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 8993.386284609844,\n          \"numberOfExtraBeds\": 7879.437150709567,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        },\n        {\n          \"priceOriginal\": 2376.202267701013,\n          \"currentPrice\": 794.7109144202647,\n          \"currency\": \"string\",\n          \"flightClassName\": \"string\",\n          \"urlToBooking\": \"string\",\n          \"roomTypeCode\": \"string\",\n          \"roomTypeName\": \"string\",\n          \"boardIncluded\": \"string\",\n          \"available\": 8774.883232278353,\n          \"seatsAvailable\": 744.6077505917659,\n          \"roomTags\": [\n            \"string\",\n            \"string\"\n          ],\n          \"roomGroupCode\": \"string\",\n          \"numberOfOrdinaryBeds\": 3684.047996767914,\n          \"numberOfExtraBeds\": 5064.924082693424,\n          \"campaignCode\": \"string\",\n          \"campaignName\": \"string\"\n        }\n      ],\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"departureName\": \"string\",\n      \"countryName\": \"string\",\n      \"destinationName\": \"string\",\n      \"outboundTravelTime\": \"string\",\n      \"homeboundTravelTime\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://prod.api.tui/sales/pip-package/partner",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "26dbb255-6b49-42b5-84a0-5c23c7948840",
+    "name": "Meta Partner Packages & Flights",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Meta Partner Packages & Flights provides a suite of RESTful endpoints that enable meta partners to search \nfor and retrieve up-to-date information on flights and travel packages.\nIt allows clients to integrate real-time availability and pricing into their applications.",
+      "type": "text/plain"
+    }
+  }
+}

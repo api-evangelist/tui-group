@@ -1,0 +1,889 @@
+{
+  "item": [
+    {
+      "id": "8c13b6bc-d7c1-4471-8853-98e60a8a12d1",
+      "name": "Hotel Inventory",
+      "description": {
+        "content": "Operations to manage hotel inventory related information",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e36386bd-4083-411d-baad-3d40c7c8bd3a",
+          "name": "Retrieves hotels portfolio",
+          "request": {
+            "name": "Retrieves hotels portfolio",
+            "description": {
+              "content": "Returns the list of all the hotels available in the portfolio.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "hotel_inventory"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "api_version",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://pre-prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "39dd36b0-359a-47a9-aa99-76c6f7cf11b5",
+              "name": "Successfully retrieved the hotel inventory.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"hotels\": [\n    {\n      \"hotel_id\": \"76460\",\n      \"name\": \"Fancy Hotel\",\n      \"address\": {\n        \"street\": \"Main Street\",\n        \"city\": \"Bad Reichenhall\",\n        \"region\": \"Bavaria\",\n        \"country\": \"DE\",\n        \"postal_code\": \"12345\"\n      },\n      \"latitude\": \"48.123456\",\n      \"longitude\": \"48.123456\",\n      \"phone_number\": \"+49123456789\",\n      \"url\": \"https://www.domain.com/fancy-hotel\",\n      \"star_rating\": \"4.5\"\n    },\n    {\n      \"hotel_id\": \"76460\",\n      \"name\": \"Fancy Hotel\",\n      \"address\": {\n        \"street\": \"Main Street\",\n        \"city\": \"Bad Reichenhall\",\n        \"region\": \"Bavaria\",\n        \"country\": \"DE\",\n        \"postal_code\": \"12345\"\n      },\n      \"latitude\": \"48.123456\",\n      \"longitude\": \"48.123456\",\n      \"phone_number\": \"+49123456789\",\n      \"url\": \"https://www.domain.com/fancy-hotel\",\n      \"star_rating\": \"4.5\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "679d8b38-cb53-4741-a84d-94153ae4174d",
+              "name": "Bad Request - invalid input parameters or malformed request data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fece3103-350f-4d0f-80ac-64a3d31d4038",
+              "name": "Not Found - The requested resource could not be found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bd9a41eb-601e-4744-b1b0-0e158475766d",
+              "name": "Internal Server Error - An unexpected occurred while processing the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "23bb7782-6e75-4650-9719-23030882a757",
+          "name": "Sends hotels portfolio to SFTP server.",
+          "request": {
+            "name": "Sends hotels portfolio to SFTP server.",
+            "description": {
+              "content": "Sends hotels portfolio to SFTP server.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "hotel_inventory",
+                "send",
+                ":fileName"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "api_version",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "language",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "fileName",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/problem+json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://pre-prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9e2d549b-ade4-4976-a3a0-7d7523bbc4a7",
+              "name": "Successfully sent the hotel inventory to the SFTP server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory",
+                    "send",
+                    ":fileName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "fileName",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "0e068412-c69d-4420-bb12-7092bf02f00d",
+              "name": "Bad Request - invalid input parameters or malformed request data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory",
+                    "send",
+                    ":fileName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "fileName",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32e5db12-d2c6-4571-9f22-afcd05362d3a",
+              "name": "Not Found - The requested resource could not be found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory",
+                    "send",
+                    ":fileName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "fileName",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8ba6966b-21ab-4a46-a28f-c6b6fca4e4c4",
+              "name": "Internal Server Error - An unexpected occurred while processing the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_inventory",
+                    "send",
+                    ":fileName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_version",
+                      "value": "v1"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en_GB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "fileName",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "a8d64699-83d7-4872-ab0c-787121457ed3",
+      "name": "Hotel Availability",
+      "description": {
+        "content": "Operations around hotel availability details",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9691d2bf-a7bf-4961-bcdc-a612b7d6fe21",
+          "name": "Checks hotels availability",
+          "request": {
+            "name": "Checks hotels availability",
+            "description": {
+              "content": "Returns the hotel availability based on the provided criteria.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "hotel_availability"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://pre-prod.api.tui/oauth2/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_version\": \"<string>\",\n  \"language\": \"<string>\",\n  \"hotel_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"check_in_date\": \"<date>\",\n  \"check_out_date\": \"<date>\",\n  \"number_of_rooms\": \"<integer>\",\n  \"party\": [\n    {\n      \"adults\": \"<integer>\",\n      \"children_ages\": [\n        \"<integer>\",\n        \"<integer>\"\n      ]\n    },\n    {\n      \"adults\": \"<integer>\",\n      \"children_ages\": [\n        \"<integer>\",\n        \"<integer>\"\n      ]\n    }\n  ],\n  \"currency\": \"<string>\",\n  \"rate_model\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1080d6cc-0b4f-4a2e-a45c-83d53f006177",
+              "name": "Successfully updated the existing MetaSearchGeneric with the provided data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"hotel_ids\": [\n    \"A1954871\",\n    \"A1954871\"\n  ],\n  \"check_in_date\": \"2023-07-22\",\n  \"check_out_date\": \"2023-07-30\",\n  \"number_of_rooms\": 1,\n  \"party\": [\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    },\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    }\n  ],\n  \"currency\": \"EUR\",\n  \"rate_model\": \"AI\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"currency\": \"EUR\",\n  \"hotel_ids\": [\n    \"A1954871\",\n    \"A1954871\"\n  ],\n  \"check_in_date\": \"2023-07-22\",\n  \"check_out_date\": \"2023-07-30\",\n  \"number_of_rooms\": 1,\n  \"hotels\": [\n    {\n      \"hotel_id\": \"A1954871\",\n      \"cheapest_offer\": {}\n    },\n    {\n      \"hotel_id\": \"A1954871\",\n      \"cheapest_offer\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77b7ba98-b1ce-41ba-8e94-70d03601c0da",
+              "name": "Bad Request - invalid input parameters or malformed request data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"hotel_ids\": [\n    \"A1954871\",\n    \"A1954871\"\n  ],\n  \"check_in_date\": \"2023-07-22\",\n  \"check_out_date\": \"2023-07-30\",\n  \"number_of_rooms\": 1,\n  \"party\": [\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    },\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    }\n  ],\n  \"currency\": \"EUR\",\n  \"rate_model\": \"AI\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bf46d9a2-b9aa-4b46-88ea-4e5d053081fd",
+              "name": "Not Found - The requested resource could not be found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"hotel_ids\": [\n    \"A1954871\",\n    \"A1954871\"\n  ],\n  \"check_in_date\": \"2023-07-22\",\n  \"check_out_date\": \"2023-07-30\",\n  \"number_of_rooms\": 1,\n  \"party\": [\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    },\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    }\n  ],\n  \"currency\": \"EUR\",\n  \"rate_model\": \"AI\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ddfc943-6083-40e9-8930-55de8ab2c199",
+              "name": "Internal Server Error - An unexpected occurred while processing the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hotel_availability"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"api_version\": \"v1\",\n  \"language\": \"en_GB\",\n  \"hotel_ids\": [\n    \"A1954871\",\n    \"A1954871\"\n  ],\n  \"check_in_date\": \"2023-07-22\",\n  \"check_out_date\": \"2023-07-30\",\n  \"number_of_rooms\": 1,\n  \"party\": [\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    },\n    {\n      \"adults\": 2,\n      \"children_ages\": [\n        5,\n        10\n      ]\n    }\n  ],\n  \"currency\": \"EUR\",\n  \"rate_model\": \"AI\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"/some/uri-reference\",\n  \"title\": \"some title for the error situation\",\n  \"status\": 283,\n  \"detail\": \"some description for the error situation\",\n  \"instance\": \"/some/uri-reference#specific-occurrence-context\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pre-prod.api.tui/sales/pip/germany/tui/generic",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9f1bc84e-808e-4b38-a6e3-2e3318d85a84",
+    "name": "Meta-Search-Generic API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Meta-Search-Generic API that allows meta partners to access portfolio and offers information.\n\nContact Support:\n Name: meta.search.team\n Email: pip-meta@tui.com",
+      "type": "text/plain"
+    }
+  }
+}

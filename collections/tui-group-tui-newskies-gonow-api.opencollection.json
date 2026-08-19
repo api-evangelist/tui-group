@@ -1,0 +1,2090 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "NewSkies-GoNow-Api",
+    "version": "5.2.6.69"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "baggage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Adds a list of bags to a booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v3/baggage",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Optional record locator determines whether this endpoint behaves statelessly or modifies the booking in state. \n    Including the record locator will add the bags statelessly without assigning any baggage group. \n    Omitting the record locator will add the bags to the booking in state, \n    assigning a baggage group for the specified passenger, \n    with any other passengers specified by otherPassengersAlternateKeys.\n\nGraphQL endpoint: dcsCreateBagsV3"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "boardingDevices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generates commands for all BGR actions except for Connect.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/boardingDevices/bgrCommands",
+            "params": [
+              {
+                "name": "BoardingDeviceKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "LocationCode",
+                "value": "",
+                "type": "query",
+                "description": "The location code specifying which command generation rules will be used.  If not specified,\nthe default location code from the JWT will be used."
+              }
+            ]
+          },
+          "docs": "For post-board, separate command lists are returned for different boarding response\nscenarios.  These post-board lists contain tokenized commands, where the tokens should\nbe replaced by the client with a specific passenger's data before sending the commands\nto the BGR.  Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,\n%%UnitDesignator%%, and %%ErrorMessage%%.\n\nGraphQL endpoint: dcsGenerateBgrCommands"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "bookings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parses scanner output and performs a booking search based on the type of scan.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v2/bookings/searchByScan",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsSearchByScan"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "checkin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Checks in a list of passengers on the given segments.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/checkin",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsPerformCheckin"
+        },
+        {
+          "info": {
+            "name": "Removes the checked-in status for a list of passengers on the given segments.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/checkin",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint accepts manifest segment keys or booking segment keys\n\nGraphQL endpoint: dcsUndoCheckin"
+        },
+        {
+          "info": {
+            "name": "Gets custom requirements (AKA UserFlow Workflow) for the booking in state.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/checkin/requirements/custom",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "These requirements specify which pages in the client app are required by the client\nconfig to be visited before checking in.  Client apps may track or ignore these\nrequirements to meet their own design specifications.  Check-in is never\nblocked by whether these requirements have been met.\n\nGraphQL endpoint: dcsGetCheckinCustomRequirementsStateful"
+        },
+        {
+          "info": {
+            "name": "Gets general checkin requirements for the booking in state.  Does not get\ngovernment security requirements or custom requirements.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/checkin/requirements/general",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetCheckinGeneralRequirementsStateful"
+        },
+        {
+          "info": {
+            "name": "Gets government security checkin requirements for the booking in state.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/gss/v1/checkin/requirements/security",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetCheckinSecurityRequirementsStateful"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "deviceManagers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves device manager info for the specified device manager key.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/deviceManagers/:deviceManagerKey",
+            "params": [
+              {
+                "name": "deviceManagerKey",
+                "value": "",
+                "type": "path",
+                "description": "The device manager key."
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetDeviceManagerInfo"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "disruption",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Combines a list of segments into a properly formed journey and determines whether that\njourney contains ad hoc connections.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/disruption/combineSegments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsCombineDisruptionSegments"
+        },
+        {
+          "info": {
+            "name": "Uses search criteria to retrieve a list of legs from which passengers can be moved in\na disruption.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/disruption/fromLegs",
+            "params": [
+              {
+                "name": "GetIropOnly",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "OpSuffix",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the dotREZ NSK API's GET /api/nsk/v1/settings/booking/reserveFlights to retrieve\nrelated role settings:\n    \n        \n        daysBeforeIrop:  This value must be a positive number, and the departure\n        date of the request must not be more than this number of days after today.\n        \n        \n        allowMove:  This value must not be set to MoveFlightCode.NotAllowed.\n        \n    \nUse the dotREZ NSK API's GET /api/nsk/v1/settings/general/operations to retrieve\nrelated role setting:\n  "
+        },
+        {
+          "info": {
+            "name": "Retrieves a list of the final destination journeys for the passengers from a given\ndisruption from-leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/disruption/fromLegs/:legKey/finalDestinations",
+            "params": [
+              {
+                "name": "legKey",
+                "value": "",
+                "type": "path",
+                "description": "The leg key."
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetDisruptionFinalDestinations"
+        },
+        {
+          "info": {
+            "name": "Performs a disruption move operation (IROP or diversion) for a group of bookings.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/disruption/move",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the dotREZ NSK API's GET /api/nsk/v1/settings/booking/reserveFlights to retrieve\nrelated role settings:\n    \n        \n        daysBeforeIrop:  This value must be a positive number, and the departure\n        date of the request must not be more than this number of days after today.\n        \n        \n        allowMove:  This value must not be set to MoveFlightCode.NotAllowed.\n        \n        \n        allowMoveOverbook:  If InventoryControlType in the request is set to\n        OversellSpace, t"
+        },
+        {
+          "info": {
+            "name": "Uses search criteria to retrieve a list of journeys to which passengers can be moved in\na disruption.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/disruption/toJourneys",
+            "params": [
+              {
+                "name": "FlightType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = All, 1 = NonStop, 2 = Through, 3 = Direct, 4 = Connect"
+              },
+              {
+                "name": "IncludeNextDay",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "OpSuffix",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetDisruptionToJourneys"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parses scanner output and updates a specific passenger or infant's travel document\nfor the booking in state.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/documents/:travelDocumentKey/scannedData",
+            "params": [
+              {
+                "name": "travelDocumentKey",
+                "value": "",
+                "type": "path",
+                "description": "Document to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The scanned data must belong to the same type of document and be issued by the same\ncountry as the one specified by the given travel document key.  The rest of the\ndocument's information will be updated from the scanned data.\nUpdates booking passenger information with the scanned data if it does not match the document.\n\nGraphQL endpoint: dcsUpdateTravelDocumentFromScanStateful"
+        },
+        {
+          "info": {
+            "name": "Parses scanner output and creates a new travel document for a specific passenger\nor infant on the booking in state.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/documents/scannedData",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates booking passenger information with the scanned data if it does not match the document.\n\nGraphQL endpoint: dcsCreateTravelDocumentFromScanStateful"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "graph",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "v2_graph_queryName_post",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/v2/graph/:queryName",
+            "params": [
+              {
+                "name": "queryName",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cachedResults",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "health",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "v3_health_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/v3/health"
+          }
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "legs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves a list of inventory legs based on search criteria.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/legs",
+            "params": [
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "OpSuffix",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetLegs"
+        },
+        {
+          "info": {
+            "name": "Gets government security requirements that are required for closing the specified leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/gss/v1/legs/:legKey/close/requirements",
+            "params": [
+              {
+                "name": "legKey",
+                "value": "",
+                "type": "path",
+                "description": "The unique leg key. Leg keys can be retrieved via GET /api/dcs/v1/legs."
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetLegCloseSecurityRequirements"
+        },
+        {
+          "info": {
+            "name": "Retrieves operations (AKA flight following) info for the specified inventory leg.  In\nthe case of passive flights, only status, boardingTimeOffset, and schedule-related\nfields are populated.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/legs/:legKey/operationsInfo",
+            "params": [
+              {
+                "name": "legKey",
+                "value": "",
+                "type": "path",
+                "description": "The leg key or manifest leg key."
+              }
+            ]
+          },
+          "docs": "This endpoint replaces the dotREZ NSK API's GET /api/nsk/v2/trip/info/{legKey}/status.\nThis endpoint uses a more detailed and operationally-appropriate enum for the status\nfield.\n\nGraphQL endpoint: dcsGetOperationsInfo"
+        },
+        {
+          "info": {
+            "name": "Retrieves a list of thru legs for the specified leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/legs/:legKey/thruLegs",
+            "params": [
+              {
+                "name": "legKey",
+                "value": "",
+                "type": "path",
+                "description": "The leg key."
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetThruLegs"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Pushes a client side log entry to the server.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/logs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Pushes a client side log entry to the server."
+        },
+        {
+          "info": {
+            "name": "Uploads a log file to the server.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/logs/file",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "SystemType",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "MachineName",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Message",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "File",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Uploads a log file to the server."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "passengers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Uses search criteria to retrieve a list of passengers.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/passengers",
+            "params": [
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "OpSuffix",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FirstName",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "LastName",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "RecordLocator",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SearchByRecordLocatorOnly",
+                "value": "",
+                "type": "query",
+                "description": "If true, recordLocator is required and all other fields are ignored.  If false,\ncarrierCode, departureDate, and origin are required."
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetPassengers"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "printers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets the list of TCP/IP printers for the logged in agent's location.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers"
+          },
+          "docs": "GraphQL endpoint: dcsGetPrinters"
+        },
+        {
+          "info": {
+            "name": "Performs bag tag print for bags of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/bagTags/passenger/print",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsPerformBagTagPrint"
+        },
+        {
+          "info": {
+            "name": "Generates bag tag print streams for bags of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/bagTags/passenger/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.  If the user is\nnot an agent, then the specified booking must be in state and unmodified, and the\nspecified bag tags must be in the Added state (i.e. they must not have been printed\nalready).\n\nGraphQL endpoint: dcsGenerateBagTagPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Performs boarding pass print for the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/boardingPasses/print",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\nAccepts manifest segment keys or booking segment keys.\n\nGraphQL endpoint: dcsPerformBoardingPassPrint"
+        },
+        {
+          "info": {
+            "name": "Generates boarding pass print streams for the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/boardingPasses/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.  If the user is\nnot an agent, then the specified booking must be in state and unmodified.\n\nGraphQL endpoint: dcsGenerateBoardingPassPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Retrieves initialization streams for setting up a printer.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/initializationStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsGetPrinterInitializationStreams"
+        },
+        {
+          "info": {
+            "name": "Performs printer initialization.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/initialize",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsPerformPrinterInitialization"
+        },
+        {
+          "info": {
+            "name": "Performs receipt print for the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/booking/print",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsPerformBookingReceiptPrint"
+        },
+        {
+          "info": {
+            "name": "Generates receipt print streams for the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/booking/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.  If the user is\nnot an agent, then the specified booking must be in state and unmodified.\nAccepts manifest segment keys or booking segment keys.\n\nGraphQL endpoint: dcsGenerateBookingReceiptPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Performs receipt print for selected passengers of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/passenger/print",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsPerformPassengerReceiptPrint"
+        },
+        {
+          "info": {
+            "name": "Generates receipt print streams for selected passengers of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/passenger/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.  If the user is\nnot an agent, then the specified booking must be in state and unmodified.\n\nGraphQL endpoint: dcsGeneratePassengerReceiptPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Performs receipt print for a specific payment of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/payment/print",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.\n\nGraphQL endpoint: dcsPerformPaymentReceiptPrint"
+        },
+        {
+          "info": {
+            "name": "Generates receipt print streams for a specific payment of the specified booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/receipts/payment/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint uses the session's location code if one isn't provided.  If the user is\nnot an agent, then the specified booking must be in state and unmodified.\n\nGraphQL endpoint: dcsGeneratePaymentReceiptPrintStreams"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "printers/reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets the print preview for an availability report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/availabilityReport/printPreview",
+            "params": [
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAvailabilityReport:  This value must be true.\n\nGraphQL endpoint: dcsGetAvailabilityReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for an availability report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/availabilityReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAvailabilityReport:  This value must be true.\n\nGraphQL endpoint: dcsGetAvailabilityReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a bag tag tracking report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/bagTagTrackingReport/printPreview",
+            "params": [
+              {
+                "name": "BagTag",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Date",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagTagTrackingReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagTagTrackingReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a bag tag tracking report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/bagTagTrackingReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagTagTrackingReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagTagTrackingReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for the bag weight by leg report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/bagWeightByLegReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "WeightType",
+                "value": "",
+                "type": "query",
+                "description": "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagWeightByLegReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagWeightByLegReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for the bag weight by leg report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/bagWeightByLegReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagWeightByLegReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagWeightByLegReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a checked baggage report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/checkedBaggageReport/printPreview",
+            "params": [
+              {
+                "name": "StartDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "EndDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "PrimarySortType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = FlightNumber, 1 = CityPair, 2 = Sequence"
+              },
+              {
+                "name": "SecondarySortType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Name, 1 = BagTag"
+              },
+              {
+                "name": "WeightType",
+                "value": "",
+                "type": "query",
+                "description": "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+              },
+              {
+                "name": "IncludeUnflownPassengers",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ShowSummaryOnly",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "AgentName",
+                "value": "",
+                "type": "query",
+                "description": "The username of the agent account that checked the baggage."
+              },
+              {
+                "name": "AgentDomain",
+                "value": "",
+                "type": "query",
+                "description": "The domain of the agent account that checked the baggage.  If agentName is empty,\nthis value is ignored."
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckedBaggageReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckedBaggageReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a checked baggage report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/checkedBaggageReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckedBaggageReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckedBaggageReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a check-in report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/checkInReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeThruPassengers",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DisplayNames",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DisplaySeats",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckInReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckInReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a check-in report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/checkInReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckInReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckInReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a departure manifest report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/departureManifestReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetDepartureManifestReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a downline passenger and count report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/downlinePassengerAndCountReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeIatciFlights",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ShowPassengerNames",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetDownlinePassengerAndCountReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a downline passenger and count report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/downlinePassengerAndCountReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetDownlinePassengerAndCountReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for an enplanement or deplanement report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/enplanementDeplanementReport/printPreview",
+            "params": [
+              {
+                "name": "StartDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "EndDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ShowSummaryOnly",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Enplanement, 1 = Deplanement"
+              },
+              {
+                "name": "SegmentStatus",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Flown, 1 = Open"
+              },
+              {
+                "name": "Station",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeConnections",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FareClasses",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "StartFlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "EndFlightNumber",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowEnplanementDeplanementReport:  This value must be true.\n\nGraphQL endpoint: dcsGetEnplanementDeplanementReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for an enplanement or deplanement report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/enplanementDeplanementReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowEnplanementDeplanementReport:  This value must be true.\n\nGraphQL endpoint: dcsGetEnplanementDeplanementReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a flight close report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightCloseReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SortType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Name, 1 = Seat, 2 = Destination, 3 = Sequence"
+              },
+              {
+                "name": "WeightType",
+                "value": "",
+                "type": "query",
+                "description": "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightCloseReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightCloseReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a flight close report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightCloseReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightCloseReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightCloseReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a flight information report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightInformationReport/printPreview",
+            "params": [
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Destination",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FlightNumber",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "OpSuffix",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetFlightInformationReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a flight information report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightInformationReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetFlightInformationReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a flight load report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightLoadReport/printPreview",
+            "params": [
+              {
+                "name": "DepartureDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "Origin",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightLoadReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightLoadReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a flight load report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightLoadReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightLoadReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightLoadReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a flight manifest report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightManifestReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = FlightManifest, 1 = FlightManifestWithApisDetails, 2 = PassengerDocument"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightManifestReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a flight manifest report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightManifestReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightManifestReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the zone counts and baggage counts for a flight summary report for a given leg.\nClient apps must calculate their own manifest counts and formatting to display a\nprint preview.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightSummaryReport/data",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "WeightType",
+                "value": "",
+                "type": "query",
+                "description": "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightSummaryReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightSummaryPartialReportData"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a flight summary report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/flightSummaryReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightSummaryReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightSummaryReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for an inbound passenger and count report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/inboundPassengerAndCountReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeIatciFlights",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ShowPassengerNames",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetInboundPassengerandCountReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for an inbound passenger and count report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/inboundPassengerAndCountReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetInboundPassengerandCountReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for an inventory leg-op file report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/inventoryLegOpFileReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": "Property for the Report Type of the report \nEnumeration values: 0 = Both, 1 = Weather, 2 = Flight"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetInventoryLegOpFileReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for an inventory leg-op file report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/inventoryLegOpFileReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetInventoryLegOpFileReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a passenger verification report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/passengerVerificationReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeUnverifiedPassenger",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludePassengerAddress",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetPassengerVerificationReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a passenger verification report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/passengerVerificationReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetPassengerVerificationReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a payment receipt report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/paymentReceiptReport/printPreview",
+            "params": [
+              {
+                "name": "PaymentDate",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the date of the payment."
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": "The type of payment receipt report to be returned. \nEnumeration values: 0 = Summary, 1 = Detailed"
+              },
+              {
+                "name": "PaymentMethodCode",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying which payment method was used."
+              },
+              {
+                "name": "LocationCode",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the location where the payment was accepted."
+              },
+              {
+                "name": "DepartmentCode",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the department code of the agent that accepted the payment."
+              },
+              {
+                "name": "AgentName",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the name of the agent that accepted the payment."
+              },
+              {
+                "name": "CurrencyCode",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the currency that was used to make the payment."
+              },
+              {
+                "name": "BaseCurrencyCode",
+                "value": "",
+                "type": "query",
+                "description": "Search criteria specifying the base currency associated with the payment."
+              },
+              {
+                "name": "DisplayCurrencySource",
+                "value": "",
+                "type": "query",
+                "description": "Specifies whether to display the currency used in the booking or in the specific payment. \nEnumeration values: 0 = Payment, 1 = Booking"
+              },
+              {
+                "name": "TimeZoneCode",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the time zone used in performing the search and displaying the report."
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPaymentReceiptReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPaymentReceiptReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a payment receipt report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/paymentReceiptReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPaymentReceiptReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPaymentReceiptReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a pre or post flight manifest report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/prePostFlightManifestReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = PostFlightManifest, 1 = PreFlightManifest, 2 = PreFlightManifestWithSeatMap"
+              },
+              {
+                "name": "SortType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Seat, 1 = Name"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPrePostFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPrePostFlightManifestReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a pre or post flight manifest report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/prePostFlightManifestReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPrePostFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPrePostFlightManifestReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a segments by time report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/segmentsByTimeReport/printPreview",
+            "params": [
+              {
+                "name": "BookingDate",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ChannelType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = Default, 1 = Direct, 2 = Web, 3 = Gds, 4 = Api, 5 = DigitalApi, 6 = DigitalWeb, 7 = Ndc"
+              },
+              {
+                "name": "CarrierCode",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowSegmentsByTimeReport:  This value must be true.\n\nGraphQL endpoint: dcsGetSegmentsByTimeReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a segments by time report.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/segmentsByTimeReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowSegmentsByTimeReport:  This value must be true.\n\nGraphQL endpoint: dcsGetSegmentsByTimeReportPrintStreams"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a standard leg report, i.e. any type of report that takes no\nparameters other than a legKey. The specific type of report is specified by the\nreportType parameter.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/standardLegReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ReportType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = AircraftZoneReport, 1 = AppsOverrideReport, 2 = BaggageReport, 3 = BoardingHistoryReport, 4 = CabinServiceAreaDetailedReport, 5 = CabinServiceAreaSummaryReport, 6 = DuplicateTravelDocumentReport, 7 = FlightHistoryReport, 8 = ManifestWithConnectionInformationReport, 9 = ManifestWithTripDetailReport, 10 = MealFulfillmentDetailedReport, 11 = MealFulfillmentSummaryReport, 12 = SeatAssignmentReport, 13 = SelecteesByFlightReport"
+              }
+            ]
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAircraftZoneReport:  This value must be true if reportType is\n        \"AircraftZoneReport\".\n        \n        \n        allowCabinServiceAreaReport:  This value must be true if reportType is\n        \"CabinServiceAreaDetailedReport\" or \"CabinServiceAreaSummaryReport\".\n        \n        \n        allowManifestReport:  This value must be true if reportType is\n        \"ManifestRep"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a standard leg report, i.e. any type of report that takes no\nparameters other than a legKey. The specific type of report is specified by the\nreportType parameter.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/standardLegReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAircraftZoneReport:  This value must be true if reportType is\n        \"AircraftZoneReport\".\n        \n        \n        allowCabinServiceAreaReport:  This value must be true if reportType is\n        \"CabinServiceAreaDetailedReport\" or \"CabinServiceAreaSummaryReport\".\n        \n        \n        allowManifestReport:  This value must be true if reportType is\n        \"ManifestRep"
+        },
+        {
+          "info": {
+            "name": "Gets the print preview for a transfer bag tag report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/transferBagTagReport/printPreview",
+            "params": [
+              {
+                "name": "LegKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "IncludeOaAndManualTags",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SortType",
+                "value": "",
+                "type": "query",
+                "description": " \nEnumeration values: 0 = PassengerLastName, 1 = BagTag"
+              }
+            ]
+          },
+          "docs": "GraphQL endpoint: dcsGetTransferBagTagReportPrintPreview"
+        },
+        {
+          "info": {
+            "name": "Gets the print streams for a transfer bag tag report for a given leg.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/printers/reports/transferBagTagReport/printStreams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetTransferBagTagReportPrintStreams"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "scanners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Parses scanner output into individual data fields, returning one or more scan types\nbased on the formats specified in the scan parser configuration.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v3/scanners/parse",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsParseScannedDataV3"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "segments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves a list of downline segments based on search criteria.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/segments/downline",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetDownlineSegments"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "settings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets check-in settings for the current user's role code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v2/settings/operations/checkin"
+          },
+          "docs": "GraphQL endpoint: dcsGetCheckinSettingsV2"
+        },
+        {
+          "info": {
+            "name": "Gets departure settings for the current user's role code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/settings/operations/departure"
+          },
+          "docs": "GraphQL endpoint: dcsGetDepartureSettings"
+        },
+        {
+          "info": {
+            "name": "Gets settings for the device manager.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/settings/operations/deviceManager",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "GraphQL endpoint: dcsGetDeviceManagerSettings"
+        },
+        {
+          "info": {
+            "name": "Gets kiosk settings.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/settings/operations/kiosk"
+          },
+          "docs": "GraphQL endpoint: dcsGetKioskSettings"
+        },
+        {
+          "info": {
+            "name": "Gets report settings for the current user's role code.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/settings/operations/reports"
+          },
+          "docs": "GraphQL endpoint: dcsGetReportSettings"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "ssrs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generates paired SSR comments for a booking.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/ssrs/paired/comments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Optional record locator on the request determines how the booking is retrieved.\nIf a record locator is present, this endpoint behaves statelessly, but\nomitting the record locator specifies that comments will be generated from the\nbooking in state.\n\n\nSSR pairs and associated comment formats are defined in the setting\npairedSsrConfirmationList, which can be retrieved from the GoNow API's\nGET /api/dcs/v1/settings/operations/checkin.\n\nGraphQL endpoint: dcsGeneratePairedSsrComments"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "token",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Gets token-based information about the current user that is commonly used by DCS\napplications.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://prod.api.tui/flight/newskies/gonow/api/dcs/v1/token"
+          },
+          "docs": "Before calling this endpoint, you first need to login using the PUT or POST endpoint\nat /api/nsk/v2/token.\n\nGraphQL endpoint: dcsToken"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

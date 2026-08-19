@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Meta-Search-Generic API",
+    "version": "0.3.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Hotel Inventory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieves hotels portfolio",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pre-prod.api.tui/sales/pip/germany/tui/generic/hotel_inventory",
+            "params": [
+              {
+                "name": "api_version",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://pre-prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns the list of all the hotels available in the portfolio."
+        },
+        {
+          "info": {
+            "name": "Sends hotels portfolio to SFTP server.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pre-prod.api.tui/sales/pip/germany/tui/generic/hotel_inventory/send/:fileName",
+            "params": [
+              {
+                "name": "api_version",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fileName",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://pre-prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Sends hotels portfolio to SFTP server."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Hotel Availability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Checks hotels availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pre-prod.api.tui/sales/pip/germany/tui/generic/hotel_availability",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://pre-prod.api.tui/oauth2/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns the hotel availability based on the provided criteria."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,101 @@
+{
+  "item": [
+    {
+      "id": "8f124602-221d-4a54-a0e9-60811d3ad482",
+      "name": "Supply",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3129f0c0-24cd-40f5-bb69-7661e285fdd9",
+          "name": "SupplyResponse",
+          "request": {
+            "name": "SupplyResponse",
+            "description": {
+              "content": "The SupplyResponse is here defined as a GET oparation, but in real time a (xml) file is created and placed on \na server from which third parties can retrieve them via download. Each file contains the supply for a certain \naccommodation.  \nIt contains information about the package:\n- General information  \n  Like PackageID, Description, BookPeriod and content location\n- Transport information  \n  Like Route information (from/to)\n- Accommodation/room information  \n  Like AccommodationID and AccommodationType,  \n  UnitID, Type, Board and Occupation (rules) \n- Transfer information  \n  Included transfer, that could be \"No Transfer\" or \"Standard Transfer\"\n- Price information  \n  Price for each Departuredate, Duration, Route, Unit, Board and Occupation\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supply"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "7a7efd3b-7afc-4bd9-aafb-2faea8b20b98",
+              "name": "Contents of supply file",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supply"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/xml"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/xml"
+                }
+              ],
+              "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+              "cookie": [],
+              "_postman_previewlanguage": "xml"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "prod.sftp.tui-b2bota-g7.nl",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "281f296b-8e02-4725-bb9b-beb14659841c",
+    "name": "Supply",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This document only describes the SupplyResponse and is a translation of the supply.xsd.\nBecause not all items in xsd schema can be translated to open API definition it is important to also use the examples.  \nFor example the Price Group:     \n&lt;Price Currency=\"EUR\" Occupation=\"1\" PricePer=\"PA\" PriceType=\"OFF\"&gt;303400&lt;/Price&gt;  \nThe Price element has attributes, but also contains the price itself. This cannot be defined in API Specification (json).\nThe price will be a group and a group can not contain a value, only items.\n\n\nContact Support:\n Name: G7-OTA-TEAM\n Email: b2bota.g7.support@tui.nl",
+      "type": "text/plain"
+    }
+  }
+}
