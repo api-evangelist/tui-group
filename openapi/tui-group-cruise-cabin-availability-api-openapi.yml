@@ -1,0 +1,1459 @@
+openapi: 3.2.0
+info:
+  title: Cruise Cabin availability API
+  description: Cruise cabin availability API to get available cabins for a given itinerary, duration, cabin type, occupancy and board.
+  version: '1.0'
+  contact:
+    email: NRCruiseTeam@TUIGroup.onmicrosoft.com
+    name: Cruise NR API Support
+  x-header: 'This APIs returns physical cabins on a cruise for given search criteria.
+
+    '
+  x-summary: 'This API returns physical cabins on a cruise that is specific to the search criteria.
+
+    '
+servers:
+- url: https://prod.api.tui/v2/cruises/cabinsavailability
+- url: https://pre-prod.api.tui/v2/cruises/cabinsavailability
+tags:
+- name: Cruise Cabin availability
+paths:
+  /v2/cruises/cabinsavailability:
+    post:
+      tags:
+      - Cruise Cabin availability
+      summary: API to get available cabins
+      description: This API gives a list of available physical cabins and price for the given selection and occupancy.
+      operationId: getCabinSelection
+      parameters:
+      - name: x-Correlation-Id
+        in: header
+        required: true
+        description: Unique identifier for tracing requests (UUID format)
+        schema:
+          type: string
+          format: uuid
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+      - name: apiVersion
+        description: Indicates the target version of the resource
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^v([0-9]+)([.])([0-9]+)$
+          example: v1.0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CabinAvailabilityRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+        '400':
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+        '401':
+          description: Not authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/CabinAvailabilityResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '502':
+          description: One or more backend systems not available
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    CruiseItinerary:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: DIS2
+        name:
+          type: string
+          example: Treasures of the Mediterranean
+        itineraryGroup:
+          $ref: '#/components/schemas/CruiseItineraryGroup'
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/CruiseItineraryDay'
+    MetaInformation:
+      required:
+      - agentId
+      - brand
+      - businessRelationship
+      - channel
+      - currency
+      - decoratedContent
+      - locale
+      - market
+      type: object
+      properties:
+        locale:
+          pattern: \w{2}\_\w{2}
+          type: string
+          example: nl_BE
+        market:
+          type: string
+          example: BE
+          enum:
+          - NL
+          - BE
+          - FR
+          - MA
+          - UK
+          - IE
+          - DE
+          - PL
+          - CH
+          - AT
+          - SE
+          - 'NO'
+          - DK
+          - FI
+        brand:
+          type: string
+          example: TUI
+          enum:
+          - TUI
+          - TUIFLY
+          - VIP
+          - FIRST_CHOICE
+          - CRYSTAL_SKI
+          - MARELLA_CRUISE
+          - RIVER_CRUISE
+        channel:
+          type: string
+          example: WEB
+          enum:
+          - WEB
+          - PARTNERS
+          - MOBILE
+        businessRelationship:
+          type: string
+          example: B2C
+          enum:
+          - B2B
+          - B2C
+        decoratedContent:
+          type: boolean
+          description: If this flag is set to true, the response will contain SSR descriptions with the requested local. The default behavior is decoratedContent=false
+          example: false
+        currency:
+          $ref: '#/components/schemas/Currency'
+        agentId:
+          type: string
+    Person:
+      required:
+      - dateOfBirth
+      - firstName
+      - gender
+      - lastName
+      - nationality
+      type: object
+      properties:
+        dateOfBirth:
+          type: string
+          format: date
+        firstName:
+          maxLength: 40
+          minLength: 2
+          type: string
+        middleName:
+          maxLength: 40
+          minLength: 2
+          type: string
+        lastName:
+          maxLength: 40
+          minLength: 2
+          type: string
+        reference:
+          type: string
+        gender:
+          type: string
+          enum:
+          - MALE
+          - FEMALE
+          - NUETRAL
+        nationality:
+          type: string
+          example: BE
+        vip:
+          type: boolean
+        lead:
+          type: boolean
+        infantNotBorn:
+          type: boolean
+          example: false
+        type:
+          type: string
+          enum:
+          - NORMAL
+          - JUDICIAL
+          - STAFF
+          - EMERGENCY
+        contactPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactPoint'
+        address:
+          $ref: '#/components/schemas/Address'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        email:
+          type: string
+        marketingPreferences:
+          type: array
+          items:
+            type: string
+            enum:
+            - EMAIL
+            - TEXT_MESSAGE
+            - TELEPHONE
+            - POST
+    Ship:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: DIS2
+        name:
+          type: string
+          example: Discovery 2
+        cruiseLine:
+          type: string
+          example: TUI Cruise line
+    PriceDetail:
+      required:
+      - breakdown
+      - total
+      type: object
+      properties:
+        breakdown:
+          $ref: '#/components/schemas/PriceBreakdown'
+        total:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    ContactPoint:
+      required:
+      - category
+      - contactPointId
+      - contactType
+      - priority
+      type: object
+      properties:
+        contactPointId:
+          type: string
+        priority:
+          type: string
+          enum:
+          - Emergency
+          - First
+          - Second
+          - Third
+        category:
+          type: string
+          enum:
+          - Personal
+          - Business
+        contactType:
+          type: string
+          enum:
+          - PHONE
+          - EMAIL
+          - ADDRESS
+      discriminator:
+        propertyName: contactType
+    Item:
+      required:
+      - id
+      - itemType
+      type: object
+      properties:
+        id:
+          type: string
+          description: Item id.
+        itemType:
+          type: string
+          enum:
+          - FLIGHT
+          - OPTIONS
+          - STAY
+          - TRANSFER
+          - INSURANCE
+          - EXTRAS
+      description: Details of the product associated with the assignment.
+      example: 1
+    CabinAvailabilityRequest:
+      required:
+      - metaInformation
+      - cruise
+      type: object
+      properties:
+        metaInformation:
+          $ref: '#/components/schemas/MetaInformation'
+        cruise:
+          $ref: '#/components/schemas/Cruise'
+        flights:
+          type: array
+          description: Flights are mandatory for cruise and flight bookings.
+          items:
+            $ref: '#/components/schemas/Flight'
+        inventory:
+          $ref: '#/components/schemas/CabinPackageInventory'
+    Flight:
+      required:
+      - directions
+      - id
+      - prices
+      type: object
+      properties:
+        id:
+          type: string
+        directions:
+          maxItems: 2
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightDirection'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+    CruiseItineraryGroup:
+      required:
+      - code
+      - name
+      type: object
+      properties:
+        code:
+          type: string
+          example: '123'
+        name:
+          type: string
+          example: Group name
+    FlightSegment:
+      required:
+      - arrivalDate
+      - arrivalPoint
+      - arrivalTime
+      - capacityGroups
+      - departureDate
+      - departurePoint
+      - departureTime
+      - duration
+      - flightNo
+      - id
+      - marketingCarrier
+      - operatingCarrier
+      - sectors
+      - specialServiceRequests
+      type: object
+      properties:
+        departureDate:
+          type: string
+          format: date
+          example: '2024-03-28'
+        departureTime:
+          $ref: '#/components/schemas/LocalTime'
+        arrivalDate:
+          type: string
+          format: date
+          example: '2024-03-29'
+        arrivalTime:
+          $ref: '#/components/schemas/LocalTime'
+        id:
+          type: string
+        operatingCarrier:
+          maxLength: 3
+          minLength: 2
+          type: string
+          example: TU
+        marketingCarrier:
+          maxLength: 3
+          minLength: 2
+          type: string
+          example: TU
+        flightNo:
+          pattern: \d{1,4}
+          type: string
+          description: if value will come with spaces it will be trimmed, e.g. " 111"->"111"
+        departurePoint:
+          $ref: '#/components/schemas/Point'
+        arrivalPoint:
+          $ref: '#/components/schemas/Point'
+        duration:
+          type: integer
+          description: Duration in minutes
+          format: int32
+          example: 123
+        sectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sector'
+        specialServiceRequests:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/BaseOption'
+            - $ref: '#/components/schemas/BaggageOption'
+            - $ref: '#/components/schemas/SeatsOption'
+        capacityGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapacityGroup'
+        cabinClass:
+          type: string
+          example: M
+        bookingClass:
+          type: string
+          example: M
+        sourcingSystem:
+          type: string
+          example: MULTICOM
+    FlightDirection:
+      required:
+      - id
+      - prices
+      - segments
+      - travellers
+      - type
+      type: object
+      properties:
+        duration:
+          type: integer
+          description: duration in minutes
+          format: int32
+          example: 123
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - OUTBOUND
+          - INBOUND
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightSegment'
+        downstreamRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DownstreamRef'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+    ShoreExcursion:
+      required:
+      - code
+      - id
+      - travellers
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          example: Treasures of the Mediterranean
+        name:
+          type: string
+          example: Ride to mountain
+        portVisit:
+          $ref: '#/components/schemas/PortVisit'
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    Point:
+      required:
+      - codes
+      - name
+      - type
+      type: object
+      properties:
+        codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PointCode'
+        name:
+          type: string
+          example: London Heathrow
+        type:
+          type: string
+          enum:
+          - HOTEL
+          - AIRPORT
+          - PORT
+          - POI
+          - RESORT
+          - CITY
+          - DESTINATION
+          - REGION
+          - COUNTRY
+          - CONTINENT
+    CabinPackageInventory:
+      type: object
+      description: Package inventory information for cabin availability requests. Contains supplier product details including promotional codes that can override system-configured promotional codes.
+      required:
+      - supplierProduct
+      properties:
+        supplierProduct:
+          $ref: '#/components/schemas/CabinSupplierProduct'
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
+      example: '11:00:00'
+    ServiceBundle:
+      required:
+      - code
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          example: GALA_DINNER
+        excursions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShoreExcursion'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    Cruise:
+      required:
+      - id
+      - sailings
+      - travellers
+      type: object
+      properties:
+        id:
+          type: string
+        sailings:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Sailing'
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+    Supplement:
+      required:
+      - code
+      - prices
+      type: object
+      properties:
+        code:
+          type: string
+          example: GPS
+        name:
+          type: string
+          example: GPS indicator
+        included:
+          type: boolean
+          example: true
+        mandatory:
+          type: boolean
+          example: true
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+    CruiseItineraryDay:
+      required:
+      - dayNo
+      type: object
+      properties:
+        code:
+          type: string
+          example: DAY1_DESC
+        dayNo:
+          type: integer
+          format: int32
+          example: 1
+        portVisits:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortVisit'
+    Assignment:
+      required:
+      - item
+      type: object
+      properties:
+        travellerId:
+          type: string
+          example: adt1
+        item:
+          $ref: '#/components/schemas/Item'
+      description: An assignment object that includes details about the traveller and product related to the message.
+    Cabin:
+      required:
+      - cabinNo
+      - cabinType
+      type: object
+      properties:
+        deck:
+          type: string
+          example: '1'
+        cabinNo:
+          type: string
+          example: '10002'
+        cabinType:
+          $ref: '#/components/schemas/CabinType'
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+    PhoneNumber:
+      required:
+      - countryCode
+      - countryISOCode
+      - number
+      type: object
+      properties:
+        countryCode:
+          type: string
+          example: '+32'
+        number:
+          type: string
+          example: '50334002'
+        countryISOCode:
+          type: string
+          description: in case of NR this field is not taken into account and skipped
+          example: BE
+    Currency:
+      required:
+      - currencyCode
+      type: object
+      properties:
+        currencyCode:
+          maxLength: 3
+          minLength: 3
+          type: string
+    Event:
+      required:
+      - code
+      - id
+      - travellers
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+          example: GALA_DINNER
+        name:
+          type: string
+          example: Gala Dinner
+        itineraryDay:
+          type: integer
+          format: int32
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    PointCode:
+      required:
+      - code
+      - type
+      type: object
+      properties:
+        code:
+          type: string
+          example: LHR
+        type:
+          type: string
+          example: IATA
+    CabinBoardRate:
+      required:
+      - boardType
+      - cabinType
+      - sequenceNumber
+      - travellers
+      type: object
+      properties:
+        sequenceNumber:
+          type: string
+          example: '1'
+        cabinType:
+          $ref: '#/components/schemas/CabinType'
+        boardType:
+          type: string
+          enum:
+          - A24
+          - AB
+          - AI
+          - AI+
+          - BB
+          - CB
+          - FB
+          - FB+
+          - HB
+          - HB+
+          - IT
+          - PI
+          - RO
+          - SC
+          - SC+
+          - SSC
+          - GT06-AI
+        rateCode:
+          type: string
+          example: TUI
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          $ref: '#/components/schemas/PriceDetail'
+        cabins:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cabin'
+    BaggageOption:
+      required:
+      - category
+      - code
+      - downstreamRefs
+      - id
+      - maxWeight
+      - travellers
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseOption'
+      - type: object
+        properties:
+          minWeight:
+            type: string
+            description: Minimum weight required for baggage.
+            example: '0'
+          maxWeight:
+            type: string
+            description: Maximum weight allowed for baggage.
+            example: '20'
+    SeatsOption:
+      required:
+      - category
+      - code
+      - downstreamRefs
+      - id
+      - travellers
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BaseOption'
+      - type: object
+        properties:
+          seatColumn:
+            type: string
+            description: Seat Column number.
+            example: '1'
+          seatRow:
+            type: string
+            description: Seat Row number.
+            example: '7'
+    PortVisit:
+      required:
+      - port
+      type: object
+      properties:
+        port:
+          $ref: '#/components/schemas/Point'
+        portInTime:
+          $ref: '#/components/schemas/LocalTime'
+        portOutTime:
+          $ref: '#/components/schemas/LocalTime'
+    Address:
+      required:
+      - city
+      - countryIsoCode
+      - houseNumber
+      - postcode
+      - streetName
+      type: object
+      properties:
+        houseNumber:
+          type: string
+        streetName:
+          type: string
+        addressLine2:
+          type: string
+          description: For UK - optional. FlightOnly (WR) - not presented.
+        city:
+          type: string
+        postcode:
+          type: string
+        countryIsoCode:
+          type: string
+        buildingName:
+          type: string
+          description: Packages (NR) - not presented. FlightOnly (WR) - optional.
+    ParseState:
+      type: object
+    Theme:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: FOODIE
+        name:
+          type: string
+          example: Food Heroes
+    Price:
+      required:
+      - currency
+      - priceCategory
+      - value
+      type: object
+      properties:
+        code:
+          type: string
+          example: POPM
+        priceType:
+          type: string
+          example: PER_ADULT
+          enum:
+          - PER_ADULT
+          - PER_CHILD
+          - PER_INFANT
+          - PER_PAX
+          - PER_BOOKING
+          - PER_ITEM
+        priceCategory:
+          type: string
+          example: NET
+          enum:
+          - NET
+          - TAX
+          - FEE
+          - DISCOUNT
+          - GROSS
+        aspect:
+          type: string
+          example: FLIGHT
+          enum:
+          - FLIGHT
+          - SSR
+          - INSURANCE
+          - EXTRAS
+          - TRANSFER
+        value:
+          type: number
+          example: 100
+          default: 0
+        currency:
+          $ref: '#/components/schemas/Currency'
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+    Problem:
+      type: object
+      properties:
+        message:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+        parseState:
+          $ref: '#/components/schemas/ParseState'
+        rootCause:
+          type: object
+          properties:
+            cause:
+              type: object
+              properties:
+                stackTrace:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      classLoaderName:
+                        type: string
+                      moduleName:
+                        type: string
+                      moduleVersion:
+                        type: string
+                      methodName:
+                        type: string
+                      fileName:
+                        type: string
+                      lineNumber:
+                        type: integer
+                        format: int32
+                      nativeMethod:
+                        type: boolean
+                      className:
+                        type: string
+                message:
+                  type: string
+                suppressed:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      stackTrace:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            classLoaderName:
+                              type: string
+                            moduleName:
+                              type: string
+                            moduleVersion:
+                              type: string
+                            methodName:
+                              type: string
+                            fileName:
+                              type: string
+                            lineNumber:
+                              type: integer
+                              format: int32
+                            nativeMethod:
+                              type: boolean
+                            className:
+                              type: string
+                      message:
+                        type: string
+                      localizedMessage:
+                        type: string
+                localizedMessage:
+                  type: string
+            stackTrace:
+              type: array
+              items:
+                type: object
+                properties:
+                  classLoaderName:
+                    type: string
+                  moduleName:
+                    type: string
+                  moduleVersion:
+                    type: string
+                  methodName:
+                    type: string
+                  fileName:
+                    type: string
+                  lineNumber:
+                    type: integer
+                    format: int32
+                  nativeMethod:
+                    type: boolean
+                  className:
+                    type: string
+            message:
+              type: string
+            suppressed:
+              type: array
+              items:
+                type: object
+                properties:
+                  stackTrace:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        classLoaderName:
+                          type: string
+                        moduleName:
+                          type: string
+                        moduleVersion:
+                          type: string
+                        methodName:
+                          type: string
+                        fileName:
+                          type: string
+                        lineNumber:
+                          type: integer
+                          format: int32
+                        nativeMethod:
+                          type: boolean
+                        className:
+                          type: string
+                  message:
+                    type: string
+                  localizedMessage:
+                    type: string
+            localizedMessage:
+              type: string
+        resourceDescription:
+          type: string
+    CabinSupplierProduct:
+      type: object
+      description: Supplier product information for cabin availability requests. Contains only the promo code field as other supplier product details are not required for cabin availability.
+      properties:
+        promoCode:
+          type: string
+          example: BBRB
+          description: Optional promotional code to be applied to the cabin booking
+    Location:
+      type: object
+      properties:
+        resource:
+          type: string
+          format: binary
+        source:
+          type: object
+    BaseOption:
+      required:
+      - category
+      - code
+      - downstreamRefs
+      - id
+      - travellers
+      type: object
+      properties:
+        id:
+          type: string
+          example: 26929514-237c-11ed-861d-0242bd120002
+        code:
+          maxLength: 25
+          minLength: 1
+          type: string
+          example: POPM
+        category:
+          type: string
+          example: CABINS
+          enum:
+          - ANIMALS
+          - ASSISTANCE
+          - BAGGAGE
+          - CABINS
+          - FAST
+          - LOUNGE
+          - MEALS
+          - MISC
+          - SEATS
+          - SPORTS
+        included:
+          type: boolean
+          description: indicates if SSR is default one
+          example: true
+        upgradable:
+          type: boolean
+          description: indicates it replaces included or upgraded option
+          example: false
+        travellers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        downstreamRefs:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/DownstreamRef'
+      discriminator:
+        propertyName: category
+    Duration:
+      required:
+      - checkInDate
+      - checkOutDate
+      type: object
+      properties:
+        checkInDate:
+          type: string
+          format: date
+          example: '2023-06-07'
+        checkInTime:
+          $ref: '#/components/schemas/LocalTime'
+        checkOutDate:
+          type: string
+          format: date
+          example: '2023-06-14'
+        checkOutTime:
+          $ref: '#/components/schemas/LocalTime'
+    Sailing:
+      required:
+      - cabinBoardRates
+      - duration
+      - itinerary
+      - ship
+      type: object
+      properties:
+        id:
+          type: string
+        ship:
+          $ref: '#/components/schemas/Ship'
+        itinerary:
+          $ref: '#/components/schemas/CruiseItinerary'
+        cabinBoardRates:
+          type: array
+          items:
+            $ref: '#/components/schemas/CabinBoardRate'
+        duration:
+          $ref: '#/components/schemas/Duration'
+        theme:
+          $ref: '#/components/schemas/Theme'
+        serviceBundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceBundle'
+        excursions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShoreExcursion'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        supplements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Supplement'
+    PriceBreakdown:
+      type: object
+      properties:
+        fare:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        tax:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        discount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        fee:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        total:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+    CapacityGroup:
+      required:
+      - code
+      - ssrAssociations
+      - type
+      type: object
+      properties:
+        code:
+          maxLength: 5
+          minLength: 1
+          type: string
+          description: Capacity group code configured within the application
+          example: SPEQ
+        type:
+          type: string
+          example: SHARED
+          enum:
+          - UNLIMITED
+          - INDIVIDUAL
+          - SHARED
+        sharedCapacity:
+          type: integer
+          description: Value provided by downstream options provider system that identifies total capacity for whole group.
+          format: int32
+          example: 10
+        ssrAssociations:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapacityAssociation'
+    Message:
+      required:
+      - code
+      - text
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          example: GENERAL
+          enum:
+          - GENERAL
+          - PRICE_JUMP
+        text:
+          type: string
+          description: The detailed text of the message.
+        code:
+          type: string
+          description: Message code that identifies what particular use case this message is about.
+          example: OPTIONS-123456
+        assignments:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          description: A list of assignments related to the message (particular traveller or product).
+          items:
+            $ref: '#/components/schemas/Assignment'
+      description: A message object that contains extra information about endpoint execution for 200 responses.
+      discriminator:
+        propertyName: type
+    Traveller:
+      required:
+      - age
+      - id
+      - person
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          example: 26929514-237c-11ed-861d-0242ac120002
+        type:
+          type: string
+          example: ADULT
+          enum:
+          - ADULT
+          - CHILD
+          - INFANT
+        person:
+          $ref: '#/components/schemas/Person'
+        age:
+          type: integer
+          format: int32
+          example: 25
+    ValidationProblem:
+      type: object
+      properties:
+        problem:
+          $ref: '#/components/schemas/Problem'
+        validationIssues:
+          type: array
+          items:
+            type: string
+    Sector:
+      required:
+      - arrivalDate
+      - arrivalPoint
+      - arrivalTime
+      - departureDate
+      - departurePoint
+      - departureTime
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        departurePoint:
+          $ref: '#/components/schemas/Point'
+        arrivalPoint:
+          $ref: '#/components/schemas/Point'
+        departureDate:
+          type: string
+          format: date
+          example: '2024-03-28'
+        departureTime:
+          $ref: '#/components/schemas/LocalTime'
+        arrivalDate:
+          type: string
+          format: date
+          example: '2024-03-28'
+        arrivalTime:
+          $ref: '#/components/schemas/LocalTime'
+    MasterCabinGrade:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: INS
+        name:
+          type: string
+          example: Inside Cabin
+    CabinAvailabilityResponse:
+      required:
+      - cabins
+      - message
+      description: Response object containing the available cabins and price for the given selection and occupancy.
+      type: object
+      properties:
+        cabins:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cabin'
+        messages:
+          $ref: '#/components/schemas/Message'
+    CabinGrade:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: Z101
+        name:
+          type: string
+          example: Deluxe Inside Cabin
+        masterCabinGrade:
+          $ref: '#/components/schemas/MasterCabinGrade'
+    DownstreamRef:
+      required:
+      - id
+      - itemType
+      - system
+      type: object
+      properties:
+        id:
+          type: string
+          example: Aae88613d5b8665238a124059d1e77774
+        type:
+          type: string
+        itemType:
+          type: string
+          example: EXTERNAL/INTERNAL
+          enum:
+          - INTERNAL
+          - EXTERNAL
+          - MIXED
+        system:
+          type: string
+          example: TUI_NR_ATCOM
+          enum:
+          - TUI_NR_ATCOM
+    TravellerRef:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        age:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+          - ADULT
+          - CHILD
+          - INFANT
+    CabinType:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: Z101
+        name:
+          type: string
+          example: Deluxe Inside Cabin Decks 6 & 7
+        cabinGrade:
+          $ref: '#/components/schemas/CabinGrade'
+    CapacityAssociation:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          maxLength: 5
+          minLength: 1
+          type: string
+          description: SSR code
+          example: BG25
+        individualCapacity:
+          type: integer
+          description: Value is provided by downstream options provider system
+          format: int32
+          example: 5
+        capacityPoints:
+          type: integer
+          description: Configured value within the application
+          format: int32
+          example: 1

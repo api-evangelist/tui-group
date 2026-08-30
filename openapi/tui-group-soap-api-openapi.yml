@@ -1,0 +1,69 @@
+openapi: 3.2.0
+info:
+  title: NewSkies Payment Soap API
+  description: 'NewSkies Payment Api (PCI-DSS)
+
+
+    This API proxies payment endpoints from the Navitaire NewSkies Digital API.
+
+    '
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api.flightproduction@tui.com
+servers:
+- url: https://prod.api.tui/flight/newskies/payment
+  description: TUI Prod Payment Service
+- url: https://playground.api.tui/flight/newskies/payment
+  description: TUI Playground (Test) Payment Service
+security:
+- ApiKeyAuth: []
+tags:
+- name: Soap
+paths:
+  /soap:
+    post:
+      summary: Add payment to booking (SOAP API)
+      description: Process payment for a booking using the SOAP API
+      operationId: addPaymentToBooking
+      parameters:
+      - name: SOAPAction
+        in: header
+        required: true
+        schema:
+          type: string
+          enum:
+          - http://schemas.navitaire.com/WebServices/IBookingManager/AddPaymentToBooking
+        description: SOAP action header
+      requestBody:
+        required: true
+        content:
+          text/xml:
+            schema:
+              type: string
+              description: SOAP envelope with payment details
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            text/xml:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Resource not found
+          content:
+            text/xml:
+              schema:
+                type: string
+                example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <soap:Fault>\n      <faultcode>soap:Server</faultcode>\n      <faultstring>Resource not found</faultstring>\n    </soap:Fault>\n  </soap:Body>\n</soap:Envelope>\n"
+      tags:
+      - Soap
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-apikey
+      description: API key for authentication

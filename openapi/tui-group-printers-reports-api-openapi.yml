@@ -1,0 +1,3455 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Printers/reports API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: printers/reports
+paths:
+  /api/dcs/v1/printers/reports/availabilityReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for an availability report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAvailabilityReport:  This value must be true.\n\nGraphQL endpoint: dcsGetAvailabilityReportPrintPreview"
+      operationId: dcs_v1_printers_reports_availabilityReport_printPreview_get
+      parameters:
+      - name: DepartureDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 2
+      - name: Origin
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        x-position: 3
+      - name: Destination
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 4
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/availabilityReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for an availability report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAvailabilityReport:  This value must be true.\n\nGraphQL endpoint: dcsGetAvailabilityReportPrintStreams"
+      operationId: dcs_v1_printers_reports_availabilityReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilityReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/bagTagTrackingReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a bag tag tracking report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagTagTrackingReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagTagTrackingReportPrintPreview"
+      operationId: dcs_v1_printers_reports_bagTagTrackingReport_printPreview_get
+      parameters:
+      - name: BagTag
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 32
+          minLength: 0
+        x-position: 1
+      - name: Date
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/bagTagTrackingReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a bag tag tracking report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagTagTrackingReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagTagTrackingReportPrintStreams"
+      operationId: dcs_v1_printers_reports_bagTagTrackingReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BagTagTrackingReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/bagWeightByLegReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for the bag weight by leg report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagWeightByLegReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagWeightByLegReportPrintPreview"
+      operationId: dcs_v1_printers_reports_bagWeightByLegReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: WeightType
+        in: query
+        description: "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+        schema:
+          $ref: '#/components/schemas/WeightType'
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/bagWeightByLegReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for the bag weight by leg report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowBagWeightByLegReport:  This value must be true.\n\nGraphQL endpoint: dcsGetBagWeightByLegReportPrintStreams"
+      operationId: dcs_v1_printers_reports_bagWeightByLegReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BagWeightByLegReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/checkedBaggageReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a checked baggage report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckedBaggageReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckedBaggageReportPrintPreview"
+      operationId: dcs_v1_printers_reports_checkedBaggageReport_printPreview_get
+      parameters:
+      - name: StartDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: EndDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      - name: PrimarySortType
+        in: query
+        description: " \nEnumeration values: 0 = FlightNumber, 1 = CityPair, 2 = Sequence"
+        schema:
+          $ref: '#/components/schemas/CheckedBaggagePrimarySortType'
+        x-position: 3
+      - name: SecondarySortType
+        in: query
+        description: " \nEnumeration values: 0 = Name, 1 = BagTag"
+        schema:
+          $ref: '#/components/schemas/CheckedBaggageSecondarySortType'
+        x-position: 4
+      - name: WeightType
+        in: query
+        description: "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+        schema:
+          $ref: '#/components/schemas/WeightType'
+        x-position: 5
+      - name: IncludeUnflownPassengers
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 6
+      - name: ShowSummaryOnly
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 7
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 8
+      - name: FlightNumber
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 9
+      - name: Origin
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 10
+      - name: Destination
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 11
+      - name: AgentName
+        in: query
+        description: The username of the agent account that checked the baggage.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 12
+      - name: AgentDomain
+        in: query
+        description: 'The domain of the agent account that checked the baggage.  If agentName is empty,
+
+          this value is ignored.'
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 13
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/checkedBaggageReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a checked baggage report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckedBaggageReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckedBaggageReportPrintStreams"
+      operationId: dcs_v1_printers_reports_checkedBaggageReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckedBaggageReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/checkInReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a check-in report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckInReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckInReportPrintPreview"
+      operationId: dcs_v1_printers_reports_checkInReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: IncludeThruPassengers
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: DisplayNames
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 3
+      - name: DisplaySeats
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 4
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/checkInReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a check-in report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowCheckInReport:  This value must be true.\n\nGraphQL endpoint: dcsGetCheckInReportPrintStreams"
+      operationId: dcs_v1_printers_reports_checkInReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckInReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/departureManifestReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a departure manifest report for a given leg.
+      description: 'GraphQL endpoint: dcsGetDepartureManifestReportPrintStreams'
+      operationId: dcs_v1_printers_reports_departureManifestReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartureManifestReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/downlinePassengerAndCountReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a downline passenger and count report for a given leg.
+      description: 'GraphQL endpoint: dcsGetDownlinePassengerAndCountReportPrintPreview'
+      operationId: dcs_v1_printers_reports_downlinePassengerAndCountReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: IncludeIatciFlights
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: ShowPassengerNames
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/downlinePassengerAndCountReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a downline passenger and count report for a given leg.
+      description: 'GraphQL endpoint: dcsGetDownlinePassengerAndCountReportPrintStreams'
+      operationId: dcs_v1_printers_reports_downlinePassengerAndCountReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DownlinePassengerAndCountReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/enplanementDeplanementReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for an enplanement or deplanement report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowEnplanementDeplanementReport:  This value must be true.\n\nGraphQL endpoint: dcsGetEnplanementDeplanementReportPrintPreview"
+      operationId: dcs_v1_printers_reports_enplanementDeplanementReport_printPreview_get
+      parameters:
+      - name: StartDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: EndDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      - name: ShowSummaryOnly
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 3
+      - name: ReportType
+        in: query
+        description: " \nEnumeration values: 0 = Enplanement, 1 = Deplanement"
+        schema:
+          $ref: '#/components/schemas/EnplanementDeplanementReportType'
+        x-position: 4
+      - name: SegmentStatus
+        in: query
+        description: " \nEnumeration values: 0 = Flown, 1 = Open"
+        schema:
+          $ref: '#/components/schemas/EnplanementDeplanementReportSegmentStatus'
+        x-position: 5
+      - name: Station
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 6
+      - name: IncludeConnections
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 7
+      - name: FareClasses
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 8
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 9
+      - name: StartFlightNumber
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 10
+      - name: EndFlightNumber
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 11
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/enplanementDeplanementReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for an enplanement or deplanement report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowEnplanementDeplanementReport:  This value must be true.\n\nGraphQL endpoint: dcsGetEnplanementDeplanementReportPrintStreams"
+      operationId: dcs_v1_printers_reports_enplanementDeplanementReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnplanementDeplanementReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightCloseReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a flight close report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightCloseReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightCloseReportPrintPreview"
+      operationId: dcs_v1_printers_reports_flightCloseReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: SortType
+        in: query
+        description: " \nEnumeration values: 0 = Name, 1 = Seat, 2 = Destination, 3 = Sequence"
+        schema:
+          $ref: '#/components/schemas/FlightCloseSortType'
+        x-position: 2
+      - name: WeightType
+        in: query
+        description: "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+        schema:
+          $ref: '#/components/schemas/WeightType'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightCloseReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a flight close report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightCloseReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightCloseReportPrintStreams"
+      operationId: dcs_v1_printers_reports_flightCloseReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightCloseReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightInformationReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a flight information report for a given leg.
+      description: 'GraphQL endpoint: dcsGetFlightInformationReportPrintPreview'
+      operationId: dcs_v1_printers_reports_flightInformationReport_printPreview_get
+      parameters:
+      - name: Origin
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        x-position: 1
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 2
+      - name: DepartureDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: Destination
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        x-position: 4
+      - name: FlightNumber
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 5
+      - name: OpSuffix
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 1
+          minLength: 0
+        x-position: 6
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightInformationReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a flight information report for a given leg.
+      description: 'GraphQL endpoint: dcsGetFlightInformationReportPrintStreams'
+      operationId: dcs_v1_printers_reports_flightInformationReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightInformationReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightLoadReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a flight load report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightLoadReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightLoadReportPrintPreview"
+      operationId: dcs_v1_printers_reports_flightLoadReport_printPreview_get
+      parameters:
+      - name: DepartureDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: Origin
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        x-position: 2
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 2
+          minLength: 2
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightLoadReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a flight load report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightLoadReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightLoadReportPrintStreams"
+      operationId: dcs_v1_printers_reports_flightLoadReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightLoadReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightManifestReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a flight manifest report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightManifestReportPrintPreview"
+      operationId: dcs_v1_printers_reports_flightManifestReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: ReportType
+        in: query
+        description: " \nEnumeration values: 0 = FlightManifest, 1 = FlightManifestWithApisDetails, 2 = PassengerDocument"
+        schema:
+          $ref: '#/components/schemas/FlightManifestReportType'
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightManifestReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a flight manifest report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightManifestReportPrintStreams"
+      operationId: dcs_v1_printers_reports_flightManifestReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightManifestReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightSummaryReport/data:
+    get:
+      tags:
+      - printers/reports
+      summary: 'Gets the zone counts and baggage counts for a flight summary report for a given leg.
+
+        Client apps must calculate their own manifest counts and formatting to display a
+
+        print preview.'
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightSummaryReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightSummaryPartialReportData"
+      operationId: dcs_v1_printers_reports_flightSummaryReport_data_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: WeightType
+        in: query
+        description: "Pounds or Kilograms (DAPI's weight type Default = Kilograms) \nEnumeration values: 1 = Pounds, 2 = Kilograms"
+        schema:
+          $ref: '#/components/schemas/WeightType'
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfFlightSummaryPartialReport'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/flightSummaryReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a flight summary report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowFlightSummaryReport:  This value must be true.\n\nGraphQL endpoint: dcsGetFlightSummaryReportPrintStreams"
+      operationId: dcs_v1_printers_reports_flightSummaryReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightSummaryReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/inboundPassengerAndCountReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for an inbound passenger and count report for a given leg.
+      description: 'GraphQL endpoint: dcsGetInboundPassengerandCountReportPrintPreview'
+      operationId: dcs_v1_printers_reports_inboundPassengerAndCountReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: IncludeIatciFlights
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: ShowPassengerNames
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/inboundPassengerAndCountReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for an inbound passenger and count report for a given leg.
+      description: 'GraphQL endpoint: dcsGetInboundPassengerandCountReportPrintStreams'
+      operationId: dcs_v1_printers_reports_inboundPassengerAndCountReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InboundPassengerAndCountReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/inventoryLegOpFileReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for an inventory leg-op file report.
+      description: 'GraphQL endpoint: dcsGetInventoryLegOpFileReportPrintPreview'
+      operationId: dcs_v1_printers_reports_inventoryLegOpFileReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: ReportType
+        in: query
+        description: "Property for the Report Type of the report \nEnumeration values: 0 = Both, 1 = Weather, 2 = Flight"
+        schema:
+          $ref: '#/components/schemas/InventoryLegOpFileReportType'
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/inventoryLegOpFileReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for an inventory leg-op file report.
+      description: 'GraphQL endpoint: dcsGetInventoryLegOpFileReportPrintStreams'
+      operationId: dcs_v1_printers_reports_inventoryLegOpFileReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryLegOpFileReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/passengerVerificationReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a passenger verification report for a given leg.
+      description: 'GraphQL endpoint: dcsGetPassengerVerificationReportPrintPreview'
+      operationId: dcs_v1_printers_reports_passengerVerificationReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: IncludeUnverifiedPassenger
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: IncludePassengerAddress
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/passengerVerificationReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a passenger verification report for a given leg.
+      description: 'GraphQL endpoint: dcsGetPassengerVerificationReportPrintStreams'
+      operationId: dcs_v1_printers_reports_passengerVerificationReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerVerificationReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/paymentReceiptReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a payment receipt report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPaymentReceiptReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPaymentReceiptReportPrintPreview"
+      operationId: dcs_v1_printers_reports_paymentReceiptReport_printPreview_get
+      parameters:
+      - name: PaymentDate
+        in: query
+        description: Search criteria specifying the date of the payment.
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: ReportType
+        in: query
+        description: "The type of payment receipt report to be returned. \nEnumeration values: 0 = Summary, 1 = Detailed"
+        schema:
+          $ref: '#/components/schemas/PaymentReceiptReportType'
+        x-position: 2
+      - name: PaymentMethodCode
+        in: query
+        description: Search criteria specifying which payment method was used.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 3
+      - name: LocationCode
+        in: query
+        description: Search criteria specifying the location where the payment was accepted.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 4
+      - name: DepartmentCode
+        in: query
+        description: Search criteria specifying the department code of the agent that accepted the payment.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 5
+      - name: AgentName
+        in: query
+        description: Search criteria specifying the name of the agent that accepted the payment.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 6
+      - name: CurrencyCode
+        in: query
+        description: Search criteria specifying the currency that was used to make the payment.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 7
+      - name: BaseCurrencyCode
+        in: query
+        description: Search criteria specifying the base currency associated with the payment.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 8
+      - name: DisplayCurrencySource
+        in: query
+        description: "Specifies whether to display the currency used in the booking or in the specific payment. \nEnumeration values: 0 = Payment, 1 = Booking"
+        schema:
+          $ref: '#/components/schemas/PaymentReceiptReportDisplayCurrencySource'
+        x-position: 9
+      - name: TimeZoneCode
+        in: query
+        description: Specifies the time zone used in performing the search and displaying the report.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 10
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/paymentReceiptReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a payment receipt report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPaymentReceiptReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPaymentReceiptReportPrintStreams"
+      operationId: dcs_v1_printers_reports_paymentReceiptReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/prePostFlightManifestReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a pre or post flight manifest report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPrePostFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPrePostFlightManifestReportPrintPreview"
+      operationId: dcs_v1_printers_reports_prePostFlightManifestReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: ReportType
+        in: query
+        description: " \nEnumeration values: 0 = PostFlightManifest, 1 = PreFlightManifest, 2 = PreFlightManifestWithSeatMap"
+        schema:
+          $ref: '#/components/schemas/PrePostFlightManifestReportType'
+        x-position: 2
+      - name: SortType
+        in: query
+        description: " \nEnumeration values: 0 = Seat, 1 = Name"
+        schema:
+          $ref: '#/components/schemas/PrePostFlightManifestSortType'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/prePostFlightManifestReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a pre or post flight manifest report for a given leg.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowPrePostFlightManifestReport:  This value must be true.\n\nGraphQL endpoint: dcsGetPrePostFlightManifestReportPrintStreams"
+      operationId: dcs_v1_printers_reports_prePostFlightManifestReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrePostFlightManifestReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/segmentsByTimeReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a segments by time report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowSegmentsByTimeReport:  This value must be true.\n\nGraphQL endpoint: dcsGetSegmentsByTimeReportPrintPreview"
+      operationId: dcs_v1_printers_reports_segmentsByTimeReport_printPreview_get
+      parameters:
+      - name: BookingDate
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: ChannelType
+        in: query
+        description: " \nEnumeration values: 0 = Default, 1 = Direct, 2 = Web, 3 = Gds, 4 = Api, 5 = DigitalApi, 6 = DigitalWeb, 7 = Ndc"
+        schema:
+          $ref: '#/components/schemas/ChannelType'
+        x-position: 2
+      - name: CarrierCode
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/segmentsByTimeReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a segments by time report.
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowSegmentsByTimeReport:  This value must be true.\n\nGraphQL endpoint: dcsGetSegmentsByTimeReportPrintStreams"
+      operationId: dcs_v1_printers_reports_segmentsByTimeReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentsByTimeReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/standardLegReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: 'Gets the print preview for a standard leg report, i.e. any type of report that takes no
+
+        parameters other than a legKey. The specific type of report is specified by the
+
+        reportType parameter.'
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAircraftZoneReport:  This value must be true if reportType is\n        \"AircraftZoneReport\".\n        \n        \n        allowCabinServiceAreaReport:  This value must be true if reportType is\n        \"CabinServiceAreaDetailedReport\" or \"CabinServiceAreaSummaryReport\".\n        \n        \n        allowManifestReport:  This value must be true if reportType is\n        \"ManifestReport\".\n        \n        \n        allowManifestTripDetailReport:  This value must be true if reportType is\n        \"ManifestWithTripDetailReport\".\n        \n        \n        allowMealFulfillmentReport:  This value must be true if reportType is\n        \"MealFulfillmentDetailedReport\" or \"MealFulfillmentSummaryReport\".\n        \n        \n        allowSeatAssignmentReport:  This value must be true if reportType is\n        \"SeatAssignmentReport\".\n        \n        \n        allowSelecteesByFlightReport:  This value must be true if reportType is\n        \"SelecteesByFlightReport\".\n\nGraphQL endpoint: dcsGetStandardLegReportPrintPreview"
+      operationId: dcs_v1_printers_reports_standardLegReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: ReportType
+        in: query
+        description: " \nEnumeration values: 0 = AircraftZoneReport, 1 = AppsOverrideReport, 2 = BaggageReport, 3 = BoardingHistoryReport, 4 = CabinServiceAreaDetailedReport, 5 = CabinServiceAreaSummaryReport, 6 = DuplicateTravelDocumentReport, 7 = FlightHistoryReport, 8 = ManifestWithConnectionInformationReport, 9 = ManifestWithTripDetailReport, 10 = MealFulfillmentDetailedReport, 11 = MealFulfillmentSummaryReport, 12 = SeatAssignmentReport, 13 = SelecteesByFlightReport"
+        schema:
+          $ref: '#/components/schemas/StandardLegReportType'
+        x-position: 2
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/standardLegReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: 'Gets the print streams for a standard leg report, i.e. any type of report that takes no
+
+        parameters other than a legKey. The specific type of report is specified by the
+
+        reportType parameter.'
+      description: "Use the GoNow API's GET /api/dcs/v1/settings/operations/reports to retrieve\nrelated role setting:\n    \n        \n        allowAircraftZoneReport:  This value must be true if reportType is\n        \"AircraftZoneReport\".\n        \n        \n        allowCabinServiceAreaReport:  This value must be true if reportType is\n        \"CabinServiceAreaDetailedReport\" or \"CabinServiceAreaSummaryReport\".\n        \n        \n        allowManifestReport:  This value must be true if reportType is\n        \"ManifestReport\".\n        \n        \n        allowManifestTripDetailReport:  This value must be true if reportType is\n        \"ManifestWithTripDetailReport\".\n        \n        \n        allowMealFulfillmentReport:  This value must be true if reportType is\n        \"MealFulfillmentDetailedReport\" or \"MealFulfillmentSummaryReport\".\n        \n        \n        allowSeatAssignmentReport:  This value must be true if reportType is\n        \"SeatAssignmentReport\".\n        \n        \n        allowSelecteesByFlightReport:  This value must be true if reportType is\n        \"SelecteesByFlightReport\".\n\nGraphQL endpoint: dcsGetStandardLegReportPrintStreams"
+      operationId: dcs_v1_printers_reports_standardLegReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandardLegReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/transferBagTagReport/printPreview:
+    get:
+      tags:
+      - printers/reports
+      summary: Gets the print preview for a transfer bag tag report for a given leg.
+      description: 'GraphQL endpoint: dcsGetTransferBagTagReportPrintPreview'
+      operationId: dcs_v1_printers_reports_transferBagTagReport_printPreview_get
+      parameters:
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: IncludeOaAndManualTags
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: SortType
+        in: query
+        description: " \nEnumeration values: 0 = PassengerLastName, 1 = BagTag"
+        schema:
+          $ref: '#/components/schemas/TransferBagTagSortType'
+        x-position: 3
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrintPreview'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/reports/transferBagTagReport/printStreams:
+    post:
+      tags:
+      - printers/reports
+      summary: Gets the print streams for a transfer bag tag report for a given leg.
+      description: 'GraphQL endpoint: dcsGetTransferBagTagReportPrintStreams'
+      operationId: dcs_v1_printers_reports_transferBagTagReport_printStreams_post
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferBagTagReportPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
+    FlightManifestReportType:
+      type: integer
+      description: '0 = FlightManifest
+
+        1 = FlightManifestWithApisDetails
+
+        2 = PassengerDocument'
+      x-enumNames:
+      - FlightManifest
+      - FlightManifestWithApisDetails
+      - PassengerDocument
+      enum:
+      - 0
+      - 1
+      - 2
+    WeightType:
+      type: integer
+      description: 'Specifies the weight unit of measure, either Pounds or Kilograms.
+
+
+        1 = Pounds
+
+        2 = Kilograms'
+      x-enumNames:
+      - Pounds
+      - Kilograms
+      enum:
+      - 1
+      - 2
+    EnplanementDeplanementReportType:
+      type: integer
+      description: '0 = Enplanement
+
+        1 = Deplanement'
+      x-enumNames:
+      - Enplanement
+      - Deplanement
+      enum:
+      - 0
+      - 1
+    IJsonResponseOfPrintPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/PrintPreview'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    FlightSummaryPassengerWeightCategory:
+      type: integer
+      description: '1 = Male
+
+        2 = Female
+
+        3 = Child
+
+        4 = Infant
+
+        5 = Adult
+
+        6 = Total'
+      x-enumNames:
+      - Male
+      - Female
+      - Child
+      - Infant
+      - Adult
+      - Total
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    CheckedBaggageReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - startDate
+      - endDate
+      - primarySortType
+      - secondarySortType
+      - weightType
+      - includeUnflownPassengers
+      - showSummaryOnly
+      - carrierCode
+      - printer
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          minLength: 1
+        endDate:
+          type: string
+          format: date-time
+          minLength: 1
+        primarySortType:
+          $ref: '#/components/schemas/CheckedBaggagePrimarySortType'
+        secondarySortType:
+          $ref: '#/components/schemas/CheckedBaggageSecondarySortType'
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        includeUnflownPassengers:
+          type: boolean
+        showSummaryOnly:
+          type: boolean
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        agentName:
+          type:
+          - string
+          - 'null'
+          description: The username of the agent account that checked the baggage.
+        agentDomain:
+          type:
+          - string
+          - 'null'
+          description: 'The domain of the agent account that checked the baggage.  If agentName is empty,
+
+            this value is ignored.'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightCloseSortType:
+      type: integer
+      description: '0 = Name
+
+        1 = Seat
+
+        2 = Destination
+
+        3 = Sequence'
+      x-enumNames:
+      - Name
+      - Seat
+      - Destination
+      - Sequence
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    BaggageCounts:
+      type: object
+      additionalProperties: false
+      properties:
+        destination:
+          type:
+          - string
+          - 'null'
+          description: The destination of the baggage.
+        totalWeight:
+          type: integer
+          description: The total weight of the baggage for this destination.
+          format: int32
+        checkedCount:
+          type: integer
+          description: The number of bags for this destination with a status of Checked.
+          format: int32
+        addedCount:
+          type: integer
+          description: The number of bags for this destination with a status of Added.
+          format: int32
+        addedPrintedCount:
+          type: integer
+          description: The number of bags for this destination with a status of AddedPrinted.
+          format: int32
+    ManifestPassengerSearchCriteria:
+      type: object
+      additionalProperties: false
+      properties:
+        bagTagNumber:
+          type:
+          - string
+          - 'null'
+        boardingZone:
+          type:
+          - string
+          - 'null'
+        finalDestination:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+        seatNumber:
+          type:
+          - string
+          - 'null'
+        sequenceNumber:
+          type:
+          - string
+          - 'null'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+    ManifestPassengerSortType:
+      type: integer
+      description: '0 = ApisStatus
+
+        1 = AppsStatus
+
+        2 = BoardingSequenceNumber
+
+        3 = BookingStatus
+
+        4 = ChangeCabin
+
+        5 = CustomerProgramLevel
+
+        6 = CustomerRecognitionLevel
+
+        7 = DownlineDepartureDateTime
+
+        8 = DownlineFlight
+
+        9 = FareClass
+
+        10 = FinalDestination
+
+        11 = InboundArrivalDateTime
+
+        12 = InboundFlight
+
+        13 = LiftStatus
+
+        14 = PassengerName
+
+        15 = PremiumFare
+
+        16 = Priority
+
+        17 = RecordLocator
+
+        18 = SeatAssignment
+
+        19 = Ssr
+
+        20 = StandbyOnloadOrder
+
+        21 = StandbyPriorityCode
+
+        22 = TicketTypeIndicator
+
+        23 = TravelClass'
+      x-enumNames:
+      - ApisStatus
+      - AppsStatus
+      - BoardingSequenceNumber
+      - BookingStatus
+      - ChangeCabin
+      - CustomerProgramLevel
+      - CustomerRecognitionLevel
+      - DownlineDepartureDateTime
+      - DownlineFlight
+      - FareClass
+      - FinalDestination
+      - InboundArrivalDateTime
+      - InboundFlight
+      - LiftStatus
+      - PassengerName
+      - PremiumFare
+      - Priority
+      - RecordLocator
+      - SeatAssignment
+      - Ssr
+      - StandbyOnloadOrder
+      - StandbyPriorityCode
+      - TicketTypeIndicator
+      - TravelClass
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+    PrePostFlightManifestReportType:
+      type: integer
+      description: '0 = PostFlightManifest
+
+        1 = PreFlightManifest
+
+        2 = PreFlightManifestWithSeatMap'
+      x-enumNames:
+      - PostFlightManifest
+      - PreFlightManifest
+      - PreFlightManifestWithSeatMap
+      enum:
+      - 0
+      - 1
+      - 2
+    FlightSummaryReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - weightType
+      - printer
+      - manifestCounts
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        manifestCounts:
+          type: array
+          description: 'The rows of data for the manifest counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/ManifestCounts'
+    TransferBagTagReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeOaAndManualTags
+      - sortType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeOaAndManualTags:
+          type: boolean
+        sortType:
+          $ref: '#/components/schemas/TransferBagTagSortType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    DepartureManifestReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - passengerAlternateKeys
+      - filterType
+      - sortType
+      - includeFullPassengerDetails
+      - baggageTypesToIncludeInCount
+      - recordLocatorFilterIsActive
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        passengerAlternateKeys:
+          type: array
+          items:
+            type: string
+        filterType:
+          $ref: '#/components/schemas/ManifestPassengerFilterType'
+        sortType:
+          $ref: '#/components/schemas/ManifestPassengerSortType'
+        manifestPassengerSearchCriteria:
+          $ref: '#/components/schemas/ManifestPassengerSearchCriteria'
+        includeFullPassengerDetails:
+          type: boolean
+        baggageTypesToIncludeInCount:
+          type: array
+          items:
+            type: string
+        recordLocatorFilterIsActive:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    PaymentReceiptReportType:
+      type: integer
+      description: '0 = Summary
+
+        1 = Detailed'
+      x-enumNames:
+      - Summary
+      - Detailed
+      enum:
+      - 0
+      - 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfFlightSummaryPartialReport:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/FlightSummaryPartialReport'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    FlightSummaryPartialReport:
+      type: object
+      additionalProperties: false
+      properties:
+        zoneCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The rows of data for the zone counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/ZoneCounts'
+        baggageCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The rows of data for the baggage counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/BaggageCounts'
+    PrinterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printerKey
+      properties:
+        printerKey:
+          type: string
+          minLength: 1
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+        usages:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    FlightCloseReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - sortType
+      - weightType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        sortType:
+          $ref: '#/components/schemas/FlightCloseSortType'
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    InventoryLegOpFileReportType:
+      type: integer
+      description: '0 = Both
+
+        1 = Weather
+
+        2 = Flight'
+      x-enumNames:
+      - Both
+      - Weather
+      - Flight
+      enum:
+      - 0
+      - 1
+      - 2
+    BagTagTrackingReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - bagTag
+      - date
+      - printer
+      properties:
+        bagTag:
+          type: string
+          maxLength: 32
+          minLength: 0
+        date:
+          type: string
+          format: date-time
+          minLength: 1
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightInformationReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - carrierCode
+      - departureDate
+      - origin
+      - printer
+      properties:
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        departureDate:
+          type: string
+          format: date-time
+          minLength: 1
+        destination:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          maxLength: 1
+          minLength: 0
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    PaymentReceiptReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - paymentDate
+      - reportType
+      - locationCode
+      - displayCurrencySource
+      - timeZoneCode
+      - printer
+      properties:
+        paymentDate:
+          type: string
+          description: Search criteria specifying the date of the payment.
+          format: date-time
+          minLength: 1
+        reportType:
+          description: The type of payment receipt report to be returned.
+          $ref: '#/components/schemas/PaymentReceiptReportType'
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: Search criteria specifying which payment method was used.
+        locationCode:
+          type: string
+          description: Search criteria specifying the location where the payment was accepted.
+          minLength: 1
+        departmentCode:
+          type:
+          - string
+          - 'null'
+          description: Search criteria specifying the department code of the agent that accepted the payment.
+        agentName:
+          type:
+          - string
+          - 'null'
+          description: Search criteria specifying the name of the agent that accepted the payment.
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: Search criteria specifying the currency that was used to make the payment.
+        baseCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: Search criteria specifying the base currency associated with the payment.
+        displayCurrencySource:
+          description: Specifies whether to display the currency used in the booking or in the specific payment.
+          $ref: '#/components/schemas/PaymentReceiptReportDisplayCurrencySource'
+        timeZoneCode:
+          type: string
+          description: Specifies the time zone used in performing the search and displaying the report.
+          minLength: 1
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    EnplanementDeplanementReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - startDate
+      - endDate
+      - showSummaryOnly
+      - reportType
+      - segmentStatus
+      - includeConnections
+      - carrierCode
+      - printer
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          minLength: 1
+        endDate:
+          type: string
+          format: date-time
+          minLength: 1
+        showSummaryOnly:
+          type: boolean
+        reportType:
+          $ref: '#/components/schemas/EnplanementDeplanementReportType'
+        segmentStatus:
+          $ref: '#/components/schemas/EnplanementDeplanementReportSegmentStatus'
+        station:
+          type:
+          - string
+          - 'null'
+        includeConnections:
+          type: boolean
+        fareClasses:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        startFlightNumber:
+          type:
+          - string
+          - 'null'
+        endFlightNumber:
+          type:
+          - string
+          - 'null'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    CheckedBaggageSecondarySortType:
+      type: integer
+      description: '0 = Name
+
+        1 = BagTag'
+      x-enumNames:
+      - Name
+      - BagTag
+      enum:
+      - 0
+      - 1
+    PassengerVerificationReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeUnverifiedPassenger
+      - includePassengerAddress
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeUnverifiedPassenger:
+          type: boolean
+        includePassengerAddress:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    CheckInReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeThruPassengers
+      - displayNames
+      - displaySeats
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeThruPassengers:
+          type: boolean
+        displayNames:
+          type: boolean
+        displaySeats:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    InboundPassengerAndCountReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeIatciFlights
+      - showPassengerNames
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeIatciFlights:
+          type: boolean
+        showPassengerNames:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    StandardLegReportType:
+      type: integer
+      description: '0 = AircraftZoneReport
+
+        1 = AppsOverrideReport
+
+        2 = BaggageReport
+
+        3 = BoardingHistoryReport
+
+        4 = CabinServiceAreaDetailedReport
+
+        5 = CabinServiceAreaSummaryReport
+
+        6 = DuplicateTravelDocumentReport
+
+        7 = FlightHistoryReport
+
+        8 = ManifestWithConnectionInformationReport
+
+        9 = ManifestWithTripDetailReport
+
+        10 = MealFulfillmentDetailedReport
+
+        11 = MealFulfillmentSummaryReport
+
+        12 = SeatAssignmentReport
+
+        13 = SelecteesByFlightReport'
+      x-enumNames:
+      - AircraftZoneReport
+      - AppsOverrideReport
+      - BaggageReport
+      - BoardingHistoryReport
+      - CabinServiceAreaDetailedReport
+      - CabinServiceAreaSummaryReport
+      - DuplicateTravelDocumentReport
+      - FlightHistoryReport
+      - ManifestWithConnectionInformationReport
+      - ManifestWithTripDetailReport
+      - MealFulfillmentDetailedReport
+      - MealFulfillmentSummaryReport
+      - SeatAssignmentReport
+      - SelecteesByFlightReport
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+    ZoneCounts:
+      type: object
+      additionalProperties: false
+      properties:
+        zoneName:
+          type:
+          - string
+          - 'null'
+          description: The name of the zone.
+        zoneRange:
+          type:
+          - string
+          - 'null'
+          description: The range of the zone.
+        weightCategoryCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The passenger weight categories and counts for the zone, including only the categories that
+
+            will be displayed in the printed report.'
+          items:
+            $ref: '#/components/schemas/WeightCategoryCount'
+    InventoryLegOpFileReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          description: Property for the Report Type of the report
+          $ref: '#/components/schemas/InventoryLegOpFileReportType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightLoadReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - departureDate
+      - origin
+      - carrierCode
+      - printer
+      properties:
+        departureDate:
+          type: string
+          format: date-time
+          minLength: 1
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        carrierCode:
+          type: string
+          maxLength: 2
+          minLength: 2
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    PrePostFlightManifestSortType:
+      type: integer
+      description: '0 = Seat
+
+        1 = Name'
+      x-enumNames:
+      - Seat
+      - Name
+      enum:
+      - 0
+      - 1
+    ManifestPassengerFilterType:
+      type: integer
+      description: '0 = NonThruConfirmed
+
+        1 = NonThruConfirmedCheckedIn
+
+        2 = NonThruConfirmedNoShow
+
+        3 = NonThruStandby
+
+        4 = NonThruStandbyCheckedIn
+
+        5 = ThruConfirmed
+
+        6 = ThruConfirmedCheckedIn
+
+        7 = ThruConfirmedNoShow
+
+        8 = ThruStandby
+
+        9 = ThruStandbyCheckedIn
+
+        10 = CheckedIn
+
+        11 = CheckedInBoarded
+
+        12 = CheckedInNotBoarded
+
+        13 = CheckedInNotBoardedBagChecked
+
+        14 = CheckedInNotBoardedBagAdded
+
+        16 = All
+
+        17 = CheckedInWithoutSeat
+
+        18 = Irop
+
+        19 = WithoutSeat
+
+        20 = WithCabinChange
+
+        21 = WithTravelDocument
+
+        22 = CheckedInUnfulfilledAppsRequirment
+
+        23 = CheckedInUnfulfilledApisRequirment
+
+        24 = CheckedInUnfulfilledAqqRequirment
+
+        25 = WithExtraSeat
+
+        26 = WithInboundConnection
+
+        27 = OnLockOrWarningQueue
+
+        28 = WithCustomerAccount
+
+        29 = WithDownlineFlight
+
+        30 = WithManifestComment
+
+        31 = WithSsr
+
+        32 = WithoutTravelDocument
+
+        33 = WithPremiumFare
+
+        34 = WithSeat
+
+        35 = OnReseatingQueue
+
+        36 = WithUnfulfilledDocCheckRequirement
+
+        37 = WithTicketTypeIndicator
+
+        38 = Selectee
+
+        39 = CheckedInWithUnfulfilledDocCheckRequirement
+
+        40 = CheckedInWithOverriddenClearance
+
+        41 = CheckedInWithAutoAssignedClearance
+
+        42 = CheckedInWithOverriddenClearanceNeeded
+
+        43 = WithSpecificSsr
+
+        44 = BagRemoved
+
+        45 = Child
+
+        46 = WithInfant
+
+        47 = UnhappyWithSeat
+
+        48 = NonThruStandbyNotCheckedIn
+
+        49 = BagAdded
+
+        50 = BagChecked'
+      x-enumNames:
+      - NonThruConfirmed
+      - NonThruConfirmedCheckedIn
+      - NonThruConfirmedNoShow
+      - NonThruStandby
+      - NonThruStandbyCheckedIn
+      - ThruConfirmed
+      - ThruConfirmedCheckedIn
+      - ThruConfirmedNoShow
+      - ThruStandby
+      - ThruStandbyCheckedIn
+      - CheckedIn
+      - CheckedInBoarded
+      - CheckedInNotBoarded
+      - CheckedInNotBoardedBagChecked
+      - CheckedInNotBoardedBagAdded
+      - All
+      - CheckedInWithoutSeat
+      - Irop
+      - WithoutSeat
+      - WithCabinChange
+      - WithTravelDocument
+      - CheckedInUnfulfilledAppsRequirment
+      - CheckedInUnfulfilledApisRequirment
+      - CheckedInUnfulfilledAqqRequirment
+      - WithExtraSeat
+      - WithInboundConnection
+      - OnLockOrWarningQueue
+      - WithCustomerAccount
+      - WithDownlineFlight
+      - WithManifestComment
+      - WithSsr
+      - WithoutTravelDocument
+      - WithPremiumFare
+      - WithSeat
+      - OnReseatingQueue
+      - WithUnfulfilledDocCheckRequirement
+      - WithTicketTypeIndicator
+      - Selectee
+      - CheckedInWithUnfulfilledDocCheckRequirement
+      - CheckedInWithOverriddenClearance
+      - CheckedInWithAutoAssignedClearance
+      - CheckedInWithOverriddenClearanceNeeded
+      - WithSpecificSsr
+      - BagRemoved
+      - Child
+      - WithInfant
+      - UnhappyWithSeat
+      - NonThruStandbyNotCheckedIn
+      - BagAdded
+      - BagChecked
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+      - 26
+      - 27
+      - 28
+      - 29
+      - 30
+      - 31
+      - 32
+      - 33
+      - 34
+      - 35
+      - 36
+      - 37
+      - 38
+      - 39
+      - 40
+      - 41
+      - 42
+      - 43
+      - 44
+      - 45
+      - 46
+      - 47
+      - 48
+      - 49
+      - 50
+    EnplanementDeplanementReportSegmentStatus:
+      type: integer
+      description: '0 = Flown
+
+        1 = Open'
+      x-enumNames:
+      - Flown
+      - Open
+      enum:
+      - 0
+      - 1
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    DownlinePassengerAndCountReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeIatciFlights
+      - showPassengerNames
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeIatciFlights:
+          type: boolean
+        showPassengerNames:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    PrePostFlightManifestReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - sortType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          $ref: '#/components/schemas/PrePostFlightManifestReportType'
+        sortType:
+          $ref: '#/components/schemas/PrePostFlightManifestSortType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    CheckedBaggagePrimarySortType:
+      type: integer
+      description: '0 = FlightNumber
+
+        1 = CityPair
+
+        2 = Sequence'
+      x-enumNames:
+      - FlightNumber
+      - CityPair
+      - Sequence
+      enum:
+      - 0
+      - 1
+      - 2
+    TransferBagTagSortType:
+      type: integer
+      description: '0 = PassengerLastName
+
+        1 = BagTag'
+      x-enumNames:
+      - PassengerLastName
+      - BagTag
+      enum:
+      - 0
+      - 1
+    ChannelType:
+      type: integer
+      description: 'Defines the available channel types invoking communication with the server.
+
+
+        0 = Default
+
+        1 = Direct
+
+        2 = Web
+
+        3 = Gds
+
+        4 = Api
+
+        5 = DigitalApi
+
+        6 = DigitalWeb
+
+        7 = Ndc'
+      x-enumNames:
+      - Default
+      - Direct
+      - Web
+      - Gds
+      - Api
+      - DigitalApi
+      - DigitalWeb
+      - Ndc
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    AvailabilityReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - departureDate
+      - carrierCode
+      - origin
+      - printer
+      properties:
+        departureDate:
+          type: string
+          format: date-time
+          minLength: 1
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        destination:
+          type:
+          - string
+          - 'null'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    CabinCounts:
+      type: object
+      additionalProperties: false
+      required:
+      - cabinCode
+      - count
+      properties:
+        cabinCode:
+          type: string
+          description: The cabin of service.
+          maxLength: 1
+          minLength: 0
+        count:
+          type: integer
+          description: The number of passengers in the cabin.
+          format: int32
+    PrintPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        header:
+          type:
+          - string
+          - 'null'
+          description: The report header text.
+        footer:
+          type:
+          - string
+          - 'null'
+          description: The report footer text.
+        body:
+          type:
+          - array
+          - 'null'
+          description: The lines of text constituting the report body.
+          items:
+            type: string
+    ManifestCounts:
+      type: object
+      additionalProperties: false
+      required:
+      - filterType
+      - cabinCounts
+      properties:
+        filterType:
+          description: The filter type used to generate passenger counts.
+          $ref: '#/components/schemas/ManifestPassengerFilterType'
+        cabinCounts:
+          type: array
+          description: The cabins of service and passenger counts for the filter.
+          items:
+            $ref: '#/components/schemas/CabinCounts'
+    PaymentReceiptReportDisplayCurrencySource:
+      type: integer
+      description: '0 = Payment
+
+        1 = Booking'
+      x-enumNames:
+      - Payment
+      - Booking
+      enum:
+      - 0
+      - 1
+    SegmentsByTimeReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - bookingDate
+      - carrierCode
+      - printer
+      properties:
+        bookingDate:
+          type: string
+          format: date-time
+          minLength: 1
+        channelType:
+          $ref: '#/components/schemas/ChannelType'
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    StandardLegReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          $ref: '#/components/schemas/StandardLegReportType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    BagWeightByLegReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - weightType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    WeightCategoryCount:
+      type: object
+      additionalProperties: false
+      properties:
+        weightCategory:
+          description: The weight category of passenger being counted.
+          $ref: '#/components/schemas/FlightSummaryPassengerWeightCategory'
+        count:
+          type: integer
+          description: The number of passengers in the weight category.
+          format: int32
+    FlightManifestReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          $ref: '#/components/schemas/FlightManifestReportType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

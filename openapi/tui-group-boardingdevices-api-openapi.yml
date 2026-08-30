@@ -1,0 +1,373 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Boarding Devices API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: boardingDevices
+paths:
+  /api/dcs/v1/boardingDevices/bgrCommands:
+    get:
+      tags:
+      - boardingDevices
+      summary: Generates commands for all BGR actions except for Connect.
+      description: 'For post-board, separate command lists are returned for different boarding response
+
+        scenarios.  These post-board lists contain tokenized commands, where the tokens should
+
+        be replaced by the client with a specific passenger''s data before sending the commands
+
+        to the BGR.  Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+        %%UnitDesignator%%, and %%ErrorMessage%%.
+
+
+        GraphQL endpoint: dcsGenerateBgrCommands'
+      operationId: dcs_v1_boardingDevices_bgrCommands_get
+      parameters:
+      - name: BoardingDeviceKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: LegKey
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 2
+      - name: LocationCode
+        in: query
+        description: 'The location code specifying which command generation rules will be used.  If not specified,
+
+          the default location code from the JWT will be used.'
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: BGR command strings for each action and post-board scenario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfBgrCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfBgrCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/BgrCommandsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    DeviceCommand:
+      type: object
+      additionalProperties: false
+      properties:
+        mode:
+          type:
+          - string
+          - 'null'
+          description: The mode the data should be sent in.
+        originalData:
+          type:
+          - string
+          - 'null'
+          description: If the command has unprintable binary characters, this contains the binary command data.
+        sanitizedData:
+          type:
+          - string
+          - 'null'
+          description: 'This contains a printable version of the command data, which means that if the command
+
+            has unprintable binary characters, the binary command data is in originalData.'
+        isBinary:
+          type: boolean
+          description: True if originalData has unprintable binary characters.
+        mustCheckIfBusy:
+          type: boolean
+          description: True if an app should check if the device is busy before sending this command.
+        mustRun:
+          type: boolean
+          description: True if this command must run, even when other commands fail.
+    BgrCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        disconnectCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of commands used to disconnect from the device.
+
+            These commands are not tokenized.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        activateCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of commands used to put the device in a state where it can be actively
+
+            used to board.  These commands are not tokenized.  Note that these commands
+
+            do not support biometric boarding.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        deactivateCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of commands used to discontinue use of the device and disconnect from it.
+
+            These commands are not tokenized.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        preBoardCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of commands used to prepare the device for boarding the next passenger.
+
+            These commands are not tokenized.  Note that some customers don''t use these
+
+            commands, so if an empty list is returned, no commands should be sent to the
+
+            device.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardSuccessTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request succeeded WITHOUT
+
+            any warnings, and a receipt SHOULD NOT be printed.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            and %%UnitDesignator%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardSuccessAndPrintReceiptTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request succeeded WITHOUT
+
+            any warnings, and a receipt SHOULD be printed.  Note that receipts printed
+
+            with these commands will not include a notification of any seat change.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            and %%UnitDesignator%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardSuccessWithWarningTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request succeeded WITH
+
+            warnings, and a receipt SHOULD NOT be printed.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            and %%UnitDesignator%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardSuccessWithWarningAndPrintReceiptTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request succeeded WITH
+
+            warnings, and a receipt SHOULD be printed.  Note that receipts printed
+
+            with these commands will not include a notification of any seat change.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            and %%UnitDesignator%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardVerificationTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request returned a verification
+
+            code.  This menas that the boarding was not performed, and an agent needs to verify
+
+            the travel documents, after which he may override ESTA.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            and %%UnitDesignator%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+        postBoardFailureTokenizedCommands:
+          type:
+          - array
+          - 'null'
+          description: 'List of tokenized commands used after a boarding request failed.
+
+            Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+
+            %%UnitDesignator%%, and %%ErrorMessage%%.'
+          items:
+            $ref: '#/components/schemas/DeviceCommand'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

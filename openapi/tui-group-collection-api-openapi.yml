@@ -1,0 +1,621 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Collection API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: collection
+paths:
+  /api/nsk/v1/collection/{accountCollectionKey}/expirationDate:
+    put:
+      tags:
+      - collection
+      summary: 'Updates the expiration of the account collection based on the
+
+        account collection key and data in the request.'
+      description: 'GraphQL endpoint: accountCollectionExpirationDateSet'
+      operationId: nsk_v1_collection_accountCollectionKey_expirationDate_put
+      parameters:
+      - name: accountCollectionKey
+        in: path
+        required: true
+        description: The account collection key.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The account expiration update request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountExpirationUpdateRequest'
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/collection/{accountCollectionKey}/transactions:
+    get:
+      tags:
+      - collection
+      summary: 'Retrieves the credit transactions based on the account collection key and
+
+        the request data.'
+      description: 'GraphQL endpoint: accountCollectionTransactions'
+      operationId: nsk_v1_collection_accountCollectionKey_transactions_get
+      parameters:
+      - name: accountCollectionKey
+        in: path
+        required: true
+        description: The account collection key.
+        schema:
+          type: string
+        x-position: 1
+      - name: StartTime
+        in: query
+        description: "The starting date and time of the date range to search in.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      - name: EndTime
+        in: query
+        description: "The end date and time of the date range to search in.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: SortByNewest
+        in: query
+        description: "Optional filter to sort results by newest.\n            "
+        schema:
+          type: boolean
+        x-position: 4
+      - name: PageSize
+        in: query
+        description: "Used to specify the number of records to return.\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 5
+      - name: PageIndex
+        in: query
+        description: "Represents the index of the requested paged item.\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        x-position: 6
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfTransaction'
+              examples:
+                Retrieve Transactions Response:
+                  description: Example response for retrieving transactions.
+                  value:
+                    data:
+                    - accountTransactionCode: null
+                      recordLocator: null
+                      accountReference: null
+                      transactionKey: MSExITEwMjA4OCJsJNQxATUzMyEhUURRNUZ
+                      amount: -2.42
+                      createdDate: '2026-07-09T05:55:16.3117608Z'
+                      currencyCode: USD
+                      foreignAmount: -15.0
+                      note: 'Funds Used: PNR123'
+                      foreignCurrencyCode: CNY
+                      type: 0
+                      paymentId: 365423
+                      accountCollectionKey: MSex
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Empty Start Date:
+                  description: Example response when start date field is empty.
+                  value:
+                    errors:
+                    - id: 154b85c0-1119-42c2-895c-1aa09ec3a85b
+                      code: TransactionSearchRequestv2.StartDate:RequiredAttribute
+                      message: TransactionSearchRequestv2.StartDate:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: TransactionSearchRequestv2
+                        member: StartDate
+                      rawMessage: The TransactionSearchRequestv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                End Date Before Start Date:
+                  description: Example response when end date is before start date.
+                  value:
+                    errors:
+                    - id: 4e33c648-abec-fa59-0877-5e0bfee7ea87
+                      code: nsk:Validation:EndDateBeforeStartDate
+                      message: nsk:Validation:EndDateBeforeStartDate
+                      type: Validation
+                      details: null
+                      rawMessage: The requested end date of 1/1/2011 occurs before the requested start date of 1/1/2012.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+      deprecated: true
+  /api/nsk/v2/collection/{accountCollectionKey}/transactions:
+    get:
+      tags:
+      - collection
+      summary: 'Retrieves the credit transactions based on the account collection key and
+
+        the request data.'
+      description: 'GraphQL endpoint: accountCollectionTransactionsv2'
+      operationId: nsk_v2_collection_accountCollectionKey_transactions_get
+      parameters:
+      - name: accountCollectionKey
+        in: path
+        required: true
+        description: The account collection key.
+        schema:
+          type: string
+        x-position: 1
+      - name: StartDate
+        in: query
+        description: "The starting date and time of the date range to search in.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      - name: EndDate
+        in: query
+        description: "The end date and time of the date range to search in.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: SortByNewest
+        in: query
+        description: "Optional filter to sort results by newest.\n            "
+        schema:
+          type: boolean
+        x-position: 4
+      - name: PageSize
+        in: query
+        description: "Used to specify the number of records to return.\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 5
+      - name: LastPageKey
+        in: query
+        description: "The last page key where to start paged query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 6
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPagedTransactionResponse'
+              examples:
+                Retrieve Transactions Successful:
+                  description: Example response for a successful retrieval of transactions.
+                  value:
+                    data:
+                      totalCount: 11085
+                      lastPageKey: MTAw
+                      transactions:
+                      - accountTransactionCode: null
+                        recordLocator: null
+                        accountReference: null
+                        transactionKey: MSExITEwMjA4OCJsJNQxATUzMyEhUURRNUZ
+                        amount: -2.42
+                        createdDate: '2026-07-09T05:55:16.3798047Z'
+                        currencyCode: USD
+                        foreignAmount: -15.0
+                        note: 'Funds Used: PNR123'
+                        foreignCurrencyCode: CNY
+                        type: 0
+                        paymentId: 365423
+                        accountCollectionKey: MSex
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Empty Start Date:
+                  description: Example response when start date field is empty.
+                  value:
+                    errors:
+                    - id: 154b85c0-1119-42c2-895c-1aa09ec3a85b
+                      code: TransactionSearchRequestv2.StartDate:RequiredAttribute
+                      message: TransactionSearchRequestv2.StartDate:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: TransactionSearchRequestv2
+                        member: StartDate
+                      rawMessage: The TransactionSearchRequestv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                End Date Before Start Date:
+                  description: Example response when end date is before start date.
+                  value:
+                    errors:
+                    - id: 4e33c648-abec-fa59-0877-5e0bfee7ea87
+                      code: nsk:Validation:EndDateBeforeStartDate
+                      message: nsk:Validation:EndDateBeforeStartDate
+                      type: Validation
+                      details: null
+                      rawMessage: The requested end date of 1/1/2011 occurs before the requested start date of 1/1/2012.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    Transaction:
+      type: object
+      description: "The transaction model.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      - currencyCode
+      properties:
+        amount:
+          type: number
+          description: "The credit account transaction amount.\n            "
+          format: decimal
+        currencyCode:
+          type: string
+          description: "The credit account transaction currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The credit account transaction note.\n            "
+          maxLength: 128
+          minLength: 0
+        accountTransactionCode:
+          type:
+          - string
+          - 'null'
+          description: "The system-generated code for the transaction.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator from the refunded booking payment. This property is redundant and the same information can be\nfound on the AccountReference property.\n            "
+          deprecated: true
+          x-deprecatedMessage: 4.4.4 - Please use Account Reference instead.
+        accountReference:
+          type:
+          - string
+          - 'null'
+          description: "The account reference. This property may contain a record locator, account number, string value, or may be null\ndepending on the transaction type.\n            "
+        transactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique transaction key.\n            "
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date associated with the transaction.\n            "
+          format: date-time
+        foreignAmount:
+          type: number
+          description: "The transaction foreign amount.\n            "
+          format: decimal
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The transaction foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        type:
+          description: "The transaction type.\n            "
+          $ref: '#/components/schemas/TransactionType'
+        paymentId:
+          type: integer
+          description: "The payment ID of the transaction. This will only be non zero on refunded booking payments. A zero signifies that\nno payment ID is found.\n            "
+          format: int64
+        accountCollectionKey:
+          type:
+          - string
+          - 'null'
+          description: "The account collection key associated with the transaction.\n            "
+    IJsonResponseOfPagedTransactionResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedTransactionResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PagedTransactionResponse:
+      type: object
+      description: "The paged transaction response.\n            "
+      additionalProperties: false
+      properties:
+        totalCount:
+          type: integer
+          description: "The total count of transactions.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The last page key.\n            "
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The collection of transactions.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    AccountExpirationUpdateRequest:
+      type: object
+      description: "The account transaction code model.\n            "
+      additionalProperties: false
+      required:
+      - expirationDate
+      properties:
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        reinstateAmount:
+          type: number
+          description: "The re-instate amount.\n            "
+          format: decimal
+    IJsonResponseOfIListOfTransaction:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    TransactionType:
+      type: integer
+      description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
+      x-enumNames:
+      - Default
+      - Payment
+      - Adjustment
+      - Supplementary
+      - Transfer
+      - Spoilage
+      - StatementDateAndBalance
+      - PayableCommission
+      - Commission
+      - ChildCommissionTransfer
+      - ParentCommissionTransfer
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

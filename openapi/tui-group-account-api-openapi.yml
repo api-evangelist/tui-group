@@ -1,0 +1,973 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Account API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: account
+paths:
+  /api/nsk/v1/account/password/challenge:
+    post:
+      tags:
+      - account
+      summary: Sends a challenge code for agents' reset password flow.
+      description: 'This is the first step in the reset password flow to generate a challenge code. The challenge
+
+        code is sent to the user''s email and/or phone number based on the domain configuration.
+
+        To configure this flow, see the Reset Password tab in the `Edit Domain` window in `Management Console`.
+
+
+        Related Endpoints:
+
+        - POST /api/nsk/v1/account/password/challenge/verify: The optional step to verify the challenge code.
+
+        - PUT /api/nsk/v1/account/password/challenge/reset: The second step to verify the challenge code and reset the
+
+        password.
+
+
+        Unrelated Endpoints:
+
+        - POST /api/auth/v1/token/multifactor: MFA relies on separate configuration and is for login flows vs reset
+
+        password flows.
+
+
+        If the domain is not configured for the new password flow, the following endpoints should be used.
+
+        - POST /api/nsk/v3/account/password/change: Expired password change using the anonymous login
+
+        - POST api/nsk/v1/account/password/reset: Forgot password change using the anonymous login.
+
+        - POST api/nsk/v3/user/password/change: Password change for the current login user.
+
+        - POST api/nsk/v1/users/{userKey}/password/change: Password change for a specific user.
+
+        - POST api/nsk/v1/users/{userKey}/password/reset: Forgot password change for a specific user.
+
+
+        GraphQL endpoint: accountPasswordChallenge'
+      operationId: nsk_v1_account_password_challenge_post
+      requestBody:
+        x-name: request
+        description: The account password challenge request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPasswordChallengeRequest'
+            examples:
+              With both phone number and email:
+                description: Example request with both phone number and email.
+                value:
+                  domain: EXT
+                  username: agent
+                  phoneNumber: '+11111111111'
+                  email: agent@mail.com
+              With a phone number only:
+                description: Example request with a phone number only.
+                value:
+                  domain: EXT
+                  username: agent
+                  phoneNumber: '+11111111111'
+                  email: null
+              With an email only:
+                description: Example request with an email only.
+                value:
+                  domain: EXT
+                  username: agent
+                  phoneNumber: null
+                  email: agent@mail.com
+        required: true
+        x-position: 1
+      responses:
+        '202':
+          description: Accepted, a challenge code was generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfString'
+              examples:
+                Challenge code generated:
+                  description: Example response when a challenge code was successfully generated. Please check the user's email and/or phone number for the challenge code.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Domain configuration does not allow agents to use the new reset password flow:
+                  description: Example when the domain configuration does not allow agents to use the new reset password flow. Check the UseNewResetPasswordFlow property in /resources/Domains.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:UseOldResetPasswordFlow
+                      message: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      type: Error
+                      details:
+                        errorNumber: '1667'
+                        sessionException: UseOldResetPasswordFlow
+                      rawMessage: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent does not exist:
+                  description: Example when the agent does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: No agent found for requested agent name EXT/agent.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent exceeded maximum allowed attempts in the reset password flow:
+                  description: Example when the agent exceeded maximum allowed attempts in the reset password flow.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      type: Error
+                      details:
+                        errorNumber: '1622'
+                        sessionException: PasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent attempts the reset password flow after exceeding the maximum allowed attempts:
+                  description: Example when the agent attempts the reset password flow after exceeding the maximum allowed attempts.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      type: Error
+                      details:
+                        errorNumber: '1650'
+                        sessionException: AttemptWhilePasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Phone number or email is a required contact method but is null, empty, or invalid in the request:
+                  description: Example when the phone number or email is a required contact method but is null, empty, or invalid in the request.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: The agent (EXT/agent) failed authentication.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Authentication token is missing or invalid:
+                  description: Example when the authentication token is missing or invalid.
+                  value: null
+  /api/nsk/v1/account/password/challenge/reset:
+    put:
+      tags:
+      - account
+      summary: Resets the password for agents using challenge code authentication.
+      description: 'This is the second step in the reset password flow. To configure this flow, see the Reset Password tab in
+
+        the `Edit Domain` window in `Management Console`.
+
+
+        Related Endpoints:
+
+        - POST /api/nsk/v1/account/password/challenge: The first step to generate the challenge code.
+
+        - POST /api/nsk/v1/account/password/challenge/verify: The optional step to verify the challenge code.
+
+
+        Unrelated Endpoints:
+
+        - POST /api/auth/v1/token/multifactor: MFA relies on separate configuration and is for login flows vs reset
+
+        password flows.
+
+
+        If the domain is not configured for the new password flow, the following endpoints should be used.
+
+        - POST /api/nsk/v3/account/password/change: Expired password change using the anonymous login
+
+        - POST api/nsk/v1/account/password/reset: Forgot password change using the anonymous login.
+
+        - POST api/nsk/v3/user/password/change: Password change for the current login user.
+
+        - POST api/nsk/v1/users/{userKey}/password/change: Password change for a specific user.
+
+        - POST api/nsk/v1/users/{userKey}/password/reset: Forgot password change for a specific user.
+
+
+        GraphQL endpoint: accountPasswordChallengeReset'
+      operationId: nsk_v1_account_password_challenge_reset_put
+      requestBody:
+        x-name: request
+        description: The account password challenge reset request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPasswordChallengeResetRequest'
+            examples:
+              Valid request:
+                description: Example request for resetting a password.
+                value:
+                  domain: EXT
+                  username: agent
+                  challengeCode: '123456'
+                  newPassword: NewPass
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Password is reset:
+                  description: Example response for a successful password reset.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Domain configuration does not allow agents to use the new reset password flow:
+                  description: Example when the domain configuration does not allow agents to use the new reset password flow. Check the UseNewResetPasswordFlow property in /resources/Domains.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:UseOldResetPasswordFlow
+                      message: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      type: Error
+                      details:
+                        errorNumber: '1667'
+                        sessionException: UseOldResetPasswordFlow
+                      rawMessage: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent does not exist:
+                  description: Example when the agent does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: No agent found for requested agent name EXT/agent.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent exceeded maximum allowed attempts in the reset password flow:
+                  description: Example when the agent exceeded maximum allowed attempts in the reset password flow.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      type: Error
+                      details:
+                        errorNumber: '1622'
+                        sessionException: PasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent attempts the reset password flow after exceeding the maximum allowed attempts:
+                  description: Example when the agent attempts the reset password flow after exceeding the maximum allowed attempts.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      type: Error
+                      details:
+                        errorNumber: '1650'
+                        sessionException: AttemptWhilePasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Challenge code is invalid or expired:
+                  description: Example when the challenge code is invalid or expired.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: Challenge code entered does not match for agent or is expired (EXT/agent).
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Authentication token is missing or invalid:
+                  description: Example when the authentication token is missing or invalid.
+                  value: null
+  /api/nsk/v1/account/password/challenge/verify:
+    post:
+      tags:
+      - account
+      summary: Verifies the challenge code for agents' reset password flow.
+      description: 'This is an optional step between creating a challenge code and resetting the password. To configure this flow,
+
+        see the Reset Password tab in the `Edit Domain` window in `Management Console`.
+
+
+        Related Endpoints:
+
+        - POST /api/nsk/v1/account/password/challenge: The first step to generate the challenge code.
+
+        - PUT /api/nsk/v1/account/password/challenge/reset: The second step to verify the challenge code and reset the
+
+        password.
+
+
+        Unrelated Endpoints:
+
+        - POST /api/auth/v1/token/multifactor: MFA relies on separate configuration and is for login flows vs reset
+
+        password flows.
+
+
+        If the domain is not configured for the new password flow, the following endpoints should be used.
+
+        - POST /api/nsk/v3/account/password/change: Expired password change using the anonymous login
+
+        - POST api/nsk/v1/account/password/reset: Forgot password change using the anonymous login.
+
+        - POST api/nsk/v3/user/password/change: Password change for the current login user.
+
+        - POST api/nsk/v1/users/{userKey}/password/change: Password change for a specific user.
+
+        - POST api/nsk/v1/users/{userKey}/password/reset: Forgot password change for a specific user.
+
+
+        GraphQL endpoint: accountPasswordChallengeVerify'
+      operationId: nsk_v1_account_password_challenge_verify_post
+      requestBody:
+        x-name: request
+        description: The account password challenge verify request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPasswordChallengeVerifyRequest'
+            examples:
+              Valid request:
+                description: Example request of verifying the challenge code.
+                value:
+                  domain: EXT
+                  username: agent
+                  challengeCode: '123456'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Challenge code is verified:
+                  description: Example when the challenge code is verified.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Domain configuration does not allow agents to use the new reset password flow:
+                  description: Example when the domain configuration does not allow agents to use the new reset password flow. Check the UseNewResetPasswordFlow property in /resources/Domains.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:UseOldResetPasswordFlow
+                      message: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      type: Error
+                      details:
+                        errorNumber: '1667'
+                        sessionException: UseOldResetPasswordFlow
+                      rawMessage: Current carrier settings for your domain EXT do not allow agents to reset their own password.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent does not exist:
+                  description: Example when the agent does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: No agent found for requested agent name EXT/agent.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent exceeded maximum allowed attempts in the reset password flow:
+                  description: Example when the agent exceeded maximum allowed attempts in the reset password flow.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      type: Error
+                      details:
+                        errorNumber: '1622'
+                        sessionException: PasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) has exceeded challenge code, and contact method match attempts in the password reset flow.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent attempts the reset password flow after exceeding the maximum allowed attempts:
+                  description: Example when the agent attempts the reset password flow after exceeding the maximum allowed attempts.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:RateLimited
+                      message: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      type: Error
+                      details:
+                        errorNumber: '1650'
+                        sessionException: AttemptWhilePasswordResetDisabled
+                      rawMessage: The agent (EXT/agent) attempted a password reset step while the password reset flow was disabled.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Challenge code is invalid or expired:
+                  description: Example when the challenge code is invalid or expired.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Credentials:Failed
+                      message: nsk-server:Credentials:Failed
+                      type: Error
+                      details: null
+                      rawMessage: Challenge code entered does not match for agent or is expired (EXT/agent).
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Authentication token is missing or invalid:
+                  description: Example when the authentication token is missing or invalid.
+                  value: null
+  /api/nsk/v3/account/password/change:
+    post:
+      tags:
+      - account
+      summary: Changes the accounts password.
+      description: 'This endpoint is recommended for a user who has an expired password.
+
+        This endpoint is restricted to the anonymous user only
+
+        and remains as the anonymous user even if the change password operation completed.
+
+        For changing the password of a logged-in user, please use /api/nsk/v3/user/password/change.
+
+        This follows domain level restrictions and could result in a failed change if there is a minimum time
+
+        requirement between password changes, invalid password length, or invalid character.
+
+
+        GraphQL endpoint: accountPasswordChangev3'
+      operationId: nsk_v3_account_password_change_post
+      requestBody:
+        x-name: request
+        description: The change password request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountChangePasswordRequestv2'
+            examples:
+              Request with username:
+                description: Validates the provided credentials then updates that user's password with the provided new one.
+                value:
+                  credentials:
+                    username: agentUsername123
+                    alternateIdentifier: null
+                    password: OldPassword123!
+                    domain: WWW
+                    location: WWW
+                    loginRole: WWWA
+                  newPassword: NewPassword123!
+              Request with alternate ID:
+                description: Functionally the same, but uses alternate IDs such as customer number.
+                value:
+                  credentials:
+                    username: null
+                    alternateIdentifier: '12345678'
+                    password: OldPassword123!
+                    domain: WWW
+                    location: WWW
+                    loginRole: WWWA
+                  newPassword: NewPassword123!
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Error response for incorrect domain, username, or password.:
+                  description: Only returns raw message in debug mode.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:PasswordChange:Failed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: 'nsk-server:AgentAuthentication: The agent (WWW/ABC123) was not authenticated'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Error response for a locked account.:
+                  description: Only returns raw message in debug mode.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:PasswordChange:Failed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: 'nsk-server:AgentLocked: The agent (WWW/ABC123) is locked.'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Error response for minimum password time.:
+                  description: Only returns raw message in debug mode. Minimum time is determined by domain configuration.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:PasswordChange:Failed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: 'nsk-server:PasswordMinimumTime: The agent (WWW/ABC123) cannot change their password before the Minimum Time is up.'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Error response for password policy violation.:
+                  description: Only returns raw message in debug mode. Password policy is configurable and determined by the domain.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:PasswordChange:Failed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: 'nsk-server:PasswordPolicy: X, Y, Z'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Error response when the new password is already used as password before.:
+                  description: Only returns raw message in debug mode. Unique password count is determined by domain configuration.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:PasswordHistory
+                      message: nsk-server:PasswordHistory
+                      type: Information
+                      details: null
+                      rawMessage: The agent (WWW/tst01) cannot reuse this password.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v1/account/password/reset:
+    post:
+      tags:
+      - account
+      summary: Invokes the forgot password reset for a specific account.
+      description: 'GraphQL endpoint: accountPasswordForgot'
+      operationId: nsk_v1_account_password_reset_post
+      requestBody:
+        x-name: request
+        description: The forgot password request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountForgotPasswordRequest'
+        required: true
+        x-position: 1
+      responses:
+        '202':
+          description: The request was accepted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    AccountChangePasswordRequestv2:
+      type: object
+      description: "Defines a change password request.\n            "
+      additionalProperties: false
+      required:
+      - newPassword
+      - credentials
+      properties:
+        newPassword:
+          type: string
+          description: "The new password.\n            "
+          maxLength: 256
+          minLength: 0
+        credentials:
+          description: "The current credentials.\n            "
+          $ref: '#/components/schemas/CredentialsBase'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    AccountPasswordChallengeRequest:
+      type: object
+      description: "The request for generating the challenge code when the new reset password flow is enabled.\n            "
+      additionalProperties: false
+      required:
+      - domain
+      - username
+      properties:
+        domain:
+          type: string
+          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type: string
+          description: "The unique username.\n            "
+          maxLength: 64
+          minLength: 0
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          description: "The phone number to send the challenge code to.\n            "
+          maxLength: 20
+          minLength: 0
+        email:
+          type:
+          - string
+          - 'null'
+          description: "The email address to send the challenge code to.\n            "
+          format: email
+    IJsonResponseOfString:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+          description: "The payload data.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AccountPasswordChallengeVerifyRequest:
+      type: object
+      description: "The request to verify the challenge code for the new reset password flow.\n            "
+      additionalProperties: false
+      required:
+      - domain
+      - username
+      - challengeCode
+      properties:
+        domain:
+          type: string
+          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type: string
+          description: "The unique username.\n            "
+          maxLength: 64
+          minLength: 0
+        challengeCode:
+          type: string
+          description: "The challenge code received from another source like email or text.\n            "
+          maxLength: 8
+          minLength: 0
+    CredentialsBase:
+      type: object
+      description: "Represents the base credential model.\n            "
+      additionalProperties: false
+      properties:
+        username:
+          type:
+          - string
+          - 'null'
+          description: "The unique username.\n            "
+        alternateIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "Alternate identifier that can be used in place of the username.\n            "
+        password:
+          type:
+          - string
+          - 'null'
+          description: "The unique password.\n            "
+        domain:
+          type:
+          - string
+          - 'null'
+          description: "The domain the user exists in.\n            "
+        location:
+          type:
+          - string
+          - 'null'
+          description: "The location the user exists in.\n            "
+        loginRole:
+          type:
+          - string
+          - 'null'
+          description: "The role to log in as.\n            "
+    AccountPasswordChallengeResetRequest:
+      type: object
+      description: "The request for the new reset password flow.\n            "
+      additionalProperties: false
+      required:
+      - domain
+      - username
+      - challengeCode
+      - newPassword
+      properties:
+        domain:
+          type: string
+          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type: string
+          description: "The unique username.\n            "
+          maxLength: 64
+          minLength: 0
+        challengeCode:
+          type: string
+          description: "The challenge code received from another source like email or text.\n            "
+          maxLength: 8
+          minLength: 0
+        newPassword:
+          type: string
+          description: "The new password to change to.\n            "
+          maxLength: 256
+          minLength: 0
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AccountForgotPasswordRequest:
+      type: object
+      description: "Defines the account forgot password request.\n            "
+      additionalProperties: false
+      required:
+      - domainCode
+      properties:
+        domainCode:
+          type: string
+          description: "The domain the user is located in.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type:
+          - string
+          - 'null'
+          description: "The unique username.\n            "
+        alternateIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The alternate identifier.\n            "
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

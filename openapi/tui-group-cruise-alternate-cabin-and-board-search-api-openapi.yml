@@ -1,0 +1,2116 @@
+openapi: 3.2.0
+info:
+  title: TUI Cruise Price and Availability. Cruise Alternate Cabin and Board Search API
+  description: These APIs returns price and availability for given search criteria
+  version: '1.0'
+  contact:
+    email: cruise-api-support@TUIGroup.onmicrosoft.com
+    name: Cruise API Support
+  x-header: 'This APIs returns cruises prices and availability for given search criteria.
+
+    '
+  x-summary: 'This API returns range of availability and pricing information that is specific to the search criteria.
+
+    This API returns offer details and pricing information for a specific itinerary, date range, and duration.
+
+    This API returns availability and pricing information for alternate cabins and boards.
+
+    This API returns availability and pricing information of alternative flights for a specific cruise package.
+
+    This API returns availability and pricing information of alternative stay variants for a specific cruise package.
+
+    '
+servers:
+- url: https://prod.api.tui/cruisepriceresults
+tags:
+- name: Cruise Alternate Cabin and Board Search
+paths:
+  /v1/cruises/cabin-board-variants:
+    post:
+      tags:
+      - Cruise Alternate Cabin and Board Search
+      summary: API to get the alternate cabin and boards
+      description: 'This API is designed to retrieve the availability and pricing information for alternate cabins based on the itinerary, date range, and duration provided.  It''s important to note that the API is unable to handle more than one cabin at a time. Therefore, if you want to request alternate cabins for multiple cabins,  you must make separate requests for each cabin allocation. For instance, if you select two cabins, you need to make two separate requests, one for each cabin.
+
+        '
+      operationId: getAlternateCabinAndBoards
+      parameters:
+      - name: x-Trace-Id
+        in: header
+        required: true
+        description: End to end tracing ID, can be any string
+        schema:
+          type: string
+          pattern: ^[A-Za-z0-9]{10,15}$
+          example: OQ9Eu77laT
+      - name: env
+        in: header
+        required: false
+        description: A unique environment identifier for request to retrieve from correct ngs instance
+        schema:
+          type: string
+          example: dev,test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CruiseUniqueRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CruiseAlternateCabinAndBoardOffers'
+        '400':
+          description: Invalid input parameters
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '502':
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '504':
+          description: Gateway Timed Out
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        default:
+          description: Unexpected error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    Accommodation:
+      title: Accommodation
+      required:
+      - code
+      - duration
+      - room
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1309874606/3
+          description: Atcom Id
+        promotionCode:
+          type: string
+          example: CGCR
+          description: Atcom Promo Code
+        sourceCode:
+          type: string
+          example: XXXX0029/011
+          description: Atcom accommodation code
+        code:
+          type: string
+          example: A0421241
+        name:
+          type: string
+          example: Avani Bentota Resort
+        duration:
+          allOf:
+          - $ref: '#/components/schemas/Duration'
+          - example:
+            - checkInDate: 2023-06-07
+              checkInTime: 0.0
+              checkOutDate: 2023-06-14
+              checkOutTime: 0.0
+              numberOfNights: 7
+        roomBoardRate:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomBoardRate'
+          description: ''
+          example:
+          - roomType: DDBT
+            boardType: HB
+            termsConditions: CNX7D
+            occupancy:
+              adult: 1
+              child: 1
+            travellers:
+            - id: 1
+              type: ADULT
+            - id: 3
+              type: CHILD
+            prices:
+            - breakdowns:
+              - fare:
+                - level: ROOM_AND_BOARD
+                  type: PER_PAX
+                  category: NET
+                  value: 99.4
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                discount:
+                - level: ROOM_AND_BOARD
+                  type: PER_PAX
+                  category: DISCOUNT
+                  value: 0.27
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                total:
+                - level: ROOM_AND_BOARD
+                  type: PER_PAX
+                  category: GROSS
+                  value: 109.99
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+              total:
+              - level: ROOM_AND_BOARD
+                type: PER_BOOKING
+                category: GROSS
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+        room:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+          description: ''
+          example:
+          - code: DDBT
+            name: Deluxe Double Room with Balcony or Terrace
+            minPax: 1
+            maxPax: 2
+            default: true
+            freeKids: false
+            prices:
+            - breakdowns:
+              - fare:
+                - level: ROOM
+                  type: PER_PAX
+                  category: NET
+                  value: 99.4
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                discount:
+                - level: ROOM
+                  type: PER_PAX
+                  category: DISCOUNT
+                  value: 0.27
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                total:
+                - level: ROOM
+                  type: PER_PAX
+                  category: GROSS
+                  value: 109.99
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+              total:
+              - level: ROOM
+                category: GROSS
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+        board:
+          type: array
+          items:
+            $ref: '#/components/schemas/Board'
+          description: ''
+          example:
+          - id: string
+            code: HB
+            name: Half board
+            prices:
+            - breakdowns:
+              - fare:
+                - level: BOARD
+                  type: PER_PAX
+                  category: NET
+                  value: 99.4
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                discount:
+                - level: BOARD
+                  type: PER_PAX
+                  category: DISCOUNT
+                  value: 0.27
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+                total:
+                - level: BOARD
+                  type: PER_PAX
+                  category: GROSS
+                  value: 109.99
+                  travellers:
+                  - id: '1'
+                  - id: '2'
+              total:
+              - level: BOARD
+                type: PER_PAX
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '1'
+                - id: '2'
+        sourceInformation:
+          allOf:
+          - $ref: '#/components/schemas/SourceInformation'
+          - example:
+            - category: CONTRACTED
+              system: TUIAccommodationSourcing
+    SeenPrice:
+      type: object
+      properties:
+        currency:
+          type: string
+          example: GBP
+        value:
+          type: string
+          example: '199.99'
+      required:
+      - value
+    CruiseV2:
+      type: object
+      description: Cruise details
+      properties:
+        id:
+          type: string
+          example: '101088'
+        sailings:
+          type: array
+          items:
+            $ref: '#/components/schemas/SailingV2'
+        cabinBoardVariants:
+          type: array
+          items:
+            type: object
+            properties:
+              cabin:
+                type: string
+                example: ZI01
+              availability:
+                type: integer
+                example: 5
+              cabinBoardRate:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CabinBoardRate'
+                example:
+                - cabinType: ZI01
+                  boardType: AI
+                  termsConditions: CNX7D
+                  occupancy:
+                    adult: 1
+                    child: 1
+                  travellers:
+                  - id: 1
+                    type: ADULT
+                  - id: 2
+                    type: CHILD
+                  prices:
+                  - breakdowns:
+                    - fare:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: NET
+                        value: 99.4
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: NET
+                        value: 299.4
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      discount:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: DISCOUNT
+                        value: 99.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: DISCOUNT
+                        value: 199.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      deposit:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: LOW_DEPOSIT
+                        value: 99.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: LOW_DEPOSIT
+                        value: 199.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      total:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: NET
+                        value: 1984.969
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: NET
+                        value: 1984.96
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                    total:
+                    - level: HOLIDAY
+                      type: PER_BOOKING
+                      category: NET
+                      value: 5954.89
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                - cabinType: ZI01
+                  boardType: PI
+                  termsConditions: CNX7D
+                  occupancy:
+                    adult: 1
+                    child: 1
+                  travellers:
+                  - id: 1
+                    type: ADULT
+                  - id: 3
+                    type: CHILD
+                  prices:
+                  - breakdowns:
+                    - fare:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: NET
+                        value: 99.4
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: NET
+                        value: 299.4
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      discount:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: DISCOUNT
+                        value: 99.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: DISCOUNT
+                        value: 199.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      deposit:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: LOW_DEPOSIT
+                        value: 99.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: LOW_DEPOSIT
+                        value: 199.27
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                        - id: '3'
+                        - id: '4'
+                      total:
+                      - level: HOLIDAY
+                        type: PER_PAX
+                        category: NET
+                        value: 1984.969
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                      - level: HOLIDAY
+                        type: PER_BOOKING
+                        category: NET
+                        value: 1984.96
+                        travellers:
+                        - id: '1'
+                        - id: '2'
+                    total:
+                    - level: HOLIDAY
+                      type: PER_BOOKING
+                      category: NET
+                      value: 5954.89
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+    PointType:
+      type: string
+      example: PORT
+      enum:
+      - HOTEL
+      - AIRPORT
+      - PORT
+      - POI
+      - RESORT
+      - CITY
+      - DESTINATION
+      - REGION
+      - COUNTRY
+      - CONTINENT
+    Ship:
+      type: object
+      properties:
+        code:
+          type: string
+          example: '150016'
+        name:
+          type: string
+          example: MARELLA VOYAGER
+        cruiseLine:
+          $ref: '#/components/schemas/CruiseLine'
+    MetaInformation:
+      title: MetaInformation
+      description: Details of requester who wants to use this API
+      required:
+      - locale
+      - market
+      - brand
+      - channel
+      - medium
+      - currency
+      type: object
+      properties:
+        locale:
+          type: string
+          example: en_GB
+        market:
+          type: string
+          example: GB
+        brand:
+          type: string
+          example: MARELLA_UK
+        channel:
+          type: string
+          example: B2B
+        medium:
+          type: string
+          example: WEB
+        agent:
+          type: string
+          example: T|MARCR
+          description: 'Agent identifier in format T|XXXX where XXXX is the agent code. Examples include: T|MARCR, T|J0332, T|RIVER'
+        currency:
+          type: string
+          example: GBP
+      additionalProperties: false
+    PriceDetail:
+      title: PriceDetail
+      required:
+      - total
+      type: object
+      properties:
+        breakdowns:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceBreakdown'
+          description: ''
+          example:
+          - fare:
+            - level: DIRECTION
+              type: PER_PAX
+              category: NET
+              value: 99.4
+              travellers:
+              - id: '1'
+              - id: '2'
+            tax:
+            - level: DIRECTION
+              type: PER_PAX
+              category: AIRPORT_TAX
+              code: BE2
+              value: 0.27
+              travellers:
+              - id: '1'
+            total:
+            - level: DIRECTION
+              type: PER_PAX
+              category: GROSS
+              value: 109.99
+              travellers:
+              - id: '1'
+              - id: '2'
+        bookingFee:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/BookingFee'
+        total:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: DIRECTION
+            category: GROSS
+            value: 99.4
+            travellers:
+            - id: '1'
+            - id: '2'
+    StayDuration:
+      title: Stay Duration
+      type: object
+      required:
+      - numberOfNights
+      - stayOrder
+      properties:
+        numberOfNights:
+          title: Number of nights
+          type: integer
+          format: int32
+          example: 5
+          description: Number of nights stay in before or after cruise
+        stayOrder:
+          title: Stay order
+          type: string
+          enum:
+          - STAYAFTERCRUISE
+          - STAYBEFORECRUISE
+          description: The stay order before or after cruise
+      additionalProperties: false
+      description: Stay is available only for the 7 days cruise sailing duration
+    RoomBoardRate:
+      title: RoomBoardRate
+      required:
+      - roomType
+      - boardType
+      - travellers
+      - prices
+      type: object
+      properties:
+        roomType:
+          type: string
+          example: DDBT
+        boardType:
+          type: string
+          example: HB
+        termsConditions:
+          type: string
+          example: CNX7D
+        occupancy:
+          allOf:
+          - $ref: '#/components/schemas/Occupancy'
+          - example:
+            - adult: 1
+              child: 1
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+          description: ''
+          example:
+          - id: 1
+            type: ADULT
+          - id: 3
+            type: CHILD
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          description: ''
+          example:
+          - breakdowns:
+            - fare:
+              - level: ROOM_AND_BOARD
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              discount:
+              - level: ROOM_AND_BOARD
+                type: PER_PAX
+                category: DISCOUNT
+                value: 0.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              total:
+              - level: ROOM_AND_BOARD
+                type: PER_PAX
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '1'
+                - id: '2'
+            total:
+            - level: ROOM_AND_BOARD
+              category: GROSS
+              value: 99.4
+              travellers:
+              - id: '1'
+              - id: '2'
+    PriceLevel:
+      type: string
+      example: SAILING
+      enum:
+      - DIRECTION
+      - FLIGHT
+      - HOLIDAY
+      - ROOM
+      - BOARD
+      - ROOM_AND_BOARD
+      - CABIN
+      - CABIN_AND_BOARD
+      - SAILING
+      - OFFER_GROUP
+    Point:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PointType'
+    CruiseType:
+      title: Cruise Type
+      type: string
+      enum:
+      - FLY_CRUISE
+      - FLY_CRUISEANDSTAY
+      - FLY_STAYANDCRUISE
+      - FLY_BACKTOBACK_CRUISE
+      - CRUISE_ONLY
+    Direction:
+      title: Direction
+      required:
+      - id
+      - type
+      - segments
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+        type:
+          $ref: '#/components/schemas/DirectionType'
+          example:
+          - OUTBOUND
+        supplier:
+          allOf:
+          - $ref: '#/components/schemas/Supplier'
+          - example:
+            - code: string
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+          description: ''
+          example:
+          - id: string
+            departurePoint:
+              code: PMI
+              type: AIRPORT
+            arrivalPoint:
+              code: A123S
+              countryCode: string
+              type: RESORT
+            departureDate: 2023-06-07
+            departureTime: 09:45:00
+            arrivalDate: 2023-06-07
+            arrivalTime: 38700
+        sourceInformation:
+          allOf:
+          - $ref: '#/components/schemas/SourceInformation'
+          - example:
+            - category: CONTRACTED
+              system: ASTERIX
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          description: ''
+          example:
+          - breakdowns:
+            - fare:
+              - level: DIRECTION
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              fee:
+              - level: DIRECTION
+                type: PER_PAX
+                category: AIRPORT_TAX
+                code: BE2
+                value: 0.27
+                travellers:
+                - id: '1'
+                - id: '2'
+              total:
+              - level: DIRECTION
+                type: PER_PAX
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '1'
+                - id: '2'
+            - fare:
+              - level: DIRECTION
+                type: PER_CHILD
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '3'
+                - id: '4'
+              fee:
+              - level: DIRECTION
+                type: PER_CHILD
+                category: NET
+                code: BE2
+                value: 0.27
+                travellers:
+                - id: '3'
+                - id: '4'
+              total:
+              - level: DIRECTION
+                type: PER_CHILD
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '3'
+                - id: '4'
+            total:
+            - level: DIRECTION
+              category: GROSS
+              value: 99.4
+              travellers:
+              - id: '1'
+              - id: '2'
+    FlightResponse:
+      title: Flight
+      required:
+      - id
+      - directions
+      - travellers
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1317590995/4653275
+        routeCode:
+          type: string
+          example: TFSLTN5ALTNTFS
+        directions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Direction'
+          description: ''
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+          description: ''
+        totalPrice:
+          allOf:
+          - $ref: '#/components/schemas/SeenPrice'
+      example:
+        id: '1'
+        routeCode: TFSLTN5ALTNTFS
+        directions:
+        - id: '1'
+          type: OUTBOUND
+          segments:
+          - id: '1'
+            operatingCarrier: TB
+            marketingCarrier: TB
+            flightNo: '1114'
+            departurePoint:
+              code: LGW
+            arrivalPoint:
+              code: PMI
+            departureDate: 2023-10-11
+            departureTime: 09:45:00
+            arrivalDate: 2023-10-11
+            arrivalTime: 45300
+            sectors:
+            - departureAirport:
+                code: LGW
+              departureDate: 2023-10-11
+              departureTime: 09:45:00
+              arrivalAirport:
+                code: PMI
+              arrivalDate: 2023-10-11
+              arrivalTime: 45300
+          sourceInformation:
+            category: CONTRACTED
+            system: NewSkies
+            journeyKey: string
+        travellers:
+        - id: 1
+          type: ADULT
+        - id: 2
+          type: ADULT
+        - id: 3
+          type: CHILD
+        - id: 4
+          type: CHILD
+    Supplier:
+      title: Supplier
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: string
+    Extras:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          example: WCF1/A
+          description: Extras item code
+        name:
+          type: string
+          example: Tui Care foundation
+          description: Extras item name
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          minItems: 1
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+          description: ''
+      example:
+        code: WCF1/A
+        name: TUI Care Foundation
+        prices:
+        - total:
+          - type: PER_BOOKING
+            value: 109.99
+            travellers:
+            - id: '1'
+            - id: '2'
+    Currency:
+      title: Currency
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: EUR
+    CabinBoardRate:
+      title: CabinBoardRate
+      required:
+      - cabinType
+      - boardType
+      - travellers
+      - prices
+      type: object
+      properties:
+        cabinType:
+          type: string
+          example: ZI01
+        boardType:
+          type: string
+          example: AI
+        termsConditions:
+          type: string
+          example: CNX7D
+        occupancy:
+          allOf:
+          - $ref: '#/components/schemas/Occupancy'
+          - example:
+              adult: 1
+              child: 1
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+          description: ''
+          example:
+          - id: 1
+            type: ADULT
+          - id: 3
+            type: CHILD
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          description: ''
+          example:
+          - breakdowns:
+            - fare:
+              - level: HOLIDAY
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              - level: HOLIDAY
+                type: PER_BOOKING
+                category: NET
+                value: 299.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              discount:
+              - level: HOLIDAY
+                type: PER_PAX
+                category: DISCOUNT
+                value: 99.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              - level: HOLIDAY
+                type: PER_BOOKING
+                category: DISCOUNT
+                value: 199.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              deposit:
+              - level: HOLIDAY
+                type: PER_PAX
+                category: LOW_DEPOSIT
+                value: 99.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              - level: HOLIDAY
+                type: PER_BOOKING
+                category: LOW_DEPOSIT
+                value: 199.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              total:
+              - level: HOLIDAY
+                type: PER_PAX
+                category: NET
+                value: 1984.969
+                travellers:
+                - id: '1'
+                - id: '2'
+              - level: HOLIDAY
+                type: PER_BOOKING
+                category: NET
+                value: 1984.96
+                travellers:
+                - id: '1'
+                - id: '2'
+            total:
+            - level: HOLIDAY
+              type: PER_BOOKING
+              category: NET
+              value: 5954.89
+              travellers:
+              - id: '1'
+              - id: '2'
+    Segment:
+      title: Segment
+      required:
+      - id
+      - departurePoint
+      - arrivalPoint
+      - departureDate
+      - departureTime
+      - arrivalDate
+      - arrivalTime
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+        operatingCarrier:
+          type: string
+          example: TB
+        marketingCarrier:
+          type: string
+          example: TB
+        flightNo:
+          type: string
+          example: '1114'
+        departurePoint:
+          allOf:
+          - $ref: '#/components/schemas/Point'
+          - example:
+            - code: LGW
+        arrivalPoint:
+          allOf:
+          - $ref: '#/components/schemas/Point'
+          - example:
+            - code: PMI
+        departureDate:
+          type: string
+          example: '2023-10-11'
+        departureTime:
+          type: string
+          format: time
+          example: 09:45:00
+        arrivalDate:
+          type: string
+          example: '2023-10-11'
+        arrivalTime:
+          type: string
+          format: time
+          example: '12:35:00'
+        sectors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sector'
+          description: ''
+          example:
+          - departureAirport:
+              code: code
+            departureDate: '2023-10-11'
+            departureTime: 09:45:00
+            arrivalAirport:
+              code: PMI
+            arrivalDate: '2023-10-11'
+            arrivalTime: '12:35:00'
+    Money:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/Currency'
+        value:
+          default: 0.0
+          type: number
+          example: 100.0
+      required:
+      - value
+    Board:
+      title: Board
+      required:
+      - code
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+        code:
+          type: string
+          example: HB
+        name:
+          type: string
+          example: Half board
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          description: ''
+          example:
+          - breakdowns:
+            - fare:
+              - level: BOARD
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              discount:
+              - level: BOARD
+                type: PER_PAX
+                category: DISCOUNT
+                value: 0.27
+                travellers:
+                - id: '1'
+                - id: '2'
+              total:
+              - level: BOARD
+                type: PER_PAX
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '1'
+                - id: '2'
+            total:
+            - level: BOARD
+              type: PER_PAX
+              category: GROSS
+              value: 109.99
+              travellers:
+              - id: '1'
+              - id: '2'
+    PersonType:
+      type: string
+      enum:
+      - ADULT
+      - CHILD
+      - INFANT
+    DirectionType:
+      type: string
+      example: INBOUND
+      enum:
+      - INBOUND
+      - OUTBOUND
+      - ONEWAY
+      - ROUNDTRIP
+    Occupancy:
+      title: Occupancy
+      required:
+      - adult
+      - child
+      type: object
+      properties:
+        adult:
+          type: integer
+          example: 1
+        child:
+          type: integer
+          example: 1
+        infant:
+          type: integer
+          example: 0
+    CruiseLine:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Marella
+    Price:
+      type: object
+      required:
+      - value
+      properties:
+        code:
+          type: string
+        type:
+          $ref: '#/components/schemas/PriceType'
+        category:
+          $ref: '#/components/schemas/PriceCategory'
+        level:
+          $ref: '#/components/schemas/PriceLevel'
+        value:
+          type: number
+          example: 100.0
+        amount:
+          $ref: '#/components/schemas/Money'
+        travellers:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+    Problem:
+      description: Error details in case of problems with request
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type or code of the error
+        system:
+          type: string
+          description: System where error occurred
+        title:
+          type: string
+        details:
+          type: string
+      additionalProperties: false
+    BookingFee:
+      type: object
+      properties:
+        prices:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/Price'
+        total:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/Price'
+    CruiseAlternateCabinAndBoardOffers:
+      title: Cruise alternate cabin and board offers
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CruiseType'
+        offerGroup:
+          $ref: '#/components/schemas/OfferGroup'
+          description: The offer group is applicable only for the offer type  FLY_CRUISEANDSTAY, FLY_STAYANDCRUISE and FLY_BACKTOBACK
+        cruise:
+          $ref: '#/components/schemas/CruiseV2'
+        stay:
+          type: array
+          items:
+            $ref: '#/components/schemas/StayResponse'
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightResponse'
+          additionalProperties: false
+        extras:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extras'
+    PriceBreakdown:
+      title: PriceBreakdown
+      required:
+      - total
+      type: object
+      properties:
+        fare:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: DIRECTION
+            type: PER_PAX
+            category: NET
+            value: 99.4
+            travellers:
+            - id: '1'
+            - id: '2'
+        tax:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: DIRECTION
+            type: PER_PAX
+            category: AIRPORT_TAX
+            code: BE2
+            value: 0.27
+            travellers:
+            - id: '1'
+            - id: '2'
+        discount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: ROOM
+            type: PER_PAX
+            category: NET
+            value: 0.27
+            travellers:
+            - id: '1'
+            - id: '2'
+        fee:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: DIRECTION
+            type: PER_PAX
+            category: NET
+            code: BE2
+            value: 0.27
+            travellers:
+            - id: '1'
+            - id: '2'
+        deposit:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+          example:
+          - level: SAILING
+            type: PER_PAX
+            category: NET
+            code: BE2
+            value: 0.27
+            travellers:
+            - id: '1'
+            - id: '2'
+        total:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+          description: ''
+    Duration:
+      title: Duration
+      required:
+      - checkInDate
+      - checkOutDate
+      - numberOfNights
+      type: object
+      properties:
+        checkInDate:
+          type: string
+          example: '2023-06-07'
+        checkInTime:
+          type: string
+          example: '00:00:00.00'
+        checkOutDate:
+          type: string
+          example: '2023-06-14'
+        checkOutTime:
+          type: string
+          example: '00:00:00.00'
+        numberOfNights:
+          type: integer
+          format: int32
+          example: 7
+    Itinerary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '101426'
+        name:
+          type: string
+          example: Treasures of the Mediterranean
+    StayRequest:
+      type: object
+      required:
+      - id
+      - code
+      - sourceCode
+      - duration
+      - roomBoard
+      properties:
+        id:
+          type: string
+          example: 1176987100/3
+        code:
+          type: string
+          example: '9929'
+        sourceCode:
+          type: string
+          example: ESMJ0004
+        duration:
+          $ref: '#/components/schemas/StayDuration'
+        roomBoard:
+          type: array
+          items:
+            type: object
+            required:
+            - roomSequenceNumber
+            - roomType
+            - boardType
+            - travellerIds
+            properties:
+              roomSequenceNumber:
+                type: integer
+                description: Cabin sequence number start from 1 and increments by 1
+                minimum: 1
+                maximum: 5
+                format: int32
+                example: 1
+              roomType:
+                type: string
+                example: ZI01
+              boardType:
+                type: string
+                example: AI
+              travellerIds:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+                example:
+                - 2
+                - 3
+    ValidationProblem:
+      type: object
+      properties:
+        problem:
+          $ref: '#/components/schemas/Problem'
+        validationIssues:
+          type: array
+          items:
+            type: string
+    Traveller:
+      title: Traveller
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        type:
+          $ref: '#/components/schemas/PersonType'
+        age:
+          type: integer
+          format: int32
+          example: 30
+          description: Default adult age will be 30 and child age as entered in the form
+    StayResponse:
+      title: Stay
+      required:
+      - accommodation
+      type: object
+      properties:
+        accommodation:
+          allOf:
+          - $ref: '#/components/schemas/Accommodation'
+          - example:
+              id: 1309874606/3
+              promotionCode: CGCR
+              sourceCode: XXXX0029/011
+              code: A0421241
+              name: Avani Bentota Resort
+              duration:
+                checkInDate: 2023-06-07
+                checkInTime: '00:00:00.00'
+                checkOutDate: 2023-06-14
+                checkOutTime: 0.0
+                numberOfNights: 7
+              roomBoardRate:
+              - roomType: DDBT
+                boardType: HB
+                termsConditions: CNX7D
+                occupancy:
+                  adult: 1
+                  child: 1
+                travellers:
+                - id: '1'
+                  type: ADULT
+                - id: '3'
+                  type: CHILD
+                prices:
+                - breakdowns:
+                  - fare:
+                    - level: ROOM_AND_BOARD
+                      type: PER_PAX
+                      category: NET
+                      value: 599.4
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                    - level: ROOM_AND_BOARD
+                      type: PER_BOOKING
+                      category: NET
+                      value: 599.4
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                    discount:
+                    - level: ROOM_AND_BOARD
+                      type: PER_PAX
+                      category: DISCOUNT
+                      value: 145.27
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                    - level: ROOM_AND_BOARD
+                      type: PER_BOOKING
+                      category: DISCOUNT
+                      value: 145.27
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                    total:
+                    - level: ROOM_AND_BOARD
+                      type: PER_PAX
+                      category: NET
+                      value: 1109.99
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                    - level: ROOM_AND_BOARD
+                      type: PER_BOOKING
+                      category: NET
+                      value: 1109.99
+                      travellers:
+                      - id: '1'
+                      - id: '2'
+                  total:
+                  - level: ROOM_AND_BOARD
+                    type: PER_PAX
+                    category: NET
+                    value: 799.4
+                    travellers:
+                    - id: '1'
+                      type: ADULT
+                  - level: ROOM_AND_BOARD
+                    type: PER_BOOKING
+                    category: NET
+                    value: 799.4
+                    travellers:
+                    - id: '1'
+                      type: ADULT
+              room:
+              - code: DDBT
+                name: Deluxe Double Room with Balcony or Terrace
+                minPax: 1
+                maxPax: 2
+                default: true
+                freeKids: false
+                prices:
+                - breakdowns:
+                  - fare:
+                    - level: ROOM
+                      type: PER_PAX
+                      category: NET
+                      value: 99.4
+                      travellers:
+                      - id: '1'
+                    discount:
+                    - level: ROOM
+                      type: PER_PAX
+                      category: DISCOUNT
+                      value: 0.27
+                      travellers:
+                      - id: '1'
+                    total:
+                    - level: ROOM
+                      type: PER_PAX
+                      category: GROSS
+                      value: 109.99
+                      travellers:
+                      - id: '1'
+                  total:
+                    level: ROOM
+                    category: GROSS
+                    value: 99.4
+                    travellers:
+                    - id: '1'
+              board:
+              - id: string
+                code: HB
+                name: Half board
+                prices:
+                - breakdowns:
+                  - fare:
+                    - level: BOARD
+                      type: PER_PAX
+                      category: NET
+                      value: 99.4
+                      travellers:
+                      - id: '1'
+                    discount:
+                    - level: BOARD
+                      type: PER_PAX
+                      category: DISCOUNT
+                      value: 0.27
+                      travellers:
+                      - id: '1'
+                    total:
+                    - level: BOARD
+                      type: PER_PAX
+                      category: GROSS
+                      value: 109.99
+                      travellers:
+                      - id: '1'
+              sourceInformation:
+                category: CONTRACTED
+                system: TUIAccommodationSourcing
+    Sector:
+      title: Sector
+      required:
+      - departureAirport
+      - departureDate
+      - departureTime
+      - arrivalAirport
+      - arrivalDate
+      - arrivalTime
+      type: object
+      properties:
+        departureAirport:
+          allOf:
+          - $ref: '#/components/schemas/Point'
+          - example:
+            - code: LGW
+        departureDate:
+          type: string
+          example: '2023-10-11'
+        departureTime:
+          type: string
+          format: time
+          example: 09:45:00
+        arrivalAirport:
+          allOf:
+          - $ref: '#/components/schemas/Point'
+          - example:
+            - code: PMI
+        arrivalDate:
+          type: string
+          example: '2023-10-11'
+        arrivalTime:
+          type: string
+          format: time
+          example: '12:35:00'
+    OfferGroupRequest:
+      type: object
+      required:
+      - id
+      - groupId
+      - code
+      - promotionCode
+      properties:
+        id:
+          type: string
+          example: M1309869340/3/457/14|1310491357/2/0|1310491289/1309873711/3|1310491347/897937623/3
+          description: atcom/inventory id
+        groupId:
+          type: string
+          example: 1310491357/MC/AB
+          description: MC Itinerary id
+        code:
+          type: string
+          example: XXXX0029/011
+        promotionCode:
+          type: string
+          example: CGCR
+    CruiseRequest:
+      type: object
+      required:
+      - id
+      - duration
+      - sailingDate
+      - sailing
+      properties:
+        id:
+          type: string
+          description: Cruise Id
+        duration:
+          title: Cruise sailing duration in number of nights
+          type: integer
+          format: int32
+          example: 7
+        sailingDate:
+          type: string
+          description: Cruise sailing start date. Stay start date for STAYBEFORECRUISE
+          example: '2024-12-25'
+        sailing:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - sourceCode
+            - itinerary
+            - departurePoint
+            - arrivalPoint
+            - cabinBoard
+            properties:
+              id:
+                type: string
+                example: XXXX0005/119
+              sourceCode:
+                type: string
+                example: XXXX0029/011
+                description: Atcom cruise code
+              itinerary:
+                $ref: '#/components/schemas/Itinerary'
+              departurePoint:
+                $ref: '#/components/schemas/Point'
+              arrivalPoint:
+                $ref: '#/components/schemas/Point'
+              cabinBoard:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - cabinSequenceNumber
+                  - cabinType
+                  - boardType
+                  - travellerIds
+                  properties:
+                    cabinSequenceNumber:
+                      type: integer
+                      description: Cabin sequence number start from 1 and increments by 1
+                      minimum: 1
+                      maximum: 5
+                      format: int32
+                      example: 1
+                    cabinType:
+                      type: string
+                      example: ZI01
+                    boardType:
+                      type: string
+                      example: AI
+                    travellerIds:
+                      type: array
+                      items:
+                        type: integer
+                        format: int32
+                      example:
+                      - 2
+                      - 3
+              ship:
+                $ref: '#/components/schemas/Ship'
+    PriceType:
+      type: string
+      example: PER_PAX
+      enum:
+      - PER_ADULT
+      - PER_CHILD
+      - PER_PAX
+      - PER_BOOKING
+      - PER_INFANT
+    OfferGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          example: M1309869340/3/457/14|1310491357/2/0|1310491289/1309873711/3|1310491347/897937623/3
+          description: atcom/inventory id
+        groupId:
+          type: string
+          example: 1310491357/MC/AB
+          description: MC Itinerary id
+        code:
+          type: string
+          example: XXXX0029/011
+        promotionCode:
+          type: string
+          example: CGCR
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          example:
+          - breakdowns:
+            - fare:
+              - level: OFFER_GROUP
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              - level: OFFER_GROUP
+                type: PER_BOOKING
+                category: NET
+                value: 299.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              discount:
+              - level: OFFER_GROUP
+                type: PER_PAX
+                category: DISCOUNT
+                value: 99.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              - level: OFFER_GROUP
+                type: PER_BOOKING
+                category: DISCOUNT
+                value: 199.27
+                travellers:
+                - id: '1'
+                - id: '2'
+                - id: '3'
+                - id: '4'
+              total:
+              - level: OFFER_GROUP
+                type: PER_PAX
+                category: NET
+                value: 1984.96
+                travellers:
+                - id: '1'
+                - id: '2'
+              - level: OFFER_GROUP
+                type: PER_BOOKING
+                category: NET
+                value: 1984.96
+                travellers:
+                - id: '1'
+                - id: '2'
+            total:
+            - level: OFFER_GROUP
+              type: PER_BOOKING
+              category: NET
+              value: 5954.89
+              travellers:
+              - id: '1'
+              - id: '2'
+    CruiseUniqueRequest:
+      type: object
+      required:
+      - metaInformation
+      - offer
+      properties:
+        metaInformation:
+          $ref: '#/components/schemas/MetaInformation'
+        offer:
+          $ref: '#/components/schemas/CruiseOfferRequest'
+      additionalProperties: false
+    CruiseOfferRequest:
+      type: object
+      required:
+      - type
+      - cruise
+      - travellers
+      properties:
+        type:
+          $ref: '#/components/schemas/CruiseType'
+        offerGroup:
+          $ref: '#/components/schemas/OfferGroupRequest'
+          description: The offer group is applicable only for the offer type  FLY_CRUISEANDSTAY, FLY_STAYANDCRUISE and FLY_BACKTOBACK
+        cruise:
+          $ref: '#/components/schemas/CruiseRequest'
+        stay:
+          $ref: '#/components/schemas/StayRequest'
+        flight:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlightRequest'
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Traveller'
+      additionalProperties: false
+    TravellerRef:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+        type:
+          $ref: '#/components/schemas/PersonType'
+      required:
+      - id
+    Room:
+      title: Room
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: DDBT
+        name:
+          type: string
+          example: Deluxe Double Room with Balcony or Terrace
+        minPax:
+          type: integer
+          format: int32
+          example: 1
+        maxPax:
+          type: integer
+          format: int32
+          example: 2
+        default:
+          type: boolean
+          example: true
+        freeKids:
+          type: boolean
+          example: false
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetail'
+          description: ''
+          example:
+          - breakdowns:
+            - fare:
+              - level: ROOM
+                type: PER_PAX
+                category: NET
+                value: 99.4
+                travellers:
+                - id: '1'
+                - id: '2'
+              discount:
+              - level: ROOM
+                type: PER_PAX
+                category: DISCOUNT
+                value: 0.27
+                travellers:
+                - id: '1'
+                - id: '2'
+              total:
+              - level: ROOM
+                type: PER_PAX
+                category: GROSS
+                value: 109.99
+                travellers:
+                - id: '1'
+                - id: '2'
+            total:
+            - level: ROOM
+              category: GROSS
+              value: 99.4
+              travellers:
+              - id: '1'
+              - id: '2'
+    FlightRequest:
+      type: object
+      required:
+      - id
+      - routeCode
+      - directions
+      properties:
+        id:
+          type: string
+          example: 4461763247/5111314
+        routeCode:
+          type: string
+          example: PMILTN6ALTNPMI
+        directions:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - direction
+            - segments
+            properties:
+              id:
+                type: string
+                example: '1'
+              direction:
+                $ref: '#/components/schemas/DirectionType'
+                example: OUTBOUND
+              segments:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - id
+                  - departureAirport
+                  properties:
+                    id:
+                      type: string
+                      example: '1'
+                    departureAirport:
+                      type: string
+                      example: LGW
+    SourceInformation:
+      title: SourceInformation
+      required:
+      - category
+      type: object
+      properties:
+        category:
+          type: string
+          example: CONTRACTED
+        system:
+          type: string
+          example: NewSkies
+        journeyKey:
+          type: string
+          example: string
+    SailingV2:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1309874606/3
+          description: Atcom Id
+        promotionCode:
+          type: string
+          example: CGCR
+          description: Atcom Promo Code
+        sourceCode:
+          type: string
+          example: XXXX0029/011
+          description: Atcom cruise code
+        itinerary:
+          $ref: '#/components/schemas/Itinerary'
+        departurePoint:
+          $ref: '#/components/schemas/Point'
+          example:
+          - code: LGW
+        arrivalPoint:
+          $ref: '#/components/schemas/Point'
+        duration:
+          allOf:
+          - $ref: '#/components/schemas/Duration'
+          - example:
+            - checkInDate: 2023-06-07
+              checkInTime: 0.0
+              checkOutDate: 2023-06-14
+              checkOutTime: 0.0
+              numberOfNights: 7
+        ship:
+          $ref: '#/components/schemas/Ship'
+    PriceCategory:
+      type: string
+      example: NET
+      enum:
+      - NET
+      - TAX
+      - GROSS
+      - BASE_PRICE
+      - AIRPORT_TAX
+      - EARLY_BIRD_DISCOUNT
+      - DISCOUNT
+      - LOW_DEPOSIT
+      - STANDARD_DEPOSIT

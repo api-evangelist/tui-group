@@ -1,0 +1,279 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Seats API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: seats
+paths:
+  /api/dcs/v2/seats/block:
+    post:
+      tags:
+      - seats
+      summary: Blocks seats on a specific piece of equipment.
+      description: 'A blocked seat cannot be associated with/assigned to a passenger.
+
+        The change can be verified on a unit''s availability on a seat map.
+
+
+        GraphQL endpoint: seatsBlockv2'
+      operationId: dcs_v2_seats_block_post
+      requestBody:
+        x-name: request
+        description: The seat block request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockSeatsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/seats/block:
+    post:
+      tags:
+      - seats
+      summary: Blocks seats on a specific piece of equipment.
+      description: 'A blocked seat cannot be associated with/assigned to a passenger.
+
+        The change can be verified on a unit''s availability on a seat map.
+
+
+        GraphQL endpoint: seatsBlock'
+      operationId: dcs_v1_seats_block_post
+      requestBody:
+        x-name: unitKeys
+        description: The unit keys to block.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/dcs/v1/seats/unblock:
+    delete:
+      tags:
+      - seats
+      summary: Unblocks seats on a specific piece of equipment.
+      description: 'The change can be verified on a unit''s availability on a seat map.
+
+
+        GraphQL endpoint: seatsUnblock'
+      operationId: dcs_v1_seats_unblock_delete
+      requestBody:
+        x-name: unitKeys
+        description: The unit keys to unblock.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    SeatBlockType:
+      type: integer
+      description: "Enumeration representing all the different seat block types.\n            \n\n0 = Blocked\n1 = Broken"
+      x-enumNames:
+      - Blocked
+      - Broken
+      enum:
+      - 0
+      - 1
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    BlockSeatsRequest:
+      type: object
+      description: "Block seats request.\n            "
+      additionalProperties: false
+      required:
+      - unitKeys
+      properties:
+        unitKeys:
+          type: array
+          description: "The unit keys to block seats on.\n            "
+          items:
+            type: string
+        blockType:
+          description: "The seat block type.\n             "
+          $ref: '#/components/schemas/SeatBlockType'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

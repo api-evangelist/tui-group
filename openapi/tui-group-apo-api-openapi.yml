@@ -1,0 +1,560 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Apo API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: apo
+paths:
+  /api/nsk/v1/apo:
+    get:
+      tags:
+      - apo
+      summary: Gets the current saved ancillary pricing options data.
+      description: 'GraphQL endpoint: apo'
+      operationId: nsk_v1_apo_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfAncillaryPricingOptionsContext'
+              examples:
+                With a sampling random number and input parameters:
+                  description: Example response with a sampling random number and input parameters.
+                  value:
+                    data:
+                      samplingRandomNumber: 0.9707756000434866
+                      inputParameters:
+                        flightType: Through
+                        numberOfPassengers: '1'
+                        overrideSamplingRandomNumber: '0.2896014406763024'
+                With a sampling random number:
+                  description: Example response with a sampling random number.
+                  value:
+                    data:
+                      samplingRandomNumber: 0.9707756000434866
+                      inputParameters: null
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                No sampling random number and input parameters:
+                  description: Example response when there are no sampling random number and input parameters.
+                  value:
+                    data: null
+    post:
+      tags:
+      - apo
+      summary: Adds new entries to the saved ancillary pricing options data.
+      description: 'GraphQL endpoint: apoAddv2'
+      operationId: nsk_v1_apo_post
+      requestBody:
+        x-name: inputParameters
+        description: The input parameters to add.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+            examples:
+              Adding input parameters:
+                description: Example request for adding input parameters.
+                value:
+                  numberOfPassengers: '1'
+                  flightType: Through
+              Overriding the sampling random number:
+                description: Example request for overriding the sampling random number.
+                value:
+                  overrideSamplingRandomNumber: '0.28960144067630239'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Input parameter/s are added successfully:
+                  description: Example response when the input parameter/s are added successfully.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:NotEnabled
+                      message: nsk:AncillaryPricingOptions:NotEnabled
+                      type: Error
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+    put:
+      tags:
+      - apo
+      summary: Adds new or updates existing ancillary pricing options data.
+      description: Adds new or updates existing ancillary pricing options data.
+      operationId: nsk_v1_apo_put
+      requestBody:
+        x-name: inputParameters
+        description: The input parameters to add or update.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+            examples:
+              Updating input parameters:
+                description: Example request for updating input parameters.
+                value:
+                  numberOfPassengers: '2'
+                  flightType: Direct
+              Overriding the sampling random number:
+                description: Example request for overriding the sampling random number.
+                value:
+                  overrideSamplingRandomNumber: '0.3360151380002569'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Input parameter/s are updated successfully:
+                  description: Example response when the input parameter/s are updated successfully.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:NotEnabled
+                      message: nsk:AncillaryPricingOptions:NotEnabled
+                      type: Error
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                The request body is null or empty:
+                  description: Example error when the request body is null or empty.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:EmptyInputParameters
+                      message: nsk:AncillaryPricingOptions:EmptyInputParameters
+                      type: Validation
+                      details: null
+                      rawMessage: The requested update for input parameters is empty. Update could not be completed.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+    delete:
+      tags:
+      - apo
+      summary: Deletes all of the saved ancillary pricing options data.
+      description: 'GraphQL endpoint: apoDeleteAll'
+      operationId: nsk_v1_apo_delete
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Input parameter/s are deleted successfully:
+                  description: Example response when the input parameter/s are deleted successfully.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:NotEnabled
+                      message: nsk:AncillaryPricingOptions:NotEnabled
+                      type: Error
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v1/apo/{inputParameterKey}:
+    put:
+      tags:
+      - apo
+      summary: Updates an individual saved ancillary pricing option's data.
+      description: 'This will replace the current saved ancillary pricing option''s value with the
+
+        given input parameter value, based on the input parameter key.
+
+
+        GraphQL endpoint: apoSet'
+      operationId: nsk_v1_apo_inputParameterKey_put
+      parameters:
+      - name: inputParameterKey
+        in: path
+        required: true
+        description: The input parameter key to update.
+        schema:
+          type: string
+        x-position: 1
+      - name: inputParameterValue
+        in: query
+        description: The input parameter value to update.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Input parameter/s are updated successfully:
+                  description: Example response when the input parameter/s are updated successfully.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:NotEnabled
+                      message: nsk:AncillaryPricingOptions:NotEnabled
+                      type: Error
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No saved input parameters:
+                  description: Example error when there are no input parameters.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:DoesNotExist
+                      message: nsk:AncillaryPricingOptions:DoesNotExist
+                      type: Validation
+                      details: null
+                      rawMessage: There are no saved ancillary pricing options for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                The specified input parameter does not exist:
+                  description: Example error when the specified input parameter does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:InputParameterDoesNotExist
+                      message: nsk:AncillaryPricingOptions:InputParameterDoesNotExist
+                      type: Validation
+                      details: null
+                      rawMessage: An input parameter with the key NumberOfPassengers does not exist for the saved ancillary pricing options context.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+    delete:
+      tags:
+      - apo
+      summary: Deletes a single saved ancillary pricing option's data.
+      description: 'GraphQL endpoint: apoDelete'
+      operationId: nsk_v1_apo_inputParameterKey_delete
+      parameters:
+      - name: inputParameterKey
+        in: path
+        required: true
+        description: The input parameter key to delete.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Input parameter/s are deleted successfully:
+                  description: Example response when the input parameter/s are deleted successfully.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:NotEnabled
+                      message: nsk:AncillaryPricingOptions:NotEnabled
+                      type: Error
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No saved input parameters:
+                  description: Example error when there are no input parameters.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:DoesNotExist
+                      message: nsk:AncillaryPricingOptions:DoesNotExist
+                      type: Validation
+                      details: null
+                      rawMessage: There are no saved ancillary pricing options for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                The specified input parameter does not exist:
+                  description: Example error when the specified input parameter does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:AncillaryPricingOptions:InputParameterDoesNotExist
+                      message: nsk:AncillaryPricingOptions:InputParameterDoesNotExist
+                      type: Validation
+                      details: null
+                      rawMessage: An input parameter with the key NumberOfPassengers does not exist for the saved ancillary pricing options context.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    IJsonResponseOfAncillaryPricingOptionsContext:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/AncillaryPricingOptionsContext'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    AncillaryPricingOptionsContext:
+      type: object
+      description: "Defines the ancillary pricing options context.\n            "
+      additionalProperties: false
+      properties:
+        samplingRandomNumber:
+          type:
+          - number
+          - 'null'
+          description: "The sampling random number for the ancillary pricing options.\n            "
+          format: double
+          maximum: 1.0
+          minimum: 0.0
+        inputParameters:
+          type:
+          - object
+          - 'null'
+          description: "The ancillary pricing options input parameters.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

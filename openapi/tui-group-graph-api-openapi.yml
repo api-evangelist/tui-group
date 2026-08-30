@@ -1,0 +1,433 @@
+openapi: 3.2.0
+info:
+  title: Tui Group Graph API
+  version: '1.0'
+  description: 'Operations tagged graph across 2 of this provider''s published API definitions: tui-group-tui-newskies-digital-api-openapi.yml, tui-group-tui-newskies-gonow-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: graph
+paths:
+  /api/v1/graph:
+    post:
+      tags:
+      - graph
+      summary: Invokes a graph query and returns the response.
+      operationId: v1_graph_post
+      requestBody:
+        x-name: query
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQlQuery'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: The graph json response.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+      deprecated: true
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/v2/graph/{queryName}:
+    post:
+      tags:
+      - graph
+      summary: Invokes a graph query and returns the response.
+      description: Invokes a graph query and returns the response.
+      operationId: v2_graph_queryName_post
+      parameters:
+      - name: queryName
+        in: path
+        required: true
+        description: The unique name used for reporting.
+        schema:
+          type: string
+        x-position: 2
+      - name: cachedResults
+        in: query
+        description: "Cached results query string parameter. This is the same as the post variable but enables\nvarious tools to set the same value.\n            "
+        schema:
+          type: boolean
+        x-position: 3
+      requestBody:
+        x-name: query
+        description: Query details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQlQueryv2'
+            examples:
+              Simple Graph Request:
+                description: Its recommended that you use a graph specific tool for this endpoint. See the developer documentation for more information.
+                value:
+                  query: '{tokenKeepAlive}'
+                  variables: null
+                  cachedResults: false
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfObject'
+              examples:
+                Simple Response:
+                  description: The response will be json and dynamic to your graph query.
+                  value:
+                    data:
+                      tokenKeepAlive: true
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/nsk/v1/graph/{queryName}:
+    post:
+      tags:
+      - graph
+      summary: Invokes a graph query configured in utilities.
+      description: 'When a graph query is configured on the server under Resource Management it allows your payload sizes to be even
+
+        smaller.'
+      operationId: nsk_v1_graph_queryName_post
+      parameters:
+      - name: queryName
+        in: path
+        required: true
+        description: The query name matching your resource management configuration.
+        schema:
+          type: string
+        x-position: 1
+      - name: cachedResults
+        in: query
+        description: True to return cached results.
+        schema:
+          type: boolean
+        x-position: 2
+      requestBody:
+        x-name: variables
+        description: The json matching your json variables in your graph query.
+        content:
+          application/json:
+            schema: {}
+        x-position: 3
+      responses:
+        '200':
+          description: The graph json response.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    GraphQlQuery:
+      type: object
+      description: "Graph ql query object.\n            "
+      additionalProperties: false
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: "Graph query.\n            "
+          minLength: 1
+        variables:
+          type:
+          - string
+          - 'null'
+          description: "Graph variables.\n            "
+        cachedResults:
+          type: boolean
+          description: "Allow caching and the support of etags.\n            "
+        name:
+          type:
+          - string
+          - 'null'
+          description: "Name for the query\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    GraphQlQueryv2:
+      type: object
+      description: "Graph ql query object.\n            "
+      additionalProperties: false
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: "Graph query.\n            "
+          minLength: 1
+        variables:
+          description: "Graph variables.\n            "
+        cachedResults:
+          type: boolean
+          description: "Allow caching and the support of etags.\n            "
+    IJsonResponseOfObject:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    MessageStatus_2:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    GraphQlQueryv2_2:
+      type: object
+      additionalProperties: false
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          minLength: 1
+        variables: {}
+        cachedResults:
+          type: boolean
+    IJsonResponseOfObject_2:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse_2'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message_2'
+    ErrorResponse_2:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message_2:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus_2'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-refined-from:
+- tui-group-tui-newskies-digital-api-openapi.yml
+- tui-group-tui-newskies-gonow-api-openapi.yml
+x-header: 'This API returns the price and availability for TUI''s packages specifically for OTA''s according to the G7 standard.
+
+  '
+x-summary: "This API returns the price and availability for TUI's packages specifically for OTA's according to the G7 standard.\nThe Travelmessage API returns information on all the available tui.nl packages, along with other relevant details such as price, extras, etc. for this specified package. \nThis API also allows to start a bookingdialogue for these packages.\n"

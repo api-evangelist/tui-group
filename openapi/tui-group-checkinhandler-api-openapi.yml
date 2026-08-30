@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: Service Check In Handler API
+  description: Complete API specification for CheckInHandler Service endpoints
+  version: 1.0
+  contact:
+    name: Flight Production - Passenger Logistics
+    url: https://tui.atlassian.net/wiki/spaces/NST/overview?homepageId=172195842
+    email: skywalker@tui.de
+servers:
+- url: https://dev.api.tui/flight/newskies/checkinhandler
+- url: https://test.api.tui/flight/newskies/checkinhandler
+- url: https://preprod.api.tui/flight/newskies/checkinhandler
+- url: https://prod.api.tui/flight/newskies/checkinhandler
+tags:
+- name: CheckInHandler
+paths:
+  /recordlocator:
+    get:
+      tags:
+      - CheckInHandler
+      summary: Returns the Record Locator value for a booking
+      description: Returns the Record Locator value from the Third Party Record Locator and the passenger last name.
+      parameters:
+      - name: bookingId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lastName
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: RecordLocator
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordLocatorResponse'
+        '404':
+          description: BookingNotFound
+        '500':
+          description: InternalServerError
+  /checkinavailability:
+    get:
+      tags:
+      - CheckInHandler
+      summary: Returns the CheckIn/Login status for a booking
+      description: Returns the CheckIn/Login status from the TPRL/PNR and the passenger last name.
+      parameters:
+      - name: bookingId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lastName
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: CheckIn/Login status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckInValidation'
+        '500':
+          description: InternalServerError
+components:
+  schemas:
+    CheckInStatus:
+      type: object
+      properties:
+        productType:
+          type:
+          - string
+          - 'null'
+        deepLinkUrl:
+          type:
+          - string
+          - 'null'
+        checkInAvailable:
+          type: boolean
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    LoginStatus:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    RecordLocatorResponse:
+      type: object
+      properties:
+        recordLocator:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CheckInValidation:
+      type: object
+      properties:
+        recordLocator:
+          type:
+          - string
+          - 'null'
+        loginStatus:
+          $ref: '#/components/schemas/LoginStatus'
+        checkInStatus:
+          $ref: '#/components/schemas/CheckInStatus'
+      additionalProperties: false
+x-header: 'Complete API specification for CheckInHandler Service endpoints
+
+  '
+x-summary: 'Complete API specification for CheckInHandler Service endpoints
+
+  '

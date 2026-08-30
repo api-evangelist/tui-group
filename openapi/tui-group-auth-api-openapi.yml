@@ -1,0 +1,90 @@
+openapi: 3.2.0
+info:
+  title: flight-ndc-gateway-navitaire Auth API
+  version: '21.3'
+  description: 'NDC Gateway Api
+
+
+    **Note:** This is the complete API reference and includes all available operations and parameters, some of which may not be relevant to your specific use case. Before using these examples directly, we recommend starting with the Postman Collection tab, which provides curated sample requests for the most common workflows. For additional tailored examples and guidance, please contact your TUI contact person.'
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+security:
+- Bearer: []
+tags:
+- name: Auth
+paths:
+  /x3/ndc/api/Selling/r3.x/Auth:
+    post:
+      tags:
+      - Auth
+      operationId: Auth
+      parameters:
+      - name: role
+        in: query
+        schema:
+          type: string
+      - name: loc
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+      responses:
+        '200':
+          description: OK
+  /x3/ndc/api/Selling/r3.x/v2/Auth:
+    post:
+      tags:
+      - Auth
+      operationId: DAPI Auth
+      parameters:
+      - name: role
+        in: query
+        schema:
+          type: string
+      - name: loc
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Newtonsoft.Json.Linq.JToken:
+      type: array
+      items:
+        $ref: '#/components/schemas/Newtonsoft.Json.Linq.JToken'
+  securitySchemes:
+    Bearer:
+      type: http
+      description: Please enter into field the word 'Bearer' following by space and JWT
+      scheme: Bearer
+      bearerFormat: JWT

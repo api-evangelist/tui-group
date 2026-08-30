@@ -1,0 +1,755 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Messages API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: messages
+paths:
+  /api/nsk/v1/messages:
+    post:
+      tags:
+      - messages
+      summary: Adds a new message item.
+      description: 'GraphQL endpoint: messageAddv2'
+      operationId: nsk_v1_messages_post
+      requestBody:
+        x-name: request
+        description: The message queue.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageBase'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    delete:
+      tags:
+      - messages
+      summary: Deletes a collection of message items.
+      description: 'This endpoint does not perform additional verification that the messages were deleted.
+
+        As long as there are no errors or exceptions, the delete operation is considered successful.
+
+        A separate call to the GET `/api/nsk/v1/messages` endpoint can be made to verify that all the
+
+        specified messages do not exist anymore.
+
+
+        GraphQL endpoint: messagesDelete'
+      operationId: nsk_v1_messages_delete
+      requestBody:
+        x-name: messageKeys
+        description: The collection of message keys to delete.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/messages:
+    get:
+      tags:
+      - messages
+      summary: Retrieves a collection of teletype messages based on search criteria.
+      description: 'GraphQL endpoint: messagesSearchv2'
+      operationId: nsk_v2_messages_get
+      parameters:
+      - name: LastPageKey
+        in: query
+        description: "The key of the last item returned from paging.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: MessageQueueFilter
+        in: query
+        description: "The filter that specifies which records to retrieve.\n             \nEnumeration values: 0 = NonHiddenRecords, 1 = HiddenRecords, 2 = All"
+        schema:
+          $ref: '#/components/schemas/MessageQueueHiddenOptions'
+        x-position: 2
+      - name: MessageTypeCode
+        in: query
+        description: "The message type code to search for.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 3
+      - name: SearchStartDate
+        in: query
+        description: "The start of created date range to search for.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 4
+      - name: SearchEndDate
+        in: query
+        description: "The end of created date range to search for.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 5
+      - name: PageSize
+        in: query
+        description: "The number of records to return when paging.\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 6
+      - name: SearchValue
+        in: query
+        description: "The search query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          minLength: 0
+        x-position: 7
+      - name: SearchType
+        in: query
+        description: "The type of search to be performed.\n             \nEnumeration values: 0 = StartsWith, 1 = EndsWith, 2 = Contains, 3 = ExactMatch"
+        schema:
+          $ref: '#/components/schemas/SearchType'
+        x-position: 8
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfMessagesSearchResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/messages/{messageKey}:
+    get:
+      tags:
+      - messages
+      summary: Retrieves a specific message item.
+      description: 'GraphQL endpoint: messages'
+      operationId: nsk_v1_messages_messageKey_get
+      parameters:
+      - name: messageKey
+        in: path
+        required: true
+        description: The key of the message to be retrieved.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfMessageResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    delete:
+      tags:
+      - messages
+      summary: Deletes a message item.
+      description: 'GraphQL endpoint: messageDeletev2'
+      operationId: nsk_v1_messages_messageKey_delete
+      parameters:
+      - name: messageKey
+        in: path
+        required: true
+        description: The key of the message to delete.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/messages/teletype:
+    post:
+      tags:
+      - messages
+      summary: Sends a new generic teletype message to the specified address in the request.
+      description: 'GraphQL endpoint: teletypeMessageAdd'
+      operationId: nsk_v1_messages_teletype_post
+      requestBody:
+        x-name: request
+        description: The generic teletype message request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericTeletypeMessageRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/messages/teletype/tcp/{recordLocator}:
+    post:
+      tags:
+      - messages
+      summary: Sends a well-formed TCP formatted teletype message to the appropriate booking segments.
+      description: 'For carriers that are Amadeus Reservation Gateway (ARG) participants, this agent-only endpoint provides the option
+
+        to push a PNR to Amadeus on a PNR-by-PNR basis using the TCP push functionality.
+
+        When a booking containing a TCP-qualifying segment is retrieved (marketing codeshare and normal unflown segments),
+
+        and the TCP Push functionality is used, the system then sends an "Unsolicited Transfer PNR" (TCP) message to the
+
+        configured external system.
+
+        TCP messages can be configured using the Management Console > External Message Settings screen.
+
+        Related Endpoints:
+
+        - `GET /api/nsk/v1/booking/history/message`: View the history of TCP messages sent.
+
+        - `POST /api/nsk/v1/messages/teletype`: This endpoint sends a teletype message with the specified text.
+
+
+        GraphQL endpoint: tcpMessagePush'
+      operationId: nsk_v1_messages_teletype_tcp_recordLocator_post
+      parameters:
+      - name: recordLocator
+        in: path
+        required: true
+        description: The record locator, which uniquely identifies a booking. Common referred to as PNR.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                TCP Message Sent:
+                  description: The TCP message was sent.
+                  value:
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                With Invalid Record Locator:
+                  description: The record locator provided is null, empty, exceeded the maximum length, or the booking associated with the record locator is not found.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Booking:InvalidRecordLocator
+                      message: The record locator PNRPNR is not valid.
+                      type: Validation
+                      details:
+                        recordLocator: PNRPNR
+                      rawMessage: The record locator PNRPNR is not valid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With Unqualified Segments:
+                  description: The booking does not contain any TCP qualified segments.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: PNR doesn't contain any TCP qualified segments.
+                      type: Error
+                      details: null
+                      rawMessage: PNR doesn't contain any TCP qualified segments.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With Ineligible Booking:
+                  description: The system code of the booking is not configured on the TCP's receiving system.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: PNR Not Eligible for TCP Push.
+                      type: Error
+                      details: null
+                      rawMessage: PNR Not Eligible for TCP Push.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With Agent Restricted to Push TCP Messages:
+                  description: The agent is not allowed to push TCP messages. Please see Roles > SkySpeed > Allow TCP on Demand in the Management Console.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: Agent is not allowed to use the requested API. RoleCode='TAW3', API Permission='TCPOnDemand' AccessControl='Read' Channel='Default'.
+                      type: Error
+                      details: null
+                      rawMessage: Agent is not allowed to use the requested API. RoleCode='TAW3', API Permission='TCPOnDemand' AccessControl='Read' Channel='Default'.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With TCP Not Configured:
+                  description: The TCP is not configured in Management Console. This can be configured under the External Message Settings.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: TCP On Demand Not Configured.
+                      type: Error
+                      details: null
+                      rawMessage: TCP On Demand Not Configured.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With External System Interaction Not Setup:
+                  description: The carrier code of the booking is not setup for external system interaction. This can be configured under External Message Settings.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: "Failed to send TCP Push: \nReason TCP message to 1A failed, Reason External System interaction is not setup for GN to BS Interaction Purpose."
+                      type: Error
+                      details: null
+                      rawMessage: "Failed to send TCP Push: \nReason TCP message to 1A failed, Reason External System interaction is not setup for GN to BS Interaction Purpose."
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                Unable to retrieve the System Booking Configuration:
+                  description: The system booking configuration cannot be retrieved.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: 'Failed To send TCP Push:
+
+                        Reason system Booking config {0} cannot be retrieved'
+                      type: Error
+                      details: null
+                      rawMessage: 'Failed To send TCP Push:
+
+                        Reason system Booking config {0} cannot be retrieved'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                Exception occurred in the ESC Service:
+                  description: ESC Services encountered an exception
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Messages:TcpMessageNotSent
+                      message: 'Failed to send TCP Push:
+
+                        Reason ESC Services encountered an exception'
+                      type: Error
+                      details: null
+                      rawMessage: 'Failed to send TCP Push:
+
+                        Reason ESC Services encountered an exception'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+        '401':
+          description: This endpoint require agent permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    MessageAddress:
+      type: object
+      description: "Defines the message address.\n            "
+      additionalProperties: false
+      properties:
+        carrier:
+          type:
+          - string
+          - 'null'
+          description: "The carrier segment of the address.\n            "
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The city segment of the address.\n            "
+        office:
+          type:
+          - string
+          - 'null'
+          description: "The office segment of the address.\n            "
+    SearchType:
+      type: integer
+      description: "Enumeration of possible ways to do a search inquiry.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
+      x-enumNames:
+      - StartsWith
+      - EndsWith
+      - Contains
+      - ExactMatch
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    GenericTeletypeMessageRequest:
+      type: object
+      description: "Defines the send generic teletype message request.\n            "
+      additionalProperties: false
+      required:
+      - fromAddress
+      - toAddress
+      - body
+      properties:
+        fromAddress:
+          type: string
+          description: "The address of the message sender.\n            "
+          maxLength: 8
+          minLength: 7
+        toAddress:
+          type: string
+          description: "The address of the message recipient.\n            "
+          maxLength: 8
+          minLength: 7
+        body:
+          type: string
+          description: "The message body.\n            "
+          minLength: 1
+    MessageResponse:
+      type: object
+      description: "The message response.\n            "
+      additionalProperties: false
+      properties:
+        typeCode:
+          type:
+          - string
+          - 'null'
+          description: "The message type code of the message queue.\n            "
+        information:
+          type:
+          - string
+          - 'null'
+          description: "The reason why the message was added to the database.\n            "
+        body:
+          type:
+          - string
+          - 'null'
+          description: "The body of the message.\n            "
+        messageKey:
+          type:
+          - string
+          - 'null'
+          description: "The message key.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfMessageResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/MessageResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageResponsev2:
+      type: object
+      description: "The teletype message response.\n            "
+      additionalProperties: false
+      properties:
+        typeCode:
+          type:
+          - string
+          - 'null'
+          description: "The message type code of the message queue.\n            "
+        information:
+          type:
+          - string
+          - 'null'
+          description: "The reason why the message was added to the database.\n            "
+        body:
+          type:
+          - string
+          - 'null'
+          description: "The body of the message.\n            "
+        messageKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique message key.\n            "
+        fromAddress:
+          description: "The address of the message sender.\n            "
+          $ref: '#/components/schemas/MessageAddress'
+        toAddress:
+          description: "The address of the message recipient.\n            "
+          $ref: '#/components/schemas/MessageAddress'
+        createdDate:
+          type: string
+          description: "The date in which the message was created.\n            "
+          format: date-time
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessagesSearchResponse:
+      type: object
+      description: "The paged message response.\n            "
+      additionalProperties: false
+      properties:
+        messageQueueCount:
+          type: integer
+          description: "The total number of messages in the queue.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The last index of the paged response.\n            "
+        teletypeMessages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of messages in the queue.\n            "
+          items:
+            $ref: '#/components/schemas/MessageResponsev2'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    MessageQueueHiddenOptions:
+      type: integer
+      description: "Represents values for message queue record filter.\n            \n\n0 = NonHiddenRecords\n1 = HiddenRecords\n2 = All"
+      x-enumNames:
+      - NonHiddenRecords
+      - HiddenRecords
+      - All
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfMessagesSearchResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/MessagesSearchResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageBase:
+      type: object
+      description: "The message base model.\n            "
+      additionalProperties: false
+      properties:
+        typeCode:
+          type:
+          - string
+          - 'null'
+          description: "The message type code of the message queue.\n            "
+        information:
+          type:
+          - string
+          - 'null'
+          description: "The reason why the message was added to the database.\n            "
+        body:
+          type:
+          - string
+          - 'null'
+          description: "The body of the message.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

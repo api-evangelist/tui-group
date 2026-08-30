@@ -1,0 +1,389 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Redis API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: redis
+paths:
+  /api/v1/redis:
+    get:
+      tags:
+      - redis
+      summary: Gets all the cache items that exist in redis.
+      description: Gets all the cache items that exist in redis.
+      operationId: v1_redis_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+              examples:
+                Ok:
+                  description: Data results are based on the current cache.
+                  value:
+                    data:
+                    - Mac
+                    - FlightSearchSettings
+                    - Station
+        '401':
+          description: Your token is unauthorized to use this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Not Allowed:
+                  description: Role permissions is not allowed. Please see the developer documentation portal for more information.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Caching:CacheManagementNotAllowed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: The current token's permissions are not allowed to manage the redis cache.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '400':
+          description: A bad request was submitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Not Enabled:
+                  description: Please, log a SNOW request to enable this ability.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Caching:CacheManagementNotAllowed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: The ability to manage redis cache is not enabled. Please change the 'ManagementEnabled' flag in the 'RedisConfiguration' section in the JSON.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+    delete:
+      tags:
+      - redis
+      summary: Deletes all cache items.
+      description: 'This will ignore all session values. If an in memory cache is configured via "cacheOptions.serverCache" (default is
+
+        5 minutes) other API instances may still have locally stale cached data
+
+        for the configured time.'
+      operationId: v1_redis_delete
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Ok:
+                  description: No content returned.
+                  value:
+                    data: null
+        '401':
+          description: Your token is unauthorized to use this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Not Allowed:
+                  description: Role permissions is not allowed. Please see the developer documentation portal for more information.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Caching:CacheManagementNotAllowed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: The current token's permissions are not allowed to manage the redis cache.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '400':
+          description: A bad reqeust was submitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Resource Not Found:
+                  description: The value was not found.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Validation:ResourceNotFound
+                      message: null
+                      type: Error
+                      details:
+                        name: '{parameter name}'
+                        value: '{parameter value}'
+                      rawMessage: The data you are trying to access is not valid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/v1/redis/{name}:
+    delete:
+      tags:
+      - redis
+      summary: Deletes a specific cache item from redis based on the cache item name.
+      description: 'If an in memory cache is configured via "cacheOptions.serverCache" (default is 5 minutes) other API instances may
+
+        still have locally stale cached data
+
+        for the configured time.'
+      operationId: v1_redis_name_delete
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: The name of the cache item.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Ok:
+                  description: No content returned.
+                  value:
+                    data: null
+        '401':
+          description: Your token is unauthorized to use this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Not Allowed:
+                  description: Role permissions is not allowed. Please see the developer documentation portal for more information.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Caching:CacheManagementNotAllowed
+                      message: null
+                      type: Error
+                      details: null
+                      rawMessage: The current token's permissions are not allowed to manage the redis cache.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '400':
+          description: A bad reqeust was submitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Required Argument:
+                  description: Check url arguments.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Validation:RequiredArgument
+                      message: null
+                      type: Error
+                      details:
+                        argument: '{argument}'
+                      rawMessage: The request is missing a required argument expected in the request.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Resource Not Found:
+                  description: Check url argument.
+                  value:
+                    errors:
+                    - id: null
+                      code: core:Validation:ResourceNotFound
+                      message: null
+                      type: Error
+                      details:
+                        name: '{parameter name}'
+                        value: '{parameter value}'
+                      rawMessage: The data you are trying to access is not valid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfListOfString:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

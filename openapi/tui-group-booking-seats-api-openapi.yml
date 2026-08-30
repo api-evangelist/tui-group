@@ -1,0 +1,1054 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Booking/seats API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: booking/seats
+paths:
+  /api/nsk/v1/booking/seats/auto:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all selected passengers that do not have them for every journey on the booking.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.
+
+        An invalid primary passenger key or invalid passenger keys are not accepted and will return a Bad Request Error.'
+      description: 'GraphQL endpoint: autoAssignSeats'
+      operationId: nsk_v1_booking_seats_auto_post
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequestv2'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: Seats auto-assigned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '207':
+          description: Multi-status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Partial Failure.:
+                  description: Example response of a partially-successful auto-seat assignment. The failed seat assignments will each have a warning message.
+                  value:
+                    messages:
+                    - rawValue: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212 BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                      code: FailedToAssignAllSeats
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedToAssignAllSeats
+                      value: FailedToAssignAllSeats
+                      status: 0
+                      details:
+                        failedToAssignAllSeats: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212  BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                    data: null
+  /api/nsk/v1/booking/seats/auto/{primaryPassengerKey}:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all selected passengers that do not have them for every journey on the booking.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.'
+      description: 'GraphQL endpoint: seatAutoAssign'
+      operationId: nsk_v1_booking_seats_auto_primaryPassengerKey_post
+      parameters:
+      - name: primaryPassengerKey
+        in: path
+        required: true
+        description: The key for the primary passenger.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequest'
+        required: true
+        x-position: 2
+      responses:
+        '201':
+          description: Seats auto-assigned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v1/booking/seats/auto/{primaryPassengerKey}/journey/{journeyKey}:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all passengers that do not have them for a specific journey.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.'
+      description: 'GraphQL endpoint: seatAutoAssignJourney'
+      operationId: nsk_v1_booking_seats_auto_primaryPassengerKey_journey_journeyKey_post
+      parameters:
+      - name: primaryPassengerKey
+        in: path
+        required: true
+        description: The key for the primary passenger.
+        schema:
+          type: string
+        x-position: 1
+      - name: journeyKey
+        in: path
+        required: true
+        description: The specific journey key to auto assign.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequest'
+        required: true
+        x-position: 3
+      responses:
+        '201':
+          description: Seats auto-assigned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v1/booking/seats/auto/{primaryPassengerKey}/journey/{journeyKey}/quote:
+    post:
+      tags:
+      - booking/seats
+      summary: Retrieves the seat fee information of the auto-assigned seats of a passenger on a given journey.
+      description: 'Although this endpoint behaves like a GET, POST reduces the limitations resulting from URL length issues.
+
+
+        GraphQL endpoint: passengerSeatFeeQuoteJourney'
+      operationId: nsk_v1_booking_seats_auto_primaryPassengerKey_journey_journeyKey_quote_post
+      parameters:
+      - name: journeyKey
+        in: path
+        required: true
+        description: "The key of the journey for the auto-assigned seat where the seat fee information will be\nbased.\n            "
+        schema:
+          type: string
+        x-position: 1
+      - name: primaryPassengerKey
+        in: path
+        required: true
+        description: The key of the primary passenger being seated.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The seat fee quote request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignSeatFeeQuoteRequest'
+        required: true
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIDictionaryOfStringAndIListOfPassengerSeatFee'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/booking/seats/auto/{primaryPassengerKey}/segment/{segmentKey}:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all passengers that do not have them for a specific journey''s segment.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.'
+      description: 'GraphQL endpoint: seatAutoAssignSegment'
+      operationId: nsk_v1_booking_seats_auto_primaryPassengerKey_segment_segmentKey_post
+      parameters:
+      - name: primaryPassengerKey
+        in: path
+        required: true
+        description: The key for the primary passenger.
+        schema:
+          type: string
+        x-position: 1
+      - name: segmentKey
+        in: path
+        required: true
+        description: The specific segment key to auto assign.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequest'
+        required: true
+        x-position: 3
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v1/booking/seats/auto/{primaryPassengerKey}/segment/{segmentKey}/quote:
+    post:
+      tags:
+      - booking/seats
+      summary: Retrieves the seat fee information of the auto-assigned seats of a passenger on a given segment.
+      description: 'Although this endpoint behaves like a GET, POST reduces the limitations resulting from URL length issues.
+
+
+        GraphQL endpoint: passengerSeatFeeQuoteSegment'
+      operationId: nsk_v1_booking_seats_auto_primaryPassengerKey_segment_segmentKey_quote_post
+      parameters:
+      - name: segmentKey
+        in: path
+        required: true
+        description: "The key of the segment for the auto-assigned seat where the seat fee information will be\nbased.\n            "
+        schema:
+          type: string
+        x-position: 1
+      - name: primaryPassengerKey
+        in: path
+        required: true
+        description: The key of the primary passenger being seated.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The seat fee quote request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignSeatFeeQuoteRequest'
+        required: true
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIDictionaryOfStringAndIListOfPassengerSeatFee'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/booking/seats/auto/journey/{journeyKey}:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all passengers that do not have them for a specific journey.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.
+
+        An invalid primary passenger key or invalid passenger keys are not accepted and will return a Bad Request Error.'
+      description: 'GraphQL endpoint: autoAssignSeatsJourney'
+      operationId: nsk_v1_booking_seats_auto_journey_journeyKey_post
+      parameters:
+      - name: journeyKey
+        in: path
+        required: true
+        description: The specific journey key to auto assign.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequestv2'
+        required: true
+        x-position: 2
+      responses:
+        '201':
+          description: Seats auto-assigned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '207':
+          description: Multi-status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Partial Failure.:
+                  description: Example response of a partially-successful auto-seat assignment. The failed seat assignments will each have a warning message.
+                  value:
+                    messages:
+                    - rawValue: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212 BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                      code: FailedToAssignAllSeats
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedToAssignAllSeats
+                      value: FailedToAssignAllSeats
+                      status: 0
+                      details:
+                        failedToAssignAllSeats: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212  BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                    data: null
+  /api/nsk/v1/booking/seats/auto/segment/{segmentKey}:
+    post:
+      tags:
+      - booking/seats
+      summary: 'Auto assigns seats to all passengers that do not have them for a specific journey''s segment.
+
+        If seatedNearPrimary is empty, all passengers in the state booking will be requested for seat assignments.
+
+        Otherwise, passengers with a passenger key specified in seatedNearPrimary will be requested instead.
+
+        An invalid primary passenger key or invalid passenger keys are not accepted and will return a Bad Request Error.'
+      description: 'GraphQL endpoint: autoAssignSeatsSegment'
+      operationId: nsk_v1_booking_seats_auto_segment_segmentKey_post
+      parameters:
+      - name: segmentKey
+        in: path
+        required: true
+        description: The specific segment key to auto assign.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The auto assign seat request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequestv2'
+        required: true
+        x-position: 2
+      responses:
+        '201':
+          description: Seats auto-assigned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '207':
+          description: Multi-status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Partial Failure.:
+                  description: Example response of a partially-successful auto-seat assignment. The failed seat assignments will each have a warning message.
+                  value:
+                    messages:
+                    - rawValue: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212 BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                      code: FailedToAssignAllSeats
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedToAssignAllSeats
+                      value: FailedToAssignAllSeats
+                      status: 0
+                      details:
+                        failedToAssignAllSeats: 'Failed to assign seat(s) for passenger ANA MARIA Mateos on the flight VY3212  BCNTFN Detail: Seats cannot be assigned on flight segment VY3212  BCN-TFN for 09/19/2025 due to either one of the following: insufficient number of available seats for 1 passenger (1 total). '
+                    data: null
+components:
+  schemas:
+    AutoAssignRequest:
+      type: object
+      description: "Defines the auto assign seat request.\n            "
+      additionalProperties: false
+      properties:
+        waiveFee:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating to waive the seat fees if permissions permit.\n            "
+        inventoryControl:
+          description: "Indicates the type of hold placed on a unit.\n            "
+          $ref: '#/components/schemas/UnitInventoryControlType'
+        seatAssignmentMode:
+          description: "The seat assignment mode.\n            "
+          $ref: '#/components/schemas/SeatAssignmentMode'
+        collectedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Optional collection currency code. If different from the booking currency,\nfees in the collected currency will be returned if a currency conversion configuration exists.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates if the seat is to be sold in currency or points.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        preferences:
+          description: "The list of seat preferences for the primary passenger.\n            "
+          $ref: '#/components/schemas/SeatPreferences'
+        seatedNearPrimary:
+          type:
+          - array
+          - 'null'
+          description: "The list of passenger keys for seating assignments near the primary passenger.\nOnly passengers on the list and the primary passenger will be assigned\nseats. If the list is empty, seats will be assigned to all passengers.\n            "
+          items:
+            type: string
+        changeOfGaugeDetails:
+          description: "The change of gauge details.\n            "
+          $ref: '#/components/schemas/ChangeOfGaugeDetails'
+    AutoAssignRequestv2:
+      type: object
+      description: "Defines the auto assign seat request, v2.\n            "
+      additionalProperties: false
+      properties:
+        waiveFee:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating to waive the seat fees if permissions permit.\n            "
+        inventoryControl:
+          description: "Indicates the type of hold placed on a unit.\n            "
+          $ref: '#/components/schemas/UnitInventoryControlType'
+        seatAssignmentMode:
+          description: "The seat assignment mode.\n            "
+          $ref: '#/components/schemas/SeatAssignmentMode'
+        collectedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Optional collection currency code. If different from the booking currency,\nfees in the collected currency will be returned if a currency conversion configuration exists.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates if the seat is to be sold in currency or points.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        preferences:
+          description: "The list of seat preferences for the primary passenger.\n            "
+          $ref: '#/components/schemas/SeatPreferences'
+        seatedNearPrimary:
+          type:
+          - array
+          - 'null'
+          description: "The list of passenger keys for seating assignments near the primary passenger.\nOnly passengers on the list and the primary passenger will be assigned\nseats. If the list is empty, seats will be assigned to all passengers.\n            "
+          items:
+            type: string
+        changeOfGaugeDetails:
+          description: "The change of gauge details.\n            "
+          $ref: '#/components/schemas/ChangeOfGaugeDetails'
+        primaryPassengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the primary passenger.\n            "
+    TravelClassSeatPreference:
+      type: integer
+      description: "Represents a travel class seating preference.\n            \n\n0 = None\n1 = Business\n2 = Economy\n3 = FirstClass"
+      x-enumNames:
+      - None
+      - Business
+      - Economy
+      - FirstClass
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    IJsonResponseOfIDictionaryOfStringAndIListOfPassengerSeatFee:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - object
+          - 'null'
+          description: "The payload data.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/PassengerSeatFee'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    UnitInventoryControlType:
+      type: integer
+      description: "Enum indicates the type of hold placed on the seat.\n            \n\n0 = Session\n1 = None"
+      x-enumNames:
+      - Session
+      - None
+      enum:
+      - 0
+      - 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    SeatAssignmentMode:
+      type: integer
+      description: "Represents the seat assignment mode.\n            \n\n0 = AutoDetermine\n1 = PreSeatAssignment\n2 = WebCheckIn"
+      x-enumNames:
+      - AutoDetermine
+      - PreSeatAssignment
+      - WebCheckIn
+      enum:
+      - 0
+      - 1
+      - 2
+    SimpleSeatPreference:
+      type: integer
+      description: "Represents a simple seating preference.\n            \n\n0 = None\n1 = Window\n2 = Aisle\n3 = Other"
+      x-enumNames:
+      - None
+      - Window
+      - Aisle
+      - Other
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PassengerSeatFee:
+      type: object
+      description: "Passenger seat fee model.\n            "
+      additionalProperties: false
+      required:
+      - code
+      properties:
+        type:
+          description: "The fee type.\n            "
+          $ref: '#/components/schemas/FeeType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR code.\n            "
+        ssrNumber:
+          type: integer
+          description: "The fee SSR number.\n            "
+        paymentNumber:
+          type: integer
+          description: "The fee payment number.\n            "
+        isConfirmed:
+          type: boolean
+          description: "A status flag to indicate if the fee has been confirmed or not.\n            "
+        isConfirming:
+          type: boolean
+          description: "A status flag to indicate if the fee is confirming or not.\n            "
+        isConfirmingExternal:
+          type: boolean
+          description: "A status flag to indicate if the fee is confirming external or not.\n            "
+        code:
+          type: string
+          description: "The fee code.\n            "
+          maxLength: 6
+          minLength: 0
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The fee detail.\n            "
+          maxLength: 32
+          minLength: 0
+        passengerFeeKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger fee key.\n            "
+        override:
+          type: boolean
+          description: "The fee override.\n            "
+        flightReference:
+          type:
+          - string
+          - 'null'
+          description: "The flight reference which signifies a link to a segment and or leg.\n            "
+          maxLength: 22
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The fee notes.\n            "
+          maxLength: 128
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date for the fee.\n            "
+          format: date-time
+        isProtected:
+          type: boolean
+          description: "Indicates if the fee is protected.\n            "
+        serviceCharges:
+          type:
+          - array
+          - 'null'
+          description: "The list of service charges for the fee.\n            "
+          items:
+            $ref: '#/components/schemas/ServiceCharge'
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key.\n            "
+    SeatPreference:
+      type: object
+      description: "Represents a single seat preference.\n            "
+      additionalProperties: false
+      required:
+      - seatMapCode
+      - value
+      properties:
+        seatMapCode:
+          type: string
+          description: "The seat map code (ex. 'SMOKING').\n            "
+          maxLength: 8
+          minLength: 0
+        value:
+          type: string
+          description: "The seat map value (ex. 'TRUE').\n            "
+          maxLength: 8
+          minLength: 0
+        status:
+          description: "Defines if the seat preference is met, not met or unknown.\n            "
+          $ref: '#/components/schemas/SeatPreferenceStatus'
+    FeeType:
+      type: integer
+      description: "Enumeration representing all the different fee types.\n            \n\n0 = All\n1 = Tax\n2 = TravelFee\n3 = ServiceFee\n4 = PaymentFee\n5 = PenaltyFee\n6 = SsrFee\n7 = NonFlightServiceFee\n8 = UpgradeFee\n9 = SeatFee\n10 = BaseFare\n11 = SpoilageFee\n12 = NameChangeFee\n13 = ConvenienceFee\n14 = BaggageFee\n15 = FareSurcharge\n16 = PromotionDiscount\n17 = ServiceBundle\n18 = ExtraBagFee\n19 = ATPCOBagFee"
+      x-enumNames:
+      - All
+      - Tax
+      - TravelFee
+      - ServiceFee
+      - PaymentFee
+      - PenaltyFee
+      - SsrFee
+      - NonFlightServiceFee
+      - UpgradeFee
+      - SeatFee
+      - BaseFare
+      - SpoilageFee
+      - NameChangeFee
+      - ConvenienceFee
+      - BaggageFee
+      - FareSurcharge
+      - PromotionDiscount
+      - ServiceBundle
+      - ExtraBagFee
+      - ATPCOBagFee
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+    AutoAssignSeatFeeQuoteRequest:
+      type: object
+      description: "Represents a seat fee quote request for auto-assigned seats.\n            "
+      additionalProperties: false
+      properties:
+        seatedNearPrimary:
+          type:
+          - array
+          - 'null'
+          description: "The list of passenger keys for seating assignments near the primary passenger.\nOnly passengers on the list and the primary passenger will be assigned\nseats. If the list is empty, seats will be assigned to all passengers.\n            "
+          items:
+            type: string
+        preferences:
+          description: "The seat preference.\n            "
+          $ref: '#/components/schemas/SeatPreferences'
+        inventoryControlType:
+          description: "The type of hold placed on seats.\n            "
+          $ref: '#/components/schemas/UnitInventoryControlType'
+        ignoreSeatSsrs:
+          type:
+          - boolean
+          - 'null'
+          description: "Determines whether or not SSRs associated with the seat will be ignored when determining\nunit availability.\n            "
+        seatAssignmentMode:
+          description: "The seat assignment mode can affect available units in seat maps and whether or not\nseat fees are charged based on channel type, role settings, customer programs\nand/or class of service.\n            "
+          $ref: '#/components/schemas/SeatAssignmentMode'
+        monetaryOnly:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates whether the fee to be priced is to be priced in money or points.\n            "
+        collectedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Optional collection currency code. If different from the booking currency, \nfees in the collected currency will be returned if a currency conversion configuration exists.\n            "
+          maxLength: 3
+          minLength: 0
+    CollectType:
+      type: integer
+      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
+      x-enumNames:
+      - SellerChargeable
+      - ExternalChargeable
+      - SellerNonChargeable
+      - ExternalNonChargeable
+      - ExternalChargeableImmediate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    SeatPreferences:
+      type: object
+      description: "Represents the seating preferences base model.\n            "
+      additionalProperties: false
+      properties:
+        seat:
+          description: "The simple seating preference.\n            "
+          $ref: '#/components/schemas/SimpleSeatPreference'
+        travelClass:
+          description: "The preferred travel class of service.\n            "
+          $ref: '#/components/schemas/TravelClassSeatPreference'
+        advancedPreferences:
+          type:
+          - array
+          - 'null'
+          description: "The advanced seating preferences.\n            "
+          items:
+            $ref: '#/components/schemas/SeatPreference'
+    ServiceCharge:
+      type: object
+      description: "Model that represents the fare service charge information.\n            "
+      additionalProperties: false
+      properties:
+        amount:
+          type: number
+          description: "The service charge amount.\n            "
+          format: decimal
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The service charge code.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The service charge detail.\n            "
+          maxLength: 10
+          minLength: 0
+        type:
+          description: "The service charge type.\n            "
+          $ref: '#/components/schemas/ChargeType'
+        collectType:
+          description: "The service charge collect type.\n            "
+          $ref: '#/components/schemas/CollectType'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The service charge foreign amount.\n            "
+          format: decimal
+        ticketCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge ticket code.\n            "
+          maxLength: 3
+          minLength: 0
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    ChargeType:
+      type: integer
+      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
+      x-enumNames:
+      - FarePrice
+      - Discount
+      - IncludedTravelFee
+      - IncludedTax
+      - TravelFee
+      - Tax
+      - ServiceCharge
+      - PromotionDiscount
+      - ConnectionAdjustmentAmount
+      - AddOnsPrice
+      - FarePoints
+      - DiscountPoints
+      - IncludedAddOnsFee
+      - AddOnsFee
+      - AddOnsMarkup
+      - FareSurcharge
+      - AddOnsCancelFee
+      - Calculated
+      - Note
+      - Points
+      - DynamicFareAdjustment
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 16
+      - 17
+      - 18
+      - 19
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+    SeatPreferenceStatus:
+      type: integer
+      description: "Defines the seat preference status.\n            \n\n0 = Unknown\n1 = Met\n2 = NotMet"
+      x-enumNames:
+      - Unknown
+      - Met
+      - NotMet
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ChangeOfGaugeDetails:
+      type: object
+      description: "Defines the change of gauge details.\n            "
+      additionalProperties: false
+      properties:
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type of the legs to be auto-assigned seats. This is used for change\nof gauge (meaning that the legs have different equipment) and works in conjunction\nwith EquipmentTypeSuffix. If both are null or empty, or segment is not change of gauge,\nseats will be assigned to all legs. Else, seats will be assigned to legs matching\nthis EquipmentType and the EquipmentTypeSuffix.\n            "
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type suffix of the legs to be auto-assigned seats. This is used for\nchange of gauge (meaning that the legs have different equipment) and works in\nconjunction with EquipmentType. If both are null or empty, or segment is not\nchange of gauge, seats will be assigned to all legs. Else, seats will be assigned\nto legs matching the EquipmentType and this EquipmentTypeSuffix.\n            "
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

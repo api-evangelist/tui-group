@@ -1,0 +1,297 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Logs API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: logs
+paths:
+  /api/dcs/v1/logs:
+    post:
+      tags:
+      - logs
+      summary: Pushes a client side log entry to the server.
+      operationId: dcs_v1_logs_post
+      requestBody:
+        x-name: request
+        description: Request to create a log entry.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Null data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/logs/file:
+    post:
+      tags:
+      - logs
+      summary: Uploads a log file to the server.
+      operationId: dcs_v1_logs_file_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                SystemType:
+                  type:
+                  - string
+                  - 'null'
+                MachineName:
+                  type:
+                  - string
+                  - 'null'
+                Message:
+                  type:
+                  - string
+                  - 'null'
+                File:
+                  type:
+                  - string
+                  - 'null'
+                  format: binary
+      responses:
+        '200':
+          description: Null data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    LogRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - machineName
+      - action
+      - errorType
+      - logLevel
+      - message
+      properties:
+        machineName:
+          type: string
+          minLength: 1
+        action:
+          type: string
+          minLength: 1
+        errorType:
+          type: string
+          minLength: 1
+        logLevel:
+          $ref: '#/components/schemas/LogLevel'
+        errorCode:
+          type:
+          - string
+          - 'null'
+        message:
+          type: string
+          minLength: 1
+        additionalData:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    IJsonResponseOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    LogLevel:
+      type: integer
+      description: 'Defines the available channel types invoking communication with the server.
+
+
+        0 = Verbose
+
+        1 = Information
+
+        2 = Warning
+
+        3 = Error
+
+        4 = Critical'
+      x-enumNames:
+      - Verbose
+      - Information
+      - Warning
+      - Error
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

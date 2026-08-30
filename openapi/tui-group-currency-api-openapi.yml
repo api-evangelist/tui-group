@@ -1,0 +1,376 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Currency API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: currency
+paths:
+  /api/nsk/v1/currency/converter:
+    get:
+      tags:
+      - currency
+      summary: Calculates currency conversions.
+      description: "If the currency conversion is inverted, the exchange rate returned is of the reversed to and \nfrom currency code and the rate used in the calculation is 1/(exchange rate of the reverse).\n\nGraphQL endpoint: currencyCalculation"
+      operationId: nsk_v1_currency_converter_get
+      parameters:
+      - name: FromCurrencyCode
+        in: query
+        description: "The currency code that the amount is currently in.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 1
+        x-position: 1
+      - name: ToCurrencyCode
+        in: query
+        description: "The currency code we want the amount converted to.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 1
+        x-position: 2
+      - name: Amount
+        in: query
+        description: "The amount to be converted. This will be in the FromCurrencyCode currency.\n            "
+        schema:
+          type:
+          - number
+          - 'null'
+          format: decimal
+        x-position: 3
+      - name: Inverted
+        in: query
+        description: "If set to true, the endpoint will use 1/(exchange rate of the reverse) during the conversion. Defaults to false if no value is set.\n            "
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfCurrencyConversion'
+              examples:
+                Direct currency conversion successful:
+                  description: Example when using direct currency conversion.
+                  value:
+                    data:
+                      convertedAmount: 2319.4
+                      fromCurrencyCode: EUR
+                      exchangeRate: 1.16
+                      toCurrencyCode: USD
+                      roundingFactor: 0.1
+                      amount: 1999.52
+                      marketingRoundingFactor: 0.1
+                      inverted: false
+                Inverse currency conversion successful:
+                  description: Example when using inverse currency conversion.
+                  value:
+                    data:
+                      convertedAmount: 199.5
+                      fromCurrencyCode: EUR
+                      exchangeRate: 1.16
+                      toCurrencyCode: USD
+                      roundingFactor: 0.1
+                      amount: 231.4
+                      marketingRoundingFactor: 0.1
+                      inverted: true
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid Currency Code Error:
+                  description: Example error when currency code is invalid.
+                  value:
+                    errors:
+                    - id: fc79d927-e7c3-91ce-8ae8-fbd0adf7bb39
+                      code: nsk:Currency:InvalidCurrencyCode
+                      message: nsk:Currency:InvalidCurrencyCode
+                      type: Validation
+                      details: null
+                      rawMessage: The currency code ABC is either invalid or inactive in the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Currency Conversion Failed:
+                  description: Example error when currency conversion failed.
+                  value:
+                    errors:
+                    - id: 1a68ef3e-44b5-08d4-9395-e69695467a5d
+                      code: nsk:Currency:CurrencyConversionFailed
+                      message: nsk:Currency:CurrencyConversionFailed
+                      type: Validation
+                      details: null
+                      rawMessage: The currency conversion failed unexpectedly.  Please verify the currency codes are valid and active in the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Amount Required Error:
+                  description: Example error when amount is not set.
+                  value:
+                    errors:
+                    - id: e53dd703-1362-d1b2-64c4-c9b1a5f853fb
+                      code: CurrencyConversionRequest.Amount:RequiredAttribute
+                      message: CurrencyConversionRequest.Amount:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: CurrencyConversionRequest
+                        member: Amount
+                      rawMessage: The CurrencyConversionRequest field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                ToCurrencyCode Required Error:
+                  description: Example error when ToCurrencyCode is not set.
+                  value:
+                    errors:
+                    - id: c20fe6e2-2d91-7855-1d0b-613f97da120e
+                      code: CurrencyConversionRequest.ToCurrencyCode:RequiredAttribute
+                      message: CurrencyConversionRequest.ToCurrencyCode:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: CurrencyConversionRequest
+                        member: ToCurrencyCode
+                      rawMessage: The CurrencyConversionRequest field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                FromCurrencyCode Required Error:
+                  description: Example error when FromCurrencyCode is not set.
+                  value:
+                    errors:
+                    - id: 1b6d7366-8ae6-b361-8333-f60f9c7306ac
+                      code: CurrencyConversionRequest.FromCurrencyCode:RequiredAttribute
+                      message: CurrencyConversionRequest.FromCurrencyCode:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: CurrencyConversionRequest
+                        member: FromCurrencyCode
+                      rawMessage: The CurrencyConversionRequest field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    IJsonResponseOfCurrencyConversion:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/CurrencyConversion'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    CurrencyConversion:
+      type: object
+      description: "Model with the information needed to calculate from one currency to another.\n            "
+      additionalProperties: false
+      required:
+      - fromCurrencyCode
+      - toCurrencyCode
+      - amount
+      - convertedAmount
+      - exchangeRate
+      properties:
+        fromCurrencyCode:
+          type: string
+          description: "The currency code that the amount is currently in.\n            "
+          maxLength: 3
+          minLength: 1
+        toCurrencyCode:
+          type: string
+          description: "The currency code we want the amount converted to.\n            "
+          maxLength: 3
+          minLength: 1
+        amount:
+          type: number
+          description: "The amount to be converted. This will be in the FromCurrencyCode currency.\n            "
+          format: decimal
+        inverted:
+          type:
+          - boolean
+          - 'null'
+          description: "If set to true, the endpoint will use 1/(exchange rate of the reverse) during the conversion. Defaults to false if no value is set.\n            "
+        convertedAmount:
+          type: number
+          description: "The converted amount. This will be in the ToCurrencyCode currency.\n            "
+          format: decimal
+        exchangeRate:
+          type: number
+          description: "Gets or sets the exchange rate for this external rate.\n            "
+          format: decimal
+        roundingFactor:
+          type: number
+          description: "The default rounding factor of the currency conversion.\n            "
+          format: decimal
+        marketingRoundingFactor:
+          type: number
+          description: "The marketing rounding factor of the currency conversion.\n            "
+          format: decimal
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

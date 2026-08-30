@@ -1,0 +1,243 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Ssrs API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: ssrs
+paths:
+  /api/dcs/v1/ssrs/paired/comments:
+    post:
+      tags:
+      - ssrs
+      summary: Generates paired SSR comments for a booking.
+      description: 'Optional record locator on the request determines how the booking is retrieved.
+
+        If a record locator is present, this endpoint behaves statelessly, but
+
+        omitting the record locator specifies that comments will be generated from the
+
+        booking in state.
+
+
+
+        SSR pairs and associated comment formats are defined in the setting
+
+        pairedSsrConfirmationList, which can be retrieved from the GoNow API''s
+
+        GET /api/dcs/v1/settings/operations/checkin.
+
+
+        GraphQL endpoint: dcsGeneratePairedSsrComments'
+      operationId: dcs_v1_ssrs_paired_comments_post
+      requestBody:
+        x-name: request
+        description: Optional record locator, cleared SSR code, and lists of passengers and segments.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PairedSsrCommentsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: A list of paired SSR comments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    PairedSsrCommentsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengerKeys
+      - clearedSsrCode
+      - ssrWasAdded
+      properties:
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: Optional; if no record locator is provided, comments will be generated using the booking in state.
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        clearedSsrCode:
+          type: string
+          description: SSR code of the cleared SSR
+          minLength: 1
+        ssrWasAdded:
+          type: boolean
+          description: Whether the cleared SSR was added
+        reasonCode:
+          type:
+          - string
+          - 'null'
+          description: Reason code for paired SSR
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

@@ -1,0 +1,1528 @@
+openapi: 3.2.0
+info:
+  title: Tui Group Baggage API
+  version: '1.0'
+  description: 'Operations tagged baggage across 2 of this provider''s published API definitions: tui-group-tui-newskies-digital-api-openapi.yml, tui-group-tui-newskies-gonow-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: baggage
+paths:
+  /api/dcs/v1/baggage:
+    post:
+      tags:
+      - baggage
+      summary: Adds baggage to a booking stateless.
+      description: 'Agent only. Requires the booking to be committed.
+
+        If you have the booking in state you will need to re-retrieve it to see the added baggage.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: baggageAdd'
+      operationId: dcs_v1_baggage_post
+      requestBody:
+        x-name: request
+        description: A request to add bags to the given passenger.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBaggageRequest'
+            examples:
+              Journey Bag Check-in:
+                description: Example request for adding a bag to a booking.
+                value:
+                  recordLocator: I3NTYF
+                  journeyKey: TlZ_NTYyNn4gfn5TTEN_MDcvMjYvMjAyNSAwNjowMH5ERU5_MDcvMjYvMjAyNSAwNzowMH5_Xk5WfjU2MjJ_IH5_REVOfjA3LzI2LzIwMjUgMDg6MDB_Qk9TfjA3LzI2LzIwMjUgMTQ6MDB_fg--
+                  passengerKey: MCFBRFQ-
+                  iataIdentifier: 091
+                  nonStandard: false
+                  allowBaggageOnNonHosted: true
+                  baggageInformation:
+                    type: BA20
+                    manualBagTag: false
+                    osTag: SLC987654
+                    weight: 10
+                    weightType: 1
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Add Baggage Successful:
+                  description: Example when baggage is added successfully
+                  value:
+                    data: null
+                Add Baggage Failed With Specific Error Message:
+                  description: Example when baggage is not added successfully because segment status is Closed/ClosedPending/Cancelled/BlockAllActivities. A 201 Created is still returned even though the baggage was not added.
+                  value:
+                    messages:
+                    - rawValue: 'The system has returned an error message for adding a bag with passenger key ''MCFBRFQ-'' and journey key ''TlZ_MjI0MX4gfn5TTEN_MDYvMjgvMjAyNCAxMzoxNX5ERU5_MDYvMjgvMjAyNCAxNTozMH5_Xk5WfiA3ODl_IH5_REVOfjA2LzI4LzIwMjQgMTY6MzB_Qk9TfjA2LzI4LzIwMjQgMjI6MDB_fg--''.  The message is: ''Flight 2241 SLCBOS has been cancelled, request not processed.''.'
+                      code: dcs:Baggage:BaggageAddError
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Baggage:BaggageAddError
+                      status: 1
+                      details:
+                        journeyKey: TlZ_MjI0MX4gfn5TTEN_MDYvMjgvMjAyNCAxMzoxNX5ERU5_MDYvMjgvMjAyNCAxNTozMH5_Xk5WfiA3ODl_IH5_REVOfjA2LzI4LzIwMjQgMTY6MzB_Qk9TfjA2LzI4LzIwMjQgMjI6MDB_fg--
+                        passengerKey: MCFBRFQ-
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid Record Locator Error:
+                  description: Example error when record locator is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        recordLocator: 9SkFNRegdQRYuQ3YfA2g9
+                      rawMessage: The identifier 'RecordLocator' with value '9SkFNRegdQRYuQ3YfA2g9' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Passenger Key Error:
+                  description: Example error when passenger key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        passengerKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'PassengerKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Journey Key Error:
+                  description: Example error when journey key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        journeyKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'JourneyKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Baggage Type Code Error:
+                  description: Example error when baggage type code is invalid.
+                  value:
+                    errors:
+                    - id: 1a68ef3e-44b5-08d4-9395-e69695467a5d
+                      code: dcs:Baggage:InvalidBaggageTypeCode
+                      message: dcs:Baggage:InvalidBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code 'BA20' is not valid or is inactive for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Add Baggage Failure Without Specific Message:
+                  description: Example error when add baggage fails in New Skies without a specific error message.
+                  value:
+                    errors:
+                    - id: 693b6295-6ae8-a005-9f1e-1e1d1600d573
+                      code: dcs:Exceptions:CreateFailed
+                      message: dcs:Exceptions:CreateFailed
+                      type: Validation
+                      details: null
+                      rawMessage: Attempted create of object 'AddBaggageRequest' has failed. Please verify this object does not already exist.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Add Baggage Failure With Specific Message:
+                  description: Example error when add baggage fails in New Skies with a specific error message.
+                  value:
+                    errors:
+                    - id: 693b6295-6ae8-a005-9f1e-1e1d1600d573
+                      code: dcs:Exceptions:CreateFailed
+                      message: dcs:Exceptions:CreateFailed
+                      type: Validation
+                      details: null
+                      rawMessage: Attempted create of object 'AddBaggageRequest' has failed. Please verify this object does not already exist.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: 'The system has returned an error message for adding a bag with passenger key ''MCFBRFQ-'' and journey key ''TlZ_MjI0MX4gfn5TTEN_MDYvMjgvMjAyNCAxMzoxNX5ERU5_MDYvMjgvMjAyNCAxNTozMH5_Xk5WfiA3ODl_IH5_REVOfjA2LzI4LzIwMjQgMTY6MzB_Qk9TfjA2LzI4LzIwMjQgMjI6MDB_fg--''.  The message is: ''Flight 2241 SLCBOS has been cancelled, request not processed.''.'
+                      code: dcs:Baggage:BaggageAddError
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Baggage:BaggageAddError
+                      status: 1
+                      details:
+                        journeyKey: TlZ_MjI0MX4gfn5TTEN_MDYvMjgvMjAyNCAxMzoxNX5ERU5_MDYvMjgvMjAyNCAxNTozMH5_Xk5WfiA3ODl_IH5_REVOfjA2LzI4LzIwMjQgMTY6MzB_Qk9TfjA2LzI4LzIwMjQgMjI6MDB_fg--
+                        passengerKey: MCFBRFQ-
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+    delete:
+      tags:
+      - baggage
+      summary: Sets the 'Removed' status for a bag for a booking stateless.
+      description: 'Agent only. Requires the booking to be committed.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: baggageRemove'
+      operationId: dcs_v1_baggage_delete
+      requestBody:
+        x-name: request
+        description: A request to set bag status as 'Removed' for the provided passenger bag.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveBaggageRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/dcs/v2/baggage:
+    post:
+      tags:
+      - baggage
+      summary: Adds baggage to a booking stateless.
+      description: 'Agent only. Requires the booking to be committed.
+
+        If you have the booking in state you will need to re-retrieve it to see the added baggage.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: baggageAddv2'
+      operationId: dcs_v2_baggage_post
+      requestBody:
+        x-name: request
+        description: A request to add bags to the given passenger.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBaggageRequest'
+            examples:
+              Journey Bag Check-in:
+                description: Example request for adding a bag to a booking.
+                value:
+                  recordLocator: I3NTYF
+                  journeyKey: TlZ_NTYyNn4gfn5TTEN_MDcvMjYvMjAyNSAwNjowMH5ERU5_MDcvMjYvMjAyNSAwNzowMH5_Xk5WfjU2MjJ_IH5_REVOfjA3LzI2LzIwMjUgMDg6MDB_Qk9TfjA3LzI2LzIwMjUgMTQ6MDB_fg--
+                  passengerKey: MCFBRFQ-
+                  iataIdentifier: 091
+                  nonStandard: false
+                  allowBaggageOnNonHosted: true
+                  baggageInformation:
+                    type: BA20
+                    manualBagTag: false
+                    osTag: SLC987654
+                    weight: 10
+                    weightType: 1
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: Created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Add Baggage Successful:
+                  description: Example when baggage is added successfully
+                  value:
+                    data: null
+        '400':
+          description: Adding bag failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid Record Locator Error:
+                  description: Example error when record locator is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        recordLocator: 9SkFNRegdQRYuQ3YfA2g9
+                      rawMessage: The identifier 'RecordLocator' with value '9SkFNRegdQRYuQ3YfA2g9' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Passenger Key Error:
+                  description: Example error when passenger key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        passengerKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'PassengerKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Journey Key Error:
+                  description: Example error when journey key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        journeyKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'JourneyKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Baggage Type Code Error:
+                  description: Example error when baggage type code is invalid.
+                  value:
+                    errors:
+                    - id: 1a68ef3e-44b5-08d4-9395-e69695467a5d
+                      code: dcs:Baggage:InvalidBaggageTypeCode
+                      message: dcs:Baggage:InvalidBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code 'BA20' is not valid or is inactive for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                All Bags Fail Without Specific Message:
+                  description: Example error when add baggage fail in New Skies without a specific error message.
+                  value:
+                    errors:
+                    - id: 693b6295-6ae8-a005-9f1e-1e1d1600d573
+                      code: dcs:Exceptions:CreateFailed
+                      message: dcs:Exceptions:CreateFailed
+                      type: Validation
+                      details: null
+                      rawMessage: Attempted create of object 'AddBaggageRequest' has failed. Please verify this object does not already exist.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Add Baggage Failure With Specific Message:
+                  description: Example error when add baggage fails in New Skies with a specific error message.
+                  value:
+                    errors:
+                    - id: 693b6295-6ae8-a005-9f1e-1e1d1600d573
+                      code: dcs:Exceptions:CreateFailed
+                      message: Flight 2241 SLCBOS has been cancelled, request not processed.
+                      type: Error
+                      details:
+                        journeyKey: TlZ_NTYxNH4gfn5TTEN_MDYvMjgvMjAyNCAwMzowMH5ERU5_MDYvMjgvMjAyNCAwNDowMH5_Xk5WfjU2MTV_IH5_REVOfjA2LzI4LzIwMjQgMDg6MDB_Qk9TfjA2LzI4LzIwMjQgMTM6MDB_fg--
+                        passengerKey: MCFBRFQ-
+                        errorMessage: Flight 2241 SLCBOS has been cancelled, request not processed.
+                      rawMessage: Flight 2241 SLCBOS has been cancelled, request not processed.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/dcs/v1/baggage/byLegKey:
+    delete:
+      tags:
+      - baggage
+      summary: Sets the 'Removed' status for a bag for a booking stateless, by leg key.
+      description: 'Agent only. Requires the booking to be committed.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+        All downline legs and segments will have the bag status marked as `Removed` as well.
+
+        If you want to remove the bag for a whole journey, just pass in the first leg key.
+
+
+        GraphQL endpoint: baggageRemoveByLegKey'
+      operationId: dcs_v1_baggage_byLegKey_delete
+      requestBody:
+        x-name: request
+        description: A request to set bag status as 'Removed' for the provided passenger bag.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveBaggageByLegKeyRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid passenger key error:
+                  description: Example error when passenger key is invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'PassengerKey' with value 'tW' is invalid.
+                      type: Validation
+                      details:
+                        passengerKey: tW
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid leg key error:
+                  description: Example error when leg key is invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'LegKey' with value '76oyA0KoZ0gsjHX' is invalid.
+                      type: Validation
+                      details:
+                        legKey: 76oyA0KoZ0gsjHX
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid baggage key error:
+                  description: Example error when baggage key is invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'BaggageKey' with value 'upvbqtl' is invalid.
+                      type: Validation
+                      details:
+                        baggageKey: upvbqtl
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid record locator error:
+                  description: Example error when the record locator invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'RecordLocator' with value 'n02' is invalid.
+                      type: Validation
+                      details:
+                        recordLocator: n02
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/dcs/v1/baggage/checkIn:
+    put:
+      tags:
+      - baggage
+      summary: Performs an update and checks-in an individual baggage item for a specific passenger.
+      description: 'If the journey key is set on the request, the request will process all segments associated with the journey,
+
+        and will ignore the segment key value.
+
+        The baggage type code can only be updated if the baggage weight is changed as well, and if the baggage type code is
+
+        a valid, active baggage type in the current environment.
+
+        Please note, this call does NOT sync with the booking baggage allowances and usages.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: baggageSet'
+      operationId: dcs_v1_baggage_checkIn_put
+      requestBody:
+        x-name: request
+        description: The passenger bag edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerBagEditRequest'
+            examples:
+              Journey Bag Check-in:
+                description: Example request for checking in a bag for a journey
+                value:
+                  allowBaggageOnNonHosted: true
+                  weight: 20
+                  processAsIatci: false
+                  baggageCount: 2
+                  baggageTypeCode: 1BAG
+                  segmentKey: null
+                  journeyKey: TlZ_NTYyNn4gfn5TTEN_MDcvMjYvMjAyNSAwNjowMH5ERU5_MDcvMjYvMjAyNSAwNzowMH5_Xk5WfjU2MjJ_IH5_REVOfjA3LzI2LzIwMjUgMDg6MDB_Qk9TfjA3LzI2LzIwMjUgMTQ6MDB_fg--
+                  passengerKey: MCFBRFQ-
+                  baggageKey: MDAyODA0MTMzMQ--
+                  recordLocator: I3NTYF
+              Segment Bag Check-in:
+                description: Example request for checking in a bag for a segment
+                value:
+                  allowBaggageOnNonHosted: true
+                  weight: 21
+                  processAsIatci: false
+                  baggageCount: 2
+                  baggageTypeCode: 1BAG
+                  segmentKey: TlZ_MjAwNH4gfn5TTEN_MDgvMDEvMjAyNSAwMTo1OX5KRkt_MDgvMDEvMjAyNSAwNDowMH5_
+                  journeyKey: null
+                  passengerKey: MCFBRFQ-
+                  baggageKey: MDg4ODA1NTEzMA--
+                  recordLocator: T4VBGC
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid Record Locator Error:
+                  description: Example error when record locator is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        recordLocator: 9SkFNRegdQRYuQ3YfA2g9
+                      rawMessage: The identifier 'RecordLocator' with value '9SkFNRegdQRYuQ3YfA2g9' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Passenger Key Error:
+                  description: Example error when passenger key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        passengerKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'PassengerKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Journey Key Error:
+                  description: Example error when journey key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        journeyKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'JourneyKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Journey and Segment Keys Not Provided:
+                  description: Example error when neither journey key or segment key are provided.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: dcs:Baggage:JourneyOrSegmentKeyRequired
+                      message: dcs:Baggage:JourneyOrSegmentKeyRequired
+                      type: Validation
+                      details: null
+                      rawMessage: Either the journey key or the segment key is required for this operation.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Changing Type Code But Not Weight:
+                  description: Example error when the baggage type code cannot be changed because the baggage weight did not change.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: ndcs:Baggage:UnableToChangeBaggageTypeCode
+                      message: dcs:Baggage:UnableToChangeBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code cannot be changed because the edit request does not have a change for the baggage weight.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Baggage Type Code Error:
+                  description: Example error when baggage type code is invalid.
+                  value:
+                    errors:
+                    - id: 1a68ef3e-44b5-08d4-9395-e69695467a5d
+                      code: dcs:Baggage:InvalidBaggageTypeCode
+                      message: dcs:Baggage:InvalidBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code 'BA20' is not valid or is inactive for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid leg status error:
+                  description: Example error when leg status is invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Baggage:BaggageCheckinFailed
+                      message: nsk:Baggage:BaggageCheckinFailed
+                      type: Validation
+                      details:
+                        segmentKey: 9SkFNRegdQRYuQ3YfA2g9
+                        legKey: 9SkFNReg
+                        flightNumber: '1234'
+                        origin: JFK
+                        destination: LAX
+                        legStatus: Closed
+                      rawMessage: Flight must be open to checkin baggage. One or more legs on the given journey/segment is not open.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/dcs/v2/baggage/checkIn:
+    put:
+      tags:
+      - baggage
+      summary: Performs an update and checks-in an individual baggage item for a specific passenger.
+      description: 'If the journey key is set on the request, the request will process all segments associated with the journey,
+
+        and will ignore the segment key value.
+
+        The baggage type code can only be updated if the baggage weight is changed as well, and if the baggage type code is
+
+        a valid, active baggage type in the current environment.
+
+        Please note, this call does NOT sync with the booking baggage allowances and usages.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: baggageSetv2'
+      operationId: dcs_v2_baggage_checkIn_put
+      requestBody:
+        x-name: request
+        description: The passenger bag edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerBagEditRequest'
+            examples:
+              Journey Bag Check-in:
+                description: Example request for checking in a bag for a journey
+                value:
+                  allowBaggageOnNonHosted: true
+                  weight: 20
+                  processAsIatci: false
+                  baggageCount: 2
+                  baggageTypeCode: 1BAG
+                  segmentKey: null
+                  journeyKey: TlZ_NTYyNn4gfn5TTEN_MDcvMjYvMjAyNSAwNjowMH5ERU5_MDcvMjYvMjAyNSAwNzowMH5_Xk5WfjU2MjJ_IH5_REVOfjA3LzI2LzIwMjUgMDg6MDB_Qk9TfjA3LzI2LzIwMjUgMTQ6MDB_fg--
+                  passengerKey: MCFBRFQ-
+                  baggageKey: MDAyODA0MTMzMQ--
+                  recordLocator: I3NTYF
+              Segment Bag Check-in:
+                description: Example request for checking in a bag for a segment
+                value:
+                  allowBaggageOnNonHosted: true
+                  weight: 21
+                  processAsIatci: false
+                  baggageCount: 2
+                  baggageTypeCode: 1BAG
+                  segmentKey: TlZ_MjAwNH4gfn5TTEN_MDgvMDEvMjAyNSAwMTo1OX5KRkt_MDgvMDEvMjAyNSAwNDowMH5_
+                  journeyKey: null
+                  passengerKey: MCFBRFQ-
+                  baggageKey: MDg4ODA1NTEzMA--
+                  recordLocator: T4VBGC
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '207':
+          description: "\n                Multi Status. Some leg keys were invalid or could not be retrieved. See the response messages for\n                details.\n            "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Partial Failure - a Segment is Closed.:
+                  description: Example response of a partially-successful bag check in for multiple segments. The failed check-ins will each have a warning message.
+                  value:
+                    messages:
+                    - rawValue: 'The system has returned an error message for bag update with passenger key ''MCFBRFQ-'', segment key ''9SkFNRegdQRYuQ3YfA2g9'', and baggage key ''MDAyODA0MTMzOA--''.  The message is: ''Cannot print bag tag (0028041338); Invalid baggage status.''.'
+                      code: nsk:Baggage:BaggageUpdateError
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: nsk:Baggage:BaggageUpdateError
+                      status: 1
+                      details:
+                        segmentKey: 9SkFNRegdQRYuQ3YfA2g9
+                        legKey: 9SkFNReg
+                        flightNumber: '1234'
+                        origin: JFK
+                        destination: LAX
+                        legStatus: Closed
+                    data: null
+                Partial Failure - a Segment is Closed. The failed check-ins will each have a warning message.:
+                  description: Example response of a partially-successful bag check in for multiple segments.
+                  value:
+                    messages:
+                    - rawValue: Flight must be open to checkin baggage. One or more legs on the given journey/segment is not open.
+                      code: nsk:Baggage:BaggageCheckinFailed
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: nsk:Baggage:BaggageCheckinFailed
+                      status: 1
+                      details:
+                        segmentKey: 9SkFNRegdQRYuQ3YfA2g9
+                        legKey: 9SkFNReg
+                        flightNumber: '1234'
+                        origin: JFK
+                        destination: LAX
+                        legStatus: Closed
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid Record Locator Error:
+                  description: Example error when record locator is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        recordLocator: 9SkFNRegdQRYuQ3YfA2g9
+                      rawMessage: The identifier 'RecordLocator' with value '9SkFNRegdQRYuQ3YfA2g9' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Passenger Key Error:
+                  description: Example error when passenger key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        passengerKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'PassengerKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Journey Key Error:
+                  description: Example error when journey key is invalid.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: nsk:Exceptions:InvalidKey
+                      message: nsk:Exceptions:InvalidKey
+                      type: Validation
+                      details:
+                        journeyKey: JoKwkYODu4gNYRwNQo
+                      rawMessage: The identifier 'JourneyKey' with value 'JoKwkYODu4gNYRwNQo' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Journey and Segment Keys Not Provided:
+                  description: Example error when neither journey key or segment key are provided.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: dcs:Baggage:JourneyOrSegmentKeyRequired
+                      message: dcs:Baggage:JourneyOrSegmentKeyRequired
+                      type: Validation
+                      details: null
+                      rawMessage: Either the journey key or the segment key is required for this operation.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Changing Type Code But Not Weight:
+                  description: Example error when the baggage type code cannot be changed because the baggage weight did not change.
+                  value:
+                    errors:
+                    - id: 2f5dd7f3-47f7-48fb-a180-f9152278605f
+                      code: dcs:Baggage:UnableToChangeBaggageTypeCode
+                      message: dcs:Baggage:UnableToChangeBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code cannot be changed because the edit request does not have a change for the baggage weight.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Baggage Type Code Error:
+                  description: Example error when baggage type code is invalid.
+                  value:
+                    errors:
+                    - id: 1a68ef3e-44b5-08d4-9395-e69695467a5d
+                      code: dcs:Baggage:InvalidBaggageTypeCode
+                      message: dcs:Baggage:InvalidBaggageTypeCode
+                      type: Validation
+                      details: null
+                      rawMessage: The baggage type code 'BA20' is not valid or is inactive for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Closed flight:
+                  description: Example error when all baggage check-ins failed due to closed flight.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Baggage:BaggageCheckinFailed
+                      message: nsk:Baggage:BaggageCheckinFailed
+                      type: Validation
+                      details:
+                        segmentKey: 9SkFNRegdQRYuQ3YfA2g9
+                        legKey: 9SkFNReg
+                        flightNumber: '1234'
+                        origin: JFK
+                        destination: LAX
+                        legStatus: Closed
+                      rawMessage: Flight must be open to checkin baggage. All legs on the given journey/segment are not open.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/dcs/v3/baggage:
+    post:
+      tags:
+      - baggage
+      summary: Adds a list of bags to a booking.
+      description: "Optional record locator determines whether this endpoint behaves statelessly or modifies the booking in state. \n    Including the record locator will add the bags statelessly without assigning any baggage group. \n    Omitting the record locator will add the bags to the booking in state, \n    assigning a baggage group for the specified passenger, \n    with any other passengers specified by otherPassengersAlternateKeys.\n\nGraphQL endpoint: dcsCreateBagsV3"
+      operationId: dcs_v3_baggage_post
+      requestBody:
+        x-name: request
+        description: List of bags to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaggageAddRequestV3'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: List of bag keys added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfBaggageAddResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse_2'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse_2'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/gonow
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/gonow
+      description: TUI Playground
+components:
+  schemas:
+    RemoveBaggageByLegKeyRequest:
+      type: object
+      description: "The delete baggage by leg key request.\n            "
+      additionalProperties: false
+      required:
+      - recordLocator
+      - legKey
+      - passengerKey
+      - baggageKey
+      properties:
+        recordLocator:
+          type: string
+          description: "The record locator.\n            "
+          minLength: 1
+        legKey:
+          type: string
+          description: "The Leg key or manifest leg key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        baggageKey:
+          type: string
+          description: "The baggage key.\n            "
+          minLength: 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    WeightType:
+      type: integer
+      description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
+      x-enumNames:
+      - Default
+      - Pounds
+      - Kilograms
+      enum:
+      - 0
+      - 1
+      - 2
+    PassengerBagEditRequest:
+      type: object
+      description: "A model for a request to update the passenger bags.\n            "
+      additionalProperties: false
+      required:
+      - baggageCount
+      - passengerKey
+      - baggageKey
+      - recordLocator
+      properties:
+        allowBaggageOnNonHosted:
+          type: boolean
+          description: "The flag to indicate if the baggage request is allowed to process baggage for non-hosted flights.\n            "
+        weight:
+          type:
+          - integer
+          - 'null'
+          description: "The baggage weight.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        processAsIatci:
+          type: boolean
+          description: "The flag to indicate if the request should process as an IATCI scenario.\n            "
+        baggageCount:
+          type: integer
+          description: "The number of bags to process for the update.\n            "
+          format: int32
+        baggageTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "The baggage type code for the update request.\nThis can only be updated if the baggage weight is changed at the same time, and if\nthe baggage type code is active.\n            "
+        segmentKey:
+          type:
+          - string
+          - 'null'
+          description: "The segment key to update.  If the journey key is set, the request will process all\nsegments associated with the journey, and will ignore this value.\n            "
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "The journey key to update.  If the journey key is set, the request will process all\nsegments associated with the journey, and will ignore the segment key value.\n            "
+        passengerKey:
+          type: string
+          description: "The passenger key to update.\n            "
+          minLength: 1
+        baggageKey:
+          type: string
+          description: "The baggage key to update.\n            "
+          minLength: 1
+        recordLocator:
+          type: string
+          description: "The record locator for the booking to update.\n            "
+          minLength: 1
+    RemoveBaggageRequest:
+      type: object
+      description: "The delete baggage request.\n            "
+      additionalProperties: false
+      required:
+      - recordLocator
+      - journeyKey
+      - passengerKey
+      - baggageKey
+      properties:
+        recordLocator:
+          type: string
+          description: "The record locator.\n            "
+          minLength: 1
+        journeyKey:
+          type: string
+          description: "The journey key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        baggageKey:
+          type: string
+          description: "The baggage key.\n            "
+          minLength: 1
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    AddBaggageRequest:
+      type: object
+      description: "The add baggage request.\n            "
+      additionalProperties: false
+      required:
+      - recordLocator
+      - journeyKey
+      - passengerKey
+      properties:
+        recordLocator:
+          type: string
+          description: "The record locator.\n            "
+          minLength: 1
+        journeyKey:
+          type: string
+          description: "The journey key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        iataIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The IATA identifier for this request.\n            "
+        nonStandard:
+          type: boolean
+          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
+        allowBaggageOnNonHosted:
+          type: boolean
+          description: "The flag to indicate if the baggage request is allowed to process baggage for non-hosted flights.\n            "
+        baggageInformation:
+          description: "The baggage information/details.\n            "
+          $ref: '#/components/schemas/BaggageInformationRequest'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BaggageInformationRequest:
+      type: object
+      description: "The baggage information request.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The baggage type.\n            "
+        manualBagTag:
+          type: boolean
+          description: "A flag to indicate if the bag tag is manual.\nIf false, the bag tag should be auto generated.\nTrue = 'SLC123456'\nFalse = '0228123456'\n            "
+        osTag:
+          type:
+          - string
+          - 'null'
+          description: "The baggage tag identifier.\nAutomatic Baggage:\nIATA Standard digits =\n1st position         : 0 = Interline tag\n2nd to 4th position  : The three-digit numeric baggage tag issuer code assigned by\nIATA to the carrier or non-airline company.\n5th to 10th positions: The six digit serial number.\nManual Baggage:\n1st to 3rd position  : The 3 character station code.\n4th to 9th position  : The six digit serial number.\nExample:'SLC123456' (Manual Bag Tag) or '0228123456' (Automatic Bag Tag)\n            "
+        weight:
+          type:
+          - integer
+          - 'null'
+          description: "The baggage weight.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        weightType:
+          description: "The weight type for the bag. (Pounds or Kilograms)\n            "
+          $ref: '#/components/schemas/WeightType'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    PassengerBagRequestV3:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - status
+      - taggedToStation
+      - weightType
+      - weight
+      properties:
+        bagTag:
+          type:
+          - string
+          - 'null'
+          description: Bag tag, optional, automatically generated if left empty
+        type:
+          type: string
+          description: Baggage type code configurable in the environment
+          minLength: 1
+        status:
+          $ref: '#/components/schemas/ProcessBaggageActionType'
+        taggedToStation:
+          type: string
+          description: 'Last station of the bag''s journey.
+
+            Used for long checking or short cheking when adding bags to multiple segments/journeys.'
+          maxLength: 3
+          minLength: 3
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType_2'
+        weight:
+          type: integer
+          description: Weight of the bag
+          format: int32
+          maximum: 9999.0
+          minimum: 0.0
+    WeightType_2:
+      type: integer
+      description: 'Specifies the weight unit of measure, either Pounds or Kilograms.
+
+
+        1 = Pounds
+
+        2 = Kilograms'
+      x-enumNames:
+      - Pounds
+      - Kilograms
+      enum:
+      - 1
+      - 2
+    BaggageAddResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        baggageKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    MessageStatus_2:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse_2:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse_2'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message_2'
+    IJsonResponseOfBaggageAddResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/BaggageAddResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse_2'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message_2'
+    ErrorResponse_2:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message_2:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus_2'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    ProcessBaggageActionType:
+      type: integer
+      description: '0 = Add
+
+        1 = CheckIn
+
+        2 = Print'
+      x-enumNames:
+      - Add
+      - CheckIn
+      - Print
+      enum:
+      - 0
+      - 1
+      - 2
+    BaggageAddRequestV3:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKey
+      - passengerAlternateKey
+      - bags
+      properties:
+        segmentKey:
+          type: string
+          minLength: 1
+        passengerAlternateKey:
+          type: string
+          description: Selected/target passenger to have an added/checked/printed bag.
+          minLength: 1
+        bags:
+          type: array
+          description: List of bags to add
+          items:
+            $ref: '#/components/schemas/PassengerBagRequestV3'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: Optional; if no record locator is provided, bags will be added to the booking in state.
+        otherSelectedPassengersAlternateKeys:
+          type:
+          - array
+          - 'null'
+          description: "List of alternate keys for other selected passengers being processed with the passenger getting his/her bag processed.\nThis list will be translated into empty bag requests which NS uses to evaluate baggage allowances \nand fees based on Multi-Passenger Baggage Group, Market Setting, Baggage Rules, etc.\nEmpty list would mean only the passenger getting bag processed is being evaluated by NS.\nThis list is ignored if record locator is provided."
+          items:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-refined-from:
+- tui-group-tui-newskies-digital-api-openapi.yml
+- tui-group-tui-newskies-gonow-api-openapi.yml
+x-header: 'This API returns the price and availability for TUI''s packages specifically for OTA''s according to the G7 standard.
+
+  '
+x-summary: "This API returns the price and availability for TUI's packages specifically for OTA's according to the G7 standard.\nThe Travelmessage API returns information on all the available tui.nl packages, along with other relevant details such as price, extras, etc. for this specified package. \nThis API also allows to start a bookingdialogue for these packages.\n"

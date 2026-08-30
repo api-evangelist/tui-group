@@ -1,0 +1,3579 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Vouchers API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: vouchers
+paths:
+  /api/nsk/v2/vouchers:
+    get:
+      tags:
+      - vouchers
+      summary: Gets vouchers based upon data in the request.
+      description: "This endpoint requires agent permissions.\nOnly vouchers from the agent's non-restricted voucher configurations will be returned. To check which voucher\nconfigurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.\nIf given a date, one of the following properties are required:\n- CustomerName.LastName\n- CustomerNumber\n- Agent\n\t- Agent.Name\n\t- Agent.Domain\nIf only the begin date is given, the default value of the end date will be the day after the begin date.\nIf only the end date is given, the begin date will be required.\nIf at least one of the market properties is provided, all the other market properties are required.\nIf at least one of the agent properties is provided, the other agent property is required.\nIf the customer first name is provided, the customer last name is required.\n\nGraphQL endpoint: vouchersv3"
+      operationId: nsk_v2_vouchers_get
+      parameters:
+      - name: VoucherIssuanceKey
+        in: query
+        description: "The unique voucher issuance key.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      - name: Market.Destination
+        in: query
+        description: "Gets or sets the leg arrival station.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 2
+      - name: Market.Origin
+        in: query
+        description: "Gets or sets the leg departure station.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 3
+      - name: Market.DepartureDate
+        in: query
+        description: "The departure date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 4
+      - name: Market.Identifier
+        in: query
+        description: "The unique transportation identifier.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          minLength: 0
+        x-position: 5
+      - name: Market.CarrierCode
+        in: query
+        description: "The carrier code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 6
+      - name: Market.OpSuffix
+        in: query
+        description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 1
+        x-position: 7
+      - name: Agent.Name
+        in: query
+        description: "The agent name associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          minLength: 0
+        x-position: 8
+      - name: Agent.Domain
+        in: query
+        description: "The domain code associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 9
+      - name: BeginDate
+        in: query
+        description: "The starting date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 10
+      - name: EndDate
+        in: query
+        description: "The ending date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 11
+      - name: PageSize
+        in: query
+        description: "The Page Size, Default 1000\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 12
+      - name: LastPageKey
+        in: query
+        description: "The LastPageKey, where to start paged query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 13
+      - name: SortCriteria
+        in: query
+        description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n             \nEnumeration values: 0 = CreatedDateAscending, 1 = Name, 2 = CreatedDateDescending"
+        schema:
+          $ref: '#/components/schemas/FindVoucherSortCriteria'
+        x-position: 14
+      - name: RecordLocator
+        in: query
+        description: "The record locator associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 12
+          minLength: 0
+        x-position: 15
+      - name: CustomerName.FirstName
+        in: query
+        description: "The first name associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          minLength: 0
+        x-position: 16
+      - name: CustomerName.LastName
+        in: query
+        description: "The last name associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          minLength: 0
+        x-position: 17
+      - name: CustomerNumber
+        in: query
+        description: "The customer number associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 20
+          minLength: 0
+        x-position: 18
+      - name: ActiveOnly
+        in: query
+        description: "The flag to indicate if only active items should be returned.\n            "
+        schema:
+          type: boolean
+        x-position: 19
+      - name: CultureCode
+        in: query
+        description: "The culture code of the paged request.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 17
+          minLength: 0
+        x-position: 20
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPagedVouchersResponse'
+              examples:
+                Retrieve Vouchers:
+                  description: Successful retrieval of vouchers
+                  value:
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 3
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5486216+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.548623+00:00'
+                        voucherKey: QYB3NsFyNUdlSRXyNBXsAyB4JLMyZSFyNEBy
+                        reference: '10011707041300002'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5486233+00:00'
+                        voucherKey: TBS3NlFzLPdyLDRnNDCyMfB4NFFyNjBzFAGg
+                        reference: '10011707041300003'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                Invalid Sort Criteria:
+                  description: The provided sort criteria is invalid or not defined in the system.
+                  value:
+                    messages:
+                    - code: core:Validation:MalformedRequest
+                      type: Information
+                      value: The value 'CreatedTime' is invalid.
+                      status: 1
+                      details: null
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 1
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5486252+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All matching vouchers are restricted to the agent:
+                  description: Example response when all the vouchers that satisfies the search query belongs to the agent's restricted voucher configuration
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      message: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      type: Validation
+                      details:
+                        message: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      rawMessage: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No filters specified:
+                  description: Example response when no filters are specified.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:VoucherNotFound
+                      message: nsk-server:VoucherNotFound
+                      type: Validation
+                      details: null
+                      rawMessage: 'Please specify any of the search criteria: Voucher Details/Passenger Details/Record Locator/Flight Details/Agent Details.'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                At least one of the market properties is specified and no destination is specified:
+                  description: Example response when at least one of the market properties is specified and the destination is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformation.Destination:RequiredAttribute
+                      message: VoucherMarketInformation.Destination:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformation
+                        member: Destination
+                      rawMessage: The VoucherMarketInformation field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                At least one of the market properties is specified and no origin is specified:
+                  description: Example response when at least one of the market properties is specified and the origin is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformation.Origin:RequiredAttribute
+                      message: VoucherMarketInformation.Origin:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformation
+                        member: Origin
+                      rawMessage: The VoucherMarketInformation field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                At least one of the market properties is specified and no departure date is specified:
+                  description: Example response when at least one of the market properties is specified and the departure date is set to null.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformation.DepartureDate:RequiredAttribute
+                      message: VoucherMarketInformation.DepartureDate:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformation
+                        member: DepartureDate
+                      rawMessage: The VoucherMarketInformation field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                At least one of the market properties is specified and no identifier is specified:
+                  description: Example response when at least one of the market properties is specified and the identifier is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformation.Identifier:RequiredAttribute
+                      message: VoucherMarketInformation.Identifier:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformation
+                        member: Identifier
+                      rawMessage: The VoucherMarketInformation field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                At least one of the market properties is specified and no carrier code is specified:
+                  description: Example response when at least one of the market properties is specified and the carrier code is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformation.CarrierCode:RequiredAttribute
+                      message: VoucherMarketInformation.CarrierCode:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformation
+                        member: CarrierCode
+                      rawMessage: The VoucherMarketInformation field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent name is specified and agent domain is not specified:
+                  description: Example response when the agent name is specified and the agent domain is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: Agent.Domain:RequiredAttribute
+                      message: Agent.Domain:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: Agent
+                        member: Domain
+                      rawMessage: The Agent field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Agent domain is specified and agent name is not specified:
+                  description: Example response when the agent domain is specified and the agent name is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: Agent.Name:RequiredAttribute
+                      message: Agent.Name:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: Agent
+                        member: Name
+                      rawMessage: The Agent field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Customer first name is specified and customer last name is not specified:
+                  description: Example response when the customer first name is specified and the customer last name is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: CustomerName.LastName:RequiredAttribute
+                      message: CustomerName.LastName:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: CustomerName
+                        member: LastName
+                      rawMessage: The CustomerName field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                End date is specified and begin date is not specified:
+                  description: Example response when end date is specified and begin date is null.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Voucher:VoucherBeginDateRequired
+                      message: nsk:Voucher:VoucherBeginDateRequired
+                      type: Validation
+                      details:
+                        beginDate: null
+                      rawMessage: Voucher creation begin date is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                End date is earlier than begin date:
+                  description: Example response when the end date is earlier than the begin date.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:EndDate:EndDateBeforeBeginDate
+                      message: nsk:EndDate:EndDateBeforeBeginDate
+                      type: Validation
+                      details: null
+                      rawMessage: The requested end date of 4/29/2025 occurs before the requested begin date of 4/30/2025.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Begin date or end date is specified but customer name, customer number, agent name, and agent domain is not specified:
+                  description: Example response when the Begin date or end date is specified but customer name, customer number, agent name, and agent domain is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Voucher:VoucherSearchRequirementsUnmet
+                      message: nsk:Voucher:VoucherSearchRequirementsUnmet
+                      type: Validation
+                      details:
+                        customerName: null
+                        customerNumber: null
+                        agentName: null
+                        agentDomainCode: null
+                      rawMessage: 'Requirements unmet: Enter one - Customer Name, Customer Number or Agent Name.'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+      deprecated: true
+  /api/nsk/v1/vouchers/{voucherKey}:
+    get:
+      tags:
+      - vouchers
+      summary: Gets a specific voucher based upon the voucher key.
+      description: 'This endpoint requires agent permissions.
+
+
+        GraphQL endpoint: voucher'
+      operationId: nsk_v1_vouchers_voucherKey_get
+      parameters:
+      - name: voucherKey
+        in: path
+        required: true
+        description: The voucher key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucher'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    patch:
+      tags:
+      - vouchers
+      summary: Changes the voucher status, type, or expiration date.
+      description: 'This endpoint requires agent permissions.
+
+        Due to system limitations only one field can be updated per call.
+
+        Voucher types of 0 and 2 (Credit and Service) have been removed from the request for this endpoint
+
+        as they are not valid type to be updated to.
+
+
+        GraphQL endpoint: voucherModify'
+      operationId: nsk_v1_vouchers_voucherKey_patch
+      parameters:
+      - name: voucherKey
+        in: path
+        required: true
+        description: The voucher key
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The voucher update request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherUpdateRequestv2'
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Multiple field update:
+                  description: Example error if more than one field is being updated
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing VoucherType when changing the Status on a Voucher to Void is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing VoucherType when changing the Status on a Voucher to Void is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing ExpirationDate when changing the Status on a Voucher to Void is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing ExpirationDate when changing the Status on a Voucher to Void is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing VoucherType when reinstating a Voucher is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing VoucherType when reinstating a Voucher is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing ExpirationDate when reinstating a Voucher is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing ExpirationDate when reinstating a Voucher is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing the Status of a Voucher when extending the ExpirationDate is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing the Status of a Voucher when extending the ExpirationDate is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing the VoucherType of a Voucher when extending the ExpirationDate is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing the VoucherType of a Voucher when extending the ExpirationDate is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing the Status of a Voucher when changing the VoucherType is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing the Status of a Voucher when changing the VoucherType is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    - id: null
+                      code: nsk-server:Vouchers
+                      message: Changing ExpirationDate of a Voucher when changing a VoucherType is not supported
+                      type: Error
+                      details:
+                        voucherWarningMessage: Changing ExpirationDate of a Voucher when changing a VoucherType is not supported
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid voucher type:
+                  description: Example error if an invalid voucher type is used
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:OutOfRange
+                      message: 'The value ''2'' is out of range for ''VoucherUpdateRequestv2.Type''.Expected values: (1,3,4,5,6)'
+                      type: Validation
+                      details: null
+                      rawMessage: null
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v1/vouchers/{voucherKey}/owner:
+    patch:
+      tags:
+      - vouchers
+      summary: Changes the voucher owner.
+      description: 'This endpoint requires agent permissions.
+
+        If the personKey is populated, the voucher owner''s first and last name will be updated to match what
+
+        corresponds with the person.
+
+        If no personKey is given, the names in the request will be used to update the voucher.
+
+        Additionally, there are configuration restrictions to be able to use this endpoint.
+
+        First, the voucher must be allowed to be used by the Agent, under Booking Payments Codes -> Voucher Basis Codes.
+
+        Second, the voucher basis must have usage type "Match On Passenger Name" or "Match on Passenger or Contact Name".
+
+        Related endpoints:
+
+        - GET /api/nsk/v2/vouchers: Lookup vouchers. Agent Only.
+
+        - GET /api/nsk/v1/vouchers/{voucherKey}: Get a specific voucher.
+
+
+        GraphQL endpoint: voucherOwnerModify'
+      operationId: nsk_v1_vouchers_voucherKey_owner_patch
+      parameters:
+      - name: voucherKey
+        in: path
+        required: true
+        description: The voucher key
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The voucher update request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherOwnerUpdateRequest'
+            examples:
+              Update Voucher Owner Person Key Only:
+                description: Example request for when wanting to update the voucher owner of a voucher based on a person key. You can simply not set the First Name and Last Name on the request and those will be set internally.
+                value:
+                  personKey: MUNzPRfx
+                  firstName: null
+                  lastName: null
+              Update Voucher Owner with First and Last Name Only:
+                description: Example request for when wanting to update the voucher owner's first and last name without associating with a person key.
+                value:
+                  personKey: null
+                  firstName: Jim
+                  lastName: Bob
+              Update Voucher Owner with Person Key and Names:
+                description: Example request for when wanting to update the voucher owner of a voucher based on a person key. You can set FirstName and LastName, but if they don't match the Person they will be overriden.
+                value:
+                  personKey: MUNzPRfx
+                  firstName: FirstNameMatchesPerson
+                  lastName: LastNameMatchesPerson
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Failure to Update Voucher Owner Because Transferable.:
+                  description: Example error for when unable to update the voucher owner of a voucher that is transferable.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:UpdateFailed
+                      message: nsk:Exceptions:UpdateFailed
+                      type: Validation
+                      details: null
+                      rawMessage: Attempted update of object 'Voucher' has failed. Please verify this object exists.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: null
+                      code: nsk:Voucher:VoucherValidationWarning
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: VoucherValidation
+                      value: Unable to update the owner of a transferable voucher.
+                      status: 1
+                      details:
+                        voucherWarningMessage: Unable to update the owner of a transferable voucher.
+                    data: null
+                Failure to Update Voucher Owner:
+                  description: Example error for when no changes were made to the voucher.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:UpdateFailed
+                      message: nsk:Exceptions:UpdateFailed
+                      type: Validation
+                      details: null
+                      rawMessage: Attempted update of object 'Voucher' has failed. Please verify this object exists.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: null
+                      code: nsk:Voucher:VoucherValidationWarning
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: VoucherValidation
+                      value: No changes were made to the voucher details.
+                      status: 1
+                      details:
+                        voucherWarningMessage: No changes were made to the voucher details.
+                    data: null
+  /api/nsk/v2/vouchers/byAgent:
+    get:
+      tags:
+      - vouchers
+      summary: Gets a collection of vouchers based on the specified agent information.
+      description: 'This endpoint requires agent permissions.
+
+        Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
+
+        configurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.
+
+
+        GraphQL endpoint: vouchersByAgentv2'
+      operationId: nsk_v2_vouchers_byAgent_get
+      parameters:
+      - name: Name
+        in: query
+        description: "The agent name associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 64
+          minLength: 0
+        x-position: 1
+      - name: Domain
+        in: query
+        description: "The domain code associated with the voucher.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 2
+      - name: BeginDate
+        in: query
+        description: "The starting date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: EndDate
+        in: query
+        description: "The ending date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 4
+      - name: PageSize
+        in: query
+        description: "The Page Size, Default 1000\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 5
+      - name: LastPageKey
+        in: query
+        description: "The LastPageKey, where to start paged query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 6
+      - name: SortCriteria
+        in: query
+        description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n             \nEnumeration values: 0 = CreatedDateAscending, 1 = Name, 2 = CreatedDateDescending"
+        schema:
+          $ref: '#/components/schemas/FindVoucherSortCriteria'
+        x-position: 7
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPagedVouchersResponse'
+              examples:
+                Retrieve Vouchers:
+                  description: Successful retrieval of vouchers
+                  value:
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 3
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5536046+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5536059+00:00'
+                        voucherKey: QYB3NsFyNUdlSRXyNBXsAyB4JLMyZSFyNEBy
+                        reference: '10011707041300002'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5536062+00:00'
+                        voucherKey: TBS3NlFzLPdyLDRnNDCyMfB4NFFyNjBzFAGg
+                        reference: '10011707041300003'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                Invalid Sort Criteria:
+                  description: The provided sort criteria is invalid or not defined in the system.
+                  value:
+                    messages:
+                    - code: core:Validation:MalformedRequest
+                      type: Information
+                      value: The value 'CreatedTime' is invalid.
+                      status: 1
+                      details: null
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 1
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5536088+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All matching vouchers are restricted to the agent:
+                  description: Example response when all the vouchers that satisfies the search query belongs to the agent's restricted voucher configuration
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      message: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      type: Validation
+                      details:
+                        message: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      rawMessage: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v1/vouchers/byDate:
+    get:
+      tags:
+      - vouchers
+      summary: Searches for vouchers issued within the given date range.
+      description: 'This endpoint requires agent permissions.
+
+        Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
+
+        configurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.
+
+
+        GraphQL endpoint: vouchersByDate'
+      operationId: nsk_v1_vouchers_byDate_get
+      parameters:
+      - name: PageSize
+        in: query
+        description: "The number of items to return.\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 1
+      - name: LastPageKey
+        in: query
+        description: "The key returned previously to get the next page of items.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 2
+      - name: BeginDate
+        in: query
+        description: "The starting date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: EndDate
+        in: query
+        description: "The ending date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVouchersSummaryResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All matching vouchers are restricted to the agent:
+                  description: Example response when all the vouchers that satisfies the search query belongs to the agent's restricted voucher configuration
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      message: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      type: Validation
+                      details:
+                        message: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      rawMessage: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/vouchers/byIssuance/{voucherIssuanceKey}:
+    get:
+      tags:
+      - vouchers
+      summary: Gets vouchers associated with a voucher issuance.
+      description: 'This endpoint requires agent permissions.
+
+        Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
+
+        configurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.
+
+
+        GraphQL endpoint: vouchersByIssuancev2'
+      operationId: nsk_v2_vouchers_byIssuance_voucherIssuanceKey_get
+      parameters:
+      - name: voucherIssuanceKey
+        in: path
+        required: true
+        description: The voucher issuance key.
+        schema:
+          type: string
+        x-position: 1
+      - name: PageSize
+        in: query
+        description: "The Page Size, Default 1000\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 2
+      - name: LastPageKey
+        in: query
+        description: "The LastPageKey, where to start paged query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 3
+      - name: sortCriteria
+        in: query
+        description: "Indicates how the search results will be sorted. Defaults to `CreatedDate` if not specified\nor invalid.\n             \nEnumeration values: 0 = CreatedDateAscending, 1 = Name, 2 = CreatedDateDescending"
+        schema:
+          $ref: '#/components/schemas/FindVoucherSortCriteria'
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPagedVouchersResponse'
+              examples:
+                Retrieve Vouchers:
+                  description: Successful retrieval of vouchers
+                  value:
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 3
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5557974+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5557986+00:00'
+                        voucherKey: QYB3NsFyNUdlSRXyNBXsAyB4JLMyZSFyNEBy
+                        reference: '10011707041300002'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5557989+00:00'
+                        voucherKey: TBS3NlFzLPdyLDRnNDCyMfB4NFFyNjBzFAGg
+                        reference: '10011707041300003'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                Invalid Sort Criteria:
+                  description: The provided sort criteria is invalid or not defined in the system.
+                  value:
+                    messages:
+                    - code: core:Validation:MalformedRequest
+                      type: Information
+                      value: The value 'CreatedTime' is invalid.
+                      status: 1
+                      details: null
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 1
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5558002+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All matching vouchers are restricted to the agent:
+                  description: Example response when all the vouchers that satisfies the search query belongs to the agent's restricted voucher configuration
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      message: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      type: Validation
+                      details:
+                        message: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      rawMessage: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v2/vouchers/byMarket:
+    get:
+      tags:
+      - vouchers
+      summary: Gets a collection of vouchers based on the market information.
+      description: 'This endpoint requires agent permissions.
+
+        Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
+
+        configurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.
+
+
+        GraphQL endpoint: vouchersByMarketv2'
+      operationId: nsk_v2_vouchers_byMarket_get
+      parameters:
+      - name: Destination
+        in: query
+        description: "Gets or sets the leg arrival station.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 1
+      - name: Origin
+        in: query
+        description: "Gets or sets the leg departure station.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 2
+      - name: DepartureDate
+        in: query
+        description: "The departure date.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 3
+      - name: Identifier
+        in: query
+        description: "The unique transportation identifier.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 4
+          minLength: 0
+        x-position: 4
+      - name: CarrierCode
+        in: query
+        description: "The carrier code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 2
+        x-position: 5
+      - name: OpSuffix
+        in: query
+        description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 1
+        x-position: 6
+      - name: PageSize
+        in: query
+        description: "The Page Size, Default 1000\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+          maximum: 5000.0
+          minimum: 10.0
+        x-position: 7
+      - name: LastPageKey
+        in: query
+        description: "The LastPageKey, where to start paged query.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 8
+      - name: SortCriteria
+        in: query
+        description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n             \nEnumeration values: 0 = CreatedDateAscending, 1 = Name, 2 = CreatedDateDescending"
+        schema:
+          $ref: '#/components/schemas/FindVoucherSortCriteria'
+        x-position: 9
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPagedVouchersResponse'
+              examples:
+                Retrieve Vouchers:
+                  description: Successful retrieval of vouchers
+                  value:
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 3
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.5378024+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5378264+00:00'
+                        voucherKey: QYB3NsFyNUdlSRXyNBXsAyB4JLMyZSFyNEBy
+                        reference: '10011707041300002'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                      - createdDate: '2026-07-09T05:55:14.5378267+00:00'
+                        voucherKey: TBS3NlFzLPdyLDRnNDCyMfB4NFFyNjBzFAGg
+                        reference: '10011707041300003'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+                Invalid Sort Criteria:
+                  description: The provided sort criteria is invalid or not defined in the system.
+                  value:
+                    messages:
+                    - code: core:Validation:MalformedRequest
+                      type: Information
+                      value: The value 'CreatedTime' is invalid.
+                      status: 1
+                      details: null
+                    data:
+                      lastPageKey: MTAwMA--
+                      totalCount: 1
+                      vouchers:
+                      - createdDate: '2026-07-09T05:55:14.537843+00:00'
+                        voucherKey: NTA2MiExMTcwITEwMDExNzA3MDQxMzAwMDAx
+                        reference: '10011707041300001'
+                        configurationCode: NOREQ
+                        status: 0
+                        available: 1000.0
+                        firstName: John
+                        lastName: Doe
+                        personKey: MUNzPRfx
+                        voucherIssuanceKey: MTE3MCFHQkFUQ0g-
+                        expiration: '9999-12-31T23:59:59.9999999'
+                        currencyCode: USD
+                        amount: 1000.0
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All matching vouchers are restricted to the agent:
+                  description: Example response when all the vouchers that satisfies the search query belongs to the agent's restricted voucher configuration
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      message: nsk-server:AuthorizationSearchVoucherNotAllowed
+                      type: Validation
+                      details:
+                        message: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      rawMessage: Agent is not authorized to search restricted voucher reference numbers with voucher basis code(s) NOREQ.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No destination specified:
+                  description: Example response when the destination is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformationv2.Destination:RequiredAttribute
+                      message: The VoucherMarketInformationv2 field is required.
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformationv2
+                        member: Destination
+                      rawMessage: The VoucherMarketInformationv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No origin specified:
+                  description: Example response when the origin is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformationv2.Origin:RequiredAttribute
+                      message: The VoucherMarketInformationv2 field is required.
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformationv2
+                        member: Origin
+                      rawMessage: The VoucherMarketInformationv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No departure date specified:
+                  description: Example response when the departure date is set to null.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformationv2.DepartureDate:RequiredAttribute
+                      message: The VoucherMarketInformationv2 field is required.
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformationv2
+                        member: DepartureDate
+                      rawMessage: The VoucherMarketInformationv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No identifier specified:
+                  description: Example response when the identifier is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformationv2.Identifier:RequiredAttribute
+                      message: The VoucherMarketInformationv2 field is required.
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformationv2
+                        member: Identifier
+                      rawMessage: The VoucherMarketInformationv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                No carrier code specified:
+                  description: Example response when the carrier code is set to null or an empty string.
+                  value:
+                    errors:
+                    - id: null
+                      code: VoucherMarketInformationv2.CarrierCode:RequiredAttribute
+                      message: The VoucherMarketInformationv2 field is required.
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: VoucherMarketInformationv2
+                        member: CarrierCode
+                      rawMessage: The VoucherMarketInformationv2 field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/vouchers/byReference/{voucherReferenceNumber}:
+    get:
+      tags:
+      - vouchers
+      summary: Gets a specific voucher based upon the voucher reference number.
+      description: 'This endpoint requires agent permissions. If you are not seeing a voucher reference number, and you are expecting
+
+        to,
+
+        make sure that voucher masking is turned off or that you have permissions to view voucher reference numbers.
+
+
+        GraphQL endpoint: voucherByReferenceNumber'
+      operationId: nsk_v1_vouchers_byReference_voucherReferenceNumber_get
+      parameters:
+      - name: voucherReferenceNumber
+        in: path
+        required: true
+        description: The voucher reference number.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherReference'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/vouchers/configuration:
+    get:
+      tags:
+      - vouchers
+      summary: Performs a shallow call to get all available voucher configurations.
+      description: 'This endpoint requires agent permissions.
+
+        Since this performs a shallow call, some voucher configuration list properties come back empty. To get the complete
+
+        data, use GET `/api/nsk/v1/vouchers/configuration/{configurationCode}` which performs a deep call to get a specific
+
+        voucher configuration based on the configuration code.
+
+
+        GraphQL endpoint: voucherConfigurations'
+      operationId: nsk_v1_vouchers_configuration_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfVoucherConfiguration'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    post:
+      tags:
+      - vouchers
+      summary: Creates a new voucher configuration.
+      description: 'This endpoint requires agent permissions.
+
+
+        GraphQL endpoint: addVoucherConfigurations'
+      operationId: nsk_v1_vouchers_configuration_post
+      requestBody:
+        x-name: request
+        description: The voucher configuration request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherConfigurationRequest'
+        required: true
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+      deprecated: true
+    put:
+      tags:
+      - vouchers
+      summary: Updates a voucher configuration.
+      description: 'This endpoint requires agent permissions.
+
+        When updating the market or travel restrictions, you will need to specify the market or travel restrictions
+
+        sequence number in order to properly update
+
+        the associated restriction.
+
+        In order to add new market or travel restrictions on this endpoint, the sequence number on the restriction needs to
+
+        be set to `-1` to indicate to
+
+        NewSkies that it is an added restriction.
+
+
+        GraphQL endpoint: setVoucherConfigurations'
+      operationId: nsk_v1_vouchers_configuration_put
+      requestBody:
+        x-name: request
+        description: The voucher configuration request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherConfigurationRequest'
+            examples:
+              Add Market or Travel Restrictions:
+                description: Example request for when wanting to add market or travel restrictions on an update of a voucher configuration.
+                value:
+                  configurationCode: y0z6XR
+                  name: Jim Bob
+                  description: null
+                  type: null
+                  issuanceType: null
+                  voucherUsageType: 2
+                  tripType: 0
+                  expirationControl: 0
+                  expirationType: null
+                  expirationDate: '2026-07-09T05:55:13.4986772+00:00'
+                  expirationDays: 0
+                  currencyCode: USD
+                  amountControl: 0
+                  calculatedAmountControl: 0
+                  maximumAmount: 0.0
+                  maximumPassengers: 1
+                  maximumVouchersPerBooking: 0
+                  travelDayOfWeekRestriction: null
+                  nameRestriction: 0
+                  voucherRequirements: 0
+                  nextReferenceNumber: 0
+                  note: Voucher configuration note
+                  maximumAmountIsPerPassenger: false
+                  calculatedPercentage: 0.0
+                  issuanceControl: 0
+                  enableVoucherAdjustments: false
+                  restrictFlightBatchIssuance: 0
+                  voucherUsageBaseFeeType: 0
+                  issueToRevenuePassengersOnly: false
+                  fareClasses: null
+                  marketRestrictions:
+                  - restrictionType: 0
+                    voucherConfigurationCode: null
+                    directionality: 1
+                    sequence: -1
+                    regionType: 2
+                    regionCode: SLC
+                    travelRegionType: 2
+                    travelRegionCode: BOS
+                  travelRestrictions:
+                  - restrictionType: 2
+                    voucherConfigurationCode: null
+                    initialTravelDate: '2026-07-09T05:55:13.4988302+00:00'
+                    sequence: -1
+                    endTravelDate: '2026-07-14T05:55:13.4988102+00:00'
+                  enabled: true
+              Update Market or Travel Restrictions:
+                description: Example request for when wanting to update a market or travel restrictions on an update of a voucher configuration.
+                value:
+                  configurationCode: y0z6XR
+                  name: Jim Bob
+                  description: null
+                  type: null
+                  issuanceType: null
+                  voucherUsageType: 2
+                  tripType: 0
+                  expirationControl: 0
+                  expirationType: null
+                  expirationDate: '2026-07-09T05:55:13.4989932+00:00'
+                  expirationDays: 0
+                  currencyCode: USD
+                  amountControl: 0
+                  calculatedAmountControl: 0
+                  maximumAmount: 0.0
+                  maximumPassengers: 1
+                  maximumVouchersPerBooking: 0
+                  travelDayOfWeekRestriction: null
+                  nameRestriction: 0
+                  voucherRequirements: 0
+                  nextReferenceNumber: 0
+                  note: Voucher configuration note
+                  maximumAmountIsPerPassenger: false
+                  calculatedPercentage: 0.0
+                  issuanceControl: 0
+                  enableVoucherAdjustments: false
+                  restrictFlightBatchIssuance: 0
+                  voucherUsageBaseFeeType: 0
+                  issueToRevenuePassengersOnly: false
+                  fareClasses: null
+                  marketRestrictions:
+                  - restrictionType: 0
+                    voucherConfigurationCode: null
+                    directionality: 1
+                    sequence: 2
+                    regionType: 2
+                    regionCode: SLC
+                    travelRegionType: 2
+                    travelRegionCode: BOS
+                  travelRestrictions:
+                  - restrictionType: 2
+                    voucherConfigurationCode: null
+                    initialTravelDate: '2026-07-09T05:55:13.4989939+00:00'
+                    sequence: 1
+                    endTravelDate: '2026-07-14T05:55:13.4989936+00:00'
+                  enabled: true
+        required: true
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+      deprecated: true
+    delete:
+      tags:
+      - vouchers
+      summary: Deletes a voucher configuration.
+      description: 'This endpoint requires agent permissions.
+
+        A voucher configuration can only be deleted if no vouchers are associated with it.
+
+        Otherwise, it cannot be deleted, regardless of the status of the associated vouchers
+
+        (Active, Redeemed, Void, Expired).
+
+
+        GraphQL endpoint: deleteVoucherConfigurations'
+      operationId: nsk_v1_vouchers_configuration_delete
+      requestBody:
+        x-name: request
+        description: The voucher configuration delete request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherConfigurationDeleteRequest'
+        required: true
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+  /api/nsk/v2/vouchers/configuration:
+    post:
+      tags:
+      - vouchers
+      summary: Creates a new voucher configuration.
+      description: 'This endpoint requires agent permissions.
+
+
+        GraphQL endpoint: addVoucherConfigurationsv2'
+      operationId: nsk_v2_vouchers_configuration_post
+      requestBody:
+        x-name: request
+        description: The voucher configuration request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherConfigurationRequestv2'
+        required: true
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+    put:
+      tags:
+      - vouchers
+      summary: Updates a voucher configuration.
+      description: 'This endpoint requires agent permissions.
+
+        When updating the market or travel restrictions, you will need to specify the market or travel restrictions
+
+        sequence number in order to properly update
+
+        the associated restriction.
+
+        In order to add new market or travel restrictions on this endpoint, the sequence number on the restriction needs to
+
+        be set to `-1` to indicate to
+
+        NewSkies that it is an added restriction.
+
+
+        GraphQL endpoint: setVoucherConfigurationsv2'
+      operationId: nsk_v2_vouchers_configuration_put
+      requestBody:
+        x-name: request
+        description: The voucher configuration request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherConfigurationRequestv2'
+            examples:
+              Add Market or Travel Restrictions:
+                description: Example request for when wanting to add market or travel restrictions on an update of a voucher configuration.
+                value:
+                  configurationCode: y0z6XR
+                  name: Jim Bob
+                  description: null
+                  type: null
+                  issuanceType: null
+                  voucherUsageTypes:
+                  - 5
+                  - 9
+                  - 10
+                  tripType: 0
+                  expirationControl: 0
+                  expirationType: null
+                  expirationDate: '2026-07-09T05:55:14.5215377+00:00'
+                  expirationDays: 0
+                  currencyCode: USD
+                  amountControl: 0
+                  calculatedAmountControl: 0
+                  maximumAmount: 0.0
+                  maximumPassengers: 1
+                  maximumVouchersPerBooking: 0
+                  travelDayOfWeekRestriction: null
+                  nameRestriction: 0
+                  voucherRequirements: 0
+                  nextReferenceNumber: 0
+                  note: Voucher configuration note
+                  maximumAmountIsPerPassenger: false
+                  calculatedPercentage: 0.0
+                  issuanceControl: 0
+                  enableVoucherAdjustments: false
+                  restrictFlightBatchIssuance: 0
+                  voucherUsageBaseFeeType: 0
+                  issueToRevenuePassengersOnly: false
+                  fareClasses: null
+                  marketRestrictions:
+                  - restrictionType: 0
+                    voucherConfigurationCode: null
+                    directionality: 1
+                    sequence: -1
+                    regionType: 2
+                    regionCode: SLC
+                    travelRegionType: 2
+                    travelRegionCode: BOS
+                  travelRestrictions:
+                  - restrictionType: 2
+                    voucherConfigurationCode: null
+                    initialTravelDate: '2026-07-09T05:55:14.5219014+00:00'
+                    sequence: -1
+                    endTravelDate: '2026-07-14T05:55:14.5219001+00:00'
+                  enabled: true
+              Update Market or Travel Restrictions:
+                description: Example request for when wanting to update a market or travel restrictions on an update of a voucher configuration.
+                value:
+                  configurationCode: y0z6XR
+                  name: Jim Bob
+                  description: null
+                  type: null
+                  issuanceType: null
+                  voucherUsageTypes:
+                  - 11
+                  - 12
+                  tripType: 0
+                  expirationControl: 0
+                  expirationType: null
+                  expirationDate: '2026-07-09T05:55:14.5219267+00:00'
+                  expirationDays: 0
+                  currencyCode: USD
+                  amountControl: 0
+                  calculatedAmountControl: 0
+                  maximumAmount: 0.0
+                  maximumPassengers: 1
+                  maximumVouchersPerBooking: 0
+                  travelDayOfWeekRestriction: null
+                  nameRestriction: 0
+                  voucherRequirements: 0
+                  nextReferenceNumber: 0
+                  note: Voucher configuration note
+                  maximumAmountIsPerPassenger: false
+                  calculatedPercentage: 0.0
+                  issuanceControl: 0
+                  enableVoucherAdjustments: false
+                  restrictFlightBatchIssuance: 0
+                  voucherUsageBaseFeeType: 0
+                  issueToRevenuePassengersOnly: false
+                  fareClasses: null
+                  marketRestrictions:
+                  - restrictionType: 0
+                    voucherConfigurationCode: null
+                    directionality: 1
+                    sequence: 2
+                    regionType: 2
+                    regionCode: SLC
+                    travelRegionType: 2
+                    travelRegionCode: BOS
+                  travelRestrictions:
+                  - restrictionType: 2
+                    voucherConfigurationCode: null
+                    initialTravelDate: '2026-07-09T05:55:14.5219275+00:00'
+                    sequence: 1
+                    endTravelDate: '2026-07-14T05:55:14.5219274+00:00'
+                  enabled: true
+        required: true
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+  /api/nsk/v1/vouchers/configuration/{configurationCode}:
+    get:
+      tags:
+      - vouchers
+      summary: Performs a deep call to get a specific voucher configuration based on the configuration code.
+      description: 'This endpoint requires agent permissions.
+
+
+        GraphQL endpoint: voucherConfiguration'
+      operationId: nsk_v1_vouchers_configuration_configurationCode_get
+      parameters:
+      - name: configurationCode
+        in: path
+        required: true
+        description: The code of the voucher configuration to retrieve.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    VoucherStatusUpdate:
+      type: integer
+      description: "An enumeration to indicate what status the voucher should\nbe changed to.\n            \n\n0 = Reinstate\n1 = Void"
+      x-enumNames:
+      - Reinstate
+      - Void
+      enum:
+      - 0
+      - 1
+    TravelRestrictionType:
+      type: integer
+      description: "The travel restriction type.\n            \n\n0 = Default\n1 = Blackout\n2 = Season"
+      x-enumNames:
+      - Default
+      - Blackout
+      - Season
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherExpirationControl:
+      type: integer
+      description: "The voucher expiration control.\n            \n\n0 = None\n1 = Fixed\n2 = FixedAtIssuance\n3 = Calculated"
+      x-enumNames:
+      - None
+      - Fixed
+      - FixedAtIssuance
+      - Calculated
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    IJsonResponseOfIListOfVoucherConfiguration:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherExpirationType:
+      type: integer
+      description: "The voucher expiration type.\n            \n\n0 = TravelBy\n1 = TravelCompleteBy\n2 = BookingBy"
+      x-enumNames:
+      - TravelBy
+      - TravelCompleteBy
+      - BookingBy
+      enum:
+      - 0
+      - 1
+      - 2
+    MarketRestrictionType:
+      type: integer
+      description: "The market restriction type enumeration.\n            \n\n0 = MustBeOne\n1 = MustNot"
+      x-enumNames:
+      - MustBeOne
+      - MustNot
+      enum:
+      - 0
+      - 1
+    FindVoucherSortCriteria:
+      type: integer
+      description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n            \n\n0 = CreatedDateAscending\n1 = Name\n2 = CreatedDateDescending"
+      x-enumNames:
+      - CreatedDateAscending
+      - Name
+      - CreatedDateDescending
+      enum:
+      - 0
+      - 1
+      - 2
+    VouchersSummaryResponse:
+      type: object
+      description: "The voucher by date search response item.\n            "
+      additionalProperties: false
+      properties:
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the last item returned from paging.\n            "
+        vouchers:
+          type:
+          - array
+          - 'null'
+          description: "The collection of vouchers.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherSummary'
+    IJsonResponseOfPagedVouchersResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedVouchersResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherTravelRestriction:
+      type: object
+      description: "The voucher configuration model.\n            "
+      additionalProperties: false
+      properties:
+        voucherConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+        sequence:
+          type: integer
+          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
+        restrictionType:
+          description: "The travel restriction type.\n            "
+          $ref: '#/components/schemas/TravelRestrictionType'
+        initialTravelDate:
+          type:
+          - string
+          - 'null'
+          description: "The beginning travel date.\n            "
+          format: date-time
+        endTravelDate:
+          type:
+          - string
+          - 'null'
+          description: "The ending travel date.\n            "
+          format: date-time
+    VoucherRequirements:
+      type: integer
+      description: "The voucher requirements enumeration.\n            \n\n0 = None\n1 = RecordLocator\n2 = CustomerNumber\n3 = Both"
+      x-enumNames:
+      - None
+      - RecordLocator
+      - CustomerNumber
+      - Both
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    VoucherItem:
+      type: object
+      description: "The voucher item model.\n            "
+      additionalProperties: false
+      properties:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher key.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference number for the voucher.\n            "
+          maxLength: 20
+          minLength: 0
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        status:
+          description: "The voucher status.\n            "
+          $ref: '#/components/schemas/VoucherStatus'
+        available:
+          type: number
+          description: "The availability count of the voucher.\n            "
+          format: decimal
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key associated with the voucher.\n            "
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date for the voucher item.\n            "
+          format: date-time
+    IJsonResponseOfVoucherConfiguration:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VoucherConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherTransactionType:
+      type: integer
+      description: "Defines voucher transaction type.\n            \n\n0 = Debit\n1 = Credit\n2 = Void\n3 = Reinstate\n4 = Adjustment\n5 = ExpirationDateChange\n6 = VoucherTypeChange\n7 = VoucherOwnerChange"
+      x-enumNames:
+      - Debit
+      - Credit
+      - Void
+      - Reinstate
+      - Adjustment
+      - ExpirationDateChange
+      - VoucherTypeChange
+      - VoucherOwnerChange
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    VoucherIssuanceControl:
+      type: integer
+      description: "The voucher issuance control enumeration.\n            \n\n0 = IssuedToPassengers\n1 = IssuedToContact"
+      x-enumNames:
+      - IssuedToPassengers
+      - IssuedToContact
+      enum:
+      - 0
+      - 1
+    VoucherReference:
+      type: object
+      description: "The voucher model.\n            "
+      additionalProperties: false
+      properties:
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The amount of foreign currency.\n            "
+          format: decimal
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        password:
+          type:
+          - string
+          - 'null'
+          description: "The password for the voucher.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher transactions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTransaction'
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher key.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference number for the voucher.\n            "
+          maxLength: 20
+          minLength: 0
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        status:
+          description: "The voucher status.\n            "
+          $ref: '#/components/schemas/VoucherStatus'
+        available:
+          type: number
+          description: "The availability count of the voucher.\n            "
+          format: decimal
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key associated with the voucher.\n            "
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        createdDate:
+          type: string
+          description: "The date when the voucher was created.\n            "
+          format: date-time
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfVouchersSummaryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VouchersSummaryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherStatus:
+      type: integer
+      description: "Defines the status of a voucher.\n            \n\n0 = Available\n1 = Void\n2 = Redeemed\n3 = Expired"
+      x-enumNames:
+      - Available
+      - Void
+      - Redeemed
+      - Expired
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    IssuanceType:
+      type: integer
+      description: "The issuance type.\n            \n\n0 = Individual\n1 = Batch\n2 = FlightBatch\n3 = HighVolumeBatch\n4 = OdBatch"
+      x-enumNames:
+      - Individual
+      - Batch
+      - FlightBatch
+      - HighVolumeBatch
+      - OdBatch
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    VoucherConfigurationRequest:
+      type: object
+      description: "The voucher configuration request model.\n            "
+      deprecated: true
+      x-deprecatedMessage: 4.5.2 - Please use VoucherConfigurationRequestv2
+      additionalProperties: false
+      required:
+      - configurationCode
+      - name
+      - description
+      - expirationDate
+      - currencyCode
+      - note
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        name:
+          type: string
+          description: "The voucher configuration name.\n            "
+          maxLength: 64
+          minLength: 0
+        description:
+          type: string
+          description: "The voucher configuration description.\n            "
+          maxLength: 128
+          minLength: 0
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        issuanceType:
+          description: "The issuance type.\n            "
+          $ref: '#/components/schemas/IssuanceType'
+        voucherUsageType:
+          description: "The voucher usage types.\n            "
+          $ref: '#/components/schemas/VoucherUsageType'
+        tripType:
+          description: "The voucher trip type.\n            "
+          $ref: '#/components/schemas/VoucherTripType'
+        expirationControl:
+          description: "The voucher expiration control.\n            "
+          $ref: '#/components/schemas/VoucherExpirationControl'
+        expirationType:
+          description: "The voucher expiration type.\n            "
+          $ref: '#/components/schemas/VoucherExpirationType'
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        expirationDays:
+          type: integer
+          description: "The voucher expiration days.\n            "
+        currencyCode:
+          type: string
+          description: "The voucher currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amountControl:
+          description: "The voucher amount control.\n            "
+          $ref: '#/components/schemas/AmountControl'
+        calculatedAmountControl:
+          description: "The voucher calculated amount control.\n            "
+          $ref: '#/components/schemas/CalculatedAmountControl'
+        maximumAmount:
+          type: number
+          description: "The maximum voucher amount.\n            "
+          format: decimal
+        maximumPassengers:
+          type: integer
+          description: "The voucher maximum passenger total.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        maximumVouchersPerBooking:
+          type: integer
+          description: "The voucher maximum number of vouchers per booking.\n            "
+        travelDayOfWeekRestriction:
+          type:
+          - array
+          - 'null'
+          description: "The voucher day of week travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        nameRestriction:
+          description: "The voucher name restriction.\n            "
+          $ref: '#/components/schemas/VoucherNameRestriction'
+        voucherRequirements:
+          description: "The voucher requirements.\n            "
+          $ref: '#/components/schemas/VoucherRequirements'
+        nextReferenceNumber:
+          type: integer
+          description: "The next reference number for the voucher configuration.\n            "
+          format: int64
+        note:
+          type: string
+          description: "The voucher configuration note.\n            "
+          minLength: 1
+        maximumAmountIsPerPassenger:
+          type: boolean
+          description: "Flag to indicate if the maximum amount is per passenger or not.\n            "
+        calculatedPercentage:
+          type: number
+          description: "The calculated percentage.\n            "
+          format: decimal
+        issuanceControl:
+          description: "The voucher issuance control.\n            "
+          $ref: '#/components/schemas/VoucherIssuanceControl'
+        enableVoucherAdjustments:
+          type: boolean
+          description: "Enables voucher adjustments.\n            "
+        restrictFlightBatchIssuance:
+          description: "The flight batch issuance restrictions.\n            "
+          $ref: '#/components/schemas/RestrictFlightBatchIssuance'
+        voucherUsageBaseFeeType:
+          description: "The voucher usage base fee type.\n            "
+          $ref: '#/components/schemas/VoucherUsageBaseFeeType'
+        issueToRevenuePassengersOnly:
+          type: boolean
+          description: "Enables Issuance to revenue passengers only.\n            "
+        fareClasses:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration fare classes.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfigurationFareClass'
+        marketRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration market restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherMarketRestriction'
+        travelRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTravelRestriction'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if the voucher is enabled or disabled.\n            "
+    VoucherSummary:
+      type: object
+      description: "The voucher summary model.\n            "
+      additionalProperties: false
+      properties:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the voucher.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The voucher reference.\n            "
+          maxLength: 20
+          minLength: 0
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The optional note associated with the voucher.\n            "
+        amount:
+          type: number
+          description: "The amount of the voucher.\n            "
+          format: decimal
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher's expiration.\n            "
+          format: date-time
+    IJsonResponseOfVoucher:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Voucher'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    RegionType:
+      type: integer
+      description: "Enum reprenting the the region type used to indicate the kind of region an item is associated with.\n            \n\n0 = Default\n1 = Station\n2 = City\n3 = ProvinceState\n4 = Country\n5 = FeeZone\n6 = SubZone\n7 = Area\n8 = All\n9 = Mac"
+      x-enumNames:
+      - Default
+      - Station
+      - City
+      - ProvinceState
+      - Country
+      - FeeZone
+      - SubZone
+      - Area
+      - All
+      - Mac
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+    VoucherConfigurationFareClass:
+      type: object
+      description: "The voucher configuration model.\n            "
+      additionalProperties: false
+      properties:
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration fare class of service.\n            "
+          maxLength: 8
+          minLength: 0
+    VoucherUsageBaseFeeType:
+      type: integer
+      description: "Voucher usage type specifies whether the voucher can be used for included taxes of non-fare components (e.g. SSR\nfees).\n            \n\n0 = None\n1 = BaseFeeOnly"
+      x-enumNames:
+      - None
+      - BaseFeeOnly
+      enum:
+      - 0
+      - 1
+    VoucherTripType:
+      type: integer
+      description: "The types of trips a voucher could be user for.\n            \n\n0 = Any\n1 = OneWay\n2 = RoundTrip\n3 = None"
+      x-enumNames:
+      - Any
+      - OneWay
+      - RoundTrip
+      - None
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    AmountControl:
+      type: integer
+      description: "The amount control enumeration.\n            \n\n0 = Fixed\n1 = FixedAtIssuance\n2 = Calculated"
+      x-enumNames:
+      - Fixed
+      - FixedAtIssuance
+      - Calculated
+      enum:
+      - 0
+      - 1
+      - 2
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    IJsonResponseOfVoucherReference:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VoucherReference'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    VoucherOwnerUpdateRequest:
+      type: object
+      description: "The voucher owner update request.\n            "
+      additionalProperties: false
+      properties:
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key to update to as the voucher owner. This can be retrieved via GET /api/nsk/v2/persons.\n            "
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
+          maxLength: 64
+          minLength: 0
+    CalculatedAmountControl:
+      type: integer
+      description: "Represents the different types of service a voucher could be used for.\n            \n\n0 = Default\n1 = Fares\n2 = FaresPlusTaxes\n3 = FaresTaxesAndFees\n4 = FaresTaxesFeesAndOtherServices"
+      x-enumNames:
+      - Default
+      - Fares
+      - FaresPlusTaxes
+      - FaresTaxesAndFees
+      - FaresTaxesFeesAndOtherServices
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    VoucherUsageType:
+      type: integer
+      description: "Voucher usage type specifies what parts of a booking this voucher can pay for.\n            \n\n0 = None\n1 = Fares\n2 = Taxes\n3 = TravelFees\n4 = ServiceFees\n5 = PenaltyFees\n6 = SsrFees\n7 = NonFlightServiceFees\n8 = UpgradeFees\n9 = SeatFees\n10 = SpoilageFees\n11 = NameChangeFees\n12 = ConvenienceFees\n13 = Car\n14 = Hotel\n15 = Insurance\n16 = Activities"
+      x-enumNames:
+      - None
+      - Fares
+      - Taxes
+      - TravelFees
+      - ServiceFees
+      - PenaltyFees
+      - SsrFees
+      - NonFlightServiceFees
+      - UpgradeFees
+      - SeatFees
+      - SpoilageFees
+      - NameChangeFees
+      - ConvenienceFees
+      - Car
+      - Hotel
+      - Insurance
+      - Activities
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+    Directionality:
+      type: integer
+      description: "Enum representing direction of an object.\n            \n\n0 = None\n1 = To\n2 = From\n3 = Between"
+      x-enumNames:
+      - None
+      - To
+      - From
+      - Between
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    VoucherConfigurationRequestv2:
+      type: object
+      description: "The voucher configuration request model v2.\n            "
+      additionalProperties: false
+      required:
+      - configurationCode
+      - name
+      - description
+      - expirationDate
+      - currencyCode
+      - note
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        name:
+          type: string
+          description: "The voucher configuration name.\n            "
+          maxLength: 64
+          minLength: 0
+        description:
+          type: string
+          description: "The voucher configuration description.\n            "
+          maxLength: 128
+          minLength: 0
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        issuanceType:
+          description: "The issuance type.\n            "
+          $ref: '#/components/schemas/IssuanceType'
+        voucherUsageTypes:
+          type:
+          - array
+          - 'null'
+          description: "The voucher usage types.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherUsageType'
+        tripType:
+          description: "The voucher trip type.\n            "
+          $ref: '#/components/schemas/VoucherTripType'
+        expirationControl:
+          description: "The voucher expiration control.\n            "
+          $ref: '#/components/schemas/VoucherExpirationControl'
+        expirationType:
+          description: "The voucher expiration type.\n            "
+          $ref: '#/components/schemas/VoucherExpirationType'
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        expirationDays:
+          type: integer
+          description: "The voucher expiration days.\n            "
+        currencyCode:
+          type: string
+          description: "The voucher currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amountControl:
+          description: "The voucher amount control.\n            "
+          $ref: '#/components/schemas/AmountControl'
+        calculatedAmountControl:
+          description: "The voucher calculated amount control.\n            "
+          $ref: '#/components/schemas/CalculatedAmountControl'
+        maximumAmount:
+          type: number
+          description: "The maximum voucher amount.\n            "
+          format: decimal
+        maximumPassengers:
+          type: integer
+          description: "The voucher maximum passenger total.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        maximumVouchersPerBooking:
+          type: integer
+          description: "The voucher maximum number of vouchers per booking.\n            "
+        travelDayOfWeekRestriction:
+          type:
+          - array
+          - 'null'
+          description: "The voucher day of week travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        nameRestriction:
+          description: "The voucher name restriction.\n            "
+          $ref: '#/components/schemas/VoucherNameRestriction'
+        voucherRequirements:
+          description: "The voucher requirements.\n            "
+          $ref: '#/components/schemas/VoucherRequirements'
+        nextReferenceNumber:
+          type: integer
+          description: "The next reference number for the voucher configuration.\n            "
+          format: int64
+        note:
+          type: string
+          description: "The voucher configuration note.\n            "
+          minLength: 1
+        maximumAmountIsPerPassenger:
+          type: boolean
+          description: "Flag to indicate if the maximum amount is per passenger or not.\n            "
+        calculatedPercentage:
+          type: number
+          description: "The calculated percentage.\n            "
+          format: decimal
+        issuanceControl:
+          description: "The voucher issuance control.\n            "
+          $ref: '#/components/schemas/VoucherIssuanceControl'
+        enableVoucherAdjustments:
+          type: boolean
+          description: "Enables voucher adjustments.\n            "
+        restrictFlightBatchIssuance:
+          description: "The flight batch issuance restrictions.\n            "
+          $ref: '#/components/schemas/RestrictFlightBatchIssuance'
+        voucherUsageBaseFeeType:
+          description: "The voucher usage base fee type.\n            "
+          $ref: '#/components/schemas/VoucherUsageBaseFeeType'
+        issueToRevenuePassengersOnly:
+          type: boolean
+          description: "Enables Issuance to revenue passengers only.\n            "
+        fareClasses:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration fare classes.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfigurationFareClass'
+        marketRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration market restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherMarketRestriction'
+        travelRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTravelRestriction'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if the voucher is enabled or disabled.\n            "
+    Voucher:
+      type: object
+      description: "The voucher model.\n            "
+      additionalProperties: false
+      properties:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher key.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference number for the voucher.\n            "
+          maxLength: 20
+          minLength: 0
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        status:
+          description: "The voucher status.\n            "
+          $ref: '#/components/schemas/VoucherStatus'
+        available:
+          type: number
+          description: "The availability count of the voucher.\n            "
+          format: decimal
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key associated with the voucher.\n            "
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The amount of foreign currency.\n            "
+          format: decimal
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        password:
+          type:
+          - string
+          - 'null'
+          description: "The password for the voucher.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher transactions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTransaction'
+    VoucherMarketRestriction:
+      type: object
+      description: "The voucher market restriction model.\n            "
+      additionalProperties: false
+      properties:
+        voucherConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+        sequence:
+          type: integer
+          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
+        restrictionType:
+          description: "The market restriction type.\n            "
+          $ref: '#/components/schemas/MarketRestrictionType'
+        directionality:
+          description: "The directionality of the voucher market restriction.\n            "
+          $ref: '#/components/schemas/Directionality'
+        regionType:
+          description: "The region type.\n            "
+          $ref: '#/components/schemas/RegionType'
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: "The region code.\n            "
+        travelRegionType:
+          description: "The travel region type.\n            "
+          $ref: '#/components/schemas/RegionType'
+        travelRegionCode:
+          type:
+          - string
+          - 'null'
+          description: "The travel region code.\n            "
+    RestrictFlightBatchIssuance:
+      type: integer
+      description: "The restrict flight batch issuance enumeration\n            \n\n0 = All\n1 = Confirmed\n2 = ConfirmedAndPaidRequired"
+      x-enumNames:
+      - All
+      - Confirmed
+      - ConfirmedAndPaidRequired
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherUpdateRequestv2:
+      type: object
+      description: "The voucher update request.\n            "
+      additionalProperties: false
+      properties:
+        status:
+          description: "The status to update the voucher to.\n            "
+          $ref: '#/components/schemas/VoucherStatusUpdate'
+        type:
+          description: "The voucher type to update the voucher to.\n            "
+          $ref: '#/components/schemas/VoucherUpdateType'
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The expiration date to update the voucher to.\n            "
+          format: date-time
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherUpdateType:
+      type: integer
+      description: "Defines the type of voucher that can be updated to.\n            \n\n1 = SingleUseCredit\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
+      x-enumNames:
+      - SingleUseCredit
+      - SingleUse
+      - MultiUse
+      - SingleUseNegativeAdjustment
+      - PassengerSelect
+      enum:
+      - 1
+      - 3
+      - 4
+      - 5
+      - 6
+    VoucherConfiguration:
+      type: object
+      description: "The voucher configuration model.\n            "
+      additionalProperties: false
+      required:
+      - configurationCode
+      - name
+      - description
+      - type
+      - issuanceType
+      - expirationType
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration note.\n            "
+        name:
+          type: string
+          description: "The voucher configuration name.\n            "
+          maxLength: 64
+          minLength: 0
+        description:
+          type: string
+          description: "The voucher configuration description.\n            "
+          maxLength: 128
+          minLength: 0
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        issuanceType:
+          description: "The issuance type.\n            "
+          $ref: '#/components/schemas/IssuanceType'
+        usageTypes:
+          type:
+          - array
+          - 'null'
+          description: "The voucher usage types.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherUsageType'
+        tripType:
+          description: "The voucher trip type.\n            "
+          $ref: '#/components/schemas/VoucherTripType'
+        expirationControl:
+          description: "The voucher expiration control.\n            "
+          $ref: '#/components/schemas/VoucherExpirationControl'
+        expirationType:
+          description: "The voucher expiration type.\n            "
+          $ref: '#/components/schemas/VoucherExpirationType'
+        expirationDays:
+          type: integer
+          description: "The voucher expiration days.\n            "
+        amountControl:
+          description: "The voucher amount control.\n            "
+          $ref: '#/components/schemas/AmountControl'
+        calculatedAmountControl:
+          description: "The voucher calculated amount control.\n            "
+          $ref: '#/components/schemas/CalculatedAmountControl'
+        maximumPassengers:
+          type: integer
+          description: "The voucher maximum passenger total.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        maximumVouchersPerBooking:
+          type: integer
+          description: "The voucher maximum number of vouchers per booking.\n            "
+        travelDowRestriction:
+          type:
+          - array
+          - 'null'
+          description: "The voucher day of week travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        nameRestriction:
+          description: "The voucher name restriction.\n            "
+          $ref: '#/components/schemas/VoucherNameRestriction'
+        isRecordLocatorRequired:
+          type: boolean
+          description: "The flag to indicate if a record locator is required.\n            "
+        isCustomerNumberRequired:
+          type: boolean
+          description: "The flag to indicate if a customer number is required.\n            "
+        nextReferenceNumber:
+          type: integer
+          description: "The next reference number for the voucher configuration.\n            "
+          format: int64
+        maximumAmountIsPerPassenger:
+          type: boolean
+          description: "Flag to indicate if the maximum amount is per passenger or not.\n            "
+        calculatedPercentage:
+          type: number
+          description: "The calculated percentage.\n            "
+          format: decimal
+        issuanceControl:
+          description: "The voucher issuance control.\n            "
+          $ref: '#/components/schemas/VoucherIssuanceControl'
+        fareClasses:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration fare classes.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfigurationFareClass'
+        marketRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration market restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherMarketRestriction'
+        travelRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTravelRestriction'
+        expiration:
+          type: string
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        maximumAmount:
+          type: number
+          description: "The maximum voucher amount.\n            "
+          format: decimal
+        createdDate:
+          type: string
+          description: "The voucher creation date.\n            "
+          format: date-time
+        enabled:
+          type: boolean
+          description: "Indicates if the voucher is enabled or disabled.\n            "
+    VoucherType:
+      type: integer
+      description: "Defines the type of voucher.\n            \n\n0 = Credit\n1 = SingleUseCredit\n2 = Service\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
+      x-enumNames:
+      - Credit
+      - SingleUseCredit
+      - Service
+      - SingleUse
+      - MultiUse
+      - SingleUseNegativeAdjustment
+      - PassengerSelect
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    DayOfWeek:
+      type: integer
+      description: "Defines the day of the week with none as an option.\n            \n\n0 = None\n1 = Monday\n2 = Tuesday\n3 = Wednesday\n4 = Thursday\n5 = Friday\n6 = Saturday\n7 = Sunday"
+      x-enumNames:
+      - None
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    PagedVouchersResponse:
+      type: object
+      description: "The paged voucher search response item.\n            "
+      additionalProperties: false
+      properties:
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the last item returned from paging.\n            "
+        totalCount:
+          type: integer
+          description: "The total count of vouchers that match the search parameters.\nThis will only be populated if the last page key is not specified.\ni.e. The initial page of the paged voucher response is being retrieved.\nOtherwise, it will be set to 0.\n            "
+          format: int32
+        vouchers:
+          type:
+          - array
+          - 'null'
+          description: "The collection of vouchers.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherItem'
+    VoucherNameRestriction:
+      type: integer
+      description: "Defines how the name on the voucher will be validated.\n            \n\n0 = None\n1 = MustBePassenger\n2 = MustBePassengerOrContact"
+      x-enumNames:
+      - None
+      - MustBePassenger
+      - MustBePassengerOrContact
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherConfigurationDeleteRequest:
+      type: object
+      description: "The voucher configuration delete request model.\n            "
+      additionalProperties: false
+      required:
+      - configurationCode
+      - expirationDate
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+    VoucherTransaction:
+      type: object
+      description: "The voucher transaction model.\n            "
+      additionalProperties: false
+      properties:
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The amount of foreign currency.\n            "
+          format: decimal
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        voucherTransactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher transaction key.\n            "
+        type:
+          description: "The voucher transaction type.\n            "
+          $ref: '#/components/schemas/VoucherTransactionType'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher transaction.\n            "
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

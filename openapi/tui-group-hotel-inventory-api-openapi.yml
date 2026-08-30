@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  title: Meta-Search-Generic Hotel Inventory API
+  version: 0.3.1
+  contact:
+    email: pip-meta@tui.com
+    name: meta.search.team
+    url: https://source.tui/osp/pip/meta-layer/api/meta-search-generic-api
+  description: The Meta-Search-Generic API that allows meta partners to access portfolio and offers information.
+servers:
+- url: https://pre-prod.api.tui/sales/pip/germany/tui/generic
+- url: https://prod.api.tui/sales/pip/germany/tui/generic
+tags:
+- name: Hotel Inventory
+  description: Operations to manage hotel inventory related information
+paths:
+  /hotel_inventory:
+    get:
+      tags:
+      - Hotel Inventory
+      summary: Retrieves hotels portfolio
+      description: Returns the list of all the hotels available in the portfolio.
+      operationId: getHotelInventory
+      security:
+      - OAuth2PreProdPublic: []
+      - OAuth2ProdPublic: []
+      parameters:
+      - in: query
+        name: api_version
+        required: true
+        schema:
+          type: string
+          example: v1
+          description: API version to be used
+      - in: query
+        name: language
+        required: true
+        schema:
+          type: string
+          example: en_GB
+          description: Language to be used by the API
+      responses:
+        '200':
+          description: Successfully retrieved the hotel inventory.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelInventoryResponse'
+        '400':
+          description: Bad Request - invalid input parameters or malformed request data.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found - The requested resource could not be found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error - An unexpected occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /hotel_inventory/send/{fileName}:
+    post:
+      tags:
+      - Hotel Inventory
+      summary: Sends hotels portfolio to SFTP server.
+      description: Sends hotels portfolio to SFTP server.
+      operationId: sendHotelInventory
+      security:
+      - OAuth2PreProdPublic: []
+      - OAuth2ProdPublic: []
+      parameters:
+      - in: query
+        name: api_version
+        required: true
+        schema:
+          type: string
+          example: v1
+          description: API version to be used
+      - in: query
+        name: language
+        required: true
+        schema:
+          type: string
+          example: en_GB
+          description: Language to be used by the API
+      - in: path
+        name: fileName
+        required: true
+        schema:
+          type: string
+          example: hotel_inventory.json
+          description: Name of the file to be sent. The file can have the extensions .json, or .zip
+      responses:
+        '202':
+          description: Successfully sent the hotel inventory to the SFTP server.
+        '400':
+          description: Bad Request - invalid input parameters or malformed request data.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found - The requested resource could not be found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error - An unexpected occurred while processing the request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    HotelInventoryResponse:
+      title: HotelInventoryResponse
+      type: object
+      description: The successful response payload containing the hotel inventory.
+      properties:
+        api_version:
+          type: string
+          description: The API current version.
+          example: v1
+        language:
+          type: string
+          description: The language in the API response.
+          example: en_GB
+        hotels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hotel'
+      required:
+      - api_version
+      - language
+      - hotels
+    Address:
+      type: object
+      title: Address
+      description: The hotel address details
+      properties:
+        street:
+          type: string
+          description: The street name.
+          example: Main Street
+        city:
+          type: string
+          description: The city name.
+          example: Bad Reichenhall
+        region:
+          type: string
+          description: The region or state if applicable.
+          example: Bavaria
+        country:
+          type: string
+          description: The country code according to ISO 3166-2.
+          example: DE
+        postal_code:
+          type: string
+          description: The postal code.
+          example: '12345'
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: 'A URI reference that uniquely identifies the problem type only in the context of the provided API. Opposed to the specification in RFC-9457, it is neither recommended to be dereferenceable and point to a human-readable documentation nor globally unique for the problem type.
+
+            '
+          default: about:blank
+          example: /some/uri-reference
+        title:
+          type: string
+          description: 'A short summary of the problem type. Written in English and readable for engineers, usually not suited for non technical stakeholders and not localized.
+
+            '
+          example: some title for the error situation
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          exclusiveMaximum: 600
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem that is helpful to locate the problem and give advice on how to proceed. Written in English and readable for engineers, usually not suited for non technical stakeholders and not localized.
+
+            '
+          example: some description for the error situation
+        instance:
+          type: string
+          format: uri-reference
+          description: 'A URI reference that identifies the specific occurrence of the problem, e.g. by adding a fragment identifier or sub-path to the problem type. May be used to locate the root of this problem in the source code.
+
+            '
+          example: /some/uri-reference#specific-occurrence-context
+    Hotel:
+      title: InventoryHotel
+      type: object
+      description: The hotel details.
+      properties:
+        hotel_id:
+          type: string
+          description: The hotel identifier.
+          example: '76460'
+        name:
+          type: string
+          description: The hotel name.
+          example: Fancy Hotel
+        address:
+          $ref: '#/components/schemas/Address'
+        latitude:
+          type: string
+          format: decimal
+          description: The latitude coordinate.
+          example: '48.123456'
+        longitude:
+          type: string
+          format: decimal
+          description: The longitude coordinate.
+          example: '48.123456'
+        phone_number:
+          type: string
+          description: The phone number including country code.
+          example: '+49123456789'
+        star_rating:
+          type: string
+          format: decimal
+          description: The star rating of the hotel.
+          example: '4.5'
+        url:
+          type: string
+          description: The generic url for the hotel.
+          example: https://www.domain.com/fancy-hotel
+      required:
+      - hotel_id
+      - name
+      - address
+      - latitude
+      - longitude
+      - phone_number
+      - url
+  securitySchemes:
+    OAuth2PreProdPublic:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://pre-prod.api.tui/oauth2/token
+          scopes: {}
+    OAuth2ProdPublic:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://prod.api.tui/oauth2/token
+          scopes: {}

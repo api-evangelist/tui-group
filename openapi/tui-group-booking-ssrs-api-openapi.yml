@@ -1,0 +1,2145 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Booking/ssrs API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: booking/ssrs
+paths:
+  /api/nsk/v1/booking/ssrs:
+    get:
+      tags:
+      - booking/ssrs
+      summary: Retrieves the current SSRs added to the booking in state.
+      description: 'Requires a booking in state.
+
+
+        GraphQL endpoint: ssrs'
+      operationId: nsk_v1_booking_ssrs_get
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfPassengerSsr'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v3/booking/ssrs:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Adds SSRs to the booking in state.
+      description: 'Adding an SSR by journey automatically adds the SSR to every segment.
+
+        Requires a booking in state.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrsAddv3'
+      operationId: nsk_v3_booking_ssrs_post
+      requestBody:
+        x-name: request
+        description: The SSR by keys request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsrByKeysRequestv2'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/booking/ssrs/{ssrKey}:
+    get:
+      tags:
+      - booking/ssrs
+      summary: Retrieves the current SSR by key.
+      description: 'Requires a booking in state.
+
+
+        GraphQL endpoint: ssr'
+      operationId: nsk_v1_booking_ssrs_ssrKey_get
+      parameters:
+      - name: ssrKey
+        in: path
+        required: true
+        description: Unique Ssr passenger identifier.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPassengerSsr'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    put:
+      tags:
+      - booking/ssrs
+      summary: Modifies the SSR note.
+      description: 'NOTE: This endpoint takes a singular property for the request body and as such the request will need to be
+
+        formatted differently than what it typically looks like. For more information, please see
+
+        https://navitaire-developer-digital-api.azurewebsites.net/articles/Miscellaneous/UniqueInputSingleRequestBodiesREST
+
+        and the Swagger request examples.
+
+        Requires a booking in state.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrSet'
+      operationId: nsk_v1_booking_ssrs_ssrKey_put
+      parameters:
+      - name: ssrKey
+        in: path
+        required: true
+        description: Unique Ssr key identifier.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: note
+        description: The updated note.
+        content:
+          application/json:
+            schema:
+              type: string
+            examples:
+              Ssr Note, Json Request Body:
+                description: Example request for updating a ssr note.
+                value: Adding an ssr note.
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    delete:
+      tags:
+      - booking/ssrs
+      summary: Deletes the SSR associated with the specified passenger SSR key.
+      description: 'Requires a booking in state. The passenger SSR key can be found in the `PassengerSegment.Ssrs` object in the
+
+        booking.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrsDelete'
+      operationId: nsk_v1_booking_ssrs_ssrKey_delete
+      parameters:
+      - name: ssrKey
+        in: path
+        required: true
+        description: The passenger SSR key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v3/booking/ssrs/{ssrKey}:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Add an SSR to the booking in state.
+      description: 'Adding an SSR by journey automatically adds the SSR to every segment.
+
+        Requires a booking in state.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrAddv3'
+      operationId: nsk_v3_booking_ssrs_ssrKey_post
+      parameters:
+      - name: ssrKey
+        in: path
+        required: true
+        description: The SSR key to add.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The single SSR by key request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleSsrByKeyRequestv2'
+        required: true
+        x-position: 2
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                With Already Booked SSR or Bundle:
+                  description: Example OSI Message if passenger already booked an SSR or bundle
+                  value:
+                    messages:
+                    - rawValue: '[HMC] cannot be sold because passenger 0 already booked [THCS] on NV3075  YTZ-LAX.'
+                      code: CannotSellBundleSSR
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: CannotSellBundleSSR
+                      value: CannotSellBundleSSR
+                      status: 0
+                      details:
+                        cannotSellBundleSSRMessage: '[HMC] cannot be sold because passenger 0 already booked [THCS] on NV3075  YTZ-LAX.'
+                    data: null
+                With Cannot Find Interchangeable Bundle SSR:
+                  description: Example OSI Message if cannot find interchangeable bundle SSR in state
+                  value:
+                    messages:
+                    - rawValue: Cannot find interchangeable bundle SSR for [HMC] in state.
+                      code: CannotSellBundleSSR
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: CannotSellBundleSSR
+                      value: CannotSellBundleSSR
+                      status: 0
+                      details:
+                        cannotSellBundleSSRMessage: Cannot find interchangeable bundle SSR for [HMC] in state.
+                    data: null
+                With SSR Not Found in Service Bundle:
+                  description: Example OSI Message if an SSR is not found in service bundle
+                  value:
+                    messages:
+                    - rawValue: SSR [HMC] not found in service bundle.
+                      code: CannotSellBundleSSR
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: CannotSellBundleSSR
+                      value: CannotSellBundleSSR
+                      status: 0
+                      details:
+                        cannotSellBundleSSRMessage: SSR [HMC] not found in service bundle.
+                    data: null
+                With Duplicate SSR or Bundle:
+                  description: Example OSI Message if duplicate SSR or Bundle
+                  value:
+                    messages:
+                    - rawValue: Duplicate SSR [THCS] in SAN-YTZ is not allowed for service bundle.
+                      code: CannotSellBundleSSR
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: CannotSellBundleSSR
+                      value: CannotSellBundleSSR
+                      status: 0
+                      details:
+                        cannotSellBundleSSRMessage: Duplicate SSR [THCS] in SAN-YTZ is not allowed for service bundle.
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/booking/ssrs/{ssrKey}:
+    delete:
+      tags:
+      - booking/ssrs
+      summary: Deletes the SSR associated with the specified passenger SSR key.
+      description: 'Requires a booking in state. The passenger SSR key can be found in the `PassengerSegment.Ssrs` object in the
+
+        booking.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrsDeletev2'
+      operationId: nsk_v2_booking_ssrs_ssrKey_delete
+      parameters:
+      - name: ssrKey
+        in: path
+        required: true
+        description: The passenger SSR key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                No booking in state:
+                  description: No booking loaded into state during the retrieval of SSR availability.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Booking:NoBookingInState
+                      message: nsk:Booking:NoBookingInState
+                      type: Validation
+                      details: null
+                      rawMessage: No booking was found in session, cannot perform operation.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid SSR key:
+                  description: The specified SSR key is not valid or not found in the booking.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'ssrKey' with value 'MCFNQ0ZCUkZRLSFRV0VSITEhQk9TIU5WITYzOTEwODM2MDAwMDAwMDAwMCFTTEMhNTY2NyE=' is invalid.
+                      type: Validation
+                      details:
+                        ssrKey: MCFNQ0ZCUkZRLSFRV0VSITEhQk9TIU5WITYzOTEwODM2MDAwMDAwMDAwMCFTTEMhNTY2NyE=
+                      rawMessage: The identifier 'ssrKey' with value 'MCFNQ0ZCUkZRLSFRV0VSITEhQk9TIU5WITYzOTEwODM2MDAwMDAwMDAwMCFTTEMhNTY2NyE=' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v3/booking/ssrs/availability:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Gets the available SSRs that can be added to a booking.
+      description: 'This endpoint requires a booking in state. By default, all SSR availability for the booking is returned.
+
+        For details about a specific SSR, the `GET booking/passengers/{passengerKey}/ssrs/{ssrCode}/price` endpoint can
+
+        be used.
+
+        Duplicate values for trips and/or passenger keys in the request are ignored i.e. only unique values are
+
+        processed.
+
+
+        Infant SSR availability for the configured infant SSR (the infant SSR code recognized by the Digital API on
+
+        infant-specific endpoints) is included. To determine the configured infant SSR, please use the
+
+        `GET api/v1/configuration` endpoint.
+
+        Please note that the SSR key for the configured infant SSR will be null as selling and cancelling the infant
+
+        SSR is handled by the following infant-specific endpoints:
+
+        - `POST/DELETE booking/passengers/{passengerKey}/infant`
+
+        - `POST/DELETE booking/journeys/{journeyKey}/passengers/{passengerKey}/infant`
+
+        - `POST/DELETE booking/segments/{segmentKey}/passengers/{passengerKey}/infant`
+
+        - `POST trip/sell`
+
+        - `POST trip`
+
+
+        GraphQL endpoint: ssrAvailabilityv3'
+      operationId: nsk_v3_booking_ssrs_availability_post
+      requestBody:
+        x-name: request
+        description: Optional parameters to filter the SSR availability.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsrAvailabilityRequestv3'
+            examples:
+              Retrieve SSR availability:
+                description: Example request for retrieving SSR availability.
+                value:
+                  trips:
+                  - identifier:
+                      identifier: '5600'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: BOS
+                    origin: SLC
+                    departureDate: '2026-07-09T00:00:00Z'
+                  passengerKeys:
+                  - MCFBRFQ-
+                  currencyCode: USD
+                  feePricingMode: 0
+                  ssrAvailabilityMode: 0
+              Retrieve SSR availability with multiple trips and passengers:
+                description: Example request for retrieving SSR availability with multiple trips (round-trip, connecting or thru flights) and multiple passengers.
+                value:
+                  trips:
+                  - identifier:
+                      identifier: '5600'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: DEN
+                    origin: SLC
+                    departureDate: '2026-07-09T00:00:00Z'
+                  - identifier:
+                      identifier: '5601'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: BOS
+                    origin: DEN
+                    departureDate: '2026-07-09T04:00:00Z'
+                  passengerKeys:
+                  - MCFBRFQ-
+                  - MSFBRFQ-
+                  currencyCode: USD
+                  feePricingMode: 0
+                  ssrAvailabilityMode: 0
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfSsrAvailability'
+              examples:
+                Get SSR availability:
+                  description: Successful retrieval of available SSRs.
+                  value:
+                    data:
+                      journeySsrs:
+                      - journeyKey: TlZ_NTYwMH4gfn5TTEN_MTIvMDUvMjAyNSAwNzowMH5CT1N_MTIvMDUvMjAyNSAxMzowMH5_
+                        journeyDetails:
+                          identifier:
+                            identifier: '5600'
+                            carrierCode: NV
+                            opSuffix: null
+                          destination: BOS
+                          origin: SLC
+                          departureDate: '2026-07-09T00:00:00Z'
+                        ssrs:
+                        - ssrCode: WIFI
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFXSUZJITQxIUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 369.97
+                          ssrType: 0
+                          name: Wi-Fi Entertainment Service
+                          limitPerPassenger: 1
+                          available: 6
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: WIFI
+                          nest: WIFI
+                          seatRestriction: 1
+                        - ssrCode: WCOB
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFXQ09CITgzIUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 597.74
+                          ssrType: 0
+                          name: On-Board Wheelchair
+                          limitPerPassenger: 1
+                          available: 6
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: WCOB
+                          nest: WCOB
+                          seatRestriction: 1
+                        - ssrCode: UNMR
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFVTk1SITY4IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 328.0
+                          ssrType: 0
+                          name: Unaccompanied Minor
+                          limitPerPassenger: 1
+                          available: 8
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: UNMR
+                          nest: UNMR
+                          seatRestriction: 1
+                        - ssrCode: SURF
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFTVVJGITk2IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 623.61
+                          ssrType: 0
+                          name: Surf Board
+                          limitPerPassenger: 1
+                          available: 5
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: SURF
+                          nest: SURF
+                          seatRestriction: 1
+                        - ssrCode: SPEQ
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFTUEVRITg2IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 71.27
+                          ssrType: 0
+                          name: Sports Equipment
+                          limitPerPassenger: 1
+                          available: 4
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: SPEQ
+                          nest: SPEQ
+                          seatRestriction: 1
+                      segmentSsrs:
+                      - segmentKey: TlZ_NTYwMH4gfn5TTEN_MTIvMDUvMjAyNSAwNzowMH5CT1N_MTIvMDUvMjAyNSAxMzowMH5_
+                        segmentDetails:
+                          identifier:
+                            identifier: '5600'
+                            carrierCode: NV
+                            opSuffix: null
+                          destination: BOS
+                          origin: SLC
+                          departureDate: '2026-07-09T00:00:00Z'
+                        ssrs:
+                        - ssrCode: WIFI
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFXSUZJITk0IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 680.66
+                          ssrType: 0
+                          name: Wi-Fi Entertainment Service
+                          limitPerPassenger: 1
+                          available: 9
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: WIFI
+                          nest: WIFI
+                          seatRestriction: 1
+                        - ssrCode: INFT
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: null
+                              passengerKey: MCFBRFQ-
+                              price: 100.11
+                          ssrType: 1
+                          name: Infant
+                          limitPerPassenger: 1
+                          available: 8
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: INFT
+                          nest: INFT
+                          seatRestriction: 1
+                        - ssrCode: INF
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MSFNQ0ZCUkZRLSFJTkYhMTAhQk9TIU5WITUyNTA4Nzc1Mzg0MjczODc5MDQhU0xDITU2MDAhIA--
+                              passengerKey: MCFBRFQ-
+                              price: 38.67
+                          ssrType: 1
+                          name: Infant
+                          limitPerPassenger: 1
+                          available: 5
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: INF
+                          nest: INFT
+                          seatRestriction: 1
+                        - ssrCode: PETC
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MCFNQ0ZCUkZRLSFQRVRDITg0IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 232.34
+                          ssrType: 0
+                          name: Pet in Cabin
+                          limitPerPassenger: 1
+                          available: 2
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: PETC
+                          nest: PETC
+                          seatRestriction: 1
+                        - ssrCode: BG23
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MyFNQ0ZCUkZRLSFCRzIzITcwIUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 855.99
+                          ssrType: 3
+                          name: 23 Kilogram Bag
+                          limitPerPassenger: 1
+                          available: 8
+                          inventoryControlled: false
+                          seatDependent: false
+                          feeCode: BG23
+                          nest: null
+                          seatRestriction: 1
+                        - ssrCode: BG15
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MyFNQ0ZCUkZRLSFCRzE1ITU2IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 228.19
+                          ssrType: 3
+                          name: 15 Kilogram Bag
+                          limitPerPassenger: 1
+                          available: 3
+                          inventoryControlled: false
+                          seatDependent: false
+                          feeCode: BG15
+                          nest: null
+                          seatRestriction: 1
+                      legSsrs:
+                      - legKey: NjM5MDA1MTQ4MDAwMDAwMDAwIU5WITU2MDAhICFTTEMhQk9TITI4NDI3NDk-
+                        legDetails:
+                          identifier:
+                            identifier: '5600'
+                            carrierCode: NV
+                            opSuffix: null
+                          destination: BOS
+                          origin: SLC
+                          departureDate: '2026-07-09T00:00:00Z'
+                        ssrs:
+                        - ssrCode: TLME
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: NCFNQ0ZCUkZRLSFUTE1FITUwIUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 876.23
+                          ssrType: 4
+                          name: Travel Line Meal E
+                          limitPerPassenger: 1
+                          available: 2
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: TLME
+                          nest: null
+                          seatRestriction: 1
+                        - ssrCode: HMC
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MiFNQ0ZCUkZRLSFITUMhODghQk9TIU5WITUyNTA4Nzc1Mzg0MjczODc5MDQhU0xDITU2MDAhIA--
+                              passengerKey: MCFBRFQ-
+                              price: 511.85
+                          ssrType: 2
+                          name: Hot Meal Combo
+                          limitPerPassenger: 1
+                          available: 2
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: HMC
+                          nest: MEAL
+                          seatRestriction: 1
+                        - ssrCode: CKML
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MiFNQ0ZCUkZRLSFDS01MITU2IUJPUyFOViE1MjUwODc3NTM4NDI3Mzg3OTA0IVNMQyE1NjAwISA-
+                              passengerKey: MCFBRFQ-
+                              price: 415.41
+                          ssrType: 2
+                          name: Standard Chicken Meal
+                          limitPerPassenger: 1
+                          available: 6
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: CKML
+                          nest: MEAL
+                          seatRestriction: 1
+                        - ssrCode: KRML
+                          passengersAvailability:
+                            mcfbrfQ-:
+                              ssrKey: MiFNQ0ZCUkZRLSFLUk1MITUhQk9TIU5WITUyNTA4Nzc1Mzg0MjczODc5MDQhU0xDITU2MDAhIA--
+                              passengerKey: MCFBRFQ-
+                              price: 275.14
+                          ssrType: 2
+                          name: Korean Meal
+                          limitPerPassenger: 1
+                          available: 2
+                          inventoryControlled: true
+                          seatDependent: false
+                          feeCode: KRML
+                          nest: MEAL
+                          seatRestriction: 1
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                No booking in state:
+                  description: No booking loaded into state during the retrieval of SSR availability.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Booking:NoBookingInState
+                      message: nsk:Booking:NoBookingInState
+                      type: Validation
+                      details: null
+                      rawMessage: No booking was found in session, cannot perform operation.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid market:
+                  description: The market information specified in the request does not match any segments in the booking in state.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Journey:InvalidMarket
+                      message: The requested market is not valid.
+                      type: Validation
+                      details:
+                        origin: SLC
+                        destination: DEN
+                        departureDate: '2026-07-09T00:00:00Z'
+                        carrier: NV
+                        identifier: '1234'
+                        opSuffix: ''
+                      rawMessage: The requested market is not valid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid passenger key:
+                  description: The passenger key specified in the request is invalid or does not exist in the booking in state.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'PassengerKey' with value 'MSFBRFQ-' is invalid.
+                      type: Validation
+                      details:
+                        passengerKey: MSFBRFQ-
+                      rawMessage: The identifier 'PassengerKey' with value 'MSFBRFQ-' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid currency code:
+                  description: The currency code in the request is not configured or no conversion rate is setup in the system.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk-server:CurrencyConversionRateNotFound
+                      message: nsk-server:CurrencyConversionRateNotFound
+                      type: Information
+                      details: null
+                      rawMessage: No currency conversion rate found from XXX to USD.  You need to add this rate in Management Application.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v2/booking/ssrs/availability:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Get the ssr's available to add to the booking in state.
+      description: '- Requires a booking in state.
+
+        - By default, all ssr availability for the booking is returned.
+
+        - For details about a specific ssr you can use the
+
+        `/booking/passengers/{passengerKey}/ssrs/{ssrCode}/price` endpoint.
+
+        - Infant SSR availability for the configured infant SSR is not included by default.
+
+        - If the configured infant SSR availability needs to be displayed, the `passengerOptions.showInfantSsrAvailability`
+
+        flag in the API''s configuration should be set to true.
+
+        - Note that the SSR key for the default, configured infant SSR will be null as selling the infant SSR is handled
+
+        via the following endpoints:
+
+        - `booking/passengers/{passengerKey}/infant` POST/DELETE
+
+        - `trip/sell` POST
+
+        - `trip` POST
+
+
+        GraphQL endpoint: ssrAvailabilityv2'
+      operationId: nsk_v2_booking_ssrs_availability_post
+      requestBody:
+        x-name: request
+        description: Optional request filter.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsrAvailabilityRequestv2'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfSsrAvailability'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v1/booking/ssrs/bundles/resell:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Resells any cancelled SSR bundle to the provided journey on the booking.
+      description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.`
+
+
+        GraphQL endpoint: resellSsrBundles'
+      operationId: nsk_v1_booking_ssrs_bundles_resell_post
+      requestBody:
+        x-name: request
+        description: The bundle resell request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BundleResellRequest'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/booking/ssrs/manual:
+    delete:
+      tags:
+      - booking/ssrs
+      summary: Deletes the SSR that matches the request criteria.
+      description: 'Requires a booking in state.
+
+        This is an alternate way of deleting an SSR. It is still recommended to delete an SSR by the passenger key (see
+
+        DELETE /booking/ssrs/{ssrKey}). This method is useful if the application is not querying availability and not using
+
+        dynamic SSR information.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrsDeleteManual'
+      operationId: nsk_v1_booking_ssrs_manual_delete
+      requestBody:
+        x-name: request
+        description: The unique passenger SSR information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerSsrKey'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/booking/ssrs/manual:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Adds SSRs to the booking in state.
+      description: 'Adding an SSR by journey automatically adds the SSR to every segment.
+
+        Requires a booking in state.
+
+        This is an alternate way of creating an SSR. Creating by ID is recommended (see /api/booking/ssrs).
+
+        This method is useful if the UI is not querying availability and not using dynamic SSR information.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: ssrsAddManualv2'
+      operationId: nsk_v2_booking_ssrs_manual_post
+      requestBody:
+        x-name: request
+        description: The request for adding an SSR.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsrsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/booking/ssrs/resell:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Resells any cancelled SSRs to the provided journey on the booking.
+      description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.`
+
+
+        GraphQL endpoint: resellSsrs'
+      operationId: nsk_v1_booking_ssrs_resell_post
+      requestBody:
+        x-name: request
+        description: The resell SSR request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResellSsrRequest'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v2/booking/ssrs/resell:
+    post:
+      tags:
+      - booking/ssrs
+      summary: Resells any cancelled SSRs to the provided journey on the booking.
+      description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.`
+
+        Related Endpoints:
+
+        - `GET /api/nsk/v1/booking/journeys`: Gets the collection of journeys on the booking in state.
+
+        - `GET /api/nsk/v1/booking/ssrs`: Retrieves the current SSRs added to the booking in state.
+
+        - `GET /api/nsk/v1/settings/general/codes`: Determines which roles are allowed to waive fees.
+
+
+        GraphQL endpoint: resellSsrsv2'
+      operationId: nsk_v2_booking_ssrs_resell_post
+      requestBody:
+        x-name: request
+        description: The resell SSR request v2.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResellSsrRequestv2'
+            examples:
+              Resell SSRs And Auto Assign Seats:
+                description: Example request for reselling SSRs, and auto-assigning the passengers to new seats.
+                value:
+                  journeyKey: TlZ_NTY3MH4gfn5TTEN_MDUvMTMvMjAyNSAxNzozMH5CT1N_MDUvMTMvMjAyNSAyMzozMH5_
+                  resellSsrs: true
+                  resellUnitSsrs: 1
+                  waiveSeatFee: true
+              Resell SSRs And Do Not Auto Assign Seats:
+                description: Example request for reselling SSRs, but no auto-assigning of passengers to new seats when reselling seat-dependent SSRs.
+                value:
+                  journeyKey: TlZ_NTY3MH4gfn5TTEN_MDUvMTMvMjAyNSAxNzozMH5CT1N_MDUvMTMvMjAyNSAyMzozMH5_
+                  resellSsrs: true
+                  resellUnitSsrs: 2
+                  waiveSeatFee: true
+              Do Not Resell Seat-Dependent SSRs:
+                description: Example request for reselling SSRs, but no reselling of seat dependent SSRs.
+                value:
+                  journeyKey: TlZ_NTY3MH4gfn5TTEN_MDUvMTMvMjAyNSAxNzozMH5CT1N_MDUvMTMvMjAyNSAyMzozMH5_
+                  resellSsrs: true
+                  resellUnitSsrs: 0
+                  waiveSeatFee: true
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The SSRs are resold after the journey has been cancelled then rebooked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Resold All SSRs:
+                  description: All SSRs are resold for the booking passenger.
+                  value:
+                    data: null
+                Resold Available SSRs:
+                  description: Available SSRs are resold for the booking passenger except some SSRs that are unavailable.
+                  value:
+                    messages:
+                    - rawValue: 'A SSR could not be sold for the following SSR, passenger and flight: SFML|MCFBRFQ-|NV5665 |SLC|BOS|2025-08-21T00:00:00.0000000'
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: SSRIsUnavailable
+                      value: null
+                      status: 1
+                      details:
+                        carrierCode: NV
+                        departureDate: 7/9/2026 5:55:13 AM
+                        destination: BOS
+                        flightNumber: '5665'
+                        origin: SLC
+                        passengerKey: MCFBRFQ-
+                        ssrCode: SFML
+                    data: null
+                Resold Available Seat-Dependent SSRs:
+                  description: Available seat-dependent SSRs are resold for the booking passenger except for some seat-dependent SSRs that are unavailable and/or restricted.
+                  value:
+                    messages:
+                    - rawValue: 'Unable to resell the unit SSR DEAF for John Doe on 01/01/2000 SLC-BOS #NV5600'
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedToReinstateSSR
+                      value: null
+                      status: 1
+                      details: null
+                    - rawValue: SSR [2BAG] is not available on any seat on flight NV5667 SLC-BOS for passenger John Doe.
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedSeatSSRValidation
+                      value: null
+                      status: 1
+                      details: null
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Cannot Resell SSRs:
+                  description: The SSRs are not resold due to various reasons such as there are no SSRs in the cancelled journey or the `Sell Seat SSR Before Assignment` booking setting is disabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Ssrs:CannotResellSsr
+                      message: Unable to resell the SSR(s)
+                      type: Validation
+                      details: null
+                      rawMessage: Unable to resell the SSR(s)
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                SSRs Unavailable:
+                  description: The SSRs are not resold due to unavailability on the rebooked flight.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Ssrs:CannotResellSsr
+                      message: Unable to resell the SSR(s)
+                      type: Validation
+                      details: null
+                      rawMessage: Unable to resell the SSR(s)
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: 'A SSR could not be sold for the following SSR, passenger and flight: SFML|MCFBRFQ-|NV5665 |SLC|BOS|2025-08-21T00:00:00.0000000'
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: SSRIsUnavailable
+                      value: null
+                      status: 1
+                      details:
+                        carrierCode: NV
+                        departureDate: 7/9/2026 5:55:13 AM
+                        destination: BOS
+                        flightNumber: '5665'
+                        origin: SLC
+                        passengerKey: MCFBRFQ-
+                        ssrCode: SFML
+                    data: null
+                SSR Code Restricted:
+                  description: The SSRs are not resold due to restriction.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Ssrs:CannotResellSsr
+                      message: Unable to resell the SSR(s)
+                      type: Validation
+                      details: null
+                      rawMessage: Unable to resell the SSR(s)
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: SSR [2BAG] is not available on any seat on flight NV5667 SLC-BOS for passenger John Doe.
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedSeatSSRValidation
+                      value: null
+                      status: 1
+                      details: null
+                    data: null
+                Seat-Dependent SSRs Unavailable:
+                  description: The seat-dependent SSRs are not resold due to unavailability on the rebooked flight.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Ssrs:CannotResellSsr
+                      message: Unable to resell the SSR(s)
+                      type: Validation
+                      details: null
+                      rawMessage: Unable to resell the SSR(s)
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: 'Unable to resell the unit SSR DEAF for John Doe on 01/01/2000 SLC-BOS #NV5600'
+                      code: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: FailedToReinstateSSR
+                      value: null
+                      status: 1
+                      details: null
+                    data: null
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    BundleResellRequest:
+      type: object
+      description: "The bundle resell request.\n            "
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "Journey to resell the previously cancelled SSR bundles on.\n            "
+        passengerKeys:
+          type:
+          - array
+          - 'null'
+          description: "A list of passengers to resell the SSR bundle for.\n            "
+          items:
+            type: string
+    SsrDurationType:
+      type: integer
+      description: "Ssr duration type.\n            \n\n0 = Segment\n1 = Journey\n2 = Leg"
+      x-enumNames:
+      - Segment
+      - Journey
+      - Leg
+      enum:
+      - 0
+      - 1
+      - 2
+    SsrsRequest:
+      type: object
+      description: "Request to add multiple leg, segment, or journey Ssr's.\n            "
+      additionalProperties: false
+      required:
+      - requests
+      properties:
+        requests:
+          type: array
+          description: "Ssr requests by type of request (Journey, Leg, Segment).\n            "
+          items:
+            $ref: '#/components/schemas/SsrsByType'
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the currency code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+    SsrAvailabilityRequestv2:
+      type: object
+      description: "Represents an SSR availability request.\n            "
+      additionalProperties: false
+      required:
+      - trips
+      - passengerKeys
+      - currencyCode
+      properties:
+        trips:
+          type: array
+          description: "Filter the trips requested.\n            "
+          items:
+            $ref: '#/components/schemas/MarketInformation'
+        passengerKeys:
+          type: array
+          description: "Filter the passenger numbers.\n            "
+          items:
+            type: string
+        currencyCode:
+          type: string
+          description: "Set the Currency Code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Flag to indicate whether a fee is meant to be sold in points or currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        ssrAvailabilityMode:
+          description: "Indicates which types of SSRs in a passenger's service bundle are to be returned.\n            "
+          $ref: '#/components/schemas/SsrAvailabilityMode'
+    SsrByLeg:
+      type: object
+      description: "Model information for a special service request (SSR) tied to a specific leg.\n            "
+      additionalProperties: false
+      properties:
+        legKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the leg of a segment.\n            "
+        legDetails:
+          description: "Leg market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The associated SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrDetail'
+    PassengerSsr:
+      type: object
+      description: "The model for a passengers Ssr details.\n            "
+      additionalProperties: false
+      properties:
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR note.\n            "
+          maxLength: 128
+          minLength: 0
+        count:
+          type: integer
+          description: "The passenger SSR unit value.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        inBundle:
+          type: boolean
+          description: "Indicates if the SSR is part of a bundle.\n            "
+        ssrDuration:
+          description: "The length of the Ssr duration.\n            "
+          $ref: '#/components/schemas/SsrDurationType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique passenger key.\n            "
+        ssrNumber:
+          type:
+          - integer
+          - 'null'
+          description: "The passenger SSR number.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        market:
+          description: "The market for either the leg or segment depending on the Ssr type.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        isConfirmed:
+          type: boolean
+          description: "A status flag to indicate if the ssr has been confirmed or not.\n            "
+        isConfirmingUnheld:
+          type: boolean
+          description: "A status flag to indicate if the ssr is in a confirming unheld state.\n            "
+        ssrKey:
+          type:
+          - string
+          - 'null'
+          description: "The key that uniquely identifies the Ssr, passenger, and leg or segment.\n            "
+        feeCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR fee code.\n            "
+          maxLength: 6
+          minLength: 0
+        ssrDetail:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR detail.\n            "
+          maxLength: 20
+          minLength: 0
+    SsrsByType:
+      type: object
+      description: "Ssrs by type model allows multiple Ssr requests for a specific type.\n            "
+      additionalProperties: false
+      required:
+      - type
+      - market
+      - items
+      properties:
+        type:
+          description: "Defines the duration type of the Ssr.\n            "
+          $ref: '#/components/schemas/SsrDurationType'
+        market:
+          description: "Market for the corresponding type.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        items:
+          type: array
+          description: "SSR request items.\n            "
+          items:
+            $ref: '#/components/schemas/SsrRequest'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    SsrAvailability:
+      type: object
+      description: "Model containing all Ssr information.\n            "
+      additionalProperties: false
+      properties:
+        segmentSsrs:
+          type:
+          - array
+          - 'null'
+          description: "Segment SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrBySegment'
+        legSsrs:
+          type:
+          - array
+          - 'null'
+          description: "Leg SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByLeg'
+        journeySsrs:
+          type:
+          - array
+          - 'null'
+          description: "Journey Ssrs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByJourney'
+    PassengerSsrKey:
+      type: object
+      description: "The model for the data needed to identify a passenger ssr key.\n            "
+      additionalProperties: false
+      properties:
+        ssrDuration:
+          description: "The length of the Ssr duration.\n            "
+          $ref: '#/components/schemas/SsrDurationType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique passenger key.\n            "
+        ssrNumber:
+          type:
+          - integer
+          - 'null'
+          description: "The passenger SSR number.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        market:
+          description: "The market for either the leg or segment depending on the Ssr type.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+    IJsonResponseOfPassengerSsr:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PassengerSsr'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfPassengerSsr:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSsr'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrDetail:
+      type: object
+      description: "Provides more information about the special service request (SSR).\n            "
+      additionalProperties: false
+      properties:
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The unique code for the SSR.\n            "
+        passengersAvailability:
+          type:
+          - object
+          - 'null'
+          description: "The passengers to which this SSR is available.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/PassengerSsrAvailability'
+        ssrType:
+          description: "Indicates the type of SSR.\n            "
+          $ref: '#/components/schemas/SsrType'
+        name:
+          type:
+          - string
+          - 'null'
+          description: "Short description or name of the SSR.\n            "
+        limitPerPassenger:
+          type: integer
+          description: "Indicates how many SSRs is allowed per passenger.\n            "
+          format: int32
+        available:
+          type:
+          - integer
+          - 'null'
+          description: "The number of SSRs available.\n            "
+          format: int32
+        inventoryControlled:
+          type: boolean
+          description: "Indicates if the SSR is inventory controlled.\n            "
+        seatDependent:
+          type: boolean
+          description: "Indicates if the SSR is seat-dependent.\n            "
+        feeCode:
+          type:
+          - string
+          - 'null'
+          description: "The fee code associated with the SSR.\n            "
+        nest:
+          type:
+          - string
+          - 'null'
+          description: "The SSR nest.\n            "
+        seatRestriction:
+          description: "Indicates the seat restriction for the SSR.\n            "
+          $ref: '#/components/schemas/SeatRestriction'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    SsrAvailabilityMode:
+      type: integer
+      description: "SSR availability modes for use in the SSR availability request.\n            \n\n0 = NonBundledSsrs\n1 = BundledSsrs\n2 = FilteredBundleSsrs"
+      x-enumNames:
+      - NonBundledSsrs
+      - BundledSsrs
+      - FilteredBundleSsrs
+      enum:
+      - 0
+      - 1
+      - 2
+    SeatRestriction:
+      type: integer
+      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
+      x-enumNames:
+      - Undefined
+      - AlwaysAllowed
+      - DefaultAllowed
+      - DefaultRestricted
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    SingleSsrByKeyRequestv2:
+      type: object
+      description: "The single ssr by key request model, v2.\n            "
+      additionalProperties: false
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the Currency Code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        ssrSellMode:
+          description: "Indicates whether the SSR is meant to be sold in the passenger's service bundle.\n            "
+          $ref: '#/components/schemas/SsrSellMode'
+    SsrRequest:
+      type: object
+      description: "SSR request for a single Ssr.\n            "
+      additionalProperties: false
+      required:
+      - ssrCode
+      - passengerKey
+      properties:
+        ssrCode:
+          type: string
+          description: "The Ssr code.\n            "
+          minLength: 1
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        inBundle:
+          type: boolean
+          description: "Indicates if the SSR is part of a bundle.\n            "
+    ResellSsrRequestv2:
+      type: object
+      description: "The Resell SSR request v2.\n            "
+      additionalProperties: false
+      required:
+      - journeyKey
+      properties:
+        journeyKey:
+          type: string
+          description: "Journey on which to resell the previously cancelled SSRs\n            "
+          minLength: 1
+        resellSsrs:
+          type: boolean
+          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
+        resellUnitSsrs:
+          description: "Indicates whether to resell the unit SSRs, i.e. auto-assign a new Unit that supports the same SSRs.\n            "
+          $ref: '#/components/schemas/ResellUnitSsrFilter'
+        waiveSeatFee:
+          type: boolean
+          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
+    SsrType:
+      type: integer
+      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
+      x-enumNames:
+      - Standard
+      - Infant
+      - Meal
+      - BaggageAllowance
+      - TravelLineMeal
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    SsrByKeyRequest:
+      type: object
+      description: "SSR detail for a specific passenger number.\n            "
+      additionalProperties: false
+      required:
+      - ssrKey
+      properties:
+        ssrKey:
+          type: string
+          description: "The Ssr key.\n            "
+          minLength: 1
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+    SsrAvailabilityRequestv3:
+      type: object
+      description: "Represents a Special Service Request (SSR) availability request, version 3.\n            "
+      additionalProperties: false
+      required:
+      - trips
+      - passengerKeys
+      - currencyCode
+      properties:
+        trips:
+          type: array
+          description: "The list of trips for which SSR availability is requested. If not specified, availability for all the non-passive\nsegments in the booking will be returned.\n            "
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/MarketInformation'
+        passengerKeys:
+          type: array
+          description: "The list of passengers in which the SSRs are available for. If not specified, availability for all passengers in\nthe booking will be returned.\n            "
+          maxItems: 100
+          items:
+            type: string
+        currencyCode:
+          type: string
+          description: "Sets the currency code if different from the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether a fee is meant to be sold in points or currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        ssrAvailabilityMode:
+          description: "Indicates if the availability is for bundled or non-bundled SSRs.\n            "
+          $ref: '#/components/schemas/SsrAvailabilityMode'
+    PassengerSsrAvailability:
+      type: object
+      description: "Model containing the details about the availability and price of the Ssr for a specific passenger.\n            "
+      additionalProperties: false
+      properties:
+        ssrKey:
+          type:
+          - string
+          - 'null'
+          description: "The Ssr key that identifies the ssr, passenger and trip information.\nNote this key does not equal the SSR key on the booking. The availability key contains the ssr number that is\nhelpful in some creation requests as well as a less accurate departure date.\n            "
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key.\n            "
+        price:
+          type: number
+          description: "Gets the SSR price.\n            "
+          format: decimal
+    IJsonResponseOfSsrAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SsrAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    SsrByJourney:
+      type: object
+      description: "Model information for a special service request (SSR) tied to a specific journey.\n            "
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the journey.\n            "
+        journeyDetails:
+          description: "Journey market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The associated SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrDetail'
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    ResellSsrRequest:
+      type: object
+      description: "The resell Ssr request.\n            "
+      deprecated: true
+      x-deprecatedMessage: 4.6 - ResellSsrRequestv2 instead.
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "Journey to resell the previously cancelled SSRs on.\n            "
+        resellSsrs:
+          type: boolean
+          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
+        resellUnitSsrs:
+          type: boolean
+          description: "Indicates whether to resell the unit SSRs, i.e autoassign a new Unit that supports\nthe same SSRs.\n            "
+        waiveSeatFee:
+          type: boolean
+          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrSellMode:
+      type: integer
+      description: "The ssr sell mode enumeration.\n            \n\n0 = NonBundle\n1 = Bundle\n2 = BundleSsrSwap"
+      x-enumNames:
+      - NonBundle
+      - Bundle
+      - BundleSsrSwap
+      enum:
+      - 0
+      - 1
+      - 2
+    SsrBySegment:
+      type: object
+      description: "Model information for a special service request (SSR) tied to a specific segment.\n            "
+      additionalProperties: false
+      properties:
+        segmentKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the segment of a journey.\n            "
+        segmentDetails:
+          description: "Segment market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The associated SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrDetail'
+    ResellUnitSsrFilter:
+      type: integer
+      description: "Enumeration representing the filters when reselling seat-dependent SSRS.\n            \n\n0 = DoNotResell\n1 = ResellAndAutoAssignSeats\n2 = ResellAndDoNotAutoAssignSeats"
+      x-enumNames:
+      - DoNotResell
+      - ResellAndAutoAssignSeats
+      - ResellAndDoNotAutoAssignSeats
+      enum:
+      - 0
+      - 1
+      - 2
+    SsrByKeysRequestv2:
+      type: object
+      description: "Request to add a leg, segment, or journey Ssr.\n            "
+      additionalProperties: false
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: "Keys for the request.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByKeyRequest'
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the Currency Code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

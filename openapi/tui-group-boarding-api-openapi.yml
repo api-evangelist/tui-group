@@ -1,0 +1,908 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Boarding API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: boarding
+paths:
+  /api/dcs/v2/boarding/{recordLocator}/legs/{legKey}/passengers/{passengerKey}:
+    post:
+      tags:
+      - boarding
+      summary: 'Boards a passenger on a specific leg. If the leg is NOT a part of a change of gauge flight, it is
+
+        recommended to board by segment instead.'
+      description: 'If there are downstream legs that are not boarded on the segment and the flight
+
+        is not a change of gauge, the rest of the legs will be boarded as well. For example,
+
+        if you have a three leg segment and you board the middle leg, the last leg will also
+
+        be boarded and the first leg will not be boarded.
+
+        This endpoint will return information like a GET because there may be necessary
+
+        security information on the response.
+
+        To check the lift status of the boarded leg, please use
+
+        /api/nsk/manifest/{legKey}.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: boardByLegv2'
+      operationId: dcs_v2_boarding_recordLocator_legs_legKey_passengers_passengerKey_post
+      parameters:
+      - name: recordLocator
+        in: path
+        required: true
+        description: The record locator for the booking.
+        schema:
+          type: string
+        x-position: 1
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key to board.
+        schema:
+          type: string
+        x-position: 2
+      - name: passengerKey
+        in: path
+        required: true
+        description: The passenger key.
+        schema:
+          type: string
+        x-position: 3
+      requestBody:
+        x-name: request
+        description: The board passenger request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardPassengerBaseRequest'
+        required: true
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfBoardPassengerResponsev2'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/boarding/{recordLocator}/legs/{legKey}/passengers/{passengerKey}:
+    delete:
+      tags:
+      - boarding
+      summary: Unboards a passenger on a specific leg.
+      description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.`
+
+
+        GraphQL endpoint: unboardByLeg'
+      operationId: dcs_v1_boarding_recordLocator_legs_legKey_passengers_passengerKey_delete
+      parameters:
+      - name: recordLocator
+        in: path
+        required: true
+        description: The record locator for the booking.
+        schema:
+          type: string
+        x-position: 1
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key to board.
+        schema:
+          type: string
+        x-position: 2
+      - name: passengerKey
+        in: path
+        required: true
+        description: The passenger key.
+        schema:
+          type: string
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v2/boarding/{recordLocator}/segments/{segmentKey}/passengers/{passengerKey}:
+    post:
+      tags:
+      - boarding
+      summary: 'Boards a passenger on a specific segment. A segment should not be boarded if it is a change of
+
+        gauge flight.'
+      description: 'If an attempt at boarding a segment is made with a change of gauge flight, only the first leg of
+
+        that segment will be boarded. The endpoint will return that the process was successful,
+
+        but the full segment with legs was not boarded. This can be checked using the endpoint listed below.
+
+        This endpoint will return information like a GET because there may be necessary
+
+        security information on the response.
+
+        To check the lift status of the boarded segment please use
+
+        /api/nsk/v1/bookings/checkin/{recordLocator}/segments/{segmentKey}/status.
+
+        That endpoint can be used after boarding as well because it retrieves the lift status of the segment.
+
+        IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
+
+        problems.
+
+
+        GraphQL endpoint: boardBySegmentv2'
+      operationId: dcs_v2_boarding_recordLocator_segments_segmentKey_passengers_passengerKey_post
+      parameters:
+      - name: recordLocator
+        in: path
+        required: true
+        description: The record locator for the booking.
+        schema:
+          type: string
+        x-position: 1
+      - name: segmentKey
+        in: path
+        required: true
+        description: The segment key to board.
+        schema:
+          type: string
+        x-position: 2
+      - name: passengerKey
+        in: path
+        required: true
+        description: The passenger key.
+        schema:
+          type: string
+        x-position: 3
+      requestBody:
+        x-name: request
+        description: The board passenger request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardPassengerBaseRequest'
+        required: true
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfBoardPassengerResponsev2'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '409':
+          description: Concurrent changes were being made in the same session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/boarding/legs/{legKey}/passengers:
+    delete:
+      tags:
+      - boarding
+      summary: Unboards all passengers on a leg.
+      description: 'If a warning message is present, check the lift status of the passengers. A passenger will come back as not
+
+        being unboarded if they are not checked in and boarded.
+
+
+        GraphQL endpoint: unboardAllPassengers'
+      operationId: dcs_v1_boarding_legs_legKey_passengers_delete
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v2/boarding/legs/{legKey}/passengers:
+    post:
+      tags:
+      - boarding
+      summary: Boards all passengers on a specific leg.
+      description: 'If there are downstream legs that are not boarded on the segment and the flight
+
+        is not a change of gauge, the rest of the legs will be boarded as well. For example,
+
+        if you have a three leg segment and you board the middle leg, the last leg will also
+
+        be boarded and the first leg will not be boarded. If the flight is a change of gauge,
+
+        then only the leg requested will be boarded.
+
+        To check the lift status of the boarded leg, please use
+
+        /api/nsk/manifest/bookings/{recordLocator}/legs/{legKey}.
+
+
+        GraphQL endpoint: boardAllByLegv2'
+      operationId: dcs_v2_boarding_legs_legKey_passengers_post
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key to board.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfBoardAllPassengerResponsev2'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    CheckinOverrideAllowedMode:
+      type: integer
+      description: "Defines the check-in override allowed mode.\n            \n\n0 = Never\n1 = Outage\n2 = Normal\n3 = Always"
+      x-enumNames:
+      - Never
+      - Outage
+      - Normal
+      - Always
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    GovernmentMessageType:
+      type: integer
+      description: "Defines the government message type.\n            \n\n0 = None\n1 = Aqq\n2 = SecureFlight\n3 = Apps\n4 = Apis\n5 = Iapp\n6 = Eub\n7 = Iatci\n8 = DocCheck\n9 = DocsOnly\n10 = PnrGov\n11 = Digiyatra\n12 = Pfms"
+      x-enumNames:
+      - None
+      - Aqq
+      - SecureFlight
+      - Apps
+      - Apis
+      - Iapp
+      - Eub
+      - Iatci
+      - DocCheck
+      - DocsOnly
+      - PnrGov
+      - Digiyatra
+      - Pfms
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+    SecurityAuthorizationInformation:
+      type: object
+      description: "The passenger's government security authorization information for boarding clearance and access to airport\nrestricted areas.\n            "
+      additionalProperties: false
+      properties:
+        governmentMessageType:
+          description: "The corresponding message type for this authorization.\n            "
+          $ref: '#/components/schemas/GovernmentMessageType'
+        authorizationStatus:
+          type:
+          - string
+          - 'null'
+          description: "The clearance based on the program driver (APIS, APPS, SF/AQQ).\n            "
+        securityAuthorizationText:
+          type:
+          - array
+          - 'null'
+          description: "List of government security authorization free text.\n            "
+          items:
+            $ref: '#/components/schemas/SecurityAuthorizationText'
+        marketInformation:
+          description: "The market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        forInfant:
+          type: boolean
+          description: "Whether the passenger is an infant or not.\n            "
+        programDescription:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the user friendly program description associated with the government message type.\nThis is added for display purposes for the UI. So that they will know what to display for the specific government\nmessage type.\n            "
+        driverName:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the driver name associated with the government message type.\nThis is added so that the UI will know, during override, what driver name to indicate in an override request.\n            "
+        checkinOverrideAllowed:
+          type: boolean
+          description: "Indicates whether a check-in override is allowed.\n            "
+        outageMode:
+          type: boolean
+          description: "Indicates whether in outage mode or not.\n            "
+        validOverrideResponseCodes:
+          type:
+          - array
+          - 'null'
+          description: "List of all government response codes that can be entered during the override process.\n            "
+          items:
+            $ref: '#/components/schemas/AuthorizationStatusConfiguration'
+        isDepartureValue:
+          type: boolean
+          description: "Used with APPS to represent if this clearance is associated with the departure country.\n            "
+        checkinAllowed:
+          type: boolean
+          description: "Determines whether this authorization allows the passenger to check-in.\n            "
+        boardingAllowed:
+          type: boolean
+          description: "Determines whether this authorization allows the passenger to board.\n            "
+        authorizationStatusDescription:
+          type:
+          - string
+          - 'null'
+          description: "This will contain the user-friendly description of the authorization status.\n            "
+        screeningType:
+          description: "The government screening type.\n            "
+          $ref: '#/components/schemas/GovernmentScreeningType'
+        electronicTravelAuthorization:
+          description: "The government generic electronic travel authorization value.\n            "
+          $ref: '#/components/schemas/ElectronicTravelAuthorization'
+        manuallyOverridden:
+          type: boolean
+          description: "Determines whether that passenger's authorization is manually overridden.\n            "
+        autoOutage:
+          type: boolean
+          description: "Indicates if the authorization was automatically overridden due to outage.\n            "
+        clearanceCountry:
+          type:
+          - string
+          - 'null'
+          description: "This authorization status is from this country, if applicable. 2-character country code.\n            "
+        errorResponse:
+          type: boolean
+          description: "An error was returned from the government.\n            "
+        passedSecurity:
+          type: boolean
+          description: "Represents that a passenger has passed security or is is a secure area.\n            "
+        departureDetail:
+          type:
+          - string
+          - 'null'
+          description: "Departure detail information for APPS security authorization.\n            "
+        arrivalDetail:
+          type:
+          - string
+          - 'null'
+          description: "Arrival detail information for APPS security authorization.\n            "
+    GovernmentScreeningType:
+      type: integer
+      description: "Defines the government security screening type.\n            \n\n0 = Normal\n1 = LowRisk\n2 = Enhanced\n3 = Inhibited"
+      x-enumNames:
+      - Normal
+      - LowRisk
+      - Enhanced
+      - Inhibited
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    BoardAllPassengerResponsev2:
+      type: object
+      description: "Defines the response from boarding all passengers.\n            "
+      additionalProperties: false
+      properties:
+        securityAuthorizationList:
+          type:
+          - array
+          - 'null'
+          description: "The list of security authorization. Will be populated when there are negative APP directives during secure\nboarding.\n            "
+          items:
+            $ref: '#/components/schemas/SecurityAuthorizationInformation'
+        passengerName:
+          description: "The name of the passenger.\n            "
+          $ref: '#/components/schemas/Name'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The booking record locator.\n            "
+        boarded:
+          type: boolean
+          description: "Whether the passenger was boarded or not.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    Name:
+      type: object
+      description: "Defines a common name.\n            "
+      additionalProperties: false
+      properties:
+        first:
+          type:
+          - string
+          - 'null'
+          description: "The given first name.\n            "
+          maxLength: 32
+          minLength: 0
+        middle:
+          type:
+          - string
+          - 'null'
+          description: "The given middle name.\n            "
+          maxLength: 32
+          minLength: 0
+        last:
+          type:
+          - string
+          - 'null'
+          description: "The given last name.\n            "
+          maxLength: 32
+          minLength: 0
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title.\n            "
+          maxLength: 6
+          minLength: 0
+        suffix:
+          type:
+          - string
+          - 'null'
+          description: "The suffix.\n            "
+          maxLength: 6
+          minLength: 0
+    IJsonResponseOfBoardPassengerResponsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/BoardPassengerResponsev2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ElectronicTravelAuthorization:
+      type: integer
+      description: "Defines the electronic travel authorization for the government boarding directive.\nFor US Secure Flight, this is the electronic system for travel authorization (ESTA) value.\n            \n\n0 = Denied\n1 = NotApplicable\n2 = OnFile\n3 = NotOnFile\n4 = DocumentRequired\n5 = Error\n6 = TimeOut"
+      x-enumNames:
+      - Denied
+      - NotApplicable
+      - OnFile
+      - NotOnFile
+      - DocumentRequired
+      - Error
+      - TimeOut
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    BoardPassengerBaseRequest:
+      type: object
+      description: "Defines the base request to board a passenger.\n            "
+      additionalProperties: false
+      properties:
+        skipSecurityChecks:
+          type: boolean
+          description: "Whether to skip security checks or not.\n            "
+        overrideEstaRequirement:
+          type: boolean
+          description: "Identifies if the Electronic System for Travel Authorization (ESTA) requirement is being overriden.\n            "
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AuthorizationStatusConfiguration:
+      type: object
+      description: "The government security authorization status configuration that corresponds to a government security message type.\nAuthorization status configuration is the object used when getting the config and the validOverrideResponseCodes.\nThe object for the passenger is government security authorization.\n            "
+      additionalProperties: false
+      properties:
+        authorizationStatusCode:
+          type:
+          - string
+          - 'null'
+          description: "The boarding directive returned from the government agency.\n            "
+        checkInAllowed:
+          type: boolean
+          description: "Indicates whether this authorization allows the passenger to check-in.\n            "
+        boardingPassPrintingAllowed:
+          type: boolean
+          description: "Indicates whether this authorization allows the passenger to be issued or print a boarding pass.\n            "
+        boardingAllowed:
+          type: boolean
+          description: "Indicates whether this authorization allows the passenger to board.\n            "
+        selfCheckInAllowed:
+          type: boolean
+          description: "Indicates whether this authorization allows the passenger to check-in via the web, kiosk, mobile, etc.\n            "
+        authorizationStatusDescription:
+          type:
+          - string
+          - 'null'
+          description: "This will contain the user-friendly description of the Authorization Status.\nIt will be used during the override process as a list of valid Authorization Status Code.\n            "
+        screeningType:
+          description: "The government screening type code.\n            "
+          $ref: '#/components/schemas/GovernmentScreeningType'
+        customFreeText:
+          type:
+          - string
+          - 'null'
+          description: "Custom text including error messages the UI can display to the agent based on the Authorization Status Code.\n            "
+        electronicTravelAuthorization:
+          description: "Government generic electronic travel authorization values. This is used by the UI to differentiate which exception\ntype to throw based on the authorization status code ESTA value.\n            "
+          $ref: '#/components/schemas/ElectronicTravelAuthorization'
+        boardingPassPrintText:
+          type:
+          - string
+          - 'null'
+          description: "Holds custom boarding pass text like SSSS for Selectee or TSA Pre-check.\n            "
+        promptToVerifyId:
+          type: boolean
+          description: "Indicates whether the UI should prompt to verify the passenger's Id.\n            "
+        errorResponse:
+          type: boolean
+          description: "Indicates whether an error was returned from the government like 4Z.\n            "
+        incompleteDirective:
+          type: boolean
+          description: "Indicates whether part of the authorization status is missing.\nFor example, \"0?\" is an incomplete secure flight authorization status.\n            "
+        validOverrideAuthorizationCode:
+          type: boolean
+          description: "Indicates whether this code should be included in the override prompt.\n            "
+        validGatePassOverrideAuthorizationCode:
+          type: boolean
+          description: "Indicates whether this code should be included in the override prompt for gate pass.\n            "
+        checkInOverrideAllowed:
+          type: boolean
+          description: "Will be set if in SF/iAPP outage mode or for APPS D, T or U directives.\n            "
+        gatePassAllowed:
+          type: boolean
+          description: "Indicates whether this authorization allows the passenger to have a gate pass.\n            "
+        gatePassOverrideAllowed:
+          type: boolean
+          description: "Indicates whether the gate pass authorization status can be manually overridden.\n            "
+        canResubmitWithoutQualifiedChange:
+          type: boolean
+          description: "Indicates whether it is allowed to resubmit this authorization without a qualified change during GetClearance for\naction. This does not indicate whether the authorization should be resubmitted.\n            "
+        checkInOverrideAllowedMode:
+          description: "Sets when a manual override can occur.\n            "
+          $ref: '#/components/schemas/CheckinOverrideAllowedMode'
+    BoardPassengerResponsev2:
+      type: object
+      description: "Defines the response from boarding a passenger.\n            "
+      additionalProperties: false
+      properties:
+        passengerName:
+          description: "The name of the passenger.\n            "
+          $ref: '#/components/schemas/Name'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The booking record locator.\n            "
+        securityAuthorizationList:
+          type:
+          - array
+          - 'null'
+          description: "The list of security authorization. Will be populated when there are negative APP directives during secure\nboarding.\n            "
+          items:
+            $ref: '#/components/schemas/SecurityAuthorizationInformation'
+    SecurityAuthorizationText:
+      type: object
+      description: "The passenger's government security authorization free text.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The code qualifier.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "Free text.\n            "
+        displayText:
+          type: boolean
+          description: "Whether or not to display the free text.\n            "
+    IJsonResponseOfIListOfBoardAllPassengerResponsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BoardAllPassengerResponsev2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

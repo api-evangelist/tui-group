@@ -1,0 +1,318 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Device Managers API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: deviceManagers
+paths:
+  /api/dcs/v1/deviceManagers/{deviceManagerKey}:
+    get:
+      tags:
+      - deviceManagers
+      summary: Retrieves device manager info for the specified device manager key.
+      description: 'GraphQL endpoint: dcsGetDeviceManagerInfo'
+      operationId: dcs_v1_deviceManagers_deviceManagerKey_get
+      parameters:
+      - name: deviceManagerKey
+        in: path
+        required: true
+        description: The device manager key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: The device manager info.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfDeviceManagerInfo'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
+    IJsonResponseOfDeviceManagerInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DeviceManagerInfo'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    DeviceManagerInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        deviceManagerKey:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
+        port:
+          type:
+          - string
+          - 'null'
+        workstationName:
+          type:
+          - string
+          - 'null'
+        devices:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalDevice'
+        connectionId:
+          type:
+          - string
+          - 'null'
+    ExternalDevice:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the device.
+        generalType:
+          description: The general type of the device.
+          $ref: '#/components/schemas/ExternalDeviceGeneralType'
+        specificType:
+          type:
+          - string
+          - 'null'
+          description: 'The specific type of the device.
+
+            Populate using Navitaire.Dcs.Contract.ExternalDevice.Constants.SpecificExternalDeviceType.'
+        commonUseProvider:
+          type:
+          - string
+          - 'null'
+          description: The specific common use provider of the device.
+        properties:
+          type:
+          - array
+          - 'null'
+          description: 'A list of properties associated with this device.
+
+            The properties can either be system controlled or user controlled.'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+        language:
+          type:
+          - string
+          - 'null'
+          description: 'The language of this device.
+
+            Use constant file DeviceLanguage to populate this field.'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    ExternalDeviceGeneralType:
+      type: integer
+      description: '0 = Unknown
+
+        1 = Printer
+
+        2 = Scanner
+
+        3 = BoardingGateReader
+
+        4 = SelfBoardingGate'
+      x-enumNames:
+      - Unknown
+      - Printer
+      - Scanner
+      - BoardingGateReader
+      - SelfBoardingGate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

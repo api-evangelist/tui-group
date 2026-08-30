@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Organization Groups API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: organizationGroups
+paths:
+  /api/nsk/v1/organizationGroups/{organizationGroupCode}:
+    post:
+      tags:
+      - organizationGroups
+      summary: Creates a new organization group.
+      description: 'GraphQL endpoint: organizationGroupAdd'
+      operationId: nsk_v1_organizationGroups_organizationGroupCode_post
+      parameters:
+      - name: organizationGroupCode
+        in: path
+        required: true
+        description: The ID of the organization group to create.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The information for adding the organization group.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationGroupRequest'
+        required: true
+        x-position: 2
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfOrganizationGroupDetails'
+      deprecated: true
+    put:
+      tags:
+      - organizationGroups
+      summary: Modifies an organization group by updating the group name or adding an organization to the organization group.
+      description: 'GraphQL endpoint: organizationGroupSet'
+      operationId: nsk_v1_organizationGroups_organizationGroupCode_put
+      parameters:
+      - name: organizationGroupCode
+        in: path
+        required: true
+        description: The organization group code to modify.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The request for the update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationGroupRequest'
+        required: true
+        x-position: 2
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationGroupDetails'
+    delete:
+      tags:
+      - organizationGroups
+      summary: 'Deletes an organization group.
+
+        This should not be used if the organization group needs to exist.'
+      description: 'GraphQL endpoint: organizationGroupDelete'
+      operationId: nsk_v1_organizationGroups_organizationGroupCode_delete
+      parameters:
+      - name: organizationGroupCode
+        in: path
+        required: true
+        description: The organization group code to delete.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/organizationGroups/{organizationGroupCode}/organizations:
+    put:
+      tags:
+      - organizationGroups
+      summary: Updates an organization group by removing all organizations
+      description: 'GraphQL endpoint: organizationGroupOrganizationRemoveAll'
+      operationId: nsk_v1_organizationGroups_organizationGroupCode_organizations_put
+      parameters:
+      - name: organizationGroupCode
+        in: path
+        required: true
+        description: The organization group code to remove all organizations from.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationGroupDetails'
+  /api/nsk/v1/organizationGroups/{organizationGroupCode}/organizations/{organizationCode}:
+    put:
+      tags:
+      - organizationGroups
+      summary: Updates an organization group by removing an organization
+      description: 'GraphQL endpoint: organizationGroupOrganizationRemove'
+      operationId: nsk_v1_organizationGroups_organizationGroupCode_organizations_organizationCode_put
+      parameters:
+      - name: organizationGroupCode
+        in: path
+        required: true
+        description: The organization group code to modify.
+        schema:
+          type: string
+        x-position: 1
+      - name: organizationCode
+        in: path
+        required: true
+        description: The organization code to remove from the group.
+        schema:
+          type: string
+        x-position: 2
+      responses:
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationGroupDetails'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfOrganizationGroupDetails:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OrganizationGroupDetails'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    OrganizationGroupDetails:
+      type: object
+      description: "The data for an organization group including details.\n            "
+      additionalProperties: false
+      required:
+      - organizationGroupCode
+      properties:
+        organizationGroupCode:
+          type: string
+          description: "The organization group code.\n            "
+          maxLength: 3
+          minLength: 1
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The organization group name.\n            "
+        organizations:
+          type:
+          - array
+          - 'null'
+          description: "The organizations included in the group.\n            "
+          items:
+            $ref: '#/components/schemas/OrganizationRecordMinimum'
+    OrganizationRecordMinimum:
+      type: object
+      description: "The data for a simple organization record.\n            "
+      additionalProperties: false
+      required:
+      - organizationCode
+      properties:
+        organizationCode:
+          type: string
+          description: "The organization group code.\n            "
+          maxLength: 10
+          minLength: 1
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The organization company name.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    OrganizationGroupRequest:
+      type: object
+      description: "The data for an organization group request.\n            "
+      additionalProperties: false
+      properties:
+        organizationGroupName:
+          type:
+          - string
+          - 'null'
+          description: "The organization group name.\n            "
+        organization:
+          description: "The organization included in the group.\n            "
+          $ref: '#/components/schemas/OrganizationRecordMinimum'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

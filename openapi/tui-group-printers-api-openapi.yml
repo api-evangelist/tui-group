@@ -1,0 +1,1318 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Printers API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: printers
+paths:
+  /api/dcs/v1/printers:
+    get:
+      tags:
+      - printers
+      summary: Gets the list of TCP/IP printers for the logged in agent's location.
+      description: 'GraphQL endpoint: dcsGetPrinters'
+      operationId: dcs_v1_printers_get
+      responses:
+        '200':
+          description: The list of printers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfPrinter'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/bagTags/passenger/print:
+    post:
+      tags:
+      - printers
+      summary: Performs bag tag print for bags of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsPerformBagTagPrint'
+      operationId: dcs_v1_printers_bagTags_passenger_print_post
+      requestBody:
+        x-name: request
+        description: Bag tag print request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BagTagPrintRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/bagTags/passenger/printStreams:
+    post:
+      tags:
+      - printers
+      summary: Generates bag tag print streams for bags of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.  If the user is
+
+        not an agent, then the specified booking must be in state and unmodified, and the
+
+        specified bag tags must be in the Added state (i.e. they must not have been printed
+
+        already).
+
+
+        GraphQL endpoint: dcsGenerateBagTagPrintStreams'
+      operationId: dcs_v1_printers_bagTags_passenger_printStreams_post
+      requestBody:
+        x-name: request
+        description: Bag tag print streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BagTagPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfBagTagPrintStreams'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/boardingPasses/print:
+    post:
+      tags:
+      - printers
+      summary: Performs boarding pass print for the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+        Accepts manifest segment keys or booking segment keys.
+
+
+        GraphQL endpoint: dcsPerformBoardingPassPrint'
+      operationId: dcs_v1_printers_boardingPasses_print_post
+      requestBody:
+        x-name: request
+        description: Boarding pass print request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardingPassPrintRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/boardingPasses/printStreams:
+    post:
+      tags:
+      - printers
+      summary: Generates boarding pass print streams for the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.  If the user is
+
+        not an agent, then the specified booking must be in state and unmodified.
+
+
+        GraphQL endpoint: dcsGenerateBoardingPassPrintStreams'
+      operationId: dcs_v1_printers_boardingPasses_printStreams_post
+      requestBody:
+        x-name: request
+        description: Boarding pass print streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardingPassPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/initializationStreams:
+    post:
+      tags:
+      - printers
+      summary: Retrieves initialization streams for setting up a printer.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsGetPrinterInitializationStreams'
+      operationId: dcs_v1_printers_initializationStreams_post
+      requestBody:
+        x-name: request
+        description: Printer initialization streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrinterCommandsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Printer initialization stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/initialize:
+    post:
+      tags:
+      - printers
+      summary: Performs printer initialization.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsPerformPrinterInitialization'
+      operationId: dcs_v1_printers_initialize_post
+      requestBody:
+        x-name: request
+        description: Printer initialization request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrinterInitializationRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/booking/print:
+    post:
+      tags:
+      - printers
+      summary: Performs receipt print for the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsPerformBookingReceiptPrint'
+      operationId: dcs_v1_printers_receipts_booking_print_post
+      requestBody:
+        x-name: request
+        description: Booking receipt print request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingReceiptPrintRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/booking/printStreams:
+    post:
+      tags:
+      - printers
+      summary: Generates receipt print streams for the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.  If the user is
+
+        not an agent, then the specified booking must be in state and unmodified.
+
+        Accepts manifest segment keys or booking segment keys.
+
+
+        GraphQL endpoint: dcsGenerateBookingReceiptPrintStreams'
+      operationId: dcs_v1_printers_receipts_booking_printStreams_post
+      requestBody:
+        x-name: request
+        description: Booking receipt print streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingReceiptPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/passenger/print:
+    post:
+      tags:
+      - printers
+      summary: Performs receipt print for selected passengers of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsPerformPassengerReceiptPrint'
+      operationId: dcs_v1_printers_receipts_passenger_print_post
+      requestBody:
+        x-name: request
+        description: Passenger receipt print request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerReceiptPrintRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/passenger/printStreams:
+    post:
+      tags:
+      - printers
+      summary: Generates receipt print streams for selected passengers of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.  If the user is
+
+        not an agent, then the specified booking must be in state and unmodified.
+
+
+        GraphQL endpoint: dcsGeneratePassengerReceiptPrintStreams'
+      operationId: dcs_v1_printers_receipts_passenger_printStreams_post
+      requestBody:
+        x-name: request
+        description: Passenger receipt print streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassengerReceiptPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/payment/print:
+    post:
+      tags:
+      - printers
+      summary: Performs receipt print for a specific payment of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.
+
+
+        GraphQL endpoint: dcsPerformPaymentReceiptPrint'
+      operationId: dcs_v1_printers_receipts_payment_print_post
+      requestBody:
+        x-name: request
+        description: Payment receipt print request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptPrintRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print result data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPrinterCommandsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/printers/receipts/payment/printStreams:
+    post:
+      tags:
+      - printers
+      summary: Generates receipt print streams for a specific payment of the specified booking.
+      description: 'This endpoint uses the session''s location code if one isn''t provided.  If the user is
+
+        not an agent, then the specified booking must be in state and unmodified.
+
+
+        GraphQL endpoint: dcsGeneratePaymentReceiptPrintStreams'
+      operationId: dcs_v1_printers_receipts_payment_printStreams_post
+      requestBody:
+        x-name: request
+        description: Payment receipt print streams request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptPrintStreamsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: Print stream strings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfListOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    PrinterInitializationRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - deviceManagerKey
+      - clientName
+      - clientId
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    BagTagPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - recordLocator
+      - baggageKeys
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        recordLocator:
+          type: string
+          minLength: 1
+        baggageKeys:
+          type: array
+          items:
+            type: string
+    ResponseData:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: The key or name for this data.
+        value:
+          type:
+          - string
+          - 'null'
+          description: The value for this data.
+    PrinterCommandResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        documentId:
+          type:
+          - string
+          - 'null'
+        isSuccessful:
+          type: boolean
+        errorCode:
+          type:
+          - string
+          - 'null'
+          description: Error Code that informs about any failures.
+        errorMessage:
+          type:
+          - string
+          - 'null'
+          description: 'Error Message that informs about any failures.
+
+            Only set when IsSuccessful is false.'
+        result:
+          type:
+          - string
+          - 'null'
+          description: The actual result of the command.
+        responseData:
+          type:
+          - array
+          - 'null'
+          description: Any additinal data.
+          items:
+            $ref: '#/components/schemas/ResponseData'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    PaymentReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      - paymentKey
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        paymentKey:
+          type: string
+          minLength: 1
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfPrinterCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/PrinterCommandsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    BookingReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        useSummaryFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Summary. If false or
+
+            null, the print streams will be formatted for receipt type of PrintAll.'
+    PrinterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printerKey
+      properties:
+        printerKey:
+          type: string
+          minLength: 1
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+        usages:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    IJsonResponseOfListOfPrinter:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Printer'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PrinterCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        clientId:
+          type:
+          - string
+          - 'null'
+        deviceName:
+          type:
+          - string
+          - 'null'
+        responses:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PrinterCommandResponse'
+    PrinterCommandsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+    PassengerReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      - passengerKeys
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        useKioskFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Kiosk. If false or
+
+            null, the print streams will be formatted for receipt type of PrintSelected.'
+    BoardingPassPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - segmentKeys
+      - passengerKeys
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    BoardingPassPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - recordLocator
+      - segmentKeys
+      - passengerKeys
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+    PaymentReceiptPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - paymentKey
+      - recordLocator
+      - stationCode
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        paymentKey:
+          type: string
+          minLength: 1
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfListOfBagTagPrintStreams:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/BagTagPrintStreams'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    BookingReceiptPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        useSummaryFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Summary. If false or
+
+            null, the print streams will be formatted for receipt type of PrintAll.'
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    BagTagPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - baggageKeys
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        baggageKeys:
+          type: array
+          items:
+            type: string
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    PassengerReceiptPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - passengerKeys
+      - recordLocator
+      - stationCode
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        useKioskFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Kiosk. If false or
+
+            null, the print streams will be formatted for receipt type of PrintSelected.'
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    BagTagPrintStreams:
+      type: object
+      additionalProperties: false
+      properties:
+        baggageKey:
+          type:
+          - string
+          - 'null'
+        printStreams:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Printer:
+      type: object
+      additionalProperties: false
+      properties:
+        printerKey:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

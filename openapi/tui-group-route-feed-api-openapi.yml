@@ -1,0 +1,85 @@
+openapi: 3.2.0
+info:
+  title: Meta Partner Packages & Flights Route Feed API
+  description: "The Meta Partner Packages & Flights provides a suite of RESTful endpoints that enable meta partners to search \nfor and retrieve up-to-date information on flights and travel packages.\nIt allows clients to integrate real-time availability and pricing into their applications."
+  version: 1.0.0
+servers:
+- url: https://prod.api.tui/sales/pip-package/partner
+  description: Prod Server
+- url: https://pre-prod.api.tui/sales/pip-package/partner
+  description: Pre-prod Server
+tags:
+- name: Route Feed
+paths:
+  /{market}/flights/{agent}/route-feed:
+    get:
+      operationId: GetFlightsRouteFeed
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FlightsRoute'
+                type: array
+      description: This endpoint returns the current flights route feed.
+      tags:
+      - Route Feed
+      security:
+      - tsoa_auth_prod: []
+      - tsoa_auth_preprod: []
+      parameters:
+      - description: 'The source market code. Accepted values: dk, fi, no, se.'
+        in: path
+        name: market
+        required: true
+        schema:
+          type: string
+          pattern: ^dk$|^fi$|^no$|^se$
+      - description: Your agent code. This will be used for monitoring purposes.
+        in: path
+        name: agent
+        required: true
+        schema:
+          type: string
+          pattern: ^\w+$
+components:
+  schemas:
+    FlightsRoute:
+      properties:
+        origin:
+          type: string
+        destination:
+          type: string
+        days_of_week:
+          type: string
+        effective_start:
+          type: string
+        effective_end:
+          type: string
+      required:
+      - origin
+      - destination
+      - days_of_week
+      - effective_start
+      - effective_end
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    tsoa_auth_prod:
+      type: oauth2
+      description: Production OAuth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://prod.api.tui/oauth2/token
+          scopes:
+            read:sales-meta-package: Read access
+    tsoa_auth_preprod:
+      type: oauth2
+      description: Pre-production OAuth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://pre-prod.api.tui/oauth2/token
+          scopes:
+            read:sales-meta-package: Read access

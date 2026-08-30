@@ -1,0 +1,960 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Pricing API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: pricing
+paths:
+  /api/apo/v1/pricing:
+    post:
+      tags:
+      - pricing
+      summary: Creates a pricing offer in the ancillary pricing options service.
+      description: 'GraphQL endpoint: apoPricingAdd'
+      operationId: apo_v1_pricing_post
+      requestBody:
+        x-name: request
+        description: The price request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApoPriceRequest'
+            examples:
+              APO pricing request:
+                description: Example APO pricing request.
+                value:
+                  currencyCode: USD
+                  passengerType: ADT
+                  externalBookingReference: '0'
+                  stage: 0
+                  inputParameters:
+                  - code: AgentID
+                    values:
+                    - '1'
+                  - code: FareClass
+                    values:
+                    - S
+                  - code: JourneyDestinationCountryCode
+                    values:
+                    - A
+                  - code: JourneyDestinationLocationCode
+                    values:
+                    - A
+                  - code: JourneyOriginCountryCode
+                    values:
+                    - A
+                  - code: MarketingCarrierCode
+                    values:
+                    - A
+                  - code: NumberOfPassengers
+                    values:
+                    - '1'
+                  - code: TotalItineraryPrice
+                    values:
+                    - '720.0'
+                  - code: TripFirstTravelDate
+                    values:
+                    - '2079-07-23T14:20:00'
+                  - code: SegmentFirstTravelDate
+                    values:
+                    - '2079-07-23T14:20:00'
+                  - code: TripReturnTravelDate
+                    values:
+                    - '2079-07-24T14:20:00'
+                  - code: ChannelID
+                    values:
+                    - '1'
+                  - code: IPAddress
+                    values:
+                    - 127.0.0.1
+                  - code: JourneyTravelTime
+                    values:
+                    - '395'
+                  - code: ResidentCountryCode
+                    values:
+                    - US
+                  - code: RoleName
+                    values:
+                    - SYSM
+                  - code: SegmentDestinationCountryCode
+                    values:
+                    - US
+                  - code: SegmentDestinationLocationCode
+                    values:
+                    - LAX
+                  - code: SegmentOriginCountryCode
+                    values:
+                    - US
+                  - code: SegmentOriginLocationCode
+                    values:
+                    - JFK
+                  - code: SegmentTravelTime
+                    values:
+                    - '395'
+                  - code: TotalFare
+                    values:
+                    - '720.0'
+                  - code: TripDestinationCountryCode
+                    values:
+                    - US
+                  - code: TripDestinationLocationCode
+                    values:
+                    - LAX
+                  - code: TripOriginCountryCode
+                    values:
+                    - US
+                  - code: TripOriginLocationCode
+                    values:
+                    - JFK
+                  - code: TripType
+                    values:
+                    - '2'
+                  valueTypes:
+                  - Price
+                  products:
+                  - productReference: '0'
+                    source: NS
+                    provider: FARE
+                    code: A
+                    variation: null
+                    type: DEF
+                    originalPrice: 100.0
+                    cost: 0.0
+                    available: -1
+                    count: 1
+                    segmentProductRatio: 1
+                    inputParameters: null
+                  - productReference: '1'
+                    source: NS
+                    provider: FARE
+                    code: B
+                    variation: null
+                    type: DEF
+                    originalPrice: 100.0
+                    cost: 0.0
+                    available: -1
+                    count: 1
+                    segmentProductRatio: 1
+                    inputParameters: null
+                  - productReference: '2'
+                    source: NS
+                    provider: FARE
+                    code: Z
+                    variation: null
+                    type: DEF
+                    originalPrice: 100.0
+                    cost: 0.0
+                    available: -1
+                    count: 1
+                    segmentProductRatio: 1
+                    inputParameters: null
+                  - productReference: '3'
+                    source: NS
+                    provider: FARE
+                    code: B
+                    variation: null
+                    type: DEF
+                    originalPrice: 100.0
+                    cost: 0.0
+                    available: -1
+                    count: 1
+                    segmentProductRatio: 1
+                    inputParameters: null
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfPriceOffer'
+              examples:
+                APO price offers are created:
+                  description: Example when APO price offers are created.
+                  value:
+                    data:
+                    - type: Price
+                      productReference: '3'
+                      price: 90.0
+                      currencyCode: USD
+                      probability: 0
+                      offerCode: OfferDAPI
+                      acceptZero: true
+                      chargeCode: DISC
+                      points: 0
+                      outputParameters:
+                      - key: MarketingCarrierCode
+                        value: A
+                      - key: NumberOfPassengers
+                        value: '1'
+                      - key: PaxType
+                        value: ADT
+                      - key: TotalItineraryPrice
+                        value: '720.0'
+                      - key: FareClass
+                        value: S
+                      - key: AgentID
+                        value: '1'
+                    - type: Price
+                      productReference: '1'
+                      price: 90.0
+                      currencyCode: USD
+                      probability: 0
+                      offerCode: OfferDAPI
+                      acceptZero: true
+                      chargeCode: DISC
+                      points: 0
+                      outputParameters:
+                      - key: MarketingCarrierCode
+                        value: A
+                      - key: NumberOfPassengers
+                        value: '1'
+                      - key: PaxType
+                        value: ADT
+                      - key: TotalItineraryPrice
+                        value: '720.0'
+                      - key: FareClass
+                        value: S
+                      - key: AgentID
+                        value: '1'
+                    - type: Price
+                      productReference: '2'
+                      price: 90.0
+                      currencyCode: USD
+                      probability: 0
+                      offerCode: OfferDAPI
+                      acceptZero: true
+                      chargeCode: DISC
+                      points: 0
+                      outputParameters:
+                      - key: MarketingCarrierCode
+                        value: A
+                      - key: NumberOfPassengers
+                        value: '1'
+                      - key: PaxType
+                        value: ADT
+                      - key: TotalItineraryPrice
+                        value: '720.0'
+                      - key: FareClass
+                        value: S
+                      - key: AgentID
+                        value: '1'
+                    - type: Price
+                      productReference: '3'
+                      price: 90.0
+                      currencyCode: USD
+                      probability: 0
+                      offerCode: OfferDAPI
+                      acceptZero: true
+                      chargeCode: DISC
+                      points: 0
+                      outputParameters:
+                      - key: MarketingCarrierCode
+                        value: A
+                      - key: NumberOfPassengers
+                        value: '1'
+                      - key: PaxType
+                        value: ADT
+                      - key: TotalItineraryPrice
+                        value: '720.0'
+                      - key: FareClass
+                        value: S
+                      - key: AgentID
+                        value: '1'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: apo:General:NotEnabled
+                      message: The ancillary pricing options functionality is not enabled for the current environment.
+                      type: Critical
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/apo/v1/pricing/configuration:
+    get:
+      tags:
+      - pricing
+      summary: Gets the pricing configuration data from the ancillary pricing options service.
+      description: 'GraphQL endpoint: apoPricingConfiguration'
+      operationId: apo_v1_pricing_configuration_get
+      parameters:
+      - name: source
+        in: query
+        description: The pricing configuration source.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfPricingConfiguration'
+              examples:
+                APO pricing configuration response:
+                  description: Example APO pricing configuration response.
+                  value:
+                    data:
+                      chargeCode: DISC
+                      maximumOptimizePercentage: 1.0
+                      settings:
+                      - code: CHRG
+                        value: DISC
+                      - code: DTRTPRD
+                        value: ALL
+                      - code: LOYFIL
+                        value: MonetaryOnly,PointsOnly,PointsAndMonetary
+                      - code: MAXBDL
+                        value: '1'
+                      - code: ACPTZRO
+                        value: 'FALSE'
+                      - code: MOPTP
+                        value: '1.0'
+                      providers:
+                      - code: Fare
+                        source: NS
+                        inputParameters:
+                        - AgentID
+                        - ChannelID
+                        - ClientName
+                        - CustomerHomeCity
+                        - FareClass
+                        - FirstPassengerHomeCity
+                        - GoverningFareBasisCode
+                        - GoverningFareClassOfService
+                        - GoverningFareType
+                        - GoverningProductClass
+                        - IPAddress
+                        - JourneyConnectingStationsList
+                        - JourneyDestinationCountryCode
+                        - JourneyDestinationLocationCode
+                        - JourneyEquipmentMarketingConfigurationList
+                        - JourneyEquipmentSalesConfigurationList
+                        - JourneyEquipmentTypeList
+                        - JourneyEquipmentTypeSuffixList
+                        - JourneyFareClassOfServiceList
+                        - JourneyFirstTravelDate
+                        - JourneyFlightType
+                        - JourneyHasMarketingCodeShare
+                        - JourneyHasOutboundInterline
+                        - JourneyMarketingCarrierCodeList
+                        - JourneyMarketingFlightNumberList
+                        - JourneyOperatingCarrierCodeList
+                        - JourneyOperatingFlightNumberList
+                        - JourneyOriginCountryCode
+                        - JourneyOriginLocationCode
+                        - JourneyOriginLocationCodeTimeZoneOffset
+                        - JourneySalesDate
+                        - JourneySoldAgentRoleCode
+                        - JourneySoldByLegByTravelClassList
+                        - JourneyTravelClassList
+                        - JourneyTravelTime
+                        - LoyaltyFilter
+                        - NumberOfPassengers
+                        - OverrideSamplingRandomNumber
+                        - ParentBookingID
+                        - ParentRecordLocator
+                        - PassengerDiscountCode
+                        - PricingDate
+                        - PromotionCode
+                        - RecordLocator
+                        - ResidentCountryCode
+                        - RoleName
+                        - SourceEndpoint
+                        - SourceOrganizationCode
+                        - SystemCode
+                        - TotalFare
+                        - TotalFareWithoutFeeAndTax
+                        - TotalItineraryPrice
+                        - TripDestinationCountryCode
+                        - TripDestinationLocationCode
+                        - TripFirstTravelDate
+                        - TripOriginCountryCode
+                        - TripOriginLocationCode
+                        - TripOriginLocationCodeTimeZoneOffsetMinutes
+                        - TripReturnTravelDate
+                        - TripType
+                        - WebSessionID
+                        products:
+                        - code: D
+                          variation: null
+                          type: null
+                        - code: B
+                          variation: null
+                          type: null
+                        - code: N
+                          variation: null
+                          type: null
+                        - code: A
+                          variation: null
+                          type: null
+                        - code: A
+                          variation: CR
+                          type: null
+                        - code: C
+                          variation: null
+                          type: null
+                        - code: C
+                          variation: CR
+                          type: null
+                        - code: C
+                          variation: CV
+                          type: null
+                        - code: B
+                          variation: null
+                          type: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                APO is not enabled:
+                  description: Example response when APO is not enabled. Please coordinate with your Navitaire account manager if this functionality needs to be enabled.
+                  value:
+                    errors:
+                    - id: null
+                      code: apo:General:NotEnabled
+                      message: The ancillary pricing options functionality is not enabled for the current environment.
+                      type: Critical
+                      details: null
+                      rawMessage: The ancillary pricing options functionality is not enabled for the current environment.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Source is null or empty:
+                  description: Example response when the source is null or empty.
+                  value:
+                    errors:
+                    - id: null
+                      code: apo:Pricing:EmptyPricingSource
+                      message: apo:Pricing:EmptyPricingSource
+                      type: Validation
+                      details: null
+                      rawMessage: The pricing configuration source is empty.  A value must be set.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    PriceOffer:
+      type: object
+      description: "Defines the price offer model.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the type of request that was sent.\n            "
+        productReference:
+          type:
+          - string
+          - 'null'
+          description: "Used for data mapping for the requested product.\n            "
+        price:
+          type: number
+          description: "Contains the optimized price from the APO service.\n            "
+          format: decimal
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Currency code for the optimized price.\n            "
+        probability:
+          type: integer
+          description: "The probability computation for the result.\n            "
+          format: int32
+        offerCode:
+          type:
+          - string
+          - 'null'
+          description: "The offer code which gave the optimized price.\n            "
+        acceptZero:
+          type: boolean
+          description: "Indicates if the offer accepts a zero price.\n            "
+        chargeCode:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the offer's charge code.\n            "
+        points:
+          type: integer
+          description: "Contains the optimized points from the APO service.\n            "
+          format: int32
+        outputParameters:
+          type:
+          - array
+          - 'null'
+          description: "The output parameters. Please refer to the NDP/APO documentation for the output parameters key value pair\nconfiguration.\n            "
+          items:
+            $ref: '#/components/schemas/KeyValuePairOfStringAndString'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    PricingProvider:
+      type: object
+      description: "Defines the pricing provider model.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The session provider code.\n            "
+        source:
+          type:
+          - string
+          - 'null'
+          description: "The session provider source.\n            "
+        inputParameters:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation session input parameters.\n            "
+          items:
+            type: string
+        products:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation session products.\n            "
+          items:
+            $ref: '#/components/schemas/PricingProduct'
+    PriceRequestProduct:
+      type: object
+      description: "Defines the price request model.\n            "
+      additionalProperties: false
+      required:
+      - productReference
+      - source
+      - provider
+      - code
+      properties:
+        productReference:
+          type: string
+          description: "The product reference, used for data mapping. \nThis is the RecommendedPriceRequestProduct.ProductKey field in APO\n            "
+          minLength: 1
+        source:
+          type: string
+          description: "The product source. \n            "
+          maxLength: 7
+          minLength: 0
+        provider:
+          type: string
+          description: "The product provider. \n            "
+          maxLength: 7
+          minLength: 0
+        code:
+          type: string
+          description: "The pricing product code.\nThis is the RecommendedPriceRequestProduct.ProductCode field in APO\n            "
+          maxLength: 36
+          minLength: 0
+        variation:
+          type:
+          - string
+          - 'null'
+          description: "The pricing product variation. \nThis is the RecommendedPriceRequestProduct.ProductVariationCode field in APO\n            "
+          maxLength: 32
+          minLength: 0
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The pricing product type. \nThis is the RecommendedPriceRequestProduct.ProductTypeCode field in APO\n            "
+          maxLength: 7
+          minLength: 0
+        originalPrice:
+          type: number
+          description: "The product's original price. \n            "
+          format: decimal
+          minimum: 0.0
+        cost:
+          type: number
+          description: "The product cost. \n            "
+          format: decimal
+        available:
+          type:
+          - integer
+          - 'null'
+          description: "The available inventory for this product.\n            "
+          format: int32
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The quantity of this product requested for this session.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 0.0
+        segmentProductRatio:
+          type:
+          - integer
+          - 'null'
+          description: "The segment ratio, if available. \n            "
+        inputParameters:
+          type:
+          - array
+          - 'null'
+          description: "The input parameters associated with this product. \nThis is the RecommendedPriceRequestProduct.ProductAttributes field in APO\n            "
+          items:
+            $ref: '#/components/schemas/PriceInputParameters'
+    ApoPriceRequest:
+      type: object
+      description: "Defines the recommend price request model.\n            "
+      additionalProperties: false
+      properties:
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The charge code to be used for all discount records that will be added.\n            "
+          maxLength: 3
+          minLength: 0
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The passenger type.\n            "
+        externalBookingReference:
+          type:
+          - string
+          - 'null'
+          description: "The booking reference associated by the selling system for this transaction.  This value is optional,\nas it is for data mapping purposes only.\n            "
+        stage:
+          description: "Defines the stage of this transaction.\n            "
+          $ref: '#/components/schemas/ApoPricingStage'
+        inputParameters:
+          type:
+          - array
+          - 'null'
+          description: "The collection of Input Parameters to be used for this session.\n            "
+          items:
+            $ref: '#/components/schemas/PriceInputParameters'
+        valueTypes:
+          type:
+          - array
+          - 'null'
+          description: "Defines the price types to be generated by the system.\n            "
+          items:
+            type: string
+        products:
+          type:
+          - array
+          - 'null'
+          description: "Contains the products that will be processed.\n            "
+          items:
+            $ref: '#/components/schemas/PriceRequestProduct'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PricingConfiguration:
+      type: object
+      description: "Defines the pricing configuration model.\n            "
+      additionalProperties: false
+      properties:
+        chargeCode:
+          type:
+          - string
+          - 'null'
+          description: "The charge code to be used for all discount records that will be added.\n            "
+        maximumOptimizePercentage:
+          type: number
+          description: "This is the largest sample size active in the service.\n            "
+          format: double
+        settings:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation's settings.\n            "
+          items:
+            $ref: '#/components/schemas/PricingSetting'
+        providers:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation's providers.\n            "
+          items:
+            $ref: '#/components/schemas/PricingProvider'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ApoPricingStage:
+      type: integer
+      description: "An enumeration to indicate the ancillary pricing options pricing stage.\n            \n\n0 = Look\n1 = Sell\n2 = Book"
+      x-enumNames:
+      - Look
+      - Sell
+      - Book
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfPricingConfiguration:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PricingConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfPriceOffer:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PriceOffer'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PriceInputParameters:
+      type: object
+      description: "Defines the price request model.\n            "
+      additionalProperties: false
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          description: "The input parameter's code.\n            "
+          maxLength: 64
+          minLength: 0
+        values:
+          type:
+          - array
+          - 'null'
+          description: "The values associated with this input parameter.\n            "
+          items:
+            type: string
+    KeyValuePairOfStringAndString:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+    PricingProduct:
+      type: object
+      description: "Defines the pricing product model.\n            "
+      additionalProperties: false
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          description: "The pricing product code.\n            "
+          maxLength: 36
+          minLength: 0
+        variation:
+          type:
+          - string
+          - 'null'
+          description: "The pricing product variation.\n            "
+          maxLength: 32
+          minLength: 0
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The pricing product type.\n            "
+          maxLength: 7
+          minLength: 0
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    PricingSetting:
+      type: object
+      description: "Defines the pricing setting model.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The setting code.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The setting value.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

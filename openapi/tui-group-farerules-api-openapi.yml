@@ -1,0 +1,513 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Fare Rules API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: fareRules
+paths:
+  /api/nsk/v1/fareRules/{fareAvailabilityKey}:
+    get:
+      tags:
+      - fareRules
+      summary: Gets the fare rules from the server based on a fare availability key.
+      description: 'Note that this defaults to returning the fare rules in HTML format.
+
+        The HTML format may not be entirely culture sensitive, so setting the convertToHtml flag to false
+
+        will allow users some flexibility when converting the content and the fare rules will be returned as an RTF string.
+
+
+        GraphQL endpoint: fareRulesByAvailabilityKeyv2'
+      operationId: nsk_v1_fareRules_fareAvailabilityKey_get
+      parameters:
+      - name: fareAvailabilityKey
+        in: path
+        required: true
+        description: The unique fare availability key to get rules for.
+        schema:
+          type: string
+        x-position: 1
+      - name: convertToHtml
+        in: query
+        description: Whether to convert to HTML. Defaults to true.
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfFareRule'
+              examples:
+                Retrieve Fare Rules Stateless:
+                  description: Example response for successfully retrieving the fare rules statelessly.
+                  value:
+                    data:
+                      fareSellKey: MH5Rfn5NS35RVENGQVJFfkNDNTB_fjF_MX5OTU5MWVRaMDAxMDAxMH5YXjB_U35_TUt_UVRDRkFSRX5DQzUwfn4xfjF_Tk1OTFlUWjAwMTAwMTB_WCEwMg--
+                      content: 'Fare Rules and Conditions: Tickets are available for purchase by all individuals aged 18 and above.'
+                With Empty Fare Rules List:
+                  description: Example response when there are no fare rules returned.
+                  value:
+                    data: []
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                With Invalid Fare Availability Key:
+                  description: The fare availability key is not valid or does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'fareAvailabilityKey' with value 'MTW' is invalid.
+                      type: Validation
+                      details:
+                        fareAvailabilityKey: MTW
+                      rawMessage: The identifier 'fareAvailabilityKey' with value 'MTW' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/fareRules/category50/journeys/{journeyKey}/segments/{segmentKey}:
+    post:
+      tags:
+      - fareRules
+      summary: Get the category 50 fare rule information after an availability call.
+      description: 'This is functionally a GET but POST is used to reduce URL length overhead.
+
+
+        GraphQL endpoint: category50FareRuleInfov2'
+      operationId: nsk_v2_fareRules_category50_journeys_journeyKey_segments_segmentKey_post
+      parameters:
+      - name: journeyKey
+        in: path
+        required: true
+        description: The journey key.
+        schema:
+          type: string
+        x-position: 1
+      - name: segmentKey
+        in: path
+        required: true
+        description: The segment key.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The v2 category 50 request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category50Requestv2'
+            examples:
+              Category 50 Fare Rule Request:
+                description: Example request for retrieving category 50 fare rule information.
+                value:
+                  fareAvailabilityKey: MH5Rfn5NS35RVENGQVJFfkNDNTB_fjF_MX5OTU5MWVRaMDAxMDAxMH5Y
+                  passengerPriceTypes:
+                  - passengerType: ADT
+                    passengerDiscountCode: ADT
+                    passengerCount: 1
+                  cultureCode: en-US
+                  convertToHtml: true
+        required: true
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfCategory50Responsev2'
+              examples:
+                Retrieve Category 50 Fare Rule Information:
+                  description: Example response for successfully retrieving the category 50 fare rule information.
+                  value:
+                    data:
+                      title: Category 50 Fare Rule
+                      text: 'Fare Rules and Conditions: Tickets are available for purchase by all individuals aged 18 and above.'
+                      dataType: 0
+                      cultureCode: en-US
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                With Invalid Journey Key:
+                  description: The journey key is not valid or does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'journeyKey' with value 'MTW' is invalid.
+                      type: Validation
+                      details:
+                        journeyKey: MTW
+                      rawMessage: The identifier 'journeyKey' with value 'MTW' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With Invalid Segment Key:
+                  description: The segment key is not valid or does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'segmentKey' with value 'MTW' is invalid.
+                      type: Validation
+                      details:
+                        segmentKey: MTW
+                      rawMessage: The identifier 'segmentKey' with value 'MTW' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                With Invalid Fare Availability Key:
+                  description: The fare availability key is not valid or does not exist.
+                  value:
+                    errors:
+                    - id: null
+                      code: nsk:Exceptions:InvalidKey
+                      message: The identifier 'fareAvailabilityKey' with value 'MTW' is invalid.
+                      type: Validation
+                      details:
+                        fareAvailabilityKey: MTW
+                      rawMessage: The identifier 'fareAvailabilityKey' with value 'MTW' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                With Null Fare Rule Information:
+                  description: Example response when there is no fare rule information returned.
+                  value:
+                    data: null
+components:
+  schemas:
+    FareRule:
+      type: object
+      description: "Defines a fare rule and its data.\n            "
+      additionalProperties: false
+      properties:
+        fareSellKey:
+          type:
+          - string
+          - 'null'
+          description: "The fare sell key that is in reference to the fare rule.\n            "
+        content:
+          type:
+          - string
+          - 'null'
+          description: "The fare rule content.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    Category50Requestv2:
+      type: object
+      description: "Represents a v2 cat 50 request.\n            "
+      additionalProperties: false
+      required:
+      - fareAvailabilityKey
+      - passengerPriceTypes
+      properties:
+        fareAvailabilityKey:
+          type: string
+          description: "The fare availability key.\n            "
+          minLength: 1
+        passengerPriceTypes:
+          type: array
+          description: "The list of passenger types and the counts for each.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerPriceType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+        convertToHtml:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag, if true, convert response to html. Defaults to true.\n            "
+    IJsonResponseOfCategory50Responsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Category50Responsev2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    Category50Responsev2:
+      type: object
+      description: "Represents a cat 50 response.\n            "
+      additionalProperties: false
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title of the category 50 fare rule information.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The formatted text for the category 50 fare rule information..\n            "
+        dataType:
+          description: "The content data type of the text.\n            "
+          $ref: '#/components/schemas/ContentDataType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfFareRule:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/FareRule'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    PassengerPriceType:
+      type: object
+      description: "Represents a cat 50 request.\n            "
+      additionalProperties: false
+      properties:
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The passenger type code assigned to this group of passengers.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger discount code assigned to this group of passengers.\nThis value will be overriden if there is a passenger\ndiscount code associated with the availability requests promotion code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerCount:
+          type: integer
+          description: "The number of passengers in this group with the specified passenger type\nand discount code.\n            "
+          format: int32
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    ContentDataType:
+      type: integer
+      description: "Defines the content data type enumeration.\n            \n\n0 = Default\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx\n-1 = Unmapped"
+      x-enumNames:
+      - Default
+      - Text
+      - RichTextFormat
+      - ImageJpg
+      - ImageGif
+      - ImageBmp
+      - ImagePng
+      - WordDoc
+      - Html
+      - Pdf
+      - Uri
+      - WordDocx
+      - Unmapped
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - -1
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

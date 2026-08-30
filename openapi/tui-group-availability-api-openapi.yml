@@ -1,0 +1,3552 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Availability API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: availability
+paths:
+  /api/nsk/v3/availability/lowfare:
+    post:
+      tags:
+      - availability
+      summary: 'Searches for low fare availability with the full low fare search request. This request allows for total control
+
+        over the configuration. If a property is not set, the default settings (LowFareAvailabilitySettings) are used in
+
+        its place. Note low fare will not always match availability requests for certain configurations including sorting
+
+        by taxes and fees.'
+      description: 'Although this endpoint behaves like a GET, POST reduces the limitations resulting from URL length issues.
+
+        When LowFareAvailabilityRequest.GetAllDetails is set to true, New Skies sets the passenger count in the request
+
+        to zero. This means that passenger count restrictions on a fare are not considered and that any available fare
+
+        is returned.
+
+
+        GraphQL endpoint: availabilityLowFarev3'
+      operationId: nsk_v3_availability_lowfare_post
+      requestBody:
+        x-name: request
+        description: The low fare availability request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LowFareAvailabilityRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfLowFareAvailabilityv2'
+              examples:
+                200 OK Response With Macs, One Way:
+                  description: Example response for a successful call for a one way flight, with macs included.
+                  value:
+                    data:
+                      trips:
+                      - lowFareAvailableByMarket:
+                          slC|BOS:
+                          - lowestFareAmount:
+                              fareAmount: 40.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 40.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: BOS
+                                origin: SLC
+                                flightNumber: '5600'
+                                carrierCode: NV
+                                equipmentType: '380'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flg-
+                              soldOut: false
+                            destination: BOS
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                          slC|MHT:
+                          - lowestFareAmount:
+                              fareAmount: 50.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 50.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - Y
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: MHT
+                                origin: SLC
+                                flightNumber: '5200'
+                                carrierCode: NV
+                                equipmentType: '280'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flt
+                              soldOut: false
+                            destination: MHT
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                      includeTaxesAndFees: false
+                      currencyCode: USD
+                200 OK Response, round trip:
+                  description: Example response for a successful call round trip
+                  value:
+                    data:
+                      trips:
+                      - lowFareAvailableByMarket:
+                          slC|BOS:
+                          - lowestFareAmount:
+                              fareAmount: 40.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 40.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: BOS
+                                origin: SLC
+                                flightNumber: '5600'
+                                carrierCode: NV
+                                equipmentType: '380'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flg-
+                              soldOut: false
+                            destination: BOS
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                      - lowFareAvailableByMarket:
+                          boS|SLC:
+                          - lowestFareAmount:
+                              fareAmount: 80.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 80.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-06T00:00:00'
+                              departureTime: '2024-02-06T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-06T00:00:00'
+                                departureTime: '2024-02-06T00:00:00'
+                                destination: SLC
+                                origin: BOS
+                                flightNumber: '6500'
+                                carrierCode: NV
+                                equipmentType: '830'
+                                operatingCarrier: null
+                              availableCount: 50
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfj
+                              soldOut: false
+                            destination: SLC
+                            origin: BOS
+                            departureDate: '2024-02-06T00:00:00'
+                            noFlights: false
+                      includeTaxesAndFees: false
+                      currencyCode: USD
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/availability/lowfare/estimate:
+    get:
+      tags:
+      - availability
+      summary: Retrieves the low fare availability estimate using a range of dates.
+      description: 'This endpoint, unless otherwise specified, will request the pricing and availability for a single adult passenger.
+
+        However, the number of passengers can be set on the
+
+        request.  It is important to note that the pricing on this endpoint is estimated.  It will not match availability
+
+        due to round trip vs one way discounts, taxes and fees
+
+        variations, multi passenger discounts, recently sold out fares, etc.  It''s intended to be an estimate only.  Due to
+
+        these restrictions this endpoint is extremely
+
+        performant and can be configured to be cached, with a high cache hit rate.
+
+
+        GraphQL endpoint: availabilityLowFareEstimate'
+      operationId: nsk_v1_availability_lowfare_estimate_get
+      parameters:
+      - name: StartDate
+        in: query
+        description: "The start date to retrieve from the low fare cache.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 1
+      - name: EndDate
+        in: query
+        description: "The end date for the low fare cache request.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        x-position: 2
+      - name: Origin
+        in: query
+        description: "The origin station code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 3
+      - name: Destination
+        in: query
+        description: "The destination station code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 4
+      - name: CurrencyCode
+        in: query
+        description: "The currency code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 0
+        x-position: 5
+      - name: IncludeTaxesAndFees
+        in: query
+        description: "A flag to indicate if taxes and fees should be included.\n            "
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 6
+      - name: NumberOfPassengers
+        in: query
+        description: "The number of passengers\n            "
+        schema:
+          type:
+          - integer
+          - 'null'
+        x-position: 7
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfLowFareEstimateResults'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v3/availability/lowfare/simple:
+    post:
+      tags:
+      - availability
+      summary: 'Searches for low fare availability with the simple search request. The simple search request covers the common
+
+        search
+
+        criteria and lets default settings (LowFareAvailabilitySettings) configure the rest. Note low fare will not always
+
+        match availability requests for certain configurations included sorting by taxes and fees.'
+      description: 'Although this endpoint behaves like a GET, POST reduces the limitations resulting from URL length issues.
+
+
+        GraphQL endpoint: availabilityLowFareSimplev3'
+      operationId: nsk_v3_availability_lowfare_simple_post
+      requestBody:
+        x-name: request
+        description: The low fare availability search simple request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LowFareAvailabilitySearchSimpleRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfLowFareAvailabilityv2'
+              examples:
+                200 OK Response With Macs, One Way:
+                  description: Example response for a successful call for a one way flight, with macs included.
+                  value:
+                    data:
+                      trips:
+                      - lowFareAvailableByMarket:
+                          slC|BOS:
+                          - lowestFareAmount:
+                              fareAmount: 40.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 40.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: BOS
+                                origin: SLC
+                                flightNumber: '5600'
+                                carrierCode: NV
+                                equipmentType: '380'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flg-
+                              soldOut: false
+                            destination: BOS
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                          slC|MHT:
+                          - lowestFareAmount:
+                              fareAmount: 50.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 50.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - Y
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: MHT
+                                origin: SLC
+                                flightNumber: '5200'
+                                carrierCode: NV
+                                equipmentType: '280'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flt
+                              soldOut: false
+                            destination: MHT
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                      includeTaxesAndFees: false
+                      currencyCode: USD
+                200 OK Response, round trip:
+                  description: Example response for a successful call round trip
+                  value:
+                    data:
+                      trips:
+                      - lowFareAvailableByMarket:
+                          slC|BOS:
+                          - lowestFareAmount:
+                              fareAmount: 40.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 40.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-01T00:00:00'
+                              departureTime: '2024-02-01T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-01T00:00:00'
+                                departureTime: '2024-02-01T00:00:00'
+                                destination: BOS
+                                origin: SLC
+                                flightNumber: '5600'
+                                carrierCode: NV
+                                equipmentType: '380'
+                                operatingCarrier: null
+                              availableCount: 24
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfjF_flg-
+                              soldOut: false
+                            destination: BOS
+                            origin: SLC
+                            departureDate: '2024-02-01T00:00:00'
+                            noFlights: false
+                      - lowFareAvailableByMarket:
+                          boS|SLC:
+                          - lowestFareAmount:
+                              fareAmount: 80.0
+                              farePointAmount: 0.0
+                              taxesAndFeesAmount: 0.0
+                            lowFares:
+                            - passengers:
+                                adt:
+                                  discountCode: null
+                                  fareAmount: 80.0
+                                  type: ADT
+                                  farePointAmount: 0.0
+                                  taxesAndFeesAmount: 0.0
+                              bookingClasses:
+                              - E
+                              arrivalTime: '2024-02-06T00:00:00'
+                              departureTime: '2024-02-06T00:00:00'
+                              legs:
+                              - arrivalTime: '2024-02-06T00:00:00'
+                                departureTime: '2024-02-06T00:00:00'
+                                destination: SLC
+                                origin: BOS
+                                flightNumber: '6500'
+                                carrierCode: NV
+                                equipmentType: '830'
+                                operatingCarrier: null
+                              availableCount: 50
+                              productClass: null
+                              referenceFareKey: MH5Ffn5OVn5FUlBUU0ZSRX5SUFRTfn4wfj
+                              soldOut: false
+                            destination: SLC
+                            origin: BOS
+                            departureDate: '2024-02-06T00:00:00'
+                            noFlights: false
+                      includeTaxesAndFees: false
+                      currencyCode: USD
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v4/availability/search:
+    post:
+      tags:
+      - availability
+      summary: 'Searches for availability with the full availability search request. This request allows for total control over
+
+        the configuration. If a property is not set, default values will be set instead. These defaults are what we
+
+        consider a general optimized request. If these optimizations are not preferred the requester will need to
+
+        opted out the filters on the availability request.'
+      description: 'Note: It is advised to optimize the availability request with passing in at least one or more (ProductClass,
+
+        TravelClass, FareTypes or ClassesOfService) so the response can be optimized as possible. This is even more
+
+        recommended for mobile applications due to the nature of limited network capabilities.
+
+        The default values that will be set unless specified:
+
+        - TaxesAndFees = TaxesAndFeesRollupMode.None
+
+        - Criteria.SsrCollectionsMode = AvailabilitySsrCollectionsMode.None
+
+        - Criteria.Filters.FareInclusionType = AvailabilityType.Default
+
+        - Criteria.Filters.CompressionType = FareClassControl.LowestFareClass
+
+        - Criteria.Filters.Loyalty = LoyaltyFilter.MonetaryOnly
+
+        - Criteria.Filters.FlightType = FlightType.All
+
+        - Criteria.Filters.ExclusionType = AvailabilityFilter.ExcludeUnavailable
+
+        - Criteria.Filters.SortOptions =
+
+        JourneySortKey.LowestFare,JourneySortKey.EarliestDeparture,JourneySortKey.ShortestTravelTime
+
+        - Filters.ConnectionType = SoldAsConnectionType.None
+
+        - Criteria.Filters.MaxConnectingFlights = 0
+
+        - Criteria.Stations.SearchDestinationMacs = false
+
+        - Criteria.Stations.SearchOriginMacs = false
+
+        - Criteria.Filters.BundleControlFilter = BundleControlFilter.Disabled
+
+        - NumberOfFaresPerJourney = 1
+
+        Criteria.Filters.IncludeServiceBundleSetCodes is marked as obsolete, and the use of
+
+        BundleControlFilter is preferred. To specifically return bundle set codes which IncludeServiceBundleSetCodes has
+
+        originally provided when set to true, use an enumeration value of BundleControlFilter.ReturnBundleSets for
+
+        BundleControlFilter instead.
+
+        When searching for open jaw availability the results will contain only available markets if any are configured.
+
+        The AvailabilityCriteriaFilter.FareInclusionType.NoPricing enumeration value, if set, will result in an
+
+        availability response that does not include fares.  The primary use case for this is in Move flows, but is being
+
+        maintained on the main availability and rebook availability flows in case there are other use cases as well.
+
+
+        GraphQL endpoint: availabilityv5'
+      operationId: nsk_v4_availability_search_post
+      requestBody:
+        x-name: request
+        description: The availability search request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilityRequestv3'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfAvailabilityv2'
+              examples:
+                Requested Passenger Discount Overridden Message:
+                  description: Example OSI Message when getting availability with a promotion code, no requested passenger discount, and the promotion code has a passenger discount associated with it. *NOTE*:This example *only* displays the message, however, the availability data will be populated in addition the given message.
+                  value:
+                    messages:
+                    - rawValue: 'A passenger discount code was found that is associated with the requested promotion code. The passenger discount code on the request has been override with the following associated discount code: SNR.'
+                      code: PassengerDiscountCodeOverridden
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Information
+                      value: PassengerDiscountCodeOverridden
+                      status: 0
+                      details:
+                        associatedDiscountCode: SNR
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v4/availability/search/simple:
+    post:
+      tags:
+      - availability
+      summary: 'Searches for availability with the simple availability search request. This request allows for easy setup for one
+
+        way and round trip searches. If a property is not set, default values will be set instead just like they would in
+
+        the full availability request. These defaults are what we consider a general optimized request. If these
+
+        optimizations are not preferred the requester will need to opted out the filters on the availability simple
+
+        request.'
+      description: 'Note: It is advised to optimize the availability request with passing in at least one or more (ProductClass,
+
+        TravelClass, FareTypes or ClassesOfService) so the response can be optimized as possible. This is even more
+
+        recommended for mobile applications due to the nature of limited network capabilities.
+
+        The default values that will be set unless specified:
+
+        - TaxesAndFees = TaxesAndFeesRollupMode.None
+
+        - SsrCollectionsMode = AvailabilitySsrCollectionsMode.None
+
+        - Filters.FareInclusionType = AvailabilityType.Default
+
+        - Filters.CompressionType = FareClassControl.LowestFareClass
+
+        - Filters.Loyalty = LoyaltyFilter.MonetaryOnly
+
+        - Filters.FlightType = FlightType.All
+
+        - Filters.ExclusionType = AvailabilityFilter.ExcludeUnavailable
+
+        - Filters.SortOptions =
+
+        JourneySortKey.LowestFare,JourneySortKey.EarliestDeparture,JourneySortKey.ShortestTravelTime
+
+        - Filters.ConnectionType = SoldAsConnectionType.None
+
+        - Filters.MaxConnectingFlights = 0
+
+        - SearchDestinationMacs = false
+
+        - SearchOriginMacs = false
+
+        - Criteria.Filters.BundleControlFilter = BundleControlFilter.Disabled
+
+        - NumberOfFaresPerJourney = 1
+
+        Note that the searchOriginMacs and searchDestinationMacs flags apply to both journeys when booking a round-trip
+
+        journey with the simple availability endpoint.  For example, if you set "searchOriginMacs" to "true" for a
+
+        round trip from SLC-BOS and back, it will search for SLC MAC airports on the outbound (SLC > BOS) journey, and
+
+        BOS MAC airports on the inbound (BOS > SLC) journey
+
+        Criteria.Filters.IncludeServiceBundleSetCodes is marked as obsolete, and the use of
+
+        BundleControlFilter is preferred. To specifically return bundle set codes which IncludeServiceBundleSetCodes has
+
+        originally provided when set to true, use an enumeration value of BundleControlFilter.ReturnBundleSets for
+
+        BundleControlFilter instead.
+
+        The AvailabilityCriteriaFilter.FareInclusionType.NoPricing enumeration value, if set, will result in an
+
+        availability response that does not include fares.  The primary use case for this is in Move flows, but is being
+
+        maintained on the main availability and rebook availability flows in case there are other use cases as well.
+
+
+        GraphQL endpoint: availabilitySimplev4'
+      operationId: nsk_v4_availability_search_simple_post
+      requestBody:
+        x-name: request
+        description: The availability simple v2 search request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilitySimpleRequestv2'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfAvailabilityv2'
+              examples:
+                Requested Passenger Discount Overridden Message:
+                  description: Example OSI Message when getting availability with a promotion code, no requested passenger discount, and the promotion code has a passenger discount associated with it. *NOTE*:This example *only* displays the message, however, the availability data will be populated in addition the given message.
+                  value:
+                    messages:
+                    - rawValue: 'A passenger discount code was found that is associated with the requested promotion code. The passenger discount code on the request has been override with the following associated discount code: SNR.'
+                      code: PassengerDiscountCodeOverridden
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Information
+                      value: PassengerDiscountCodeOverridden
+                      status: 0
+                      details:
+                        associatedDiscountCode: SNR
+                    data: null
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v2/availability/search/ssr:
+    post:
+      tags:
+      - availability
+      summary: 'Searches for availability with SSR prices with the full availability search request. This request allows for total
+
+        control over the configuration. If a property is not set, default values will be set instead. These defaults are
+
+        what we consider a general optimized request. If these optimizations are not preferred the requester will need to
+
+        opt out of the filters on the availability request.'
+      description: 'Note: This is an expensive call and should be used with appropriate cautions.
+
+        It is advised to optimize the availability request with passing in at least one or more (ProductClass,
+
+        TravelClass, FareTypes or ClassesOfService) so the response can be optimized as possible. This is even more
+
+        recommended for mobile applications due to the nature of limited network capabilities.
+
+        The default values that will be set unless specified:
+
+        - AvailabilityWithSsrRequest.TaxesAndFees = TaxesAndFeesRollupMode.None
+
+        - AvailabilityWithSsrRequest.Criteria.SsrCollectionsMode = AvailabilitySsrCollectionsMode.None
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.FareInclusionType = AvailabilityType.Default
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.CompressionType = FareClassControl.LowestFareClass
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.Loyalty = LoyaltyFilter.MonetaryOnly
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.FlightType = FlightType.All
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.ExclusionType = AvailabilityFilter.ExcludeUnavailable
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.SortOptions =
+
+        JourneySortKey.LowestFare,JourneySortKey.EarliestDeparture,JourneySortKey.ShortestTravelTime
+
+        - AvailabilityWithSsrRequest.Filters.ConnectionType = SoldAsConnectionType.None
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.MaxConnectingFlights = 0
+
+        - AvailabilityWithSsrRequest.Criteria.Stations.SearchDestinationMacs = false
+
+        - AvailabilityWithSsrRequest.Criteria.Stations.SearchOriginMacs = false
+
+        - AvailabilityWithSsrRequest.Criteria.Filters.BundleControlFilter = BundleControlFilter.Disabled
+
+        - AvailabilityWithSsrRequest.NumberOfFaresPerJourney = 1
+
+        AvailabilityWithSsrRequest.Criteria.Filters.IncludeServiceBundleSetCodes is marked as obsolete, and the use of
+
+        BundleControlFilter is preferred. To specifically return bundle set codes which IncludeServiceBundleSetCodes has
+
+        originally provided when set to true, use an enumeration value of BundleControlFilter.ReturnBundleSets for
+
+        BundleControlFilter instead.
+
+        The AvailabilityCriteriaFilter.FareInclusionType.NoPricing enumeration value, if set, will result in an
+
+        availability response that does not include fares.  The primary use case for this is in Move flows, but is being
+
+        maintained on the main availability and rebook availability flows in case there are other use cases as well.
+
+
+        GraphQL endpoint: availabilityWithSsrv2'
+      operationId: nsk_v2_availability_search_ssr_post
+      requestBody:
+        x-name: request
+        description: The availability with SSR search request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilityWithSsrRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfAvailabilityWithSsrResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '403':
+          description: Role permissions are not met.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    AvailabilitySsrCollectionsMode:
+      type: integer
+      description: "SSR collection mode determines whethere SSR availability should be checked and returned on availability.\n            \n\n0 = None\n1 = Leg"
+      x-enumNames:
+      - None
+      - Leg
+      enum:
+      - 0
+      - 1
+    FareReference:
+      type: object
+      description: "The fare reference represents a master reference of the full fare details.\n            "
+      additionalProperties: false
+      properties:
+        totals:
+          description: "The summed up totals for the collection of fares.\n            "
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+          $ref: '#/components/schemas/FareReferenceTotals'
+        isSumOfSector:
+          type: boolean
+          description: "Flag indicating if the fare reference is a sum of sector.\n            "
+        fareAvailabilityKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique fare availability key.\n            "
+        fares:
+          type:
+          - array
+          - 'null'
+          description: "The collection of fares for this reference.\n            "
+          items:
+            $ref: '#/components/schemas/FareAvailabilityv2'
+    IJsonResponseOfAvailabilityv2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Availabilityv2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    LowFareTripMarket:
+      type: object
+      description: "The low fare trip market represents a collection of markets.\n            "
+      additionalProperties: false
+      properties:
+        lowFareAvailableByMarket:
+          type:
+          - object
+          - 'null'
+          description: "The dictionary of available journeys per market.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/LowFareDateMarket'
+    BundleControlFilter:
+      type: integer
+      description: "Filter used to segregate the bundle information to return on flight availability.\n            \n\n0 = Disabled\n1 = ReturnBundleSets\n2 = ReturnBundleOffers"
+      x-enumNames:
+      - Disabled
+      - ReturnBundleSets
+      - ReturnBundleOffers
+      enum:
+      - 0
+      - 1
+      - 2
+    AvailabilityWithSsrResponse:
+      type: object
+      description: "Defines the trip availability with SSR response.\n            "
+      additionalProperties: false
+      properties:
+        results:
+          type:
+          - array
+          - 'null'
+          description: "The collection of trip results based on date and markets.\n            "
+          items:
+            $ref: '#/components/schemas/TripResult'
+        faresAvailable:
+          type:
+          - object
+          - 'null'
+          description: "The aggregate collection of fares available for all the provided journeys.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/FareReference'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code for all displayed fares.\n            "
+          maxLength: 17
+          minLength: 0
+        includeTaxesAndFees:
+          type: boolean
+          description: "Flag indicating if the trip includes taxes and fees.\n            "
+        bundleOffers:
+          type:
+          - object
+          - 'null'
+          description: "The collection of service bundle offers available for all the provided journeys, if requested.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/BundleOffer'
+        includedSsrs:
+          type:
+          - array
+          - 'null'
+          description: "Prices of the SSRs included in the request.\n            "
+          items:
+            $ref: '#/components/schemas/AvailabilityWithSsrPrice'
+    LowFareEstimateByDate:
+      type: object
+      description: "The low fare availability for a given date.\n            "
+      additionalProperties: false
+      properties:
+        date:
+          type: string
+          description: "The date of the low fare.\n            "
+          format: date-time
+        price:
+          type: number
+          description: "The low fare price optionally including taxes and fees.\n            "
+          format: decimal
+        taxesAndFees:
+          type:
+          - number
+          - 'null'
+          description: "The taxes and fees which will only be included if asked for in the request (due to performance). This will be\nincluded in the price value.\n            "
+          format: decimal
+        available:
+          type: integer
+          description: "The low fare available count.\n            "
+          format: int32
+        noFlights:
+          type: boolean
+          description: "Flag indicating that there are no flights for this day.\n            "
+        soldOut:
+          type: boolean
+          description: "Flag indicating that the flights are sold out.\n            "
+        referenceFareKeys:
+          type:
+          - array
+          - 'null'
+          description: "Set of Fare Keys that apply to the lowest fare.  Corresponds to the FaresAvailable.Fare.Reference property in the\nAvailability Response.\n            "
+          items:
+            type: string
+    FareClassControl:
+      type: integer
+      description: "Fare class control enumeration for controlling the number and type of fares applied to the search response.\n            \n\n0 = LowestFareClass\n1 = CompressByProductClass\n2 = Default"
+      x-enumNames:
+      - LowestFareClass
+      - CompressByProductClass
+      - Default
+      enum:
+      - 0
+      - 1
+      - 2
+    LowFarePassenger:
+      type: object
+      description: "Low fare passengers contains the passenger type specific data.\n            "
+      additionalProperties: false
+      properties:
+        fareAmount:
+          type: number
+          description: "Fare Amount for Passenger Type.\n            "
+          format: decimal
+        farePointAmount:
+          type: number
+          description: "Fare Point Amount.\n            "
+          format: decimal
+        taxesAndFeesAmount:
+          type: number
+          description: "Taxes and Fees Amount.\n            "
+          format: decimal
+        discountCode:
+          type:
+          - string
+          - 'null'
+          description: "Passenger Discount Code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "Passenger Type.\n            "
+    PassengerFareAvailability:
+      type: object
+      description: "Model describing common fare availability information for an entire availability request.\n            "
+      additionalProperties: false
+      required:
+      - passengerType
+      properties:
+        fareDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The fare discount code.\n            "
+          maxLength: 8
+          minLength: 0
+        passengerDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger discount code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerType:
+          type: string
+          description: "The type of the passenger.\n            "
+          maxLength: 4
+          minLength: 0
+        fareAmount:
+          type: number
+          description: "The passenger fare total fare amount.\n            "
+          format: decimal
+        revenueFare:
+          type: number
+          description: "The passenger fare revenue fare amount.\n            "
+          format: decimal
+        publishedFare:
+          type: number
+          description: "The passenger fare published fare amount.\n            "
+          format: decimal
+        loyaltyPoints:
+          type: number
+          description: "The passenger fare loyalty points.\n            "
+          format: decimal
+        discountedFare:
+          type: number
+          description: "The discounted fare amount.\n            "
+          format: decimal
+        serviceCharges:
+          type:
+          - array
+          - 'null'
+          description: "The service charges.\n            "
+          items:
+            $ref: '#/components/schemas/ServiceCharge'
+        multiplier:
+          type: integer
+          description: "The number of passengers with the same fare information represented by passenger type and discount code pair.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the multiplier could yield inaccurate numbers. Please use actual fare availability data to derive the correct multiplier.
+        ticketFareBasis:
+          type:
+          - string
+          - 'null'
+          description: "A fare basis alias which is a more descriptive and custom value than the fare basis itself.\nThis value is created in FareManager Plus based on specific fare rule categories and ATPCO documentation.\n            "
+    SoldAsConnectionType:
+      type: integer
+      description: "Enum to define if a connection is sold as domestic or international.\n            \n\n0 = None\n1 = Domestic\n2 = International\n3 = Both"
+      x-enumNames:
+      - None
+      - Domestic
+      - International
+      - Both
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    LowFareAvailabilityCodeCriteria:
+      type: object
+      description: "Describes the low fare availability code criteria.\n            "
+      additionalProperties: false
+      properties:
+        currency:
+          type:
+          - string
+          - 'null'
+          description: "The currency code is which to return the results.\n            "
+          maxLength: 3
+          minLength: 0
+        sourceOrganization:
+          type:
+          - string
+          - 'null'
+          description: "The specified organization code (aka travel agencies) to allow for discounts or private fares.\n            "
+          maxLength: 10
+          minLength: 0
+        promotionCode:
+          type:
+          - string
+          - 'null'
+          description: "The promotion code to be applied.\n            "
+          maxLength: 8
+          minLength: 0
+    FareReferenceTotals:
+      type: object
+      description: "The fare reference totals represents the sum of all the fares for a specific available journey fare. If individual\npassenger fare breakdown in needed that will need to be calculated using the master fare collection.\n            "
+      deprecated: true
+      x-deprecatedMessage: 4.4.5 - This model has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+      additionalProperties: false
+      properties:
+        fareTotal:
+          type:
+          - number
+          - 'null'
+          description: "The fares total.\n            "
+          format: decimal
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+        revenueTotal:
+          type:
+          - number
+          - 'null'
+          description: "The fares revenue total.\n            "
+          format: decimal
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+        publishedTotal:
+          type:
+          - number
+          - 'null'
+          description: "The fares published total.\n            "
+          format: decimal
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+        loyaltyTotal:
+          type:
+          - number
+          - 'null'
+          description: "The fares loyalty total.\n            "
+          format: decimal
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+        discountedTotal:
+          type:
+          - number
+          - 'null'
+          description: "The fares discounted total.\n            "
+          format: decimal
+          deprecated: true
+          x-deprecatedMessage: 4.4.5 - This property has been obsoleted and will be removed in a future version, as the totals could yield inaccurate numbers. Please use actual fare availability data to derive the correct total amounts.
+    NestType:
+      type: integer
+      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
+      x-enumNames:
+      - Default
+      - Net
+      - Serial
+      - OneBooking
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    AvailableJourneyFareDetail:
+      type: object
+      description: "The available journey fare details represents a journeys fare availability.\n            "
+      additionalProperties: false
+      properties:
+        availableCount:
+          type:
+          - integer
+          - 'null'
+          description: "The availability left.\n            "
+        status:
+          description: "The classes status.\n            "
+          $ref: '#/components/schemas/ClassStatus'
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference to the fare in the master fare collection.\n            "
+        serviceBundleSetCode:
+          type:
+          - string
+          - 'null'
+          description: "Service bundle set code.\n            "
+        bundleReferences:
+          type:
+          - array
+          - 'null'
+          description: "The references to the service bundle offers in the master bundle offer collection.\n            "
+          items:
+            type: string
+        ssrReferences:
+          type:
+          - array
+          - 'null'
+          description: "The SSR references that correspond to the applicable SSR prices in AvailabilityWithSSRResponse's IncludedSsrs.\n            "
+          items:
+            type: string
+    AvailabilityWithSsrPrice:
+      type: object
+      description: "This class contains an SSR and its possible prices with respect to each journey in the availability. Primarily used\nin GetTripAvailabilityWithSSR.\n            "
+      additionalProperties: false
+      properties:
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The code of the SSR being priced.\n            "
+        priceVariations:
+          type:
+          - array
+          - 'null'
+          description: "A list of possible price variants of the SSR when priced against each journey in the availability.\n            "
+          items:
+            $ref: '#/components/schemas/SsrPriceVariation'
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference to the fare from the available journey fare details.\n            "
+    Availabilityv2:
+      type: object
+      description: "Availabilityv2 represents the availability response based on the search criteria.\n            "
+      additionalProperties: false
+      properties:
+        results:
+          type:
+          - array
+          - 'null'
+          description: "The collection of trip results based on date and markets.\n            "
+          items:
+            $ref: '#/components/schemas/TripResult'
+        faresAvailable:
+          type:
+          - object
+          - 'null'
+          description: "The aggregate collection of fares available for all the provided journeys.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/FareReference'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code for all displayed fares.\n            "
+          maxLength: 17
+          minLength: 0
+        includeTaxesAndFees:
+          type: boolean
+          description: "Flag indicating if the trip includes taxes and fees.\n            "
+        bundleOffers:
+          type:
+          - object
+          - 'null'
+          description: "The collection of service bundle offers available for all the provided journeys, if requested.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/BundleOffer'
+    CollectType:
+      type: integer
+      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
+      x-enumNames:
+      - SellerChargeable
+      - ExternalChargeable
+      - SellerNonChargeable
+      - ExternalNonChargeable
+      - ExternalChargeableImmediate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    OperationsInformation:
+      type: object
+      description: "Model describing the operations information.\n            "
+      additionalProperties: false
+      properties:
+        arrivalGate:
+          description: "The arrival gate information.\n            "
+          $ref: '#/components/schemas/GateInformation'
+        departureGate:
+          description: "The departure gate information.\n            "
+          $ref: '#/components/schemas/GateInformation'
+        actualOffBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual off block time.\n            "
+          format: date-time
+        actualOnBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual on block time.\n            "
+          format: date-time
+        actualTouchDownTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual touch down time.\n            "
+          format: date-time
+        airborneTime:
+          type:
+          - string
+          - 'null'
+          description: "The airborne time.\n            "
+          format: date-time
+        arrivalNote:
+          type:
+          - string
+          - 'null'
+          description: "The arrival note.\n            "
+          maxLength: 128
+          minLength: 0
+        arrivalStatus:
+          description: "The arrival status.\n            "
+          $ref: '#/components/schemas/ArrivalStatus'
+        baggageClaim:
+          type:
+          - string
+          - 'null'
+          description: "The baggage claim.\n            "
+          maxLength: 10
+          minLength: 0
+        departureNote:
+          type:
+          - string
+          - 'null'
+          description: "The departure note.\n            "
+          maxLength: 128
+          minLength: 0
+        departureStatus:
+          description: "The departure status.\n            "
+          $ref: '#/components/schemas/DepartureStatus'
+        departureTimes:
+          description: "The departure time information.\n            "
+          $ref: '#/components/schemas/DepartureEvent'
+        standardArrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The standard time of arrival (STA).\n            "
+          format: date-time
+        tailNumber:
+          type:
+          - string
+          - 'null'
+          description: "The tail number.\n            "
+          maxLength: 10
+          minLength: 0
+        estimatedArrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The estimated time of arrival (ETA).\n            "
+          format: date-time
+    LowFareAmount:
+      type: object
+      description: "Low fare passengers contains the passenger type specific data.\n            "
+      additionalProperties: false
+      properties:
+        fareAmount:
+          type: number
+          description: "Fare Amount for Passenger Type.\n            "
+          format: decimal
+        farePointAmount:
+          type: number
+          description: "Fare Point Amount.\n            "
+          format: decimal
+        taxesAndFeesAmount:
+          type: number
+          description: "Taxes and Fees Amount.\n            "
+          format: decimal
+    AvailabilitySimpleRequestv2:
+      type: object
+      description: "Model representing an availability simple request v2.\n            "
+      additionalProperties: false
+      required:
+      - origin
+      - destination
+      - beginDate
+      - passengers
+      properties:
+        origin:
+          type: string
+          description: "The origin station code.\n            "
+          maxLength: 3
+          minLength: 3
+        destination:
+          type: string
+          description: "The destination station code.\n            "
+          maxLength: 3
+          minLength: 3
+        searchDestinationMacs:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to search destination mac stations.  Note that when set to \"true\" for round-trip availability, this\nwill search the destination MAC for both journeys.\n            "
+        searchOriginMacs:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to search origin mac stations.  Note that when set to \"true\" for round-trip availability, this will\nsearch the origin MAC for both journeys.\n            "
+        beginDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The return date. This date represents the return trip's selected day.\n            "
+          format: date-time
+        passengers:
+          description: "The list of passengers.\n            "
+          $ref: '#/components/schemas/PassengerTypeCriteria'
+        codes:
+          description: "The different code criteria that can be set that can influence availability response.\n            "
+          $ref: '#/components/schemas/AvailabilityCodeCriteriav2'
+        filters:
+          description: "Filters applied to the response for a single direction.\n            "
+          $ref: '#/components/schemas/AvailabilityCriteriaFilter'
+        taxesAndFees:
+          description: "The taxes and fees rollup mode which affects the pricing information.\n            "
+          $ref: '#/components/schemas/TaxesAndFeesRollupMode'
+        ssrCollectionsMode:
+          description: "Determines if SSR nest information will be returned on the legs for each available journey segments.\n            "
+          $ref: '#/components/schemas/AvailabilitySsrCollectionsMode'
+        numberOfFaresPerJourney:
+          type:
+          - integer
+          - 'null'
+          description: "The number of fares per journey to be returned. If not set it will use the default optimized values\n            "
+          format: int32
+        returnEmptyResults:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag determining if empty schedule responses will be returned.\nDefaults to false.\n            "
+    TripResult:
+      type: object
+      description: "The trip results represents a wrapper class for the potential collection of multiple selected dates (flex days or\nrange) selected on the availability request.\n            "
+      additionalProperties: false
+      properties:
+        trips:
+          type:
+          - array
+          - 'null'
+          description: "The collection of available trip by date that contain a collection of markets.\n            "
+          items:
+            $ref: '#/components/schemas/TripDateMarket'
+    TripDateMarket:
+      type: object
+      description: "The trip date market represents a specific dates collection of markets.\n            "
+      additionalProperties: false
+      properties:
+        multipleOriginStations:
+          type: boolean
+          description: "Flag indicating if multiple origin stations exist in the journeys available by market dictionary.\n            "
+        multipleDestinationStations:
+          type: boolean
+          description: "Flag indicating if multiple destination stations exist in the journeys available by market dictionary.\n            "
+        date:
+          type: string
+          description: "The date all the different markets are for.\n            "
+          format: date-time
+        journeysAvailableByMarket:
+          type:
+          - object
+          - 'null'
+          description: "The dictionary of available journeys for the date per market.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/AvailableJourney'
+    ChargeType:
+      type: integer
+      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
+      x-enumNames:
+      - FarePrice
+      - Discount
+      - IncludedTravelFee
+      - IncludedTax
+      - TravelFee
+      - Tax
+      - ServiceCharge
+      - PromotionDiscount
+      - ConnectionAdjustmentAmount
+      - AddOnsPrice
+      - FarePoints
+      - DiscountPoints
+      - IncludedAddOnsFee
+      - AddOnsFee
+      - AddOnsMarkup
+      - FareSurcharge
+      - AddOnsCancelFee
+      - Calculated
+      - Note
+      - Points
+      - DynamicFareAdjustment
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 16
+      - 17
+      - 18
+      - 19
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+    AvailabilityCodeCriteriav2:
+      type: object
+      description: "Describes the different code criteria that can be set that can influence availability response.\n            "
+      additionalProperties: false
+      properties:
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code for fare pricing.\n            "
+          maxLength: 3
+          minLength: 0
+        promotionCode:
+          type:
+          - string
+          - 'null'
+          description: "The promotion code to be applied.\n            "
+          maxLength: 8
+          minLength: 0
+        sourceOrganization:
+          type:
+          - string
+          - 'null'
+          description: "The organization to use when evaluating availability of private fares. If specified, this organization code will\nalso be used for evaluation of any organization rules on sales taxes and travel fees (if included in the response).\nIf blank or not specified, the logged-in user's organization will be used.\n            "
+          maxLength: 10
+          minLength: 0
+        currentSourceOrganization:
+          type:
+          - string
+          - 'null'
+          description: "The current source point of sale organization on the PNR. May be blank or unspecified if the source point of sale\norganization has not yet been set on the PNR. If blank or unspecified, the logged-in user's organization will be\nused.\n            "
+          maxLength: 10
+          minLength: 0
+    ServiceBundleType:
+      type: integer
+      description: "Defines the types for bundles.\n            \n\n0 = Included\n1 = AddOn"
+      x-enumNames:
+      - Included
+      - AddOn
+      enum:
+      - 0
+      - 1
+    AvailableJourney:
+      type: object
+      description: "The available journey represents a specific date, market journey that can be sold.\n            "
+      additionalProperties: false
+      properties:
+        flightType:
+          description: "The flight type of the journey.\n            "
+          $ref: '#/components/schemas/FlightType'
+        stops:
+          type: integer
+          description: "The number of stops the journey will make.\n            "
+          format: int32
+        designator:
+          description: "The journeys transportation designator.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique journey key.\n            "
+        segments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of segments on the journey.\n            "
+          items:
+            $ref: '#/components/schemas/AvailableSegment'
+        fares:
+          type:
+          - array
+          - 'null'
+          description: "The collection of available fares to be sold for this journey.\n            "
+          items:
+            $ref: '#/components/schemas/AvailableJourneyFare'
+        notForGeneralUser:
+          type: boolean
+          description: "A value indicating whether the journey is for a general user.\n            "
+    BundleOffer:
+      type: object
+      description: "The bundle offer model.\n            "
+      additionalProperties: false
+      properties:
+        bundleCode:
+          type:
+          - string
+          - 'null'
+          description: "The bundle code.\n            "
+          maxLength: 4
+          minLength: 0
+        serviceBundleType:
+          description: "The type of the bundle\n            "
+          $ref: '#/components/schemas/ServiceBundleType'
+        bundlePrices:
+          type:
+          - array
+          - 'null'
+          description: "A list of possible price variants of the service\nbundle and SSRs per journey in the availability.\n            "
+          items:
+            $ref: '#/components/schemas/BundlePrice'
+    DayOfWeek:
+      type: integer
+      description: "Defines the day of the week with none as an option.\n            \n\n0 = None\n1 = Monday\n2 = Tuesday\n3 = Wednesday\n4 = Thursday\n5 = Friday\n6 = Saturday\n7 = Sunday"
+      x-enumNames:
+      - None
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    AvailableSegment:
+      type: object
+      description: "Available segment represents an available segment on a available journey.\n            "
+      additionalProperties: false
+      properties:
+        isSeatmapViewable:
+          type: boolean
+          description: "Indicates if the seatmaps associated with the segment are retrievable.\nSets to `false` for passive segments, and `true` for non-passive segments.\n            "
+        identifier:
+          description: "The transportation identifier.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+        externalIdentifier:
+          description: "The external transportation identifier.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+        segmentType:
+          description: "The type of the segment.\n            "
+          $ref: '#/components/schemas/SegmentTypes'
+        isChangeOfGauge:
+          type: boolean
+          description: "Flag indicating if the segment is a change of gauge.\n            "
+        isBlocked:
+          type: boolean
+          description: "Flag indicating if the segment is blocked.\n            "
+        isHosted:
+          type: boolean
+          description: "Flag indicating if the segment is hosted.\n            "
+        designator:
+          description: "The segments transportation designator.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique segment key.\n            "
+        cabinOfService:
+          type:
+          - string
+          - 'null'
+          description: "The segments cabin of service.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        international:
+          type: boolean
+          description: "Flag indicating if the segment is international.\n            "
+        legs:
+          type:
+          - array
+          - 'null'
+          description: "The collection of legs on the segment.\n            "
+          items:
+            $ref: '#/components/schemas/Leg'
+    PassengerSearchCriteriaDetail:
+      type: object
+      description: "Represents the passenger details for flight availability search.\n            "
+      additionalProperties: false
+      properties:
+        dateOfBirth:
+          type:
+          - string
+          - 'null'
+          description: "The passenger's date of birth.\n            "
+          format: date-time
+        nationality:
+          type:
+          - string
+          - 'null'
+          description: "The passenger's nationality.\n            "
+        residentCountry:
+          type:
+          - string
+          - 'null'
+          description: "The passenger's resident country.\n            "
+        programCode:
+          type:
+          - string
+          - 'null'
+          description: "The customer program of the passenger.\n            "
+        programLevel:
+          type:
+          - string
+          - 'null'
+          description: "The customer program level of the passenger.\n            "
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    JourneySortKey:
+      type: integer
+      description: "Defines the sorting keys for the journeys on availability.\n            \n\n0 = ServiceType\n1 = ShortestTravelTime\n2 = LowestFare\n3 = HighestFare\n4 = EarliestDeparture\n5 = LatestDeparture\n6 = EarliestArrival\n7 = LatestArrival\n8 = NoSort\n9 = BiasOnlineCommercialDuplicates\n10 = JourneyNumber"
+      x-enumNames:
+      - ServiceType
+      - ShortestTravelTime
+      - LowestFare
+      - HighestFare
+      - EarliestDeparture
+      - LatestDeparture
+      - EarliestArrival
+      - LatestArrival
+      - NoSort
+      - BiasOnlineCommercialDuplicates
+      - JourneyNumber
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+    SsrPriceVariation:
+      type: object
+      description: "This class denotes a possible pricing of an SSR against the journeys of the availability. Primarily used in\nGetTripAvailabilityWithSSR.\n            "
+      additionalProperties: false
+      properties:
+        basePrice:
+          type:
+          - number
+          - 'null'
+          description: "The base price of the applied fee.\n            "
+          format: decimal
+        taxTotal:
+          type:
+          - number
+          - 'null'
+          description: "The applied sales tax.\n            "
+          format: decimal
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The applying passenger type.\n            "
+        programLevel:
+          type:
+          - string
+          - 'null'
+          description: "The applying customer program level.\n            "
+    LowFareAvailabilityRequest:
+      type: object
+      description: "Defines the low are availability request.\n            "
+      additionalProperties: false
+      required:
+      - passengers
+      - criteria
+      properties:
+        bypassCache:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to bypass the low fare cache and use real time results instead of cached results.\n            "
+        getAllDetails:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to return all data used for low fare caching, this is used for external caching providers.\n            "
+        includeTaxesAndFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to include taxes and fees on the response.\n            "
+        passengers:
+          description: "The passenger type criteria.\nIf caching is on this field will not be honored, and will use the previously cached PassengerTypes.\n            "
+          $ref: '#/components/schemas/PassengerTypeCriteria'
+        codes:
+          description: "The low fare code criteria.\n            "
+          $ref: '#/components/schemas/LowFareAvailabilityCodeCriteria'
+        filters:
+          description: "The low fare filtering criteria.\n            "
+          $ref: '#/components/schemas/LowFareAvailabilityFilterCriteria'
+        criteria:
+          type: array
+          description: "The list of low fare availability search criteria.\n            "
+          items:
+            $ref: '#/components/schemas/LowFareAvailabilityCriteria'
+    LowFareAvailabilityCriteria:
+      type: object
+      description: "Defines the low fare availability search criteria.\n            "
+      additionalProperties: false
+      required:
+      - destinationStationCodes
+      - originStationCodes
+      - beginDate
+      properties:
+        destinationStationCodes:
+          type: array
+          description: "The Arrival Station Codes.\n            "
+          items:
+            type: string
+        originStationCodes:
+          type: array
+          description: "The Departure Station Codes.\n            "
+          items:
+            type: string
+        beginDate:
+          type: string
+          description: "The Begin Date.\n            "
+          format: date-time
+          minLength: 1
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The End Date.\n            "
+          format: date-time
+    AvailabilityDateCriteria:
+      type: object
+      description: "Defines the availability criteria dates.\n            "
+      additionalProperties: false
+      required:
+      - beginDate
+      properties:
+        beginDate:
+          type: string
+          description: "The beginning date to include flights for.\n            "
+          format: date-time
+          minLength: 1
+        startTimeInterval:
+          type:
+          - string
+          - 'null'
+          description: "The beginning time interval to include flights from regardless of the days.\n            "
+          format: duration
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The ending date to include flights for.\n            "
+          format: date-time
+        endTimeInterval:
+          type:
+          - string
+          - 'null'
+          description: "The ending time interval to include flights from regardless of the days.\n            "
+          format: duration
+        daysOfWeek:
+          type:
+          - array
+          - 'null'
+          description: "The days of the week to include in the provided date range.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+    TaxesAndFeesRollupMode:
+      type: integer
+      description: "Indicates how \"all-up\" service charges will be rolled-up in the availability response.\n            \n\n0 = None\n1 = Taxes\n2 = TaxesAndFees"
+      x-enumNames:
+      - None
+      - Taxes
+      - TaxesAndFees
+      enum:
+      - 0
+      - 1
+      - 2
+    BundleProgramDetails:
+      type: object
+      description: "Represents the bundle program details model.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The program code.\n            "
+          maxLength: 3
+          minLength: 0
+        level:
+          type:
+          - string
+          - 'null'
+          description: "The program level.\n            "
+          maxLength: 3
+          minLength: 0
+    FareStatus:
+      type: integer
+      description: "This enumeration defines the fare status of a passenger fare.\n            \n\n0 = Default\n1 = SameDayStandBy\n2 = FareOverrideConfirming\n3 = FareOverrideConfirmed\n4 = PublishedFareOverrideConfirming\n5 = PublishedFareOverrideConfirmed"
+      x-enumNames:
+      - Default
+      - SameDayStandBy
+      - FareOverrideConfirming
+      - FareOverrideConfirmed
+      - PublishedFareOverrideConfirming
+      - PublishedFareOverrideConfirmed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    AvailabilityCriteria:
+      type: object
+      description: "Defines a single direction search criteria far an availability call.\n            "
+      additionalProperties: false
+      required:
+      - stations
+      - dates
+      properties:
+        stations:
+          description: "The station criteria.\n            "
+          $ref: '#/components/schemas/AvailabilityStationCriteria'
+        dates:
+          description: "The date criteria.\n            "
+          $ref: '#/components/schemas/AvailabilityDateCriteria'
+        filters:
+          description: "Filters applied to the response for a single direction.\n            "
+          $ref: '#/components/schemas/AvailabilityCriteriaFilter'
+        ssrCollectionsMode:
+          description: "Determines if SSR nest information will be returned on the legs for each available journey segments.\n            "
+          $ref: '#/components/schemas/AvailabilitySsrCollectionsMode'
+    LowFare:
+      type: object
+      description: "Low fare contains the information for a specific flight.\n            "
+      additionalProperties: false
+      properties:
+        passengers:
+          type:
+          - object
+          - 'null'
+          description: "Low fare passenger collection with they key of passenger type.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/LowFarePassenger'
+        bookingClasses:
+          type:
+          - array
+          - 'null'
+          description: "Booking classes available.\n            "
+          items:
+            type: string
+        arrivalTime:
+          type: string
+          description: "The arrival date and time.\n            "
+          format: date-time
+        departureTime:
+          type: string
+          description: "The departure date and time.\n            "
+          format: date-time
+        legs:
+          type:
+          - array
+          - 'null'
+          description: "Leg information.\n            "
+          items:
+            $ref: '#/components/schemas/LowFareLeg'
+        availableCount:
+          type: integer
+          description: "Available count for the fare.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 0.0
+        productClass:
+          type:
+          - string
+          - 'null'
+          description: "The product class for the fare.\n            "
+        referenceFareKey:
+          type:
+          - string
+          - 'null'
+          description: "The reference fare sell key.\n            "
+        soldOut:
+          type: boolean
+          description: "Flag indicating that the flights are sold out.\n            "
+    LegNest:
+      type: object
+      description: "A model representing a leg nest.\n            "
+      additionalProperties: false
+      properties:
+        adjustedCapacity:
+          type: integer
+          description: "Gets or sets the adjusted capacity of the nest.\n            "
+        classNest:
+          type: integer
+          description: "Gets or sets the nest class nest.\n            "
+        lid:
+          type: integer
+          description: "Gets or sets the nest lid.\n            "
+        travelClassCode:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the nest travel class code.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        nestType:
+          description: "Gets or sets the type of the nest.\n            "
+          $ref: '#/components/schemas/NestType'
+        legClasses:
+          type:
+          - array
+          - 'null'
+          description: "Gets or sets the nest leg classes.\n            "
+          items:
+            $ref: '#/components/schemas/LegClass'
+    LegClass:
+      type: object
+      description: "The leg class model information.\n            "
+      additionalProperties: false
+      required:
+      - classOfService
+      properties:
+        classAllotted:
+          type: integer
+          description: "The leg class allotted.\n            "
+        classAuthorizedUnits:
+          type: integer
+          description: "The leg class Authorized Units (AUs).\n            "
+        classOfService:
+          type: string
+          description: "The leg class, class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        classRank:
+          type: integer
+          description: "The leg class rank.\n            "
+        classSold:
+          type: integer
+          description: "The class sold.\n            "
+        cnxSold:
+          type: integer
+          description: "The CNX sold.\n            "
+        latestAdvancedReservation:
+          type: integer
+          description: "The latest advanced reservation.\n            "
+        status:
+          description: "The status.\n            "
+          $ref: '#/components/schemas/ClassStatus'
+        thruSold:
+          type: integer
+          description: "The thru sold.\n            "
+        classNest:
+          type: integer
+          description: "The leg class nest.\n            "
+        classType:
+          type:
+          - string
+          - 'null'
+          description: "The type of class.\n            "
+    LegStatus:
+      type: integer
+      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      x-enumNames:
+      - Normal
+      - Closed
+      - Canceled
+      - Suspended
+      - ClosedPending
+      - BlockAllActivities
+      - Mishap
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 5
+      - 6
+      - 7
+    LowFareAvailabilitySearchSimpleRequest:
+      type: object
+      description: "Model representing a low fare availability search simple request.\n            "
+      additionalProperties: false
+      required:
+      - origin
+      - destination
+      - beginDate
+      - passengers
+      properties:
+        origin:
+          type: string
+          description: "The origin station code.\n            "
+          maxLength: 3
+          minLength: 3
+        destination:
+          type: string
+          description: "The destination station code.\n            "
+          maxLength: 3
+          minLength: 3
+        beginDate:
+          type: string
+          description: "The departure date. This date represents the selected day by the user, the date range will be calculated from this\ndate as the starting date.\n            "
+          format: date-time
+          minLength: 1
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The return date. This date represents the returning trips selected day by the user, the date range will be\ncalculated from this date and the starting date.\n            "
+          format: date-time
+        passengers:
+          type: array
+          description: "The list of passenger search criteria.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSearchCriteria'
+        promotionCode:
+          type:
+          - string
+          - 'null'
+          description: "The promo code to be applied.\n            "
+          maxLength: 8
+          minLength: 0
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The search currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        loyaltyFilter:
+          description: "The loyalty fare filter.\n            "
+          $ref: '#/components/schemas/LoyaltyFilter'
+        daysToLeft:
+          type:
+          - integer
+          - 'null'
+          description: "The number of days to subtract from the begin/end date.\n            "
+          format: int32
+        daysToRight:
+          type:
+          - integer
+          - 'null'
+          description: "The number of days to add to the begin/end date.\n            "
+          format: int32
+    AvailabilityStationCriteria:
+      type: object
+      description: "Defines the availability criteria stations.\n            "
+      additionalProperties: false
+      required:
+      - destinationStationCodes
+      - originStationCodes
+      properties:
+        destinationStationCodes:
+          type: array
+          description: "The Arrival Station Codes.\n            "
+          items:
+            type: string
+        originStationCodes:
+          type: array
+          description: "The Departure Station Codes.\n            "
+          items:
+            type: string
+        searchDestinationMacs:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to search by the corresponding MAC associated with station codes provided.\n            "
+        searchOriginMacs:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to search by the corresponding MAC associated with station codes provided.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    SegmentTypes:
+      type: integer
+      description: "Indicates the type of a segment.\n            \n\n0 = Normal\n1 = CodeShareOperating\n2 = CodeShareMarketing\n3 = InterlineOutbound\n4 = InterlineInbound\n5 = Passive"
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    PassengerTypeCriteria:
+      type: object
+      description: "Defines the availability criteria passenger types.\n            "
+      additionalProperties: false
+      required:
+      - types
+      properties:
+        types:
+          type: array
+          description: "The list of passenger types and counts.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSearchCriteria'
+        residentCountry:
+          type:
+          - string
+          - 'null'
+          description: "The passenger resident country.\n            "
+          maxLength: 2
+          minLength: 0
+    ArrivalStatus:
+      type: integer
+      description: "Arrival status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Arrived\n3 = SeeAgent\n4 = Delayed"
+      x-enumNames:
+      - Default
+      - Cancelled
+      - Arrived
+      - SeeAgent
+      - Delayed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BundlePrice:
+      type: object
+      description: "The bundle price model.\n            "
+      additionalProperties: false
+      properties:
+        totalPrice:
+          type: number
+          description: "The total price for the service bundle, minus taxes.\nIncludes any fees associated with the bundle.\n            "
+          format: decimal
+        taxTotal:
+          type: number
+          description: "The total sales taxes that are applicable to the\nservice bundle.\n            "
+          format: decimal
+        feePrice:
+          type: number
+          description: "The fee price associated with the bundle if there is any.\n            "
+          format: decimal
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The passenger type that is applicable to the service\nbundle.\n            "
+          maxLength: 4
+          minLength: 0
+        program:
+          description: "The program details that are applicable to the service\nbundle.\n            "
+          $ref: '#/components/schemas/BundleProgramDetails'
+        inclusiveTaxTotal:
+          type: number
+          description: "The total sales inclusive taxes that are applicable to the service bundle.\n            "
+          format: decimal
+        bundleSsrPrices:
+          type:
+          - array
+          - 'null'
+          description: "The list of bundle SSR prices.\n            "
+          items:
+            $ref: '#/components/schemas/BundleSsrPrice'
+    TransportationDesignator:
+      type: object
+      description: "Model information about the traveling arrival and destination details.\n            "
+      additionalProperties: false
+      properties:
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        arrival:
+          type: string
+          description: "The arrival date and time local to the arrival station.\n            "
+          format: date-time
+        departure:
+          type: string
+          description: "The departure date and time local to the departure station.\n            "
+          format: date-time
+    AvailabilityCriteriaFilter:
+      type: object
+      description: "Defines all the different ways the availability response can be filtered.\n            "
+      additionalProperties: false
+      properties:
+        fareInclusionType:
+          description: "Defines the type of fares to be included in the response.\n            "
+          $ref: '#/components/schemas/AvailabilityType'
+        compressionType:
+          description: "The class compression type.\n            "
+          $ref: '#/components/schemas/FareClassControl'
+        maxPrice:
+          type:
+          - number
+          - 'null'
+          description: "The max fare price.\n            "
+          format: decimal
+        minPrice:
+          type:
+          - number
+          - 'null'
+          description: "The min fare price.\n            "
+          format: decimal
+        loyalty:
+          description: "Filters fares based on loyalty.\n            "
+          $ref: '#/components/schemas/LoyaltyFilter'
+        includeAllotments:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to include allotted fare classes of service.\n            "
+        exclusionType:
+          description: "Filters the type of journeys to return.\n            "
+          $ref: '#/components/schemas/AvailabilityFilter'
+        sortOptions:
+          type:
+          - array
+          - 'null'
+          description: "The list of inventory journey sort options, used for filtering journeys on the response.\n            "
+          items:
+            $ref: '#/components/schemas/JourneySortKey'
+        productClasses:
+          type:
+          - array
+          - 'null'
+          description: "The list of product class codes to filter with.\n            "
+          items:
+            type: string
+        travelClasses:
+          type:
+          - array
+          - 'null'
+          description: "The list of travel class codes to filter with.\nPlease note that this should be an array of chars and not an array of string.\n            "
+          items:
+            type: string
+            maxLength: 1
+        fareTypes:
+          type:
+          - array
+          - 'null'
+          description: "The list of fare types.\n            "
+          items:
+            type: string
+        classesOfService:
+          type:
+          - array
+          - 'null'
+          description: "The list of classes of service.\n            "
+          items:
+            type: string
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: "The desired carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        identifier:
+          type:
+          - string
+          - 'null'
+          description: "The desired identifier number.\n            "
+          maxLength: 4
+          minLength: 0
+        type:
+          description: "The type filtering based on connections.\n            "
+          $ref: '#/components/schemas/FlightType'
+        connectionType:
+          description: "Specifies the type of sold as connection when segment connects with passive segment.\n            "
+          $ref: '#/components/schemas/SoldAsConnectionType'
+        maxConnections:
+          type:
+          - integer
+          - 'null'
+          description: "The number of max connections.\n            "
+        bundleControlFilter:
+          description: "Determines what level of service bundle information should be returned with flight availability.\n            "
+          $ref: '#/components/schemas/BundleControlFilter'
+    DepartureStatus:
+      type: integer
+      description: "Departure status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Boarding\n3 = SeeAgent\n4 = Delayed\n5 = Departed"
+      x-enumNames:
+      - Default
+      - Cancelled
+      - Boarding
+      - SeeAgent
+      - Delayed
+      - Departed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    LowFareLeg:
+      type: object
+      description: "Low fare leg information.\n            "
+      additionalProperties: false
+      properties:
+        arrivalTime:
+          type: string
+          description: "The arrival date and time.\n            "
+          format: date-time
+        departureTime:
+          type: string
+          description: "The departure date and time.\n            "
+          format: date-time
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "The destination station code.\n            "
+          maxLength: 3
+          minLength: 3
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "The origin station code.\n            "
+          maxLength: 3
+          minLength: 3
+        flightNumber:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the flight number.\n            "
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The leg type of the equipment.\n            "
+          maxLength: 3
+          minLength: 0
+        operatingCarrier:
+          type:
+          - string
+          - 'null'
+          description: "The operating carrier code.\n            "
+    IJsonResponseOfLowFareEstimateResults:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/LowFareEstimateResults'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    LegSsr:
+      type: object
+      description: "A model representing a leg ssr summary.\n            "
+      additionalProperties: false
+      properties:
+        available:
+          type: integer
+          description: "The number of Ssrs available.\n            "
+        ssrNestCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR nest code.\n            "
+          maxLength: 4
+          minLength: 0
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
+        sold:
+          type: integer
+          description: "The number of SSRs sold in the SSR nest.\n            "
+        unitSold:
+          type: integer
+          description: "The units of space sold for the SSR.\n            "
+    Leg:
+      type: object
+      description: "Model data describing the leg which is a single travel leg from point a to b.\n            "
+      additionalProperties: false
+      properties:
+        legKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for this leg sell information.\n            "
+        designator:
+          description: "Transportation information.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        operationsInfo:
+          description: "The operations information.\n            "
+          $ref: '#/components/schemas/OperationsInformation'
+        legInfo:
+          description: "The leg information.\n            "
+          $ref: '#/components/schemas/LegInformation'
+        nests:
+          type:
+          - array
+          - 'null'
+          description: "The collection of leg nests.\n            "
+          items:
+            $ref: '#/components/schemas/LegNest'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The Ssrs summary information.\n            "
+          items:
+            $ref: '#/components/schemas/LegSsr'
+        seatmapReference:
+          type:
+          - string
+          - 'null'
+          description: "The reference identifying what seatmap the leg is in associated to.\n            "
+        flightReference:
+          type:
+          - string
+          - 'null'
+          description: "The flight reference which signifies a link to a segment and or leg.\n            "
+          maxLength: 22
+          minLength: 0
+    IJsonResponseOfAvailabilityWithSsrResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/AvailabilityWithSsrResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AvailabilityType:
+      type: integer
+      description: "Availability type defines the type of fares to be returned.\n            \n\n0 = Default\n1 = Standby\n2 = Overbook\n3 = NoPricing"
+      x-enumNames:
+      - Default
+      - Standby
+      - Overbook
+      - NoPricing
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    LowFareAvailabilityFilterCriteria:
+      type: object
+      description: "Describes the low fare availability filtering criteria.\n            "
+      additionalProperties: false
+      properties:
+        groupByDate:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to return only one low fare per date when multiple markets are requested.\n            "
+        flightFilter:
+          description: "Controls the flights that are included in a low fare availability response.\n            "
+          $ref: '#/components/schemas/LowFareFlightFilter'
+        loyalty:
+          description: "Filters fares based on loyalty.\n            "
+          $ref: '#/components/schemas/LoyaltyFilter'
+        bookingClasses:
+          type:
+          - array
+          - 'null'
+          description: "The list of booking classes to filter the results by.\n            "
+          items:
+            type: string
+        productClasses:
+          type:
+          - array
+          - 'null'
+          description: "The list of product classes to filter the results by.\n            "
+          items:
+            type: string
+        fareTypes:
+          type:
+          - array
+          - 'null'
+          description: "The list of fare types to filter the results by.\n            "
+          items:
+            type: string
+    FareAvailabilityv2:
+      type: object
+      description: "The fare availability represents a master fare reference with all the fare details.\n            "
+      additionalProperties: false
+      properties:
+        isGoverning:
+          type: boolean
+          description: "Flag indicating of the fare is the governing fare.\n            "
+        fareBasisCode:
+          type:
+          - string
+          - 'null'
+          description: "The fare basis code.\n            "
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service.\n            "
+        classType:
+          type:
+          - string
+          - 'null'
+          description: "The fare class type.\n            "
+        fareApplicationType:
+          description: "The fare application type.\n            "
+          $ref: '#/components/schemas/FareApplicationType'
+        fareStatus:
+          description: "The fare status.\n            "
+          $ref: '#/components/schemas/FareStatus'
+        productClass:
+          type:
+          - string
+          - 'null'
+          description: "The fare product class.\n            "
+        ruleNumber:
+          type:
+          - string
+          - 'null'
+          description: "The fare rule number.\n            "
+        ruleTariff:
+          type:
+          - string
+          - 'null'
+          description: "The fare rule tariff.\n            "
+        passengerFares:
+          type:
+          - array
+          - 'null'
+          description: "The fare collection of passenger price breakdown.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerFareAvailability'
+        travelClassCode:
+          type:
+          - string
+          - 'null'
+          description: "The travel class code.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        isAllotmentMarketFare:
+          type: boolean
+          description: "Gets or sets a value indicating whether this fare is an allotment market fare.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference to the fare from the journey fare available.\n            "
+    BundleSsrPrice:
+      type: object
+      description: "The bundle SSR price model.\n            "
+      additionalProperties: false
+      properties:
+        bundleSsrPrice:
+          type: number
+          description: "The total price of the applied fee.\n            "
+          format: decimal
+        taxTotal:
+          type: number
+          description: "The applied sales tax.\n            "
+          format: decimal
+        inclusiveTaxTotal:
+          type: number
+          description: "The total sales inclusive taxes that are applicable to the service bundle ssr.\n            "
+          format: decimal
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR code.\n            "
+          maxLength: 4
+          minLength: 0
+    GateInformation:
+      type: object
+      description: "Represents the gate information for the trip status model.  Consists\nof actual gate information and estimated/scheduled gate information.\n            "
+      additionalProperties: false
+      properties:
+        estimatedGate:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated or scheduled gate of the trip mode.\n            "
+          maxLength: 4
+          minLength: 0
+        actualGate:
+          type:
+          - string
+          - 'null'
+          description: "Represents the actual gate of the trip mode.\n            "
+          maxLength: 4
+          minLength: 0
+    PassengerSearchCriteria:
+      type: object
+      description: "Model representing an passenger group type for availability search.\n            "
+      additionalProperties: false
+      required:
+      - type
+      - count
+      properties:
+        type:
+          type: string
+          description: "The passenger type code.\n            "
+          maxLength: 4
+          minLength: 0
+        discountCode:
+          type:
+          - string
+          - 'null'
+          description: "The discount code to be applied.\n            "
+          maxLength: 4
+          minLength: 0
+        count:
+          type: integer
+          description: "The number of passenger for the type.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 1.0
+    AvailabilityWithSsrRequest:
+      type: object
+      description: "Defines the request to retrieve trip availability with SSR.\n            "
+      additionalProperties: false
+      required:
+      - passengers
+      - criteria
+      properties:
+        passengers:
+          description: "The list of passengers.\n            "
+          $ref: '#/components/schemas/PassengerTypeCriteria'
+        criteria:
+          type: array
+          description: "The list of availability search criteria.\n            "
+          items:
+            $ref: '#/components/schemas/AvailabilityCriteria'
+        codes:
+          description: "The different code criteria that can be set that can influence availability response.\n            "
+          $ref: '#/components/schemas/AvailabilityCodeCriteriav2'
+        taxesAndFees:
+          description: "The taxes and fees rollup mode which affects the pricing information.\n            "
+          $ref: '#/components/schemas/TaxesAndFeesRollupMode'
+        numberOfFaresPerJourney:
+          type:
+          - integer
+          - 'null'
+          description: "The number of fares per journey to be returned. If not set it will use the default optimized values\n            "
+          format: int32
+        returnEmptyResults:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag determining if empty schedule responses will be returned.\nDefaults to false.\n            "
+        passengerCountOverride:
+          type:
+          - integer
+          - 'null'
+          description: "An optional parameter to control the total passenger count passed to NewSkies.\nIf this is not provided, the API will add up the individual passenger information\ndata provided on the passenger type criteria portion of the request.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 1.0
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "SSRs to be priced in the availability.\n            "
+          items:
+            type: string
+        feePricingMode:
+          description: "Indicates whether a fee is meant to be sold in points or currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        programCode:
+          type:
+          - string
+          - 'null'
+          description: "The applying customer program code.\n            "
+        programLevel:
+          type:
+          - string
+          - 'null'
+          description: "The applying customer program level.\n            "
+    LoyaltyFilter:
+      type: integer
+      description: "Availability loyalty filter enumeration for filtering the returning fares on availability.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly\n2 = PointsAndMonetary\n3 = PreserveCurrent"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      - PointsAndMonetary
+      - PreserveCurrent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    LowFareFlightFilter:
+      type: integer
+      description: "Filter used to filter the types of availability to be returned for low fare.\n            \n\n0 = NoFlights\n1 = AllFlights\n2 = SelectedFlight"
+      x-enumNames:
+      - NoFlights
+      - AllFlights
+      - SelectedFlight
+      enum:
+      - 0
+      - 1
+      - 2
+    LowFareDateMarket:
+      type: object
+      description: "Low fare availability contains all information returned when requesting a low fare trip availability.\n            "
+      additionalProperties: false
+      properties:
+        lowestFareAmount:
+          description: "The lowest passenger fare amount for the date market.\n            "
+          $ref: '#/components/schemas/LowFareAmount'
+        lowFares:
+          type:
+          - array
+          - 'null'
+          description: "The low fare information for a specific flight.\n            "
+          items:
+            $ref: '#/components/schemas/LowFare'
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "The destination station code.\n            "
+          maxLength: 3
+          minLength: 3
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "The origin station code.\n            "
+          maxLength: 3
+          minLength: 3
+        departureDate:
+          type: string
+          description: "The departure date. This is the date only.\n            "
+          format: date-time
+        noFlights:
+          type: boolean
+          description: "Flag indicating that there are no flights for this day.\n            "
+    DepartureEvent:
+      type: object
+      description: "Represents the flight operation times for the departure event, which\nincludes an estimated and scheduled time event.\n            "
+      additionalProperties: false
+      properties:
+        scheduled:
+          type:
+          - string
+          - 'null'
+          description: "Represents the scheduled departure time.\n            "
+          format: date-time
+        estimated:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated departure time.\n            "
+          format: date-time
+    AvailabilityFilter:
+      type: integer
+      description: "Filter used to filter the types of journeys to return on availability.\n            \n\n0 = Default\n1 = ExcludeDeparted\n2 = ExcludeImminent\n3 = ExcludeUnavailable"
+      x-enumNames:
+      - Default
+      - ExcludeDeparted
+      - ExcludeImminent
+      - ExcludeUnavailable
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    FlightType:
+      type: integer
+      description: "Flight types enumeration.\n            \n\n0 = None\n1 = NonStop\n2 = Through\n3 = Direct\n4 = Connect\n5 = All"
+      x-enumNames:
+      - None
+      - NonStop
+      - Through
+      - Direct
+      - Connect
+      - All
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    ClassStatus:
+      type: integer
+      description: "Indicates whether a leg class may be used or not.\n            \n\n1 = Active\n2 = InActive\n3 = AvsOpen\n4 = AvsOnRequest\n5 = AvsClosed"
+      x-enumNames:
+      - Active
+      - InActive
+      - AvsOpen
+      - AvsOnRequest
+      - AvsClosed
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    LowFareAvailabilityv2:
+      type: object
+      description: "Low fare availability contains all information returned when requesting a low fare trip availability.\n            "
+      additionalProperties: false
+      properties:
+        trips:
+          type:
+          - array
+          - 'null'
+          description: "The collection of low fare trips based on market.\n            "
+          items:
+            $ref: '#/components/schemas/LowFareTripMarket'
+        includeTaxesAndFees:
+          type: boolean
+          description: "Flag indicating if the trips include taxes and fees.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 1
+    CodeShareIndicator:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
+      x-enumNames:
+      - NonCodeShare
+      - CodeShareCommercialDuplicate
+      - SharedDesignatorOrWetLease
+      - CodeShareHostOperatingCarrier
+      - CodeShareCommercialDuplicateWithOverrideText
+      - SharedDesignatorOrWetLeaseWithOverrideText
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    AvailabilityRequestv3:
+      type: object
+      description: "Defines the availability request, version 3.\n            "
+      additionalProperties: false
+      required:
+      - passengers
+      - criteria
+      properties:
+        passengers:
+          description: "The list of passengers.\n            "
+          $ref: '#/components/schemas/PassengerTypeCriteriav2'
+        criteria:
+          type: array
+          description: "The collection of availability search criteria.\n            "
+          items:
+            $ref: '#/components/schemas/AvailabilityCriteria'
+        codes:
+          description: "The codes that can be set to further filter the availability search.\n            "
+          $ref: '#/components/schemas/AvailabilityCodeCriteriav2'
+        taxesAndFees:
+          description: "The taxes and fees rollup mode which affects the pricing information.\n            "
+          $ref: '#/components/schemas/TaxesAndFeesRollupMode'
+        numberOfFaresPerJourney:
+          type:
+          - integer
+          - 'null'
+          description: "The number of fares per journey to be returned. If not set it will use the default optimized value.\n            "
+          format: int32
+        returnEmptyResults:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if empty schedule responses will be returned.\nDefaults to false.\n            "
+        passengerCountOverride:
+          type:
+          - integer
+          - 'null'
+          description: "An optional parameter to control the total passenger count passed to NewSkies.\nIf this is not provided, the API will add up the individual passenger information\ndata provided on the passenger type criteria portion of the request.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 1.0
+        fareValidations:
+          type:
+          - array
+          - 'null'
+          description: "The list of fare basis codes for troubleshooting fares and pricing restrictions.\nThis request property is only recommended to be used with Fare Manager Plus.\n            "
+          items:
+            type: string
+    IJsonResponseOfLowFareAvailabilityv2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/LowFareAvailabilityv2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    LegInformation:
+      type: object
+      description: "Model describing the detailed leg information.\n            "
+      additionalProperties: false
+      properties:
+        departureTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: "The departure time using the time variant in universal time.\n            "
+          format: date-time
+        arrivalTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: "The arrival time using the time variant in universal time.\n            "
+          format: date-time
+        adjustedCapacity:
+          type: integer
+          description: "The leg adjusted capacity.\n            "
+        arrivalTerminal:
+          type:
+          - string
+          - 'null'
+          description: "The leg arrival terminal.\n            "
+          maxLength: 2
+          minLength: 0
+        arrivalTimeVariant:
+          type: integer
+          description: "The leg arrival Local Time Variant (LTV).\n            "
+        backMoveDays:
+          type: integer
+          description: "The legs back move days.\n            "
+        capacity:
+          type: integer
+          description: "The leg capacity.\n            "
+        changeOfDirection:
+          type: boolean
+          description: "A value indicating whether the leg has a change of direction.\n            "
+        codeShareIndicator:
+          description: "The leg code share indicator.\n            "
+          $ref: '#/components/schemas/CodeShareIndicator'
+        departureTerminal:
+          type:
+          - string
+          - 'null'
+          description: "The leg departure terminal.\n            "
+          maxLength: 2
+          minLength: 0
+        departureTimeVariant:
+          type: integer
+          description: "The leg departure Local Time Variant (LTV).\n            "
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The leg type of the equipment.\n            "
+          maxLength: 3
+          minLength: 0
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The leg equipment type suffix.\n            "
+          maxLength: 3
+          minLength: 0
+        eTicket:
+          type: boolean
+          description: "A value indicating whether this leg is an e-ticketed leg.\n            "
+        irop:
+          type: boolean
+          description: "Gets or sets a value indicating whether this leg is an IROP.\n            "
+        lid:
+          type: integer
+          description: "The legs lid.\n            "
+        marketingCode:
+          type:
+          - string
+          - 'null'
+          description: "The leg marketing code.\n            "
+        marketingOverride:
+          type: boolean
+          description: "A value indicating whether the leg has a marketing override.\n            "
+        operatedByText:
+          type:
+          - string
+          - 'null'
+          description: "The leg \"operated by\" text.\n            "
+        operatingCarrier:
+          type:
+          - string
+          - 'null'
+          description: "The leg operating carrier.\n            "
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+          description: "The leg operating flight number.\n            "
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The leg operating operating suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        outMoveDays:
+          type: integer
+          description: "The leg move out days.\n            "
+        arrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The leg passenger standard time of arrival (STA).\n            "
+          format: date-time
+        departureTime:
+          type:
+          - string
+          - 'null'
+          description: "The leg passenger standard time of departure (STD).\n            "
+          format: date-time
+        prbcCode:
+          type:
+          - string
+          - 'null'
+          description: "The leg PRBC code.\n            "
+          maxLength: 8
+          minLength: 0
+        scheduleServiceType:
+          type:
+          - string
+          - 'null'
+          description: "The type of the schedule service.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        sold:
+          type: integer
+          description: "The sold.\n            "
+        status:
+          description: "The legs status.\n            "
+          $ref: '#/components/schemas/LegStatus'
+        subjectToGovtApproval:
+          type: boolean
+          description: "A value indicating whether the leg is subject to government approval.\n            "
+    ServiceCharge:
+      type: object
+      description: "Model that represents the fare service charge information.\n            "
+      additionalProperties: false
+      properties:
+        amount:
+          type: number
+          description: "The service charge amount.\n            "
+          format: decimal
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The service charge code.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The service charge detail.\n            "
+          maxLength: 10
+          minLength: 0
+        type:
+          description: "The service charge type.\n            "
+          $ref: '#/components/schemas/ChargeType'
+        collectType:
+          description: "The service charge collect type.\n            "
+          $ref: '#/components/schemas/CollectType'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The service charge foreign amount.\n            "
+          format: decimal
+        ticketCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge ticket code.\n            "
+          maxLength: 3
+          minLength: 0
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
+    FareApplicationType:
+      type: integer
+      description: "This enumeration defines the fare application type of a fare.\n            \n\n0 = Route\n1 = Sector\n2 = Governing"
+      x-enumNames:
+      - Route
+      - Sector
+      - Governing
+      enum:
+      - 0
+      - 1
+      - 2
+    LowFareEstimateResults:
+      type: object
+      description: "The low fare estimate results model.\n            "
+      additionalProperties: false
+      properties:
+        lowFares:
+          type:
+          - array
+          - 'null'
+          description: "The collection of low fare cache availability dates.\n            "
+          items:
+            $ref: '#/components/schemas/LowFareEstimateByDate'
+    PassengerSearchCriteriav2:
+      type: object
+      description: "Represents the passenger group type for availability search.\n            "
+      additionalProperties: false
+      required:
+      - type
+      - count
+      properties:
+        type:
+          type: string
+          description: "The passenger type code.\n            "
+          maxLength: 4
+          minLength: 0
+        discountCode:
+          type:
+          - string
+          - 'null'
+          description: "The discount code to be applied.\n            "
+          maxLength: 4
+          minLength: 0
+        count:
+          type: integer
+          description: "The number of passenger for the type.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 1.0
+        details:
+          type:
+          - array
+          - 'null'
+          description: "The additional search criteria per passenger. The number of details in the list must match the count.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSearchCriteriaDetail'
+    AvailableJourneyFare:
+      type: object
+      description: "The available journey fare represents a journeys fare offering. If the journey is multi segment multiple fare\ndetails will be present so each fare can be shown its unique details.\n            "
+      additionalProperties: false
+      properties:
+        fareAvailabilityKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique fare availability key.\n            "
+        details:
+          type:
+          - array
+          - 'null'
+          description: "The collection of fare details for a specific fare.\n            "
+          items:
+            $ref: '#/components/schemas/AvailableJourneyFareDetail'
+        isSumOfSector:
+          type: boolean
+          description: "Flag indicating if the journey fare is sum of sector.\n            "
+    PassengerTypeCriteriav2:
+      type: object
+      description: "Defines the passenger type criteria for availability search.\n            "
+      additionalProperties: false
+      required:
+      - types
+      properties:
+        types:
+          type: array
+          description: "The collection of passenger types and counts.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSearchCriteriav2'
+        residentCountry:
+          type:
+          - string
+          - 'null'
+          description: "The passenger's resident country.\n            "
+          maxLength: 2
+          minLength: 0
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

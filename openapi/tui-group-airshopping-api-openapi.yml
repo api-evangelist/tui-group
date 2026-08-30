@@ -1,0 +1,2885 @@
+openapi: 3.2.0
+info:
+  title: flight-ndc-gateway-navitaire Air Shopping API
+  version: '21.3'
+  description: 'NDC Gateway Api
+
+
+    **Note:** This is the complete API reference and includes all available operations and parameters, some of which may not be relevant to your specific use case. Before using these examples directly, we recommend starting with the Postman Collection tab, which provides curated sample requests for the most common workflows. For additional tailored examples and guidance, please contact your TUI contact person.'
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+security:
+- Bearer: []
+tags:
+- name: AirShopping
+paths:
+  /x3/ndc/api/Shopping/r3.x/v21.3/AirShopping:
+    get:
+      tags:
+      - AirShopping
+      operationId: GET AirShoppingRQ v21.3
+      parameters:
+      - name: dep
+        in: query
+        schema:
+          type: string
+      - name: arr
+        in: query
+        schema:
+          type: string
+      - name: depDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: sellerOrgName
+        in: query
+        schema:
+          type: string
+      - name: sellerOrgId
+        in: query
+        schema:
+          type: string
+      - name: retDate
+        in: query
+        schema:
+          type: string
+          default: 12/31/9999
+      - name: adt
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: chd
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: inf
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: cabin
+        in: query
+        schema:
+          type: string
+          default: '5'
+      - name: country
+        in: query
+        schema:
+          type: string
+          default: ''
+      - name: currency
+        in: query
+        schema:
+          type: string
+          default: ''
+      - name: promo
+        in: query
+        schema:
+          type: string
+          default: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+    post:
+      tags:
+      - AirShopping
+      operationId: POST AirShoppingRQ v21.3
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/*+xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+  /x3/ndc/api/Shopping/r3.x/v2/AirShopping:
+    get:
+      tags:
+      - AirShopping
+      operationId: GET AirShoppingRQ v21.3 DAPI
+      parameters:
+      - name: dep
+        in: query
+        schema:
+          type: string
+      - name: arr
+        in: query
+        schema:
+          type: string
+      - name: depDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: sellerOrgName
+        in: query
+        schema:
+          type: string
+      - name: sellerOrgId
+        in: query
+        schema:
+          type: string
+      - name: retDate
+        in: query
+        schema:
+          type: string
+          default: 12/31/9999
+      - name: adt
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: chd
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: inf
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: cabin
+        in: query
+        schema:
+          type: string
+      - name: country
+        in: query
+        schema:
+          type: string
+          default: ''
+      - name: currency
+        in: query
+        schema:
+          type: string
+          default: ''
+      - name: promo
+        in: query
+        schema:
+          type: string
+          default: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+    post:
+      tags:
+      - AirShopping
+      operationId: POST AirShoppingRQ v21.3 DAPI
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/*+xml:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/IATA_AirShoppingRQ'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/IATA_AirShoppingRS'
+components:
+  schemas:
+    PhoneType:
+      type: object
+      properties:
+        areaCodeNumber:
+          type:
+          - string
+          - 'null'
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        countryDialingCode:
+          type:
+          - string
+          - 'null'
+        extensionNumber:
+          type:
+          - string
+          - 'null'
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    EmailAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        emailAddressText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PricingMethodCriteriaType:
+      type: object
+      properties:
+        bestPricingOptionText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DistributionChainLinkType:
+      type: object
+      properties:
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfoType'
+        ordinal:
+          type:
+          - string
+          - 'null'
+        orgRole:
+          $ref: '#/components/schemas/DistributionChainRoleCodeType'
+        participatingOrg:
+          $ref: '#/components/schemas/ParticipatingOrgType'
+        salesAgent:
+          $ref: '#/components/schemas/SalesAgentType'
+        salesBranch:
+          $ref: '#/components/schemas/SalesBranchType'
+      additionalProperties: false
+    CurConversionType:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/AmountType'
+        conversionRate:
+          $ref: '#/components/schemas/RateType'
+        localAmount:
+          $ref: '#/components/schemas/AmountType'
+      additionalProperties: false
+    CommissionType:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/AmountType'
+        commissionCode:
+          type:
+          - string
+          - 'null'
+        percentage:
+          type: number
+          format: double
+        percentageSpecified:
+          type: boolean
+        percentageAppliedToAmount:
+          $ref: '#/components/schemas/AmountType'
+        taxableInd:
+          type: boolean
+        taxableIndSpecified:
+          type: boolean
+      additionalProperties: false
+    ServiceCriteriaType:
+      type: object
+      properties:
+        includeInd:
+          type: boolean
+        includeIndSpecified:
+          type: boolean
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+        rfic:
+          type:
+          - string
+          - 'null'
+        rfisc:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        servicePricingOnlyInd:
+          type: boolean
+        servicePricingOnlyIndSpecified:
+          type: boolean
+        taxonomyCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    FOID_Type:
+      type: object
+      properties:
+        foiD_ID:
+          type:
+          - string
+          - 'null'
+        foiD_TypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DistributionChainRoleCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    OwnershipTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    SalesAgentType:
+      type: object
+      properties:
+        salesAgentID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ContactInfoType:
+      type: object
+      properties:
+        contactInfoID:
+          type:
+          - string
+          - 'null'
+        contactPurposeText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        contactRefusedInd:
+          type: boolean
+        contactRefusedIndSpecified:
+          type: boolean
+        emailAddress:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/EmailAddressType'
+        individual:
+          $ref: '#/components/schemas/IndividualType'
+        individualRefID:
+          type:
+          - string
+          - 'null'
+        otherAddress:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtherAddressType'
+        paxSegmentRefID:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PhoneType'
+        postalAddress:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PostalAddressType'
+        relationshipToPax:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    LoyaltyProgramAccountType:
+      type: object
+      properties:
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        loyaltyProgram:
+          $ref: '#/components/schemas/LoyaltyProgramType'
+        signInID:
+          type:
+          - string
+          - 'null'
+        tierCode:
+          type:
+          - string
+          - 'null'
+        tierName:
+          type:
+          - string
+          - 'null'
+        tierPriorityText:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    RBD_Type:
+      type: object
+      properties:
+        rbD_Code:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PrefLevelType:
+      type: object
+      properties:
+        prefLevelCode:
+          $ref: '#/components/schemas/PrefLevelCodeType'
+      additionalProperties: false
+    LangUsageType:
+      type: object
+      properties:
+        langCode:
+          type:
+          - string
+          - 'null'
+        langUsageText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    SegmentDurationCriteriaType:
+      type: object
+      properties:
+        maximumTimeMeasure:
+          $ref: '#/components/schemas/MeasureType'
+        prefCode:
+          $ref: '#/components/schemas/PrefLevelCodeType'
+        prefCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    FlightCharacteristicsCriteriaType:
+      type: object
+      properties:
+        characteristicCode:
+          $ref: '#/components/schemas/FlightCharacteristicsCodeType'
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    PrefLevelCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    IATA_AirShoppingRQ:
+      type: object
+      properties:
+        augmentationPoint:
+          $ref: '#/components/schemas/AugmentationPointType'
+        distributionChain:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DistributionChainLinkType'
+        payloadAttributes:
+          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
+        pos:
+          $ref: '#/components/schemas/POS_Type'
+        request:
+          $ref: '#/components/schemas/AirShoppingRequestType'
+      additionalProperties: false
+    BaggagePricingCriteriaType:
+      type: object
+      properties:
+        baggageOptionCode:
+          type:
+          - string
+          - 'null'
+        commercialAgreementID:
+          type:
+          - string
+          - 'null'
+        deferralInd:
+          type: boolean
+        deferralIndSpecified:
+          type: boolean
+        fixedPrePaidInd:
+          type: boolean
+        fixedPrePaidIndSpecified:
+          type: boolean
+        includeSettlementInd:
+          type: boolean
+        includeSettlementIndSpecified:
+          type: boolean
+        optionalChargesCode:
+          type:
+          - string
+          - 'null'
+        requestedActionCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    FlightRequestType:
+      type: object
+      properties:
+        item: {}
+      additionalProperties: false
+    TaxTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    OfferCriteriaType:
+      type: object
+      properties:
+        baggagePricingCriteria:
+          $ref: '#/components/schemas/BaggagePricingCriteriaType'
+        fareCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FareCriteriaType'
+        pricingMethodCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PricingMethodCriteriaType'
+        programCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ProgramCriteriaType'
+        promotionCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PromotionType'
+        seatCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SeatCriteriaType'
+        serviceCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ServiceCriteriaType'
+        specialNeedsCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SpecialServiceType'
+        tripPurposeCode:
+          $ref: '#/components/schemas/TripPurposeCodeType'
+        tripPurposeCodeSpecified:
+          type: boolean
+        waitListCriteria:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    PromotionIssuerType:
+      type: object
+      properties:
+        item: {}
+      additionalProperties: false
+    AirShoppingRequestType:
+      type: object
+      properties:
+        contactInfoList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ContactInfoType'
+        datedMarketingSegmentList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DatedMarketingSegmentType'
+        datedOperatingLegList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DatedOperatingLegType'
+        datedOperatingSegmentList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DatedOperatingSegmentType'
+        disclosureList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisclosureType'
+        flightRelatedCriteria:
+          $ref: '#/components/schemas/FlightRelatedCriteriaType'
+        flightRequest:
+          $ref: '#/components/schemas/FlightRequestType'
+        offerCriteria:
+          $ref: '#/components/schemas/OfferCriteriaType'
+        paxJourneyList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ShoppingRequestPaxJourneyType'
+        paxList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PaxType'
+        payloadRestrictions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PayloadRestrictionsType'
+        paymentFunctions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PaymentFunctionsCriteriaType'
+        responseParameters:
+          $ref: '#/components/schemas/ResponseParametersRequestType'
+        seatProfileList:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SeatProfileType'
+      additionalProperties: false
+    DatedOperatingSegmentType:
+      type: object
+      properties:
+        carrierDesigCode:
+          type:
+          - string
+          - 'null'
+        carrierName:
+          type:
+          - string
+          - 'null'
+        datedOperatingLegRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        datedOperatingSegmentId:
+          type:
+          - string
+          - 'null'
+        disclosureRefID:
+          type:
+          - string
+          - 'null'
+        duration:
+          type:
+          - string
+          - 'null'
+        operatingCarrierFlightNumberText:
+          type:
+          - string
+          - 'null'
+        operationalSuffixText:
+          type:
+          - string
+          - 'null'
+        secureFlightInd:
+          type: boolean
+        secureFlightIndSpecified:
+          type: boolean
+        segmentTypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AirlineTaxonomyType:
+      type: object
+      properties:
+        descText:
+          type:
+          - string
+          - 'null'
+        taxonomyCode:
+          type:
+          - string
+          - 'null'
+        taxonomyFeature:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TaxonomyFeatureType'
+      additionalProperties: false
+    IATA_PayloadStandardAttributesType:
+      type: object
+      properties:
+        altLangID:
+          type:
+          - string
+          - 'null'
+        correlationID:
+          type:
+          - string
+          - 'null'
+        primaryLangID:
+          type:
+          - string
+          - 'null'
+        retransmissionInd:
+          type: boolean
+        retransmissionIndSpecified:
+          type: boolean
+        seqNumber:
+          type: number
+          format: double
+        seqNumberSpecified:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        timestampSpecified:
+          type: boolean
+        trxID:
+          type:
+          - string
+          - 'null'
+        versionNumber:
+          type: number
+          format: double
+        versionNumberSpecified:
+          type: boolean
+      additionalProperties: false
+    SpecialServiceType:
+      type: object
+      properties:
+        addlDataMeasure:
+          $ref: '#/components/schemas/MeasureType'
+        freeText:
+          type:
+          - string
+          - 'null'
+        qty:
+          type: number
+          format: double
+        qtySpecified:
+          type: boolean
+        specialServiceCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AmountType:
+      type: object
+      properties:
+        curCode:
+          type:
+          - string
+          - 'null'
+        value:
+          type: number
+          format: double
+      additionalProperties: false
+    GroupFareCriteriaType:
+      type: object
+      properties:
+        fareBasisCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        paxSegmentRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+        ptc:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AllianceType:
+      type: object
+      properties:
+        allianceCode:
+          type:
+          - string
+          - 'null'
+        carrier:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CarrierType'
+        name:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CityType:
+      type: object
+      properties:
+        cityName:
+          type:
+          - string
+          - 'null'
+        iatA_LocationCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PaymentMethodCriteriaType:
+      type: object
+      properties:
+        clearanceCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ClearanceCriteriaType'
+        paymentBrandCode:
+          type:
+          - string
+          - 'null'
+        paymentCriteriaAddlInfo:
+          $ref: '#/components/schemas/PaymentCriteriaAddlInfoType'
+        paymentMethodCountryCode:
+          type:
+          - string
+          - 'null'
+        paymentTypeCode:
+          type:
+          - string
+          - 'null'
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    CountrySubDivisionType:
+      type: object
+      properties:
+        countrySubDivisionCode:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    FareCriteriaType:
+      type: object
+      properties:
+        fareBasisCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        fareSubTypeCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        fareTypeCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        groupFareCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/GroupFareCriteriaType'
+        noAdvancePurchaseInd:
+          type: boolean
+        noAdvancePurchaseIndSpecified:
+          type: boolean
+        noPenaltyInd:
+          type: boolean
+        noPenaltyIndSpecified:
+          type: boolean
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    ConnectionCriteriaType:
+      type: object
+      properties:
+        connectionCriteriaID:
+          type:
+          - string
+          - 'null'
+        interlineInd:
+          type: boolean
+        interlineIndSpecified:
+          type: boolean
+        maximumConnectionDuration:
+          type:
+          - string
+          - 'null'
+        maximumConnectionQty:
+          type: number
+          format: double
+        maximumConnectionQtySpecified:
+          type: boolean
+        minimumConnectionDuration:
+          type:
+          - string
+          - 'null'
+        stationCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StationCriteriaType'
+      additionalProperties: false
+    FlightCriteriaType:
+      type: object
+      properties:
+        flightCharacteristicsCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FlightCharacteristicsCriteriaType'
+        iatA_AircraftType:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IATA_AircraftTypeType'
+        rbd:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RBD_Type'
+      additionalProperties: false
+    RemarkType:
+      type: object
+      properties:
+        displayInd:
+          type: boolean
+        displayIndSpecified:
+          type: boolean
+        remarkText:
+          type:
+          - string
+          - 'null'
+        timestamp:
+          type: string
+          format: date-time
+        timestampSpecified:
+          type: boolean
+      additionalProperties: false
+    SettlementInfoType:
+      type: object
+      properties:
+        commission:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionType'
+        fee:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FeeType'
+        methodCode:
+          type:
+          - string
+          - 'null'
+        settlementAmount:
+          $ref: '#/components/schemas/AmountType'
+        surcharge:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SurchargeType'
+        tax:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TaxType'
+        taxableInd:
+          type: boolean
+        taxableIndSpecified:
+          type: boolean
+      additionalProperties: false
+    TaxSummaryType:
+      type: object
+      properties:
+        allRefundableInd:
+          type: boolean
+        allRefundableIndSpecified:
+          type: boolean
+        approximateInd:
+          type: boolean
+        approximateIndSpecified:
+          type: boolean
+        collectionInd:
+          type: boolean
+        collectionIndSpecified:
+          type: boolean
+        guaranteeTimeLimitDateTime:
+          type: string
+          format: date-time
+        guaranteeTimeLimitDateTimeSpecified:
+          type: boolean
+        refundMethodText:
+          type:
+          - string
+          - 'null'
+        tax:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TaxType'
+        totalRefundableTaxAmount:
+          $ref: '#/components/schemas/AmountType'
+        totalTaxAmount:
+          $ref: '#/components/schemas/AmountType'
+      additionalProperties: false
+    OfferItemTypeCriteriaType:
+      type: object
+      properties:
+        offerItemTypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    SeatProfileType:
+      type: object
+      properties:
+        marketingInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DescType'
+        richMedia:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MediaResourceRefType'
+        seatCharacteristicCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        seatKeywords:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/KeyValuePropertyType'
+        seatPitchMeasure:
+          $ref: '#/components/schemas/MeasureType'
+        seatProfileID:
+          type:
+          - string
+          - 'null'
+        seatWidthMeasure:
+          $ref: '#/components/schemas/MeasureType'
+      additionalProperties: false
+    MediaResourceRefType:
+      type: object
+      properties:
+        contentType:
+          type:
+          - string
+          - 'null'
+        descText:
+          type:
+          - string
+          - 'null'
+        resourceURI:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ResponseParametersRequestType:
+      type: object
+      properties:
+        bdc:
+          $ref: '#/components/schemas/BDC_Type'
+        curParameter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CurParameterType'
+        device:
+          $ref: '#/components/schemas/DeviceType'
+        deviceLocation:
+          $ref: '#/components/schemas/DeviceLocationType'
+        inventoryGuaranteeInd:
+          type: boolean
+        inventoryGuaranteeIndSpecified:
+          type: boolean
+        langUsage:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/LangUsageType'
+        measurementSystemCode:
+          $ref: '#/components/schemas/MeasurementSystemCodeType'
+        measurementSystemCodeSpecified:
+          type: boolean
+        paxGroup:
+          $ref: '#/components/schemas/PaxGroupType'
+        pricingParameter:
+          $ref: '#/components/schemas/PricingParameterType'
+        reasonCode:
+          type:
+          - string
+          - 'null'
+        remark:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RemarkType'
+      additionalProperties: false
+    AddlNameType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        nameTypeCode:
+          $ref: '#/components/schemas/AddlNameTypeCodeType'
+        nameTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    CollectionPointTaxType:
+      type: object
+      properties:
+        airportAmount:
+          $ref: '#/components/schemas/AmountType'
+        station:
+          $ref: '#/components/schemas/StationType'
+      additionalProperties: false
+    DatedMarketingSegmentType:
+      type: object
+      properties:
+        airlineTaxonomy:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AirlineTaxonomyType'
+        arrival:
+          $ref: '#/components/schemas/TransportPointType'
+        carrierDesigCode:
+          type:
+          - string
+          - 'null'
+        carrierName:
+          type:
+          - string
+          - 'null'
+        datedMarketingSegmentId:
+          type:
+          - string
+          - 'null'
+        datedOperatingSegmentRefId:
+          type:
+          - string
+          - 'null'
+        dep:
+          $ref: '#/components/schemas/TransportPointType'
+        marketingCarrierFlightNumberText:
+          type:
+          - string
+          - 'null'
+        operationalSuffixText:
+          type:
+          - string
+          - 'null'
+        richMedia:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MediaResourceRefType'
+        ticketlessInd:
+          type: boolean
+        ticketlessIndSpecified:
+          type: boolean
+      additionalProperties: false
+    FeeType:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/AmountType'
+        approximateInd:
+          type: boolean
+        approximateIndSpecified:
+          type: boolean
+        descText:
+          type:
+          - string
+          - 'null'
+        desigText:
+          type:
+          - string
+          - 'null'
+        guaranteeTimeLimitDateTime:
+          type: string
+          format: date-time
+        guaranteeTimeLimitDateTimeSpecified:
+          type: boolean
+        localAmount:
+          $ref: '#/components/schemas/AmountType'
+        maximumAmount:
+          $ref: '#/components/schemas/AmountType'
+        minimumAmount:
+          $ref: '#/components/schemas/AmountType'
+        percent:
+          type: number
+          format: double
+        percentSpecified:
+          type: boolean
+        refundInd:
+          type: boolean
+        refundIndSpecified:
+          type: boolean
+      additionalProperties: false
+    PayloadRestrictionsType:
+      type: object
+      properties:
+        limit:
+          type: number
+          format: double
+        limitSpecified:
+          type: boolean
+        objectName:
+          $ref: '#/components/schemas/ObjectNameCodeType'
+        objectNameSpecified:
+          type: boolean
+      additionalProperties: false
+    OtherAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        otherAddressText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CarrierType:
+      type: object
+      properties:
+        airlineDesigCode:
+          type:
+          - string
+          - 'null'
+        duplicateDesigInd:
+          type: boolean
+        duplicateDesigIndSpecified:
+          type: boolean
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CurAppCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+      format: int32
+    StationType:
+      type: object
+      properties:
+        iatA_LocationCode:
+          type:
+          - string
+          - 'null'
+        stationName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    FlightCharacteristicsCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+      format: int32
+    AddlNameTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    ProgramOwnerType:
+      type: object
+      properties:
+        item: {}
+      additionalProperties: false
+    ObjectNameCodeType:
+      enum:
+      - 0
+      type: integer
+      format: int32
+    AugmentationPointType:
+      type: object
+      properties:
+        any:
+          type:
+          - array
+          - 'null'
+          items:
+            type: array
+            items: {}
+      additionalProperties: false
+    KeyValuePropertyType:
+      type: object
+      properties:
+        keyText:
+          type:
+          - string
+          - 'null'
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+        valueText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    TransportPointType:
+      type: object
+      properties:
+        aircraftScheduledDateTime:
+          type: string
+          format: date-time
+        aircraftScheduledDateTimeSpecified:
+          type: boolean
+        boardingGateID:
+          type:
+          - string
+          - 'null'
+        iatA_LocationCode:
+          type:
+          - string
+          - 'null'
+        stationName:
+          type:
+          - string
+          - 'null'
+        terminalName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PaymentFunctionsCriteriaType:
+      type: object
+      properties:
+        paymentMethodCriteria:
+          $ref: '#/components/schemas/PaymentMethodCriteriaType'
+      additionalProperties: false
+    ShoppingRequestPaxJourneyType:
+      type: object
+      properties:
+        paxJourneyID:
+          type:
+          - string
+          - 'null'
+        paxSegment:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ShopandReshopRequestPaxSegmentType'
+      additionalProperties: false
+    DatedOperatingLegType:
+      type: object
+      properties:
+        airlineTaxonomy:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AirlineTaxonomyType'
+        arrival:
+          $ref: '#/components/schemas/TransportPointType'
+        carrierAircraftType:
+          $ref: '#/components/schemas/CarrierAircraftTypeType'
+        changeofGaugeInd:
+          type: boolean
+        changeofGaugeIndSpecified:
+          type: boolean
+        datedOperatingLegID:
+          type:
+          - string
+          - 'null'
+        dep:
+          $ref: '#/components/schemas/TransportPointType'
+        distanceMeasure:
+          $ref: '#/components/schemas/MeasureType'
+        iatA_AircraftType:
+          $ref: '#/components/schemas/IATA_AircraftTypeType'
+        onGroundDuration:
+          type:
+          - string
+          - 'null'
+        richMedia:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MediaResourceRefType'
+      additionalProperties: false
+    PricingParameterType:
+      type: object
+      properties:
+        autoExchInd:
+          type: boolean
+        autoExchIndSpecified:
+          type: boolean
+        awardIncludedInd:
+          type: boolean
+        awardIncludedIndSpecified:
+          type: boolean
+        awardOnlyInd:
+          type: boolean
+        awardOnlyIndSpecified:
+          type: boolean
+        includeUpsellOffersInd:
+          type: boolean
+        includeUpsellOffersIndSpecified:
+          type: boolean
+        overrideCurCode:
+          type:
+          - string
+          - 'null'
+        simplePricingInd:
+          type: boolean
+        simplePricingIndSpecified:
+          type: boolean
+        taxExemption:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TaxSummaryType'
+      additionalProperties: false
+    IdentityDocType:
+      type: object
+      properties:
+        addlName:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddlNameType'
+        birthdate:
+          type: string
+          format: date-time
+        birthdateSpecified:
+          type: boolean
+        birthplaceText:
+          type:
+          - string
+          - 'null'
+        citizenshipCountryCode:
+          type:
+          - string
+          - 'null'
+        expiryDate:
+          type: string
+          format: date-time
+        expiryDateSpecified:
+          type: boolean
+        genderCode:
+          $ref: '#/components/schemas/GenderCodeType'
+        genderCodeSpecified:
+          type: boolean
+        givenName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        identityDocID:
+          type:
+          - string
+          - 'null'
+        identityDocTypeCode:
+          type:
+          - string
+          - 'null'
+        issueDate:
+          type: string
+          format: date-time
+        issueDateSpecified:
+          type: boolean
+        issuingCountryCode:
+          type:
+          - string
+          - 'null'
+        middleName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        residenceCountryCode:
+          type:
+          - string
+          - 'null'
+        suffixName:
+          type:
+          - string
+          - 'null'
+        surname:
+          type:
+          - string
+          - 'null'
+        titleName:
+          type:
+          - string
+          - 'null'
+        visa:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VisaType'
+      additionalProperties: false
+    RedressCaseType:
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+        programName:
+          type:
+          - string
+          - 'null'
+        redressCaseID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    FlightRelatedCriteriaType:
+      type: object
+      properties:
+        allianceCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AllianceCriteriaType'
+        carrierCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CarrierCriteriaType'
+        connectionCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectionCriteriaType'
+        flightCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FlightCriteriaType'
+        offerItemTypeCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OfferItemTypeCriteriaType'
+        segmentDurationCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SegmentDurationCriteriaType'
+        tripPurposeCode:
+          $ref: '#/components/schemas/TripPurposeCodeType'
+        tripPurposeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    VisaType:
+      type: object
+      properties:
+        entryQty:
+          type: number
+          format: double
+        entryQtySpecified:
+          type: boolean
+        expiryDate:
+          type: string
+          format: date-time
+        expiryDateSpecified:
+          type: boolean
+        hostCountryCode:
+          type:
+          - string
+          - 'null'
+        issueDate:
+          type: string
+          format: date-time
+        issueDateSpecified:
+          type: boolean
+        issuingCountryCode:
+          type:
+          - string
+          - 'null'
+        stayDuration:
+          type:
+          - string
+          - 'null'
+        visaID:
+          type:
+          - string
+          - 'null'
+        visaTypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PostalAddressType:
+      type: object
+      properties:
+        buildingRoomText:
+          type:
+          - string
+          - 'null'
+        cityName:
+          type:
+          - string
+          - 'null'
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryName:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+        pO_BoxCode:
+          type:
+          - string
+          - 'null'
+        postalCode:
+          type:
+          - string
+          - 'null'
+        streetText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    CarrierCriteriaType:
+      type: object
+      properties:
+        carrier:
+          $ref: '#/components/schemas/CarrierType'
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    EmployerType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        salesTaxRegistration:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SalesTaxRegistrationType'
+        taxationExemptionQualifierCode:
+          $ref: '#/components/schemas/TaxExemptionQualificationCodeType'
+        taxationExemptionQualifierCodeSpecified:
+          type: boolean
+        taxDeductedatSourceCapabilityInd:
+          type: boolean
+      additionalProperties: false
+    TaxExemptionQualificationCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    GenderCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    IATA_AirShoppingRS:
+      type: object
+      properties:
+        items:
+          type:
+          - array
+          - 'null'
+          items: {}
+        augmentationPoint:
+          $ref: '#/components/schemas/AugmentationPointType'
+        payloadAttributes:
+          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
+      additionalProperties: false
+    RateType:
+      type: object
+      properties:
+        baseCurCode:
+          type:
+          - string
+          - 'null'
+        baseMultiplierValue:
+          type: number
+          format: double
+        baseMultiplierValueSpecified:
+          type: boolean
+        baseUnitCode:
+          type:
+          - string
+          - 'null'
+        curCode:
+          type:
+          - string
+          - 'null'
+        format:
+          type:
+          - string
+          - 'null'
+        multiplierValue:
+          type: number
+          format: double
+        multiplierValueSpecified:
+          type: boolean
+        unitCode:
+          type:
+          - string
+          - 'null'
+        value:
+          type: number
+          format: double
+      additionalProperties: false
+    ClearanceCriteriaType:
+      type: object
+      properties:
+        processRuleCode:
+          type:
+          - string
+          - 'null'
+        remittanceDate:
+          type: string
+          format: date-time
+        remittanceDateSpecified:
+          type: boolean
+      additionalProperties: false
+    MeasurementSystemCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    SecurePaymentAuthenticationVersionType:
+      type: object
+      properties:
+        cardEnrollmentVersionText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        supportedVersionText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    SeatCriteriaType:
+      type: object
+      properties:
+        columnID:
+          type:
+          - string
+          - 'null'
+        rowNumber:
+          type:
+          - string
+          - 'null'
+        seatCharacteristicCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        seatProfileCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    PrePaidCertificateType:
+      type: object
+      properties:
+        appText:
+          type:
+          - string
+          - 'null'
+        effectiveDateTime:
+          type: string
+          format: date-time
+        effectiveDateTimeSpecified:
+          type: boolean
+        expiryDateTime:
+          type: string
+          format: date-time
+        expiryDateTimeSpecified:
+          type: boolean
+        number:
+          type: number
+          format: double
+        numberSpecified:
+          type: boolean
+      additionalProperties: false
+    GeospatialLocationType:
+      type: object
+      properties:
+        naturalAreaGeocode:
+          type:
+          - string
+          - 'null'
+        pointElevationNumber:
+          type: number
+          format: double
+        pointElevationNumberSpecified:
+          type: boolean
+        pointLatitudeNumber:
+          type: number
+          format: double
+        pointLatitudeNumberSpecified:
+          type: boolean
+        pointLongitudeNumber:
+          type: number
+          format: double
+        pointLongitudeNumberSpecified:
+          type: boolean
+      additionalProperties: false
+    TaxonomyFeatureType:
+      type: object
+      properties:
+        codesetCode:
+          type:
+          - string
+          - 'null'
+        codesetNameCode:
+          type:
+          - string
+          - 'null'
+        valueText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PresenceTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    LoyaltyProgramType:
+      type: object
+      properties:
+        alliance:
+          $ref: '#/components/schemas/AllianceType'
+        carrier:
+          $ref: '#/components/schemas/CarrierType'
+        programCode:
+          type:
+          - string
+          - 'null'
+        programName:
+          type:
+          - string
+          - 'null'
+        providerName:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PromotionType:
+      type: object
+      properties:
+        ownerName:
+          type:
+          - string
+          - 'null'
+        paxRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        promotionID:
+          type:
+          - string
+          - 'null'
+        promotionIssuer:
+          $ref: '#/components/schemas/PromotionIssuerType'
+        remark:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RemarkType'
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AllianceCriteriaType:
+      type: object
+      properties:
+        alliance:
+          $ref: '#/components/schemas/AllianceType'
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+      additionalProperties: false
+    ProgamContractType:
+      type: object
+      properties:
+        contractID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ParticipatingOrgType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        orgID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    TaxType:
+      type: object
+      properties:
+        addlFiledTaxCode:
+          type:
+          - string
+          - 'null'
+        addlTaxCode:
+          type:
+          - string
+          - 'null'
+        amount:
+          $ref: '#/components/schemas/AmountType'
+        approximateInd:
+          type: boolean
+        approximateIndSpecified:
+          type: boolean
+        appTypeCode:
+          type:
+          - string
+          - 'null'
+        collectionInd:
+          type: boolean
+        collectionIndSpecified:
+          type: boolean
+        collectionPointTax:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CollectionPointTaxType'
+        country:
+          $ref: '#/components/schemas/CountryType'
+        countrySubDivision:
+          $ref: '#/components/schemas/CountrySubDivisionType'
+        curConversion:
+          $ref: '#/components/schemas/CurConversionType'
+        descText:
+          type:
+          - string
+          - 'null'
+        filedAmount:
+          $ref: '#/components/schemas/AmountType'
+        filedTaxCode:
+          type:
+          - string
+          - 'null'
+        qualifierCode:
+          type:
+          - string
+          - 'null'
+        refundInd:
+          type: boolean
+        refundIndSpecified:
+          type: boolean
+        taxCode:
+          type:
+          - string
+          - 'null'
+        taxName:
+          type:
+          - string
+          - 'null'
+        taxTypeCode:
+          $ref: '#/components/schemas/TaxTypeCodeType'
+        taxTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    DeviceLocationType:
+      type: object
+      properties:
+        city:
+          $ref: '#/components/schemas/CityType'
+        country:
+          $ref: '#/components/schemas/CountryType'
+        geospatialLocation:
+          $ref: '#/components/schemas/GeospatialLocationType'
+      additionalProperties: false
+    ProgramCriteriaType:
+      type: object
+      properties:
+        companyIndexText:
+          type:
+          - string
+          - 'null'
+        memberStatusText:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        prePaidCertificate:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PrePaidCertificateType'
+        progamContract:
+          $ref: '#/components/schemas/ProgamContractType'
+        programAccount:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ProgramAccountType'
+        programOwner:
+          $ref: '#/components/schemas/ProgramOwnerType'
+        typeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PaxType:
+      type: object
+      properties:
+        ageMeasure:
+          $ref: '#/components/schemas/MeasureType'
+        birthdate:
+          type: string
+          format: date-time
+        birthdateSpecified:
+          type: boolean
+        citizenshipCountryCode:
+          type:
+          - string
+          - 'null'
+        contactInfoRefID:
+          type:
+          - string
+          - 'null'
+        employer:
+          $ref: '#/components/schemas/EmployerType'
+        foid:
+          $ref: '#/components/schemas/FOID_Type'
+        identityDoc:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/IdentityDocType'
+        individual:
+          $ref: '#/components/schemas/IndividualType'
+        langUsage:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/LangUsageType'
+        loyaltyProgramAccount:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/LoyaltyProgramAccountType'
+        paxID:
+          type:
+          - string
+          - 'null'
+        paxRefID:
+          type:
+          - string
+          - 'null'
+        profileConsentInd:
+          type: boolean
+        profileConsentIndSpecified:
+          type: boolean
+        profileID_Text:
+          type:
+          - string
+          - 'null'
+        ptc:
+          type:
+          - string
+          - 'null'
+        redressCase:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RedressCaseType'
+        remark:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RemarkType'
+        residenceCountryCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    POS_Type:
+      type: object
+      properties:
+        agentDutyText:
+          type:
+          - string
+          - 'null'
+        city:
+          $ref: '#/components/schemas/CityType'
+        country:
+          $ref: '#/components/schemas/CountryType'
+        onlineTrxInd:
+          type: boolean
+        onlineTrxIndSpecified:
+          type: boolean
+        requestTime:
+          type: string
+          format: date-time
+        requestTimeSpecified:
+          type: boolean
+      additionalProperties: false
+    TripPurposeCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+      format: int32
+    CountryType:
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    MeasureType:
+      type: object
+      properties:
+        unitCode:
+          type:
+          - string
+          - 'null'
+        value:
+          type: number
+          format: double
+      additionalProperties: false
+    PaymentCardCriteriaAddlInfoType:
+      type: object
+      properties:
+        cardProductTypeCode:
+          type:
+          - string
+          - 'null'
+        cardTypeText:
+          type:
+          - string
+          - 'null'
+        iiN_IINNumber:
+          type:
+          - string
+          - 'null'
+        securePaymentAuthenticationVersion:
+          $ref: '#/components/schemas/SecurePaymentAuthenticationVersionType'
+      additionalProperties: false
+    CarrierAircraftTypeType:
+      type: object
+      properties:
+        carrierAircraftTypeCode:
+          type:
+          - string
+          - 'null'
+        carrierAircraftTypeName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    SalesBranchType:
+      type: object
+      properties:
+        salesBranchID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DescType:
+      type: object
+      properties:
+        descText:
+          type:
+          - string
+          - 'null'
+        markupStyleText:
+          type:
+          - string
+          - 'null'
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    IATA_AircraftTypeType:
+      type: object
+      properties:
+        iatA_AircraftTypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ProgramAccountType:
+      type: object
+      properties:
+        accountID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    StationCriteriaType:
+      type: object
+      properties:
+        prefLevel:
+          $ref: '#/components/schemas/PrefLevelType'
+        station:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StationType'
+      additionalProperties: false
+    IndividualType:
+      type: object
+      properties:
+        addlName:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddlNameType'
+        birthdate:
+          type: string
+          format: date-time
+        birthdateSpecified:
+          type: boolean
+        birthplaceText:
+          type:
+          - string
+          - 'null'
+        genderCode:
+          $ref: '#/components/schemas/GenderCodeType'
+        genderCodeSpecified:
+          type: boolean
+        givenName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        individualID:
+          type:
+          - string
+          - 'null'
+        middleName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        suffixName:
+          type:
+          - string
+          - 'null'
+        surname:
+          type:
+          - string
+          - 'null'
+        titleName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CabinTypeAssociationChoiceType:
+      type: object
+      properties:
+        item: {}
+      additionalProperties: false
+    PaxGroupType:
+      type: object
+      properties:
+        contactInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ContactInfoType'
+        intendedPaxQty:
+          type: number
+          format: double
+        intendedPaxQtySpecified:
+          type: boolean
+        paxGroupID:
+          type:
+          - string
+          - 'null'
+        paxGroupName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    BagRuleCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    PaymentCriteriaAddlInfoType:
+      type: object
+      properties:
+        paymentCardCriteriaAddlInfo:
+          $ref: '#/components/schemas/PaymentCardCriteriaAddlInfoType'
+        paymentOtherMethodAddlInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RemarkType'
+      additionalProperties: false
+    SurchargeType:
+      type: object
+      properties:
+        allRefundableInd:
+          type: boolean
+        allRefundableIndSpecified:
+          type: boolean
+        breakdown:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FeeType'
+        totalAmount:
+          $ref: '#/components/schemas/AmountType'
+      additionalProperties: false
+    DeviceType:
+      type: object
+      properties:
+        deviceCode:
+          type:
+          - string
+          - 'null'
+        deviceOwnerTypeCode:
+          $ref: '#/components/schemas/OwnershipTypeCodeType'
+        deviceOwnerTypeCodeSpecified:
+          type: boolean
+        presenceTypeCode:
+          $ref: '#/components/schemas/PresenceTypeCodeType'
+        presenceTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    SalesTaxRegistrationType:
+      type: object
+      properties:
+        cityName:
+          type:
+          - string
+          - 'null'
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryDialingCode:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+        emailAddressText:
+          type:
+          - string
+          - 'null'
+        phoneNumber:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        postalCode:
+          type:
+          - string
+          - 'null'
+        salesTaxRegistrationID:
+          type:
+          - string
+          - 'null'
+        streetText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    DisclosureType:
+      type: object
+      properties:
+        desc:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DescType'
+        disclosureID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ShopandReshopRequestPaxSegmentType:
+      type: object
+      properties:
+        airlineTaxonomy:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AirlineTaxonomyType'
+        cabinTypeAssociationChoice:
+          $ref: '#/components/schemas/CabinTypeAssociationChoiceType'
+        datedMarketingSegmentRefId:
+          type:
+          - string
+          - 'null'
+        paxSegmentID:
+          type:
+          - string
+          - 'null'
+        richMedia:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MediaResourceRefType'
+        settlementInfo:
+          $ref: '#/components/schemas/SettlementInfoType'
+      additionalProperties: false
+    CurParameterType:
+      type: object
+      properties:
+        appCode:
+          $ref: '#/components/schemas/CurAppCodeType'
+        appCodeSpecified:
+          type: boolean
+        curCode:
+          type:
+          - string
+          - 'null'
+        decimalsAllowedNumber:
+          type: number
+          format: double
+        decimalsAllowedNumberSpecified:
+          type: boolean
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    BDC_Type:
+      type: object
+      properties:
+        bagRuleCode:
+          $ref: '#/components/schemas/BagRuleCodeType'
+        bagRuleCodeSpecified:
+          type: boolean
+        bdC_AnalysisResultCode:
+          type:
+          - string
+          - 'null'
+        bdC_ReasonText:
+          type:
+          - string
+          - 'null'
+        carrierDesigCode:
+          type:
+          - string
+          - 'null'
+        carrierName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: http
+      description: Please enter into field the word 'Bearer' following by space and JWT
+      scheme: Bearer
+      bearerFormat: JWT

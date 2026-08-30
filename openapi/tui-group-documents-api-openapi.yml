@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Documents API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: documents
+paths:
+  /api/dcs/v1/documents/{travelDocumentKey}/scannedData:
+    put:
+      tags:
+      - documents
+      summary: 'Parses scanner output and updates a specific passenger or infant''s travel document
+
+        for the booking in state.'
+      description: 'The scanned data must belong to the same type of document and be issued by the same
+
+        country as the one specified by the given travel document key.  The rest of the
+
+        document''s information will be updated from the scanned data.
+
+        Updates booking passenger information with the scanned data if it does not match the document.
+
+
+        GraphQL endpoint: dcsUpdateTravelDocumentFromScanStateful'
+      operationId: dcs_v1_documents_travelDocumentKey_scannedData_put
+      parameters:
+      - name: travelDocumentKey
+        in: path
+        required: true
+        description: Document to update.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: Scanned data to update the document.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScannedDocumentRequest'
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: Null data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/documents/scannedData:
+    post:
+      tags:
+      - documents
+      summary: 'Parses scanner output and creates a new travel document for a specific passenger
+
+        or infant on the booking in state.'
+      description: 'Updates booking passenger information with the scanned data if it does not match the document.
+
+
+        GraphQL endpoint: dcsCreateTravelDocumentFromScanStateful'
+      operationId: dcs_v1_documents_scannedData_post
+      requestBody:
+        x-name: request
+        description: Scanned data to add as a new document.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScannedDocumentRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: The travel document key for the newly added document.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfString'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    ParseScanRequestV2:
+      type: object
+      additionalProperties: false
+      properties:
+        track1:
+          type:
+          - string
+          - 'null'
+        track2:
+          type:
+          - string
+          - 'null'
+        track3:
+          type:
+          - string
+          - 'null'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which parsing rules will be used.  If not specified,
+
+            the default location code from the JWT will be used.'
+        documentTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    ScannedDocumentRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - passengerKey
+      - scan
+      properties:
+        passengerKey:
+          type: string
+          minLength: 1
+        isInfant:
+          type: boolean
+        scan:
+          $ref: '#/components/schemas/ParseScanRequestV2'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

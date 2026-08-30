@@ -1,0 +1,92 @@
+openapi: 3.2.0
+info:
+  title: Ship Content Graphql API
+  description: API for querying ship details.
+  version: 1.0.0
+  contact:
+    email: NRCruiseTeam@TUIGroup.onmicrosoft.com
+    name: Cruise NR API Support
+  x-header: 'API for querying ship details.
+
+    '
+  x-summary: 'API for querying ship details.
+
+    '
+servers:
+- url: https://prod.api.tui/cruises/ship
+- url: https://pre-prod.api.tui/cruises/ship
+tags:
+- name: Graphql
+paths:
+  /graphql:
+    post:
+      summary: Get ship data
+      description: Ship Content API provides information about cabin types, boards, and deck plan. This graphQL endpoint can be used to execute queries to fetch the specific information related to ship.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: GraphQL query string for fetching ship details.
+                  example: 'query MyQuery { getShip(code: 150103) { boardTypes { code title variants { composition { additionalInformation name type } } } cabins { bathroom { facts { key text } } bedroom { facts { key text } } cabinNumbers { deck { images { caption category order url } number } cabinNumber { number facts { key text } } } code general { facts { key text } occupancy { max } } images { caption category order url } name } code name decks { number } } }'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      getShip:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          code:
+                            type: string
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    example: null
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                          example: null
+                        locations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              line:
+                                type: string
+                                example: 3
+                              column:
+                                type: string
+                                example: 5
+                              sourceName:
+                                type: string
+                                example: null
+                        message:
+                          type: string
+                          example: error message
+      tags:
+      - Graphql

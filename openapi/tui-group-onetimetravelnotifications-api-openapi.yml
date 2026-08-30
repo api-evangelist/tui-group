@@ -1,0 +1,968 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api One Time Travel Notifications API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: oneTimeTravelNotifications
+paths:
+  /api/nsk/v1/oneTimeTravelNotifications:
+    post:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Creates a one time travel notification.
+      description: 'To get or delete a one time notification, you will need to store the key that is on the location header.
+
+
+        GraphQL endpoint: oneTimeTravelNotificationAdd'
+      operationId: nsk_v1_oneTimeTravelNotifications_post
+      requestBody:
+        x-name: request
+        description: The passenger travel notification create request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OneTimeNotificationCreateRequest'
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v2/oneTimeTravelNotifications:
+    post:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Creates a one time travel notification.
+      description: 'GraphQL endpoint: oneTimeTravelNotificationAddv2'
+      operationId: nsk_v2_oneTimeTravelNotifications_post
+      requestBody:
+        x-name: request
+        description: The one time travel notification create request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OneTimeNotificationCreateRequest'
+            examples:
+              Create One Time Travel Notification:
+                description: Example request when creating a one time travel notification.
+                value:
+                  events:
+                  - type: 0
+                  cultureCode: en-US
+                  timedEvents:
+                  - minutesToEvent: 10
+                    type: 0
+                  notificationDestination:
+                    deliveryMethodCode: 0
+                    destination: example@gmail.com
+                  marketInformation:
+                    identifier:
+                      identifier: '5611'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: BOS
+                    origin: SLC
+                    departureDate: '2026-07-09T05:55:13.4374112Z'
+                  deviceName: null
+              Create One Time Travel Notification With Events Only:
+                description: Example request when creating a one time travel notification with events only.
+                value:
+                  events:
+                  - type: 0
+                  cultureCode: en-US
+                  timedEvents: null
+                  notificationDestination:
+                    deliveryMethodCode: 0
+                    destination: example@gmail.com
+                  marketInformation:
+                    identifier:
+                      identifier: '5611'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: BOS
+                    origin: SLC
+                    departureDate: '2026-07-09T05:55:13.4374234Z'
+                  deviceName: null
+              Create One Time Travel Notification With Timed Events Only:
+                description: Example request when creating a one time travel notification with timed events only.
+                value:
+                  events: null
+                  cultureCode: en-US
+                  timedEvents:
+                  - minutesToEvent: 10
+                    type: 0
+                  notificationDestination:
+                    deliveryMethodCode: 0
+                    destination: example@gmail.com
+                  marketInformation:
+                    identifier:
+                      identifier: '5611'
+                      carrierCode: NV
+                      opSuffix: null
+                    destination: BOS
+                    origin: SLC
+                    departureDate: '2026-07-09T05:55:13.437424Z'
+                  deviceName: null
+        required: true
+        x-position: 1
+      responses:
+        '201':
+          description: The item was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Invalid E-mail Address:
+                  description: Example response when e-mail address is invalid
+                  value:
+                    errors:
+                    - id: 63dd49c7-59f7-5a0c-d07a-d249785314e9
+                      code: nsk-server:InvalidEmailAddress
+                      message: nsk-server:InvalidEmailAddress
+                      type: Validation
+                      details:
+                        message: '@gmail.com is not a valid email address.'
+                      rawMessage: '@gmail.com is not a valid email address.'
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Phone Number:
+                  description: Example response when phone number is invalid
+                  value:
+                    errors:
+                    - id: 63dd49c7-59f7-5a0c-d07a-d249785314e9
+                      code: nsk-server:InvalidPhoneNumber
+                      message: nsk-server:InvalidPhoneNumber
+                      type: Validation
+                      details:
+                        message: ABD is not a valid email phone number.
+                      rawMessage: ABD is not a valid email phone number.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Null Notification Destination:
+                  description: Example response when creating a one time travel notification with a null or empty notification destination.
+                  value:
+                    errors:
+                    - id: ca448f1f-9dae-afa8-bc79-423a6aaa9c56
+                      code: nsk:TravelNotification:NullDestination
+                      message: nsk:TravelNotification:NullDestination
+                      type: Validation
+                      details: null
+                      rawMessage: The destination of the subscription should not be blank.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Device Name for Push Notification:
+                  description: Example response when creating a one time travel notification with an invalid device name for push notification
+                  value:
+                    errors:
+                    - id: 6ac6116b-85f8-f47d-f100-99338b6f8287
+                      code: nsk:DeviceName:InvalidDeviceName
+                      message: nsk:DeviceName:InvalidDeviceName
+                      type: Validation
+                      details: null
+                      rawMessage: The device name should be set for notification of type Push
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Device Name for Email and Phone Notification:
+                  description: Example response when creating a one time travel notification with a device name that should not be set for email and phone notifications
+                  value:
+                    errors:
+                    - id: 6ac6116b-85f8-f47d-f100-99338b6f8287
+                      code: nsk:DeviceName:InvalidDeviceName
+                      message: nsk:DeviceName:InvalidDeviceName
+                      type: Validation
+                      details: null
+                      rawMessage: The device name should not be set for notification of type Email
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Empty Event Type:
+                  description: Example response when creating a one time travel notification with an empty event type
+                  value:
+                    errors:
+                    - id: 135f4684-f240-3988-e042-69aad6e5cce4
+                      code: OneTimeNotificationEventCreateRequest.Type:RequiredAttribute
+                      message: OneTimeNotificationEventCreateRequest.Type:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: OneTimeNotificationEventCreateRequest
+                        member: Type
+                      rawMessage: The OneTimeNotificationEventCreateRequest field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Empty Timed Event Type:
+                  description: Example response when creating a one time travel notification with an empty timed event type
+                  value:
+                    errors:
+                    - id: 6214d832-864c-a521-1e31-c24190043349
+                      code: NotificationTimedEventCreateRequest.Type:RequiredAttribute
+                      message: NotificationTimedEventCreateRequest.Type:RequiredAttribute
+                      type: Validation
+                      details:
+                        validation: RequiredAttribute
+                        model: NotificationTimedEventCreateRequest
+                        member: Type
+                      rawMessage: The NotificationTimedEventCreateRequest field is required.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Minutes to Event:
+                  description: Example response when creating a one time travel notification with an invalid minutes to event value
+                  value:
+                    errors:
+                    - id: d9f64797-ec60-93fb-dfe4-4bf4c0c94dd5
+                      code: nsk:MinutesToEvent:InvalidMinutesToEventValue
+                      message: nsk:MinutesToEvent:InvalidMinutesToEventValue
+                      type: Validation
+                      details:
+                        minutesToEvent: '5'
+                      rawMessage: The minutes to event value of '5' is invalid for timed notification even type 'Arrival'.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Event Type:
+                  description: Example response when creating a one time travel notification with an invalid event type
+                  value:
+                    errors:
+                    - id: d48df503-4c4d-30a8-0862-a3e03b0cbb1f
+                      code: nsk:NotificationEvent:InvalidEventType
+                      message: nsk:NotificationEvent:InvalidEventType
+                      type: Validation
+                      details:
+                        eventType: '2'
+                      rawMessage: The event type '2' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Timed Event Type:
+                  description: Example response when creating a one time travel notification with an invalid timed event type
+                  value:
+                    errors:
+                    - id: b1c5c484-0f33-f847-82d8-28aedb3975c2
+                      code: nsk:NotificationEvent:InvalidTimedEventType
+                      message: nsk:NotificationEvent:InvalidTimedEventType
+                      type: Validation
+                      details:
+                        timedEventType: '2'
+                      rawMessage: The timed event type '2' is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Empty Subscription Events List:
+                  description: Example response when the list of subscription events are empty.
+                  value:
+                    errors:
+                    - id: 7e18d08c-bbbc-2d2f-6c2b-9456d84670ac
+                      code: nsk:NotificationEvent:NullEvents
+                      message: nsk:NotificationEvent:NullEvents
+                      type: Validation
+                      details: null
+                      rawMessage: The list of subscription events should not be empty.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Culture Code:
+                  description: Example response when the culture code is invalid.
+                  value:
+                    errors:
+                    - id: 20c566a3-e928-1afb-edd6-b9725789060b
+                      code: nsk:TravelNotification:InvalidCultureCode
+                      message: nsk:TravelNotification:InvalidCultureCode
+                      type: Validation
+                      details:
+                        cultureCode: dn-US
+                      rawMessage: The culture code dn-US is invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Existing Notification:
+                  description: Example response when a one time travel notification already exists when creating with the same destination address.
+                  value:
+                    errors:
+                    - id: 70c46bde-ece4-508c-ce33-c59f652038ae
+                      code: nsk-server:SubscriptionCommitFailed
+                      message: nsk-server:SubscriptionCommitFailed
+                      type: Error
+                      details: null
+                      rawMessage: Request already received for 20240408 NV5611 SLCBOS with email1@test.com; email2@test.com. If an update is required, please cancel the original request.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+                Invalid Market Information:
+                  description: Example response when the market information is invalid.
+                  value:
+                    errors:
+                    - id: a0c9c3ac-f0a0-a1de-cb55-2696fc0c8562
+                      code: nsk-server:WarningException
+                      message: nsk-server:WarningException
+                      type: Error
+                      details: null
+                      rawMessage: 'The flight being subscribed to (20240415 NV 561 SLCBOS) cannot be found '
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+  /api/nsk/v1/oneTimeTravelNotifications/{oneTimeTravelNotificationKey}:
+    get:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Gets a one time travel notification.
+      description: 'GraphQL endpoint: oneTimeTravelNotification'
+      operationId: nsk_v1_oneTimeTravelNotifications_oneTimeTravelNotificationKey_get
+      parameters:
+      - name: oneTimeTravelNotificationKey
+        in: path
+        required: true
+        description: The one time travel notification key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfOneTimeTravelNotification'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+    delete:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Deletes a one time travel notification.
+      description: 'GraphQL endpoint: oneTimeTravelNotificationDelete'
+      operationId: nsk_v1_oneTimeTravelNotifications_oneTimeTravelNotificationKey_delete
+      parameters:
+      - name: oneTimeTravelNotificationKey
+        in: path
+        required: true
+        description: The one time travel notification key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+      deprecated: true
+  /api/nsk/v2/oneTimeTravelNotifications/{subscriptionNumber}:
+    get:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Gets a one time travel notification through a subscription number.
+      description: 'GraphQL endpoint: oneTimeTravelNotificationv2'
+      operationId: nsk_v2_oneTimeTravelNotifications_subscriptionNumber_get
+      parameters:
+      - name: subscriptionNumber
+        in: path
+        required: true
+        description: The subscription number.
+        schema:
+          type: string
+        x-position: 1
+      - name: destination
+        in: query
+        description: The notification destination.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfOneTimeTravelNotificationv2'
+              examples:
+                Retrieve One Time Travel Notification Response:
+                  description: Example response for successfully retrieving a One Time Travel Notification by Subscription Number
+                  value:
+                    data:
+                      expirationDate: '2026-07-12T05:55:13.4474207Z'
+                      cultureCode: US
+                      subscriptionNumber: '446776225723'
+                      notificationDestination:
+                        deliveryMethodCode: 0
+                        destination: test@gmail.com
+                      deviceName: null
+                      events:
+                      - createdDate: '2026-07-09T05:55:13.447497Z'
+                        type: 0
+                      timedEvents:
+                      - createdDate: '2026-07-09T05:55:13.4475512Z'
+                        minutesToEvent: 10
+                        type: 0
+                      marketInformation:
+                        identifier:
+                          identifier: '5611'
+                          carrierCode: NV
+                          opSuffix: null
+                        destination: SLC
+                        origin: BOS
+                        departureDate: '2026-07-10T05:55:13.4475766Z'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    delete:
+      tags:
+      - oneTimeTravelNotifications
+      summary: Deletes a one time travel notification through a subscription number.
+      description: 'GraphQL endpoint: oneTimeTravelNotificationDeletev2'
+      operationId: nsk_v2_oneTimeTravelNotifications_subscriptionNumber_delete
+      parameters:
+      - name: subscriptionNumber
+        in: path
+        required: true
+        description: The subscription number.
+        schema:
+          type: string
+        x-position: 1
+      - name: destination
+        in: query
+        description: The notification destination.
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Subscription number not found:
+                  description: Example response when the subscription number is not found
+                  value:
+                    errors:
+                    - id: 04c4da13-bb82-1816-8a4a-c3ef561516e7
+                      code: nsk:TravelNotification:SubscriptionNumberNotFound
+                      message: nsk:TravelNotification:SubscriptionNumberNotFound
+                      type: Validation
+                      details: null
+                      rawMessage: The subscription number could not be found.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+components:
+  schemas:
+    OneTimeNotificationEventType:
+      type: integer
+      description: "Represents the type of notification event type for a one time travel notification event.\n            \n\n0 = DepartureDelay\n1 = ArrivalDelay"
+      x-enumNames:
+      - DepartureDelay
+      - ArrivalDelay
+      enum:
+      - 0
+      - 1
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    OneTimeTravelNotification:
+      type: object
+      description: "A one time travel notification.\n            "
+      additionalProperties: false
+      properties:
+        oneTimeTravelNotificationKey:
+          type:
+          - string
+          - 'null'
+          description: "The one time travel notification key.\n            "
+        events:
+          type:
+          - array
+          - 'null'
+          description: "The list of one time travel notification event.\n            "
+          items:
+            $ref: '#/components/schemas/OneTimeNotificationEvent'
+        timedEvents:
+          type:
+          - array
+          - 'null'
+          description: "The list of travel notification event.\n            "
+          items:
+            $ref: '#/components/schemas/NotificationTimedEvent'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+        notificationDestination:
+          description: "The notification destination.\n            "
+          $ref: '#/components/schemas/NotificationDestination'
+        deviceName:
+          type:
+          - string
+          - 'null'
+          description: "The name of the device for the push notification.\n            "
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The expiration date.\n            "
+          format: date-time
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date of the travel notification.\n            "
+          format: date-time
+    OneTimeNotificationCreateRequest:
+      type: object
+      description: "Request for one time notification creation.\n            "
+      additionalProperties: false
+      properties:
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+        notificationDestination:
+          description: "The notification destination.\n            "
+          $ref: '#/components/schemas/NotificationDestination'
+        deviceName:
+          type:
+          - string
+          - 'null'
+          description: "The name of the device for the push notification.\n            "
+        events:
+          type:
+          - array
+          - 'null'
+          description: "The list of one time travel notification event.\n            "
+          items:
+            $ref: '#/components/schemas/OneTimeNotificationEventCreateRequest'
+        timedEvents:
+          type:
+          - array
+          - 'null'
+          description: "The list of travel notification event.\n            "
+          items:
+            $ref: '#/components/schemas/NotificationTimedEventCreateRequest'
+        marketInformation:
+          description: "The market to create a notification for.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+    OneTimeTravelNotificationv2:
+      type: object
+      description: "A one time travel notification.\n            "
+      additionalProperties: false
+      properties:
+        subscriptionNumber:
+          type:
+          - string
+          - 'null'
+          description: "The subscription number.\n            "
+        events:
+          type:
+          - array
+          - 'null'
+          description: "The list of one time travel notification events.\n            "
+          items:
+            $ref: '#/components/schemas/OneTimeNotificationEvent'
+        timedEvents:
+          type:
+          - array
+          - 'null'
+          description: "The list of travel notification timed events.\n            "
+          items:
+            $ref: '#/components/schemas/NotificationTimedEvent'
+        marketInformation:
+          description: "The market information to add a notification to.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+        notificationDestination:
+          description: "The notification destination.\n            "
+          $ref: '#/components/schemas/NotificationDestination'
+        deviceName:
+          type:
+          - string
+          - 'null'
+          description: "The name of the device for the push notification.\n            "
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The expiration date.\n            "
+          format: date-time
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    NotificationTimedEventCreateRequest:
+      type: object
+      description: "A travel notification timed event create request.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        minutesToEvent:
+          type: integer
+          description: "The minutes to the event.\n            "
+          format: int32
+        type:
+          description: "The travel notification timed event type.\n            "
+          $ref: '#/components/schemas/NotificationTimedEventType'
+    NotificationDestination:
+      type: object
+      description: "A travel notification destination.\n            "
+      additionalProperties: false
+      required:
+      - deliveryMethodCode
+      properties:
+        deliveryMethodCode:
+          description: "The delivery method code.\n            "
+          $ref: '#/components/schemas/DeliveryMethodCode'
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "The notification destination, an email or phone number.\n            "
+    OneTimeNotificationEventCreateRequest:
+      type: object
+      description: "A one time travel notification event create request.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          description: "The one time travel notification event type.\n            "
+          $ref: '#/components/schemas/OneTimeNotificationEventType'
+    IJsonResponseOfOneTimeTravelNotification:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OneTimeTravelNotification'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    NotificationTimedEvent:
+      type: object
+      description: "A travel notification timed event.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          description: "The travel notification timed event type.\n            "
+          $ref: '#/components/schemas/NotificationTimedEventType'
+        minutesToEvent:
+          type: integer
+          description: "The minutes to the event.\n            "
+          format: int32
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date of the travel notification.\n            "
+          format: date-time
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    OneTimeNotificationEvent:
+      type: object
+      description: "A one time notification event.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          description: "The one time travel notification event type.\n            "
+          $ref: '#/components/schemas/OneTimeNotificationEventType'
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date of the travel notification.\n            "
+          format: date-time
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfOneTimeTravelNotificationv2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OneTimeTravelNotificationv2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    DeliveryMethodCode:
+      type: integer
+      description: "Represents the delivery method codes.\n            \n\n0 = Email\n1 = Sms\n2 = Push"
+      x-enumNames:
+      - Email
+      - Sms
+      - Push
+      enum:
+      - 0
+      - 1
+      - 2
+    NotificationTimedEventType:
+      type: integer
+      description: "Represents the type of timed notification event type for a travel notification event.\nThese are events that have an associated property minutes to event.\n            \n\n0 = Departure\n1 = Arrival"
+      x-enumNames:
+      - Departure
+      - Arrival
+      enum:
+      - 0
+      - 1
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

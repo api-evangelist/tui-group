@@ -1,0 +1,740 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Seatmaps API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: seatmaps
+paths:
+  /api/nsk/v4/seatmaps/{journeyKey}:
+    get:
+      tags:
+      - seatmaps
+      summary: Gets the list of seat maps for a specified journey.
+      description: 'GraphQL endpoint: seatMapv4'
+      operationId: nsk_v4_seatmaps_journeyKey_get
+      parameters:
+      - name: journeyKey
+        in: path
+        required: true
+        description: The Journey Key.
+        schema:
+          type: string
+        x-position: 1
+      - name: IncludePropertyLookup
+        in: query
+        description: "Flag indicating to include seat property lookup on the response.\n            "
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: CultureCode
+        in: query
+        description: "The desired culture code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfSeatMapStatelessAvailability'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/nsk/v1/seatmaps/{legKey}:
+    get:
+      tags:
+      - seatmaps
+      summary: Gets the seat maps for a specified leg.
+      description: 'GraphQL endpoint: seatMapByLegKey'
+      operationId: nsk_v1_seatmaps_legKey_get
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg Key.
+        schema:
+          type: string
+        x-position: 1
+      - name: IncludePropertyLookup
+        in: query
+        description: "Flag indicating to include seat property lookup on the response.\n            "
+        schema:
+          type:
+          - boolean
+          - 'null'
+        x-position: 2
+      - name: CultureCode
+        in: query
+        description: "The desired culture code.\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfSeatMapStatelessAvailability'
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    UnitType:
+      type: integer
+      description: "Defines the type of unit.\n            \n\n0 = None\n1 = NormalSeat\n2 = LargeSeat\n3 = Couchette\n4 = Compartment\n5 = Table\n6 = Wall\n7 = Window\n8 = Door\n9 = Stairs\n10 = Wing\n12 = Other\n13 = Bulkhead\n14 = BedOneOfThree\n15 = BedTwoOfThree\n16 = BedThreeOfThree\n17 = BedOneOfTwo\n18 = BedTwoOfTwo\n19 = Bed\n20 = Exit\n21 = LabelRuler\n22 = GenericUnitResizableArea\n23 = Lavatory\n24 = LavatoryWithHandicappedFacilities\n25 = Luggage\n26 = MovableCompartmentDivider\n27 = Bar\n28 = Closet\n29 = Galley\n30 = MovieScreen\n31 = Storage"
+      x-enumNames:
+      - None
+      - NormalSeat
+      - LargeSeat
+      - Couchette
+      - Compartment
+      - Table
+      - Wall
+      - Window
+      - Door
+      - Stairs
+      - Wing
+      - Other
+      - Bulkhead
+      - BedOneOfThree
+      - BedTwoOfThree
+      - BedThreeOfThree
+      - BedOneOfTwo
+      - BedTwoOfTwo
+      - Bed
+      - Exit
+      - LabelRuler
+      - GenericUnitResizableArea
+      - Lavatory
+      - LavatoryWithHandicappedFacilities
+      - Luggage
+      - MovableCompartmentDivider
+      - Bar
+      - Closet
+      - Galley
+      - MovieScreen
+      - Storage
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+      - 26
+      - 27
+      - 28
+      - 29
+      - 30
+      - 31
+    IJsonResponseOfIListOfSeatMapStatelessAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/SeatMapStatelessAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    EquipmentCategory:
+      type: integer
+      description: "Represents the category of the equipment used for reservation operations.\n            \n\n0 = None\n1 = JetAircraft\n2 = PistonAircraft\n3 = TurbopropAircraft\n4 = Helicopter\n5 = Surface\n6 = Train\n7 = Bus\n8 = AllCategories"
+      x-enumNames:
+      - None
+      - JetAircraft
+      - PistonAircraft
+      - TurbopropAircraft
+      - Helicopter
+      - Surface
+      - Train
+      - Bus
+      - AllCategories
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+    SeatMapProperty:
+      type: object
+      description: "Defines a property of a equipment unit.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The dynamic equipment property code.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The dynamic equipment property value.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    SeatMap:
+      type: object
+      description: "Defines a single equipment type and all it's units.\n            "
+      additionalProperties: false
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The name of the equipment.\n            "
+        arrivalStation:
+          type:
+          - string
+          - 'null'
+          description: "The arrival station.\n            "
+        departureStation:
+          type:
+          - string
+          - 'null'
+          description: "The departure station.\n            "
+        marketingCode:
+          type:
+          - string
+          - 'null'
+          description: "The marketing code on the inventory equipment.\n            "
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The equipment label.\n            "
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The equipment code/suffix.\n            "
+        category:
+          description: "The categorization of the equipment.\n            "
+          $ref: '#/components/schemas/EquipmentCategory'
+        availableUnits:
+          type: integer
+          description: "Number of available units on the inventory equipment.\n            "
+          format: int32
+        decks:
+          type:
+          - object
+          - 'null'
+          description: "The collection of decks/levels for the equipment.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/DeckInformation'
+        seatmapReference:
+          type:
+          - string
+          - 'null'
+          description: "The reference identifying what seatmap the leg is in associated to.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    SeatRestriction:
+      type: integer
+      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
+      x-enumNames:
+      - Undefined
+      - AlwaysAllowed
+      - DefaultAllowed
+      - DefaultRestricted
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    CompartmentInformation:
+      type: object
+      description: "Defines a compartment within an equipment -> deck.\n            "
+      additionalProperties: false
+      properties:
+        availableUnits:
+          type: integer
+          description: "The number of available units in the compartment.\n            "
+          format: int32
+        designator:
+          type:
+          - string
+          - 'null'
+          description: "The unique designator for the compartment.\n            "
+        length:
+          type: integer
+          description: "The length of the compartment.\n            "
+          format: int32
+        width:
+          type: integer
+          description: "The width of the compartment.\n            "
+          format: int32
+        sequence:
+          type: integer
+          description: "The compartment's sequence number in the equipments deck.\n            "
+        orientation:
+          type: integer
+          description: "The facing orientation this compartment is in.\n            "
+        units:
+          type:
+          - array
+          - 'null'
+          description: "The list of units contained in the compartment.\n            "
+          items:
+            $ref: '#/components/schemas/UnitInformation'
+    IJsonResponseOfSeatMapStatelessAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SeatMapStatelessAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    UnitInformation:
+      type: object
+      description: "Defines a unit within an equipment -> decks -> compartment.\n            "
+      additionalProperties: false
+      properties:
+        unitKey:
+          type:
+          - string
+          - 'null'
+          description: "The key used to assign the unit to a passenger.\n            "
+        assignable:
+          type: boolean
+          description: "Flag indicating if the unit is assignable (aka is a seat). If false this means that the unit is a fixture.\n            "
+        availability:
+          description: "The availability of the seat.\n            "
+          $ref: '#/components/schemas/SeatAvailability'
+        compartmentDesignator:
+          type:
+          - string
+          - 'null'
+          description: "Defines compartment designator of the compartment to which unit belongs to.\n            "
+        designator:
+          type:
+          - string
+          - 'null'
+          description: "Defines unique designator for the unit within the compartment.\n            "
+        type:
+          description: "The type of the unit.\n            "
+          $ref: '#/components/schemas/UnitType'
+        travelClassCode:
+          type:
+          - string
+          - 'null'
+          description: "The designated travel class code.\n            "
+        set:
+          type: integer
+          description: "The designator of the group the unit belongs to.\n            "
+          format: int32
+        group:
+          type: integer
+          description: "Indicates the logical group where this unit belongs. Also indicating the pricing value of this unit via seat fees.\n            "
+        priority:
+          type: integer
+          description: "Indicates the priority level of this unit, if this unit is among the best seats computed by the seat assignment\nalgorithm.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The text associated to a unit.\n            "
+        setVacancy:
+          type: integer
+          description: "The number of available units in the group.\n            "
+          format: int32
+        angle:
+          type: integer
+          description: "This angle of the unit in the grid.\n            "
+        width:
+          type: integer
+          description: "The grid width of the unit.\n            "
+        height:
+          type: integer
+          description: "The grid height of the unit.\n            "
+        zone:
+          type: integer
+          description: "Indicates the location of this unit, thereby controlling bookings and reservations on this unit based on customer\nrecognition levels and user role settings.\n            "
+        x:
+          type: integer
+          description: "The horizontal position of the unit in the grid.\n            "
+        y:
+          type: integer
+          description: "This vertical position of the unit in the grid.\n            "
+        allowedSsrs:
+          type:
+          - array
+          - 'null'
+          description: "The collection of allowed SSR's.\n            "
+          items:
+            type: string
+        properties:
+          type:
+          - array
+          - 'null'
+          description: "The collection of properties for the specific unit.\n            "
+          items:
+            $ref: '#/components/schemas/SeatMapProperty'
+        availabilityPerPassenger:
+          type:
+          - object
+          - 'null'
+          description: "The seat availability per passenger.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/SeatAvailability'
+    SsrType:
+      type: integer
+      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
+      x-enumNames:
+      - Standard
+      - Infant
+      - Meal
+      - BaggageAllowance
+      - TravelLineMeal
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    SeatMapStatelessAvailability:
+      type: object
+      description: "Defines the equipment availability.\n            "
+      additionalProperties: false
+      properties:
+        seatMap:
+          description: "The seat map.\n            "
+          $ref: '#/components/schemas/SeatMap'
+        ssrLookup:
+          type:
+          - object
+          - 'null'
+          description: "The list of SSR's available.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/Ssr'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    DeckInformation:
+      type: object
+      description: "Defines a deck within an equipment.\n            "
+      additionalProperties: false
+      properties:
+        number:
+          type: integer
+          description: "The deck number.\n            "
+          format: int32
+        compartments:
+          type:
+          - object
+          - 'null'
+          description: "The collection of compartments within the deck.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/CompartmentInformation'
+    Ssr:
+      type: object
+      description: "The sell service request (SSR) model.\n            "
+      additionalProperties: false
+      properties:
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The Ssr code.\n            "
+          maxLength: 4
+          minLength: 1
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The name.\n            "
+          maxLength: 64
+          minLength: 1
+        feeCode:
+          type:
+          - string
+          - 'null'
+          description: "The fee code.\n            "
+          maxLength: 6
+          minLength: 0
+        ssrNestCode:
+          type:
+          - string
+          - 'null'
+          description: "The Ssr nest code.\n            "
+          maxLength: 4
+          minLength: 0
+        traceQueueCode:
+          type:
+          - string
+          - 'null'
+          description: "The trace queue code.\n            "
+          maxLength: 6
+          minLength: 0
+        ssrType:
+          description: "The Ssr type.\n            "
+          $ref: '#/components/schemas/SsrType'
+        inActive:
+          type: boolean
+          description: "The in active.\n            "
+        unitValue:
+          type: integer
+          description: "The unit value.\n            "
+        limitPerPassenger:
+          type: integer
+          description: "The limit per passenger.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        boardingZone:
+          type: integer
+          description: "The boarding zone.\n            "
+          maximum: 99.0
+          minimum: 0.0
+        allowed:
+          type: boolean
+          description: "Deprecated - Please use api/nsk/v1/settings/general/codes endpoint to verify role based access instead.\n            "
+        seatMapCode:
+          type:
+          - string
+          - 'null'
+          description: "The seat map code.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        seatRestriction:
+          description: "The seat restriction.\n            "
+          $ref: '#/components/schemas/SeatRestriction'
+        ruleSetName:
+          type:
+          - string
+          - 'null'
+          description: "The rule set name.\n            "
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SeatAvailability:
+      type: integer
+      description: "Defines the type of hold placed on the seat (unit).\n            \n\n0 = Unknown\n1 = Reserved\n2 = Blocked\n3 = HeldForAnotherSession\n4 = HeldForThisSession\n5 = Open\n6 = Missing\n7 = CheckedIn\n8 = FleetBlocked\n9 = Restricted\n10 = Broken\n11 = ReservedForPnr\n12 = SoftBlocked\n13 = Unavailable"
+      x-enumNames:
+      - Unknown
+      - Reserved
+      - Blocked
+      - HeldForAnotherSession
+      - HeldForThisSession
+      - Open
+      - Missing
+      - CheckedIn
+      - FleetBlocked
+      - Restricted
+      - Broken
+      - ReservedForPnr
+      - SoftBlocked
+      - Unavailable
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

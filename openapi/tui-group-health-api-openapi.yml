@@ -1,0 +1,370 @@
+openapi: 3.2.0
+info:
+  title: Tui Group Health API
+  version: '1.0'
+  description: 'Operations tagged health across 2 of this provider''s published API definitions: tui-group-tui-newskies-digital-api-openapi.yml, tui-group-tui-newskies-gonow-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: health
+paths:
+  /api/v1/health:
+    get:
+      tags:
+      - health
+      summary: Gets the current environment's health status.
+      operationId: v1_health_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfEnvironmentHealth'
+      deprecated: true
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/v2/health:
+    get:
+      tags:
+      - health
+      summary: Returns a simple health check that will return a 200 if the server is responding.
+      description: 'This health check will not ensure that the required underlying services are working. For a more detailed health
+
+        check that will validate configuration and third party services please use a different health endpoint.'
+      operationId: v2_health_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+      deprecated: true
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+  /api/v3/health:
+    get:
+      tags:
+      - health
+      summary: Performs the health check.
+      description: 'This endpoint does not require a token.
+
+        If the health check returns an overall status of "Ok", the expected HTTP status code response would be a
+
+        "200 - Ok".
+
+        If the health check returns an overall status of "Warning", the expected HTTP status code response would be
+
+        a "299".  This is a custom code not typically mapped as per industry
+
+        standards, and was done intentionally to indicate a warning response from the health endpoint.
+
+        If the health check returns an overall status of "Error", the expected HTTP status code response would be
+
+        a "500 - InternalServerError".'
+      operationId: v3_health_get
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentHealth'
+        '299':
+          description: Request completed successfully with warnings from health endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentHealth'
+        '500':
+          description: Request to health endpoint did not complete successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentHealth'
+    servers:
+    - url: https://prod.api.tui/flight/newskies/rest
+      description: TUI Prod
+    - url: https://playground.api.tui/flight/newskies/rest
+      description: TUI Playground
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfEnvironmentHealth:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/EnvironmentHealth'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    EnvironmentHealth:
+      type: object
+      description: "Defines the environment health details.\n            "
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+          description: "The name of the component.\n            "
+        componentType:
+          type:
+          - string
+          - 'null'
+          description: "The type of component.\n            "
+        details:
+          type:
+          - string
+          - 'null'
+          description: "The optional details of the health check.\n            "
+        status:
+          description: "The current health of the component.\n            "
+          $ref: '#/components/schemas/HealthStatus'
+        nodes:
+          type:
+          - array
+          - 'null'
+          description: "The collection of child health information objects associated with the current object.\n            "
+          items:
+            $ref: '#/components/schemas/HealthInformation'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    HealthInformation:
+      type: object
+      description: "Defines the health information details.\n            "
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+          description: "The name of the component.\n            "
+        componentType:
+          type:
+          - string
+          - 'null'
+          description: "The type of component.\n            "
+        details:
+          type:
+          - string
+          - 'null'
+          description: "The optional details of the health check.\n            "
+        status:
+          description: "The current health of the component.\n            "
+          $ref: '#/components/schemas/HealthStatus'
+    HealthStatus:
+      type: integer
+      description: "Defines the health status for a component.\n            \n\n0 = Unknown\n1 = Ok\n2 = Warning\n3 = Error"
+      x-enumNames:
+      - Unknown
+      - Ok
+      - Warning
+      - Error
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    HealthStatus_2:
+      type: integer
+      description: '0 = Unknown
+
+        1 = Ok
+
+        2 = Warning
+
+        3 = Error'
+      x-enumNames:
+      - Unknown
+      - Ok
+      - Warning
+      - Error
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    EnvironmentHealth_2:
+      type: object
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+        componentType:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/HealthStatus_2'
+        nodes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/HealthInformation_2'
+    HealthInformation_2:
+      type: object
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+        componentType:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/HealthStatus_2'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-refined-from:
+- tui-group-tui-newskies-digital-api-openapi.yml
+- tui-group-tui-newskies-gonow-api-openapi.yml
+x-header: 'This API returns the price and availability for TUI''s packages specifically for OTA''s according to the G7 standard.
+
+  '
+x-summary: "This API returns the price and availability for TUI's packages specifically for OTA's according to the G7 standard.\nThe Travelmessage API returns information on all the available tui.nl packages, along with other relevant details such as price, extras, etc. for this specified package. \nThis API also allows to start a bookingdialogue for these packages.\n"

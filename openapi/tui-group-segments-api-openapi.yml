@@ -1,0 +1,490 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-GoNow-Api Segments API
+  description: Navitaire GoNow Api
+  version: 5.2.6.69
+servers:
+- url: https://prod.api.tui/flight/newskies/gonow
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/gonow
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: segments
+paths:
+  /api/dcs/v1/segments/downline:
+    post:
+      tags:
+      - segments
+      summary: Retrieves a list of downline segments based on search criteria.
+      description: 'GraphQL endpoint: dcsGetDownlineSegments'
+      operationId: dcs_v1_segments_downline_post
+      requestBody:
+        x-name: request
+        description: The search criteria.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetDownlineSegmentsRequest'
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: The list of downline Segments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfDownlineSegmentsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    GetDownlineSegmentsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengerAlternateKeys
+      properties:
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerAlternateKeys:
+          type: array
+          items:
+            type: string
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    LegStatus:
+      type: integer
+      description: '0 = Blocked
+
+        1 = Boarding
+
+        2 = BoardingClosedPending
+
+        3 = Canceled
+
+        4 = Delayed
+
+        5 = Departed
+
+        6 = DepartedClosed
+
+        7 = DepartedClosedPending
+
+        8 = OnTime
+
+        9 = Closed
+
+        10 = OnTimeClosedPending
+
+        11 = Early
+
+        12 = Suspended
+
+        13 = EarlyClosedPending
+
+        14 = DelayedClosedPending'
+      x-enumNames:
+      - Blocked
+      - Boarding
+      - BoardingClosedPending
+      - Canceled
+      - Delayed
+      - Departed
+      - DepartedClosed
+      - DepartedClosedPending
+      - OnTime
+      - Closed
+      - OnTimeClosedPending
+      - Early
+      - Suspended
+      - EarlyClosedPending
+      - DelayedClosedPending
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    SegmentType:
+      type: integer
+      description: '0 = Normal
+
+        1 = CodeShareOperating
+
+        2 = CodeShareMarketing
+
+        3 = InterlineOutbound
+
+        4 = InterlineInbound
+
+        5 = Passive
+
+        6 = NdcInterline'
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      - NdcInterline
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DownlineSegmentsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        downlineSegments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DownlineSearchSegment'
+    DownlineSearchLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        isCheckedIn:
+          type: boolean
+        displayLegStatus:
+          $ref: '#/components/schemas/LegStatus'
+        isProcessedOffline:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/LegStatus'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        legKey:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfDownlineSegmentsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DownlineSegmentsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    SegmentStatus:
+      type: integer
+      description: 'The list of IATA standard booking action codes.
+
+        These codes speicfy a requested GDS action or
+
+        the current status of a passenger''s segment.
+
+
+        0 = AddToWaitList
+
+        1 = CancelDeclined
+
+        2 = CancelFailed
+
+        3 = Cancelled
+
+        4 = CancelUnconfirmed
+
+        5 = ClaimSpace
+
+        6 = Confirming
+
+        7 = ConfirmingNoAction
+
+        8 = ConfirmingUnheld
+
+        9 = ConfirmingWaitList
+
+        10 = DirectLinkConfirmed
+
+        11 = HeldCancelled
+
+        12 = HeldConfirmed
+
+        13 = HeldPending
+
+        14 = HeldUnconfirmed
+
+        15 = HoldingNeed
+
+        16 = NeedSpace
+
+        17 = NeedSpaceUnheld
+
+        18 = NoAction
+
+        19 = NoActionTaken
+
+        20 = OversellSpace
+
+        21 = Update
+
+        22 = UpdateConfirming
+
+        23 = WaitListConfirmed'
+      x-enumNames:
+      - AddToWaitList
+      - CancelDeclined
+      - CancelFailed
+      - Cancelled
+      - CancelUnconfirmed
+      - ClaimSpace
+      - Confirming
+      - ConfirmingNoAction
+      - ConfirmingUnheld
+      - ConfirmingWaitList
+      - DirectLinkConfirmed
+      - HeldCancelled
+      - HeldConfirmed
+      - HeldPending
+      - HeldUnconfirmed
+      - HoldingNeed
+      - NeedSpace
+      - NeedSpaceUnheld
+      - NoAction
+      - NoActionTaken
+      - OversellSpace
+      - Update
+      - UpdateConfirming
+      - WaitListConfirmed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+    DownlineSearchSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        segmentStatus:
+          $ref: '#/components/schemas/SegmentStatus'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        isHosted:
+          type: boolean
+        legs:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DownlineSearchLeg'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        canSelect:
+          type: boolean
+        isBaggageCheckinAllowed:
+          type: boolean
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))

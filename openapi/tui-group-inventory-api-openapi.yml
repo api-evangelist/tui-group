@@ -1,0 +1,1749 @@
+openapi: 3.2.0
+info:
+  title: NewSkies-Digital-Api Inventory API
+  version: 4.8.6.23
+  description: Navitaire Digital Api
+servers:
+- url: https://prod.api.tui/flight/newskies/rest
+  description: TUI Prod
+- url: https://playground.api.tui/flight/newskies/rest
+  description: TUI Playground
+security:
+- JWT: []
+tags:
+- name: inventory
+paths:
+  /api/dcs/v2/inventory/legs/{legKey}:
+    get:
+      tags:
+      - inventory
+      summary: Gets the stateless inventory leg.
+      description: 'GraphQL endpoint: inventoryLegv2'
+      operationId: dcs_v2_inventory_legs_legKey_get
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfInventoryLegv2'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    patch:
+      tags:
+      - inventory
+      summary: Patches an inventory leg's data, its nests' data, and its classes' data based on information in the request.
+      description: 'GraphQL endpoint: inventoryLegModifyv2'
+      operationId: dcs_v2_inventory_legs_legKey_patch
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: The inventory leg edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryLegEditv2Request'
+            examples:
+              Patching leg, nest, and class:
+                description: Example request for patching inventory leg, nest, and class data
+                value:
+                  lid: 50
+                  adjustedCapacity: 48
+                  sendAvsMessages: true
+                  status: 0
+                  nests:
+                    mtEzNTk2MTAxNSE0IU4-:
+                      lid: 24
+                      adjustedCapacity: 23
+                      classes: null
+                    mtEzNTk2MTAxNSExIU4-:
+                      lid: null
+                      adjustedCapacity: null
+                      classes:
+                        mtEzNTk2MTAxNSExIU0-:
+                          type: 0
+                          rank: 1
+                          authorizedUnits: 10
+                          allotted: 9
+                          latestAdvancedReservation: 0
+                    mtEzNTk2MTAxNSEyIU4-:
+                      lid: 50
+                      adjustedCapacity: 48
+                      classes:
+                        mtEzNTk2MTAxNSEyIU4-:
+                          type: null
+                          rank: null
+                          authorizedUnits: 10
+                          allotted: null
+                          latestAdvancedReservation: null
+                        mtEzNTk2MTAxNSEyIU8-:
+                          type: null
+                          rank: null
+                          authorizedUnits: null
+                          allotted: 36
+                          latestAdvancedReservation: 5
+              Patching just leg lid:
+                description: Example request for patching just inventory leg lid
+                value:
+                  lid: 50
+                  adjustedCapacity: null
+                  sendAvsMessages: false
+                  status: null
+                  nests: null
+              Patching leg class:
+                description: Example request for patching just an inventory class
+                value:
+                  lid: null
+                  adjustedCapacity: null
+                  sendAvsMessages: false
+                  status: null
+                  nests:
+                    mtEzNTk2MTAxNSExIU4-:
+                      lid: null
+                      adjustedCapacity: null
+                      classes:
+                        mtEzNTk2MTAxNSExIU0-:
+                          type: null
+                          rank: null
+                          authorizedUnits: null
+                          allotted: 9
+                          latestAdvancedReservation: null
+        required: true
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/legs/{legKey}/nests/{legNestKey}:
+    get:
+      tags:
+      - inventory
+      summary: Gets an inventory leg nest by key.
+      description: 'GraphQL endpoint: inventoryNest'
+      operationId: dcs_v1_inventory_legs_legKey_nests_legNestKey_get
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      - name: legNestKey
+        in: path
+        required: true
+        description: The leg nest key.
+        schema:
+          type: string
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfInventoryLegNest'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    patch:
+      tags:
+      - inventory
+      summary: Patches an inventory leg nest's data based on information in the request.
+      description: 'GraphQL endpoint: inventoryNestModify'
+      operationId: dcs_v1_inventory_legs_legKey_nests_legNestKey_patch
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      - name: legNestKey
+        in: path
+        required: true
+        description: The leg nest key.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The inventory nest edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeltaMapperOfInventoryNestEditRequest'
+        required: true
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/legs/{legKey}/nests/{legNestKey}/classes/{legClassKey}:
+    get:
+      tags:
+      - inventory
+      summary: Gets an inventory leg nest class by key.
+      description: 'GraphQL endpoint: inventoryClass'
+      operationId: dcs_v1_inventory_legs_legKey_nests_legNestKey_classes_legClassKey_get
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      - name: legNestKey
+        in: path
+        required: true
+        description: The leg nest key.
+        schema:
+          type: string
+        x-position: 2
+      - name: legClassKey
+        in: path
+        required: true
+        description: The leg class key.
+        schema:
+          type: string
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfInventoryLegClass'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+    patch:
+      tags:
+      - inventory
+      summary: Patches an inventory leg nest class's data based on information in the request.
+      description: 'GraphQL endpoint: inventoryClassModify'
+      operationId: dcs_v1_inventory_legs_legKey_nests_legNestKey_classes_legClassKey_patch
+      parameters:
+      - name: legKey
+        in: path
+        required: true
+        description: The leg key.
+        schema:
+          type: string
+        x-position: 1
+      - name: legNestKey
+        in: path
+        required: true
+        description: The leg nest key.
+        schema:
+          type: string
+        x-position: 2
+      - name: legClassKey
+        in: path
+        required: true
+        description: The leg class key.
+        schema:
+          type: string
+        x-position: 3
+      requestBody:
+        x-name: request
+        description: The inventory class edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeltaMapperOfInventoryClassEditRequest'
+        required: true
+        x-position: 4
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/legs/ssrs/lids:
+    post:
+      tags:
+      - inventory
+      summary: 'Returns a list of leg keys and their ssr nest codes and lids.
+
+        Structured as a POST but behaves as a GET.'
+      description: 'This is a batch endpoint. To get ssr lid information for a single leg, please use GET
+
+        `api/dcs/v2/inventory/legs/{legKey}`.'
+      operationId: dcs_v1_inventory_legs_ssrs_lids_post
+      requestBody:
+        x-name: legKeyList
+        description: The list of leg keys.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+            examples:
+              Retrieving ssr lid counts:
+                description: Example for requesting ssr lid counts for multiple legs.
+                value:
+                - NjM4ODQ2MjgwMDAwMDAwMDAwIU5WITk5ISAhU0xDIUJPUyEyNDk2MTY5
+                - NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-
+                - NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxQk9-
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfDictionaryOfStringAndListOfInventoryLegSSRLid'
+              examples:
+                Successful batch ssr lid retrieval.:
+                  description: Example response of a successful batch ssr lid retrieval for multiple legs.
+                  value:
+                    data:
+                      njM4ODQ2MjgwMDAwMDAwMDAwIU5WITk5ISAhU0xDIUJPUyEyNDk2MTY5:
+                      - ssrNestCode: BLND
+                        lid: 20
+                      - ssrNestCode: CHLD
+                        lid: 100
+                      - ssrNestCode: MEAL
+                        lid: 810
+                      njM4ODQ2NDYwMDAwMDAwMDAwIU5WITU2NjEhICFTTEMhQk9TITI0OTYxNDc-:
+                      - ssrNestCode: WIFI
+                        lid: 800
+                      - ssrNestCode: PETC
+                        lid: 10
+                      njM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-:
+                      - ssrNestCode: BG15
+                        lid: 80
+                      - ssrNestCode: BG20
+                        lid: 10
+                      - ssrNestCode: LEGX
+                        lid: 6
+                      - ssrNestCode: PETC
+                        lid: 15
+        '207':
+          description: "\n                Multi Status. Some leg keys were invalid or could not be retrieved. See the response messages for\n                details.\n            "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfDictionaryOfStringAndListOfInventoryLegSSRLid'
+              examples:
+                Partially-successful batch ssr lid retrieval.:
+                  description: Example response of a partially-successful batch ssr lid retrieval for multiple legs.
+                  value:
+                    messages:
+                    - rawValue: The leg key 'ABCDE' is invalid.
+                      code: dcs:Inventory:InvalidLegKey
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Inventory:InvalidLegKey
+                      status: 1
+                      details:
+                        legKey: ABCDE
+                    data:
+                      njM4ODQ2MjgwMDAwMDAwMDAwIU5WITk5ISAhU0xDIUJPUyEyNDk2MTY5:
+                      - ssrNestCode: BLND
+                        lid: 20
+                      - ssrNestCode: CHLD
+                        lid: 100
+                      - ssrNestCode: MEAL
+                        lid: 810
+                      njM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-:
+                      - ssrNestCode: BG15
+                        lid: 80
+                      - ssrNestCode: BG20
+                        lid: 10
+                      - ssrNestCode: LEGX
+                        lid: 6
+                      - ssrNestCode: PETC
+                        lid: 15
+        '400':
+          description: None of the provided leg keys are valid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                All leg keys invalid:
+                  description: Example error when none of the provided leg keys are valid.
+                  value:
+                    errors:
+                    - id: null
+                      code: dcs:Inventory:InvalidLegKey
+                      message: The leg key(s) are invalid.
+                      type: Validation
+                      details: null
+                      rawMessage: The leg key(s) are invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '404':
+          description: None of the requested legs were found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                None of leg keys were found:
+                  description: Example error when none of the provided leg keys were found.
+                  value:
+                    data: null
+    patch:
+      tags:
+      - inventory
+      summary: Patches the ssr lids for multiple specified legs.
+      description: 'This is a batch endpoint. It accepts a list of leg keys in the body along with their SSR nest codes and requested
+
+        lids. If a leg has an SSR that is not specified in the parameter list, that SSR will not be updated.
+
+        Related Endpoints:
+
+        GET `api/dcs/v2/inventory/legs/{legKey}`: Retrieves the current configuration for a leg and retrieve the SSR nest
+
+        codes used for this endpoint.
+
+        GET `api/nsk/v1/bookings/{recordLocator}`: Retrieves the current configuration related to a booking.Requires a
+
+        login with person type: Agent.'
+      operationId: dcs_v1_inventory_legs_ssrs_lids_patch
+      requestBody:
+        x-name: request
+        description: The list of leg keys and their respective ssr lid lists to patch.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/InventoryLegSSRLidsPatchRequest'
+            examples:
+              Patching ssr lid counts:
+                description: Example for patching ssr lid counts for multiple legs. SSRs not included in the request list will be unaffected.
+                value:
+                - legKey: NjM4ODQ2MjgwMDAwMDAwMDAwIU5WITk5ISAhU0xDIUJPUyEyNDk2MTY5
+                  ssrLids:
+                  - ssrNestCode: BLND
+                    lid: 20
+                  - ssrNestCode: CHLD
+                    lid: 100
+                  - ssrNestCode: MEAL
+                    lid: 810
+                - legKey: NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-
+                  ssrLids:
+                  - ssrNestCode: WIFI
+                    lid: 800
+                  - ssrNestCode: PETC
+                    lid: 10
+                - legKey: NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxQk9-
+                  ssrLids:
+                  - ssrNestCode: BG15
+                    lid: 80
+        required: true
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '207':
+          description: Multi Status. Some SSR lids were updated and some failed. See the response messages for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Partially-successful ssr lid patch.:
+                  description: Example response of a partially-successful ssr lid patch, where some lids were updated and some were not.
+                  value:
+                    messages:
+                    - rawValue: SSR lid update failed for leg key 'NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-' and ssr nest code 'INVALIDCODE1'.
+                      code: dcs:Inventory:FailedSSRLidUpdate
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Inventory:FailedSSRLidUpdate
+                      status: 1
+                      details:
+                        ssrNestCode: INVALIDCODE1
+                    - rawValue: SSR lid update failed for leg key 'NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-' and ssr nest code 'INVALIDCODE2'.
+                      code: dcs:Inventory:FailedSSRLidUpdate
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Inventory:FailedSSRLidUpdate
+                      status: 1
+                      details:
+                        ssrNestCode: INVALIDCODE2
+                    data: null
+        '400':
+          description: There was a problem with the request and it could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+              examples:
+                Leg key(s) are invalid:
+                  description: Example error when the provided leg key(s) are all invalid.
+                  value:
+                    errors:
+                    - id: null
+                      code: dcs:Inventory:InvalidLegKey
+                      message: The leg key(s) are invalid.
+                      type: Validation
+                      details: null
+                      rawMessage: The leg key(s) are invalid.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: The leg key 'ABC' is invalid.
+                      code: dcs:Inventory:InvalidLegKey
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: The leg key 'ABC' is invalid.
+                      status: 1
+                      details:
+                        legKey: ABC
+                    - rawValue: The leg key 'DEF' is invalid.
+                      code: dcs:Inventory:InvalidLegKey
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: The leg key 'DEF' is invalid.
+                      status: 1
+                      details:
+                        legKey: DEF
+                    data: null
+                Leg key(s) are not found:
+                  description: Example error when the provided leg key(s) are valid but not found.
+                  value:
+                    errors:
+                    - id: null
+                      code: dcs:Inventory:LegKeyNotFound
+                      message: The leg key(s) were not found.
+                      type: Validation
+                      details: null
+                      rawMessage: The leg key(s) were not found.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: The leg key 'LTg1ODQ1MTgxMzI3OTkwMzAxOTQhbnd4ITc3NiHvv78hb1NXIUhBayEy' was not found.
+                      code: dcs:Inventory:LegKeyNotFound
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: The leg key 'LTg1ODQ1MTgxMzI3OTkwMzAxOTQhbnd4ITc3NiHvv78hb1NXIUhBayEy' was not found.
+                      status: 1
+                      details:
+                        legKey: LTg1ODQ1MTgxMzI3OTkwMzAxOTQhbnd4ITc3NiHvv78hb1NXIUhBayEy
+                    - rawValue: The leg key 'LTg1ODQ1MTgxMzQzNzg1NDE1NzchTHJvITQ0NyHvv78hZ3pVIVFGWSEy' was not found.
+                      code: dcs:Inventory:LegKeyNotFound
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: The leg key 'LTg1ODQ1MTgxMzQzNzg1NDE1NzchTHJvITQ0NyHvv78hZ3pVIVFGWSEy' was not found.
+                      status: 1
+                      details:
+                        legKey: LTg1ODQ1MTgxMzQzNzg1NDE1NzchTHJvITQ0NyHvv78hZ3pVIVFGWSEy
+                    data: null
+                SSR lids not updated:
+                  description: Example error when none of the provided ssr nest lids were updated.
+                  value:
+                    errors:
+                    - id: null
+                      code: dcs:Inventory:FailedSSRLidUpdate
+                      message: SSR lid updates failed.
+                      type: Validation
+                      details: null
+                      rawMessage: SSR lid updates failed.
+                      exception: null
+                      debugMode: The API is currently running in debug mode. In production the 'rawMessage' and 'exception' nodes will not be returned. These are for troubleshooting development issues only.
+                    messages:
+                    - rawValue: SSR lid update failed for leg key 'NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-' and ssr nest code 'INVALIDCODE1'.
+                      code: dcs:Inventory:FailedSSRLidUpdate
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Inventory:FailedSSRLidUpdate
+                      status: 1
+                      details:
+                        ssrNestCode: INVALIDCODE1
+                    - rawValue: SSR lid update failed for leg key 'NjM4ODQ2MjQ0MDAwMDAwMDAwIU5WITU2ODIhICFTTEMhQk9TITI0OTYxNzQ-' and ssr nest code 'INVALIDCODE2'.
+                      code: dcs:Inventory:FailedSSRLidUpdate
+                      debugMode: The API is currently running in debug mode. In production the 'rawValue' node will not be returned. These are for troubleshooting development issues only.
+                      type: Warning
+                      value: dcs:Inventory:FailedSSRLidUpdate
+                      status: 1
+                      details:
+                        ssrNestCode: INVALIDCODE2
+                    data: null
+        '401':
+          description: Authorization Not Allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/routes/{tripKey}/classes:
+    get:
+      tags:
+      - inventory
+      summary: Gets the classes for a route, stateless.
+      description: 'GraphQL endpoint: inventoryRouteClasses'
+      operationId: dcs_v1_inventory_routes_tripKey_classes_get
+      parameters:
+      - name: tripKey
+        in: path
+        required: true
+        description: The trip key from a manifest or flight info.
+        schema:
+          type: string
+        x-position: 1
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponseOfIListOfInventoryRouteClass'
+        '404':
+          description: The item was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/routes/{tripKey}/classes/{classOfService}:
+    patch:
+      tags:
+      - inventory
+      summary: Patches an inventory route class's data based on information in the request.
+      description: 'GraphQL endpoint: inventoryRouteClassModify'
+      operationId: dcs_v1_inventory_routes_tripKey_classes_classOfService_patch
+      parameters:
+      - name: tripKey
+        in: path
+        required: true
+        description: The trip key.
+        schema:
+          type: string
+        x-position: 1
+      - name: classOfService
+        in: path
+        required: true
+        description: The class of service.
+        schema:
+          type: string
+        x-position: 2
+      requestBody:
+        x-name: request
+        description: The inventory class edit request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryRouteClassEditRequest'
+        required: true
+        x-position: 3
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+        '500':
+          description: A server error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+  /api/dcs/v1/inventory/routes/{tripKey}/classes/{classOfService}/authorizedUnit:
+    delete:
+      tags:
+      - inventory
+      summary: Deletes an inventory route class's authorized unit.
+      description: 'GraphQL endpoint: inventoryRouteClassAuthorizedUnitDelete'
+      operationId: dcs_v1_inventory_routes_tripKey_classes_classOfService_authorizedUnit_delete
+      parameters:
+      - name: tripKey
+        in: path
+        required: true
+        description: The trip key.
+        schema:
+          type: string
+        x-position: 1
+      - name: classOfService
+        in: path
+        required: true
+        description: The class of service.
+        schema:
+          type: string
+        x-position: 2
+      responses:
+        '200':
+          description: OK. Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IJsonResponse'
+components:
+  schemas:
+    IJsonResponseOfInventoryLegNest:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/InventoryLegNest'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    FlyAheadControls:
+      type: object
+      description: "The leg fly-ahead control model information.\n            "
+      additionalProperties: false
+      properties:
+        offerStatus:
+          description: "The fly-ahead offer status for the leg.\n            "
+          $ref: '#/components/schemas/FlyAheadOfferStatus'
+        isCandidate:
+          type: boolean
+          description: "True if the leg is available for use in fly-ahead candidates; false otherwise.\n            "
+        departBeforeMinutes:
+          type: integer
+          description: "The number of minutes before departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        departAfterMinutes:
+          type: integer
+          description: "The number of minutes after departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        arrivalAfterMinutes:
+          type: integer
+          description: "The number of minutes after arrival of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        soldThresholdPercent:
+          type: integer
+          description: "The maximum resulting sold threshold percentage for the candidate\njourney if this leg is present in that candidate journey.  Min = 0,\nMax = 255, Default = 100.\n            "
+          maximum: 255.0
+          minimum: 0.0
+        mustBeSameJourneyType:
+          type: boolean
+          description: "Controls whether the candidate journey must be of the same journey type.\n            "
+    ClassEditDetails:
+      type: object
+      description: "Represents the editable details for an inventory\nleg nest class.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          description: "The class of service type.\n            "
+          $ref: '#/components/schemas/ClassOfServiceType'
+        rank:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service rank.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        allotted:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service allotted count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        latestAdvancedReservation:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+    TransportationDesignator:
+      type: object
+      description: "Model information about the traveling arrival and destination details.\n            "
+      additionalProperties: false
+      properties:
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        arrival:
+          type: string
+          description: "The arrival date and time local to the arrival station.\n            "
+          format: date-time
+        departure:
+          type: string
+          description: "The departure date and time local to the departure station.\n            "
+          format: date-time
+    IJsonResponseOfInventoryLegv2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/InventoryLegv2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfDictionaryOfStringAndListOfInventoryLegSSRLid:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - object
+          - 'null'
+          description: "The payload data.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/InventoryLegSSRLid'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    InventoryLegSSRLid:
+      type: object
+      description: "Represents an SSR lid update request.\n            "
+      additionalProperties: false
+      required:
+      - ssrNestCode
+      - lid
+      properties:
+        ssrNestCode:
+          type: string
+          description: "The code of the SSR nest. For the configured details of this code, please use GET\n`api/nsk/v1/resources/SsrNests/{ssrNestCode}`.\n            "
+          maxLength: 4
+          minLength: 1
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
+    ClassStatus:
+      type: integer
+      description: "Indicates whether a leg class may be used or not.\n            \n\n1 = Active\n2 = InActive\n3 = AvsOpen\n4 = AvsOnRequest\n5 = AvsClosed"
+      x-enumNames:
+      - Active
+      - InActive
+      - AvsOpen
+      - AvsOnRequest
+      - AvsClosed
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    LegSsr:
+      type: object
+      description: "A model representing a leg ssr summary.\n            "
+      additionalProperties: false
+      properties:
+        available:
+          type: integer
+          description: "The number of Ssrs available.\n            "
+        ssrNestCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR nest code.\n            "
+          maxLength: 4
+          minLength: 0
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
+        sold:
+          type: integer
+          description: "The number of SSRs sold in the SSR nest.\n            "
+        unitSold:
+          type: integer
+          description: "The units of space sold for the SSR.\n            "
+    SeatsSoldBase:
+      type: object
+      description: "Represents the seats sold base model.\n            "
+      additionalProperties: false
+      properties:
+        total:
+          type: integer
+          description: "The number of seats sold.\n            "
+        throughTotal:
+          type: integer
+          description: "The number of seats sold as part of a through flight.\n            "
+        nonStopTotal:
+          type: integer
+          description: "The number of seats sold as part of a non-stop flight.\n            "
+        connectTotal:
+          type: integer
+          description: "The number of seats sold as part of a connecting flight.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    FlyAheadOfferStatus:
+      type: integer
+      description: "The fly ahead offer status enumeration.\n            \n\n0 = None\n1 = Involuntary\n2 = Voluntary\n3 = DisabledIfFirstLeg"
+      x-enumNames:
+      - None
+      - Involuntary
+      - Voluntary
+      - DisabledIfFirstLeg
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    LegMoveControls:
+      type: object
+      description: "The leg move control model information.\n            "
+      additionalProperties: false
+      properties:
+        moveOutDays:
+          type: integer
+          description: "The maximum number of days this leg can be moved out.\n            "
+        moveBackDays:
+          type: integer
+          description: "The maximum number of days this leg can be moved back.\n            "
+        flyAhead:
+          description: "The fly-ahead related information.\n            "
+          $ref: '#/components/schemas/FlyAheadControls'
+    InventoryLegEditv2Request:
+      type: object
+      description: "Represents the inventory leg edit v2 request.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        sendAvsMessages:
+          type: boolean
+          description: "Specifies if an AVS messages should be sent for changes.\n            "
+        status:
+          description: "The leg status.\n            "
+          $ref: '#/components/schemas/LegStatusRequestType'
+        nests:
+          type:
+          - object
+          - 'null'
+          description: "The list of nests to update, by leg nest key.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/InventoryLegEditv2NestDetails'
+    InventoryLegEditv2NestDetails:
+      type: object
+      description: "Represents an individual nest in the v2 leg edit request.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classes:
+          type:
+          - object
+          - 'null'
+          description: "The list of classes to update, by leg class key.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/ClassEditDetails'
+    InventoryRouteClassEditRequest:
+      type: object
+      description: "Represents the edit request for an individual inventory\nroute class.\n            "
+      additionalProperties: false
+      properties:
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+    InventoryRouteClass:
+      type: object
+      description: "Represents classes at the route level.\n            "
+      additionalProperties: false
+      properties:
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service for the journey.\n            "
+          maxLength: 8
+          minLength: 0
+        manageAuthorizedUnits:
+          type: boolean
+          description: "Indicator for if the AU can be managed at\nthe journey level.\n            "
+    InventoryLegNest:
+      type: object
+      description: "Represents the inventory leg nest model.\n            "
+      additionalProperties: false
+      properties:
+        nestKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the nest within a leg.\n            "
+        cabinOfService:
+          type:
+          - string
+          - 'null'
+          description: "The cabin of service.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        type:
+          description: "The nest type.\n            "
+          $ref: '#/components/schemas/NestType'
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classes:
+          type:
+          - array
+          - 'null'
+          description: "The collection of leg classes within the nest.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryLegClass'
+    DeltaMapperOfInventoryNestEditRequest:
+      type: object
+      description: "Map delta changes of a specific type T to another object.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        sendAvsMessages:
+          type: boolean
+          description: "Specifies if an AVS messages should be sent for changes.\n            "
+    NestType:
+      type: integer
+      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
+      x-enumNames:
+      - Default
+      - Net
+      - Serial
+      - OneBooking
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    IJsonResponseOfInventoryLegClass:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/InventoryLegClass'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    CodeShareIndicator:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
+      x-enumNames:
+      - NonCodeShare
+      - CodeShareCommercialDuplicate
+      - SharedDesignatorOrWetLease
+      - CodeShareHostOperatingCarrier
+      - CodeShareCommercialDuplicateWithOverrideText
+      - SharedDesignatorOrWetLeaseWithOverrideText
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    InventoryLegSSRLidsPatchRequest:
+      type: object
+      description: "Represents the inventory leg and its ssr lids.\n            "
+      additionalProperties: false
+      required:
+      - legKey
+      - ssrLids
+      properties:
+        legKey:
+          type: string
+          description: "The unique leg key.\n            "
+          maxLength: 10000
+          minLength: 0
+        ssrLids:
+          type: array
+          description: "The collection of ssr lids.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryLegSSRLid'
+    IJsonResponseOfIListOfInventoryRouteClass:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryRouteClass'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    LegStatus:
+      type: integer
+      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      x-enumNames:
+      - Normal
+      - Closed
+      - Canceled
+      - Suspended
+      - ClosedPending
+      - BlockAllActivities
+      - Mishap
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 5
+      - 6
+      - 7
+    OperatingInformation:
+      type: object
+      description: "Represents the operating information model.\n            "
+      additionalProperties: false
+      properties:
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The operated by comment field.\n            "
+        identifier:
+          type:
+          - string
+          - 'null'
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    LegStatusRequestType:
+      type: integer
+      description: "The leg status request enumeration.\n            \n\n0 = Normal\n1 = Suspended\n2 = BlockAllActivities"
+      x-enumNames:
+      - Normal
+      - Suspended
+      - BlockAllActivities
+      enum:
+      - 0
+      - 1
+      - 2
+    LegCrossReference:
+      type: object
+      description: "Represents the inventory leg cross reference data.\n            "
+      additionalProperties: false
+      properties:
+        legKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the manifest leg.\n            "
+        number:
+          type: integer
+          description: "The inventory leg cross reference number.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        marketInformation:
+          description: "Information about the market arrival and destination details.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    InventoryLegInformation:
+      type: object
+      description: "Represents the inventory leg information model.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        legNumber:
+          type: integer
+          description: "The leg number.\n            "
+        capacity:
+          type: integer
+          description: "The leg's capacity.\n            "
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type for the leg.\n            "
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type suffix for the leg.\n            "
+        equipmentChange:
+          type: boolean
+          description: "Indicates if there is an equipment change\n            "
+        managed:
+          type: boolean
+          description: "Indicates if the leg is managed.\n            "
+        status:
+          description: "The leg's status.\n            "
+          $ref: '#/components/schemas/LegStatus'
+        prbcCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger reservation booking configuration (PRBC) code.\n            "
+        marketingCode:
+          type:
+          - string
+          - 'null'
+          description: "The marketing code.\n            "
+        codeShareIndicator:
+          description: "The code share indicator.\n            "
+          $ref: '#/components/schemas/CodeShareIndicator'
+    ClassOfServiceType:
+      type: integer
+      description: "The class of service type enumeration.\n            \n\n0 = Default\n1 = Normal\n2 = Discrete\n3 = NonNested\n4 = NegoAllotment\n5 = ProrataAllotment\n6 = OperatingBlockspace\n7 = MarketingBlockspace"
+      x-enumNames:
+      - Default
+      - Normal
+      - Discrete
+      - NonNested
+      - NegoAllotment
+      - ProrataAllotment
+      - OperatingBlockspace
+      - MarketingBlockspace
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    InventoryLegClass:
+      type: object
+      description: "The inventory leg class model.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          description: "The class of service type.\n            "
+          $ref: '#/components/schemas/ClassOfServiceType'
+        rank:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service rank.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        allotted:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service allotted count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        latestAdvancedReservation:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the leg class.\n            "
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service.\n            "
+        status:
+          description: "The class status.\n            "
+          $ref: '#/components/schemas/ClassStatus'
+        seatsSold:
+          description: "The number of seats sold for the class of service\nof this leg.\n            "
+          $ref: '#/components/schemas/SeatsSoldBase'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    DeltaMapperOfInventoryClassEditRequest:
+      type: object
+      description: "Map delta changes of a specific type T to another object.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          description: "The class of service type.\n            "
+          $ref: '#/components/schemas/ClassOfServiceType'
+        rank:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service rank.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        allotted:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service allotted count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        latestAdvancedReservation:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        sendAvsMessages:
+          type: boolean
+          description: "Specifies if an AVS messages should be sent for changes.\n            "
+    InventoryLegv2:
+      type: object
+      description: "Defines the inventory leg v2.\n            "
+      additionalProperties: false
+      properties:
+        legKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique leg key.\n            "
+        legInformation:
+          description: "The leg information.\n            "
+          $ref: '#/components/schemas/InventoryLegInformation'
+        operatingInformation:
+          description: "The leg's market information.\n            "
+          $ref: '#/components/schemas/OperatingInformation'
+        identifier:
+          description: "The leg's transportation identifier information.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+        designator:
+          description: "The leg's designator information.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        departureTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: "The leg's departure time in UTC.\n            "
+          format: date-time
+        arrivalTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: "The leg's arrival time in UTC.\n            "
+          format: date-time
+        nests:
+          type:
+          - array
+          - 'null'
+          description: "The leg nests.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryLegNest'
+        legMoveControls:
+          description: "The leg move controls.\n            "
+          $ref: '#/components/schemas/LegMoveControls'
+        legSsrs:
+          type:
+          - array
+          - 'null'
+          description: "The leg ssrs.\n            "
+          items:
+            $ref: '#/components/schemas/LegSsr'
+        legCrossReferences:
+          type:
+          - array
+          - 'null'
+          description: "The leg cross references.\n            "
+          items:
+            $ref: '#/components/schemas/LegCrossReference'
+  securitySchemes:
+    JWT:
+      type: http
+      description: Paste your JWT token from the token endpoint.
+      scheme: bearer
+      bearerFormat: jwt
+x-generator: NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))

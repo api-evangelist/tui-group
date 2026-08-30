@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  version: '2.0'
+  title: OTA Content G7 content API
+  contact:
+    name: Sales-OTA-TEAM
+    url: https://developer.tui/api-catalog/ota-content-api
+    email: SalesOTAsupport@TUIGroup.onmicrosoft.com
+  description: "Sales API for OTA services\nThis API can be used to get content for the hotels for TUI packages in json format.\nThis can be used to populate all the content related to hotel, i.e accom name, images, room info, features, facilities etc.\n\nThis url is added in Supply file as contentLocation.\n\nThe infomation from the Supply file can be used to get the content for particular hotel using this API\n   \nAll api's are based on the 3.1 G7 version with a few changes to support TUI packages. The Supply has a \ncustom defined schema.\n"
+servers:
+- url: https://prod.api.tui/sales-ota-content
+tags:
+- name: G7 content
+paths:
+  /v2/accommodations/{accommodation-code}:
+    get:
+      summary: Content API for OTA
+      description: 'This is the request/response for content API
+
+        '
+      parameters:
+      - in: path
+        name: accommodation-code
+        schema:
+          type: string
+        description: accommodation code (e.g. A1013029)
+        required: true
+      - in: query
+        name: brand
+        schema:
+          type: string
+        description: brand (e.g. NL)
+        required: true
+      - in: query
+        name: relevantBrand
+        schema:
+          type: string
+        description: brand (e.g. G7_NL) - If you don't pass this param then it would return web content
+        required: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentResponse'
+      tags:
+      - G7 content
+components:
+  schemas:
+    RoomData:
+      type: object
+      properties:
+        roomtypeCode:
+          type: string
+          example: af7fd41d-f507-4098-90b8-0c2b5dbc4e5f
+        roomType:
+          type: string
+          example: tweepersoonskamer
+        roomTitle:
+          type: string
+          example: tweepersoonskamer, 1-2 pers.
+        occupancy:
+          type: object
+          properties:
+            minOccupancy:
+              type: number
+              example: 1
+            maxOccupancy:
+              type: number
+              example: 1
+        usps:
+          type: array
+          items: {}
+        description:
+          type: string
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        featureCodesAndValues:
+          type: object
+          properties:
+            general:
+              type: array
+              items:
+                type: string
+            tuinlId:
+              type: array
+              items:
+                type: string
+            roomFullTitle:
+              type: array
+              items:
+                type: string
+            roomTypeName:
+              type: array
+              items:
+                type: string
+            kitchen:
+              type: array
+              items:
+                type: string
+            roomTitle:
+              type: array
+              items:
+                type: string
+            bathroom:
+              type: array
+              items:
+                type: string
+            bedroom:
+              type: array
+              items:
+                type: string
+            outside:
+              type: array
+              items:
+                type: string
+    GalleryMediaData:
+      type: array
+      items:
+        type: object
+        properties:
+          mainSrc:
+            type: string
+            example: https://tui-sit-images.imgix.net/869a453196a5cbbae3fe908d7968e53b.jpg?&w=1080&h=608&fm=jpg&fl=progressive
+          mime:
+            type: string
+            example: image/jpeg
+          size:
+            type: string
+            example: large
+          description:
+            type: string
+          caption:
+            type: string
+    BoardBasisData:
+      properties:
+        boardbasisCode:
+          type: string
+          example: GT06-FB
+        name:
+          type: string
+          example: Volpension
+        featureCodesAndValues:
+          $ref: '#/components/schemas/BoardBasisFeatures'
+    BoardBasisFeatures:
+      type: object
+      properties:
+        lunch_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        dinner_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        drinks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        snacks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        breakfast_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+    ReviewData:
+      type: object
+      properties:
+        source:
+          type: string
+          example: TUI
+        averageRating:
+          type: number
+          example: 3.5
+        tRating:
+          type: number
+          example: 5
+        reviewsCount:
+          type: number
+          example: 200
+        ratingBar:
+          type: string
+        ratingReviewsUrl:
+          type: string
+    AccomFeatures:
+      properties:
+        introduction:
+          type: array
+          items: {}
+          example:
+          - Er heerst een levendige sfeer in hotel Gala dat populair is bij de Belgen. De centrale ligging, vlak bij het strand en de levendige uitgaansbuurt van Playa de la Americas is een van de pluspunten van dit hotel. Wil je je vakantie dat tikkeltje meer geven? Kies dan voor een verblijf in een superieure kamer met lekkere Nespresso koffie en één keer per dag gratis toegang tot het 'Spa circuit'.
+        latitude:
+          type: array
+          items: {}
+          example:
+          - 28.066465
+        locationInformation:
+          type: array
+          items: {}
+          example:
+          - centrum Playa las Americas op ca. 100 m
+        longitude:
+          type: array
+          items: {}
+          example:
+          - -16.73017
+        name:
+          type: array
+          items: {}
+          example:
+          - lti Gala
+        freeWifi:
+          type: array
+          items: {}
+          example:
+          - 'true'
+        officialRating:
+          type: array
+          items: {}
+          example:
+          - '5'
+        tuinlId:
+          type: array
+          items: {}
+          example:
+          - '647319'
+        noOfLifts:
+          type: array
+          items: {}
+          example:
+          - '1'
+        accommodationType:
+          type: array
+          items: {}
+          example:
+          - hotel
+        tRating:
+          type: array
+          items: {}
+          example:
+          - '5'
+        noOfrooms:
+          type: array
+          items: {}
+          example:
+          - '121'
+        usps:
+          type: array
+          items: {}
+          example:
+          - seaview
+    FacilityData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: FACILITIES_A0376761_TUI_NL
+        title:
+          type: string
+          example: Faciliteiten
+        description:
+          type: array
+          items:
+            type: string
+          example:
+          - fitnessruimte, tafeltennis
+        suppliments:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FACILITIES_ON_PAYMENT_A0376761_TUI_NL
+              title:
+                type: string
+                example: Faciliteiten
+              description:
+                type: array
+                items:
+                  type: string
+                  example:
+                  - massage
+                  - spa
+    ContentGeoHierarchy:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: string
+            example: 21bcba21-288b-5336-8298-b17883011f2f
+          name:
+            type: string
+            example: Spanje
+          locationType:
+            type: string
+            example: COUNTRY
+          locationLevel:
+            type: string
+            example: 1
+          subCategories:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                name:
+                  type: string
+                  example: Gran Canaria
+                locationType:
+                  type: string
+                  example: DESTINATION
+                locationLevel:
+                  type: string
+                  example: 2
+                subCategories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                      name:
+                        type: string
+                        example: Meloneras
+                      locationType:
+                        type: string
+                        example: RESORT
+                      locationLevel:
+                        type: string
+                        example: 3
+                      subCategories:
+                        type: array
+                        items: {}
+    ContentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Accommodation code
+          example: A0376761
+        accommodationType:
+          type: string
+          description: Accommodation type
+          example: HOTEL
+        featureCodesAndValues:
+          $ref: '#/components/schemas/AccomFeatures'
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        roomsData:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomData'
+        boardBasis:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardBasisData'
+        geoHierarchy:
+          type: object
+          properties:
+            geoHierarchy:
+              $ref: '#/components/schemas/ContentGeoHierarchy'
+        facilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityData'
+        review:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewData'
+x-header: 'This API returns the content for particular hotel for TUI''s packages specifically for OTA''s according to the G7 standard.
+
+  '
+x-summary: "This API returns the content for particular hotel for TUI's packages specifically for OTA's according to the G7 standard.\nThis API returns content on all the available hotel for tui.nl packages for this specified package. \n"
