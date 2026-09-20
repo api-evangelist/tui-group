@@ -1,0 +1,327 @@
+slug: tui-group
+provider: TUI Group
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Travel & Hospitality
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 30
+edges:
+- tag: trip
+  spec_file: tui-group-trip-api-openapi.yml
+  capability_id: BC-4020.10
+  capability_id_l1: BC-4020
+  capability_name: Reservation Capture
+  confidence: 0.92
+  evidence: POST /api/nsk/v5/trip — 'Creates a new booking with the provided journeys, contacts, passengers,
+    and SSRs.'; POST /api/nsk/v1/trip/contacts — 'Creates a new contacts-only booking.'
+  reason: Operations create bookings from journeys, passengers and contacts and retrieve trip/availability
+    information — reservation capture in an airline reservation system.
+- tag: Bookings
+  spec_file: tui-group-bookings-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.9
+  evidence: POST /confirm-holiday confirmHoliday Confirm to book holiday for cruises; GET /api/nsk/v2/bookings
+    Retrieves the booking from the New Skies server; GET /api/nsk/v1/bookings/{bookingKey}/history/holdDateChange
+  reason: Operations cover reservation retrieval, confirmation, itinerary/booking history across cruise
+    and airline PSS — clearly reservation & booking lifecycle management; spans multiple sub-capabilities
+    so L1 only.
+- tag: booking
+  spec_file: tui-group-booking-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.9
+  evidence: Get the current booking in state. / Commits stateful changes made and processes the booking.
+    / Divides the current booking. / Gets the list of comments on the in-state booking.
+  reason: 'The core reservation record surface: retrieve, commit, modify, divide, comment, price and document
+    a booking (PNR). Plainly Reservation & Booking Management; L2 left null because the 69 operations
+    span capture, modification, documentation and payment alike.'
+- tag: booking/payments
+  spec_file: tui-group-booking-payments-api-openapi.yml
+  capability_id: BC-4020.60
+  capability_id_l1: BC-4020
+  capability_name: Booking Payment & Settlement
+  confidence: 0.9
+  evidence: '"Retrieves the booking payments on the booking in state." / "Creates a new external payment
+    or prepaid payment on the booking in state." / "Gets the payment allocations for the booking in state."'
+  reason: Booking-level payment capture, authorisation, decline, allocation and available payment methods
+    — squarely Booking Payment & Settlement.
+- tag: equipment
+  spec_file: tui-group-equipment-api-openapi.yml
+  capability_id: BC-4080.20
+  capability_id_l1: BC-4080
+  capability_name: Aircraft Routing & Tail Assignment
+  confidence: 0.9
+  evidence: Exchanges one equipment for another on an existing flight. / Assigns a tail number to a specific
+    leg.
+  reason: Aircraft equipment swap and tail-number assignment to flight legs is precisely aircraft routing
+    and tail assignment in airline flight operations.
+- tag: verifiedTravelDocuments
+  spec_file: tui-group-verifiedtraveldocuments-api-openapi.yml
+  capability_id: BC-4040.60
+  capability_id_l1: BC-4040
+  capability_name: Traveller Document & Compliance Data Management
+  confidence: 0.9
+  evidence: POST /api/dcs/v1/verifiedTravelDocuments/{recordLocator}/segments/{segmentKey}/passengers/{passengerKey}
+    — 'Adds a new verified travel document to a passenger or the associated infant.'; schema 'VerifiedTravelDocument'
+  reason: CRUD over verified passenger travel documents per segment in a departure-control system — management
+    of travel-document data required for carriage and border control.
+- tag: G7 content
+  spec_file: tui-group-g7-content-api-openapi.yml
+  capability_id: BC-4000.70
+  capability_id_l1: BC-4000
+  capability_name: Travel Content & Imagery Management
+  confidence: 0.85
+  evidence: This API can be used to get content for the hotels for TUI packages in json format ... to
+    populate all the content related to hotel, i.e accom name, images, room info, features, facilities
+    etc.
+  reason: Serves descriptive accommodation content, imagery galleries and review/facility data — travel
+    content and imagery management (syndicated to OTA channels).
+- tag: OrderCreate
+  spec_file: tui-group-ordercreate-api-openapi.yml
+  capability_id: BC-4020.10
+  capability_id_l1: BC-4020
+  capability_name: Reservation Capture
+  confidence: 0.85
+  evidence: POST /x3/ndc/api/Selling/r3.x/v21.3/OrderCreate "POST OrderCreateRQ v21.3"; schemas IATA_OrderViewRS,
+    PaymentFunctionsCreateType, BookingEntityType
+  reason: IATA NDC OrderCreate creates the airline booking/order with payment — reservation capture.
+- tag: documents
+  spec_file: tui-group-documents-api-openapi.yml
+  capability_id: BC-4040.60
+  capability_id_l1: BC-4040
+  capability_name: Traveller Document & Compliance Data Management
+  confidence: 0.85
+  evidence: Parses scanner output and creates a new travel document for a specific passenger or infant
+    on the booking in state.
+  reason: Creates and updates passenger travel-document records from passport/ID scans — traveller document
+    data required for carriage and border control.
+- tag: watchList
+  spec_file: tui-group-watchlist-api-openapi.yml
+  capability_id: BC-4040.60
+  capability_id_l1: BC-4040
+  capability_name: Traveller Document & Compliance Data Management
+  confidence: 0.85
+  evidence: '"Searches for a collection of watch list persons."; schema WatchListPersonTravelDocument'
+  reason: Airline watch-list person records with travel documents are exactly the watchlist/document compliance
+    data used for carriage and border-control screening.
+- tag: Soap
+  spec_file: tui-group-soap-api-openapi.yml
+  capability_id: BC-4020.60
+  capability_id_l1: BC-4020
+  capability_name: Booking Payment & Settlement
+  confidence: 0.82
+  evidence: POST /soap addPaymentToBooking — "Add payment to booking (SOAP API)"; "NewSkies Payment Api
+    (PCI-DSS) This API proxies payment endpoints"
+  reason: Tag string is a protocol, but the single operation applies a payment to an existing booking,
+    which is booking-level payment/charge capture.
+- tag: OrderChange
+  spec_file: tui-group-orderchange-api-openapi.yml
+  capability_id: BC-4020.20
+  capability_id_l1: BC-4020
+  capability_name: Booking Modification & Cancellation
+  confidence: 0.8
+  evidence: POST /x3/ndc/api/Servicing/r3.x/v21.3/OrderChange "OrderChangeRQ"; schemas PenaltyType, RefundFOP_Type,
+    PenaltyTypeCodeType
+  reason: NDC Servicing OrderChange with penalty and refund form-of-payment types — voluntary modification/cancellation
+    of an existing airline booking including change fees and refunds.
+- tag: TravelMessage
+  spec_file: tui-group-travelmessage-api-openapi.yml
+  capability_id: BC-4020.10
+  capability_id_l1: BC-4020
+  capability_name: Reservation Capture
+  confidence: 0.8
+  evidence: '"This API can be used to get availability and create bookings for TUI packages following
+    the ANVR G7 standard"; POST /travelmessage/v3.1/sellrequest, /bookrequest, /cancellationrequest'
+  reason: Full sell-assign-book transaction flow creating a package reservation, plus cancellation — reservation
+    capture is the dominant operation set, with booking modification/cancellation secondary.
+- tag: disruption
+  spec_file: tui-group-disruption-api-openapi.yml
+  capability_id: BC-4020.70
+  capability_id_l1: BC-4020
+  capability_name: Booking Disruption & Rebooking Operations
+  confidence: 0.8
+  evidence: Performs a disruption move operation (IROP or diversion) for a group of bookings.
+  reason: Operations retrieve from-legs and to-journeys and move passengers/bookings during IROPs and
+    diversions — reaccommodation of bookings affected by disruption. Some overlap with airline IROPS operational
+    control (BC-4080.60), but the surface acts on bookings and journeys.
+- tag: fareRules
+  spec_file: tui-group-farerules-api-openapi.yml
+  capability_id: BC-4000.20
+  capability_id_l1: BC-4000
+  capability_name: Air Product Management
+  confidence: 0.8
+  evidence: Gets the fare rules from the server based on a fare availability key. / Get the category 50
+    fare rule information after an availability call.
+  reason: Retrieval of airline fare rule definitions (FareRule, Category50Response) is air product definition
+    — fare rules and fare attributes — rather than pricing decisioning or reservation handling.
+- tag: promotions
+  spec_file: tui-group-promotions-api-openapi.yml
+  capability_id: BC-4030.50
+  capability_id_l1: BC-4030
+  capability_name: Promotion & Discount Management
+  confidence: 0.8
+  evidence: '''Gets a promotion based on the promotion code'', ''Evaluates a promotion code and optional
+    organization code to determine if the associated promotion is valid or not''; schemas ''Promotion'',
+    ''PromotionInventoryControl'''
+  reason: Retrieval and validation of promotion codes with inventory controls in a travel booking platform
+    — promotion and discount operation.
+- tag: Hotel Availability
+  spec_file: tui-group-hotel-availability-api-openapi.yml
+  capability_id: BC-4010.40
+  capability_id_l1: BC-4010
+  capability_name: Metasearch Distribution Management
+  confidence: 0.75
+  evidence: '"The Meta-Search-Generic API that allows meta partners to access portfolio and offers information";
+    POST /hotel_availability "Checks hotels availability"'
+  reason: Explicitly a metasearch partner feed exposing hotel availability and offers — metasearch distribution
+    channel operation.
+- tag: apisMessage
+  spec_file: tui-group-apismessage-api-openapi.yml
+  capability_id: BC-4040.60
+  capability_id_l1: BC-4040
+  capability_name: Traveller Document & Compliance Data Management
+  confidence: 0.75
+  evidence: 'Takes the ApisMessage Request and sends it to core to queue a new message ... schemas: ApisQueueRequest,
+    ApisRequestType, TransportationIdentifier, Name'
+  reason: APIS is Advance Passenger Information System — the transmission of traveller identity/document
+    data to border-control authorities for a flight. That is Traveller Document & Compliance Data Management.
+    Confidence held at 0.75 because the single operation only queues the message and the payload fields
+    are not fully shown.
+- tag: booking/retrieve
+  spec_file: tui-group-booking-retrieve-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.75
+  evidence: '"Gets a specific booking by record locator and stores it in state." / "Gets a specific booking
+    by third-party record locator and stores it in state."'
+  reason: Retrieval of the reservation/PNR record by key, booking ID or record locator — reservation record
+    management. No specific L2 (retrieval is not itself capture, modification or documentation).
+- tag: booking/segments
+  spec_file: tui-group-booking-segments-api-openapi.yml
+  capability_id: BC-4020.20
+  capability_id_l1: BC-4020
+  capability_name: Booking Modification & Cancellation
+  confidence: 0.75
+  evidence: '"Cancels the specific segment from the booking in state." / "Modifies the class of service
+    for the current booking in state to effect a segment upgrade or downgrade."'
+  reason: Segment cancellation, class-of-service upgrade/downgrade and ticket reissue on an existing booking
+    are booking modification and cancellation operations.
+- tag: eTickets
+  spec_file: tui-group-etickets-api-openapi.yml
+  capability_id: BC-4020.40
+  capability_id_l1: BC-4020
+  capability_name: Reservation Confirmation & Documentation
+  confidence: 0.75
+  evidence: Retrieves the passenger's e-ticket and its details by providing the ticket number ... Retrieves
+    all coupons associated with the e-ticket.
+  reason: Manages e-ticket and coupon records for passengers, which is booking documentation issuance
+    and maintenance. Coupon status handling also touches settlement, hence not higher confidence on the
+    sub-capability.
+- tag: inventory
+  spec_file: tui-group-inventory-api-openapi.yml
+  capability_id: BC-4030.30
+  capability_id_l1: BC-4030
+  capability_name: Inventory & Capacity Controls
+  confidence: 0.75
+  evidence: '"Patches an inventory leg''s data, its nests'' data, and its classes'' data"; "Deletes an
+    inventory route class''s authorized unit"; schemas InventoryLegNest, ClassStatus, SeatsSoldBase'
+  reason: 'Airline seat inventory control: leg nests, classes of service and authorised units are the
+    classic booking-limit/inventory-control levers of a revenue management system, not product master
+    data.'
+- tag: persons
+  spec_file: tui-group-persons-api-openapi.yml
+  capability_id: BC-4040.10
+  capability_id_l1: BC-4040
+  capability_name: Guest Profile & Identity Management
+  confidence: 0.75
+  evidence: '''Creates a new person record (used by agents)'', ''Search person records'', ''Deletes a
+    person by setting the record to terminated''; schemas ''PersonAddress'', ''PersonPreferenceEditRequest'',
+    ''PersonCustomerProgramEditRequest'''
+  reason: Full CRUD over the traveller/customer person record including addresses, preferences, stored
+    payments and customer programmes — stewardship of the single traveller profile. Sub-capability leans
+    to profile/identity management, though preference management is also present.
+- tag: OrderReshop
+  spec_file: tui-group-orderreshop-api-openapi.yml
+  capability_id: BC-4020.20
+  capability_id_l1: BC-4020
+  capability_name: Booking Modification & Cancellation
+  confidence: 0.72
+  evidence: POST /x3/ndc/api/Servicing/r3.x/v21.3/OrderReshop "OrderReshopRQ"; schema IATA_OrderReshopRQ
+    under Servicing
+  reason: NDC OrderReshop reshops an existing order for alternative flights — the standard mechanism for
+    booking change/reissue in the servicing lifecycle.
+- tag: booking/journeys
+  spec_file: tui-group-booking-journeys-api-openapi.yml
+  capability_id: BC-4020.20
+  capability_id_l1: BC-4020
+  capability_name: Booking Modification & Cancellation
+  confidence: 0.72
+  evidence: '"Cancels all the journeys on the current booking in state." / "Waives the penalty fee of
+    the specified journey." / "Removes the add-on service bundles of the requested passengers in the given
+    journey."'
+  reason: Journey-level cancellation, penalty-fee waiver and add-on sell/remove against an existing booking
+    are voluntary booking modification and cancellation operations.
+- tag: Hotel Inventory
+  spec_file: tui-group-hotel-inventory-api-openapi.yml
+  capability_id: BC-4010.70
+  capability_id_l1: BC-4010
+  capability_name: Distribution Content Syndication
+  confidence: 0.7
+  evidence: '"allows meta partners to access portfolio and offers information"; GET /hotel_inventory "Retrieves
+    hotels portfolio"; POST /hotel_inventory/send/{fileName} "Sends hotels portfolio to SFTP server"'
+  reason: Syndication of the hotel portfolio/content feed to meta distribution partners, including file
+    drop to SFTP — distribution content syndication rather than inventory allocation.
+- tag: booking/addons
+  spec_file: tui-group-booking-addons-api-openapi.yml
+  capability_id: BC-4020.60
+  capability_id_l1: BC-4020
+  capability_name: Booking Payment & Settlement
+  confidence: 0.7
+  evidence: Adds a payment to a specific add-on on the booking. / Gets a specific add-on's allowed payment
+    methods.
+  reason: Three of four operations resolve allowed payment methods and post payments against add-ons attached
+    to a booking, which is booking-level payment capture. 0.7 rather than higher because the fourth operation
+    ('Syncs the prices of the Travel Commerce addons') leans toward ancillary product/pricing instead.
+- tag: booking/contacts
+  spec_file: tui-group-booking-contacts-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.7
+  evidence: '"Creates a new contact on the booking." / "Gets the primary contact based on configuration."'
+  reason: Operations manage contact and phone-number records attached to an airline booking (PNR), i.e.
+    part of the reservation record lifecycle. Mapped at L1 to Reservation & Booking Management; no single
+    L2 (capture vs documentation) is clearly named, so L2 left null.
+- tag: booking/history
+  spec_file: tui-group-booking-history-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.7
+  evidence: '"Gets the current flight move history in state." / "Gets the current segment change history
+    in state." / "HoldDateChangeHistoryResponse"'
+  reason: Audit history of changes to a reservation (segment changes, flight moves, hold-date changes,
+    itinerary sent). This is reservation-record lifecycle data; L1 Reservation & Booking Management, L2
+    ambiguous between modification and documentation so left null.
+- tag: payments
+  spec_file: tui-group-payments-api-openapi.yml
+  capability_id: BC-4020.60
+  capability_id_l1: BC-4020
+  capability_name: Booking Payment & Settlement
+  confidence: 0.7
+  evidence: '''Gets the payment data based on the specified bank identification number and date range'';
+    schemas ''BookingPaymentStatus'', ''PagedFindPaymentsByBinResponse'''
+  reason: Payment data is retrieved and typed by booking payment status, i.e. payment at the reservation
+    level in an airline PSS, matching booking payment & settlement. Only one read operation, hence moderate
+    confidence.
