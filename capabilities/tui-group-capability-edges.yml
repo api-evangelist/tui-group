@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 30
+edge_count: 33
 edges:
 - tag: trip
   spec_file: tui-group-trip-api-openapi.yml
@@ -95,6 +95,18 @@ edges:
   evidence: POST /x3/ndc/api/Selling/r3.x/v21.3/OrderCreate "POST OrderCreateRQ v21.3"; schemas IATA_OrderViewRS,
     PaymentFunctionsCreateType, BookingEntityType
   reason: IATA NDC OrderCreate creates the airline booking/order with payment — reservation capture.
+- tag: account
+  spec_file: tui-group-account-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.85
+  evidence: '''Sends a challenge code for agents'' reset password flow.'' / ''Changes the accounts password.''
+    / ''Invokes the forgot password reset for a specific account.'''
+  reason: Despite the business-sounding tag 'account', every operation manages credentials for user accounts
+    (password challenge, verify, reset, change). This is credential/identity administration, i.e. Identity
+    & Access Management, not customer account management.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: documents
   spec_file: tui-group-documents-api-openapi.yml
   capability_id: BC-4040.60
@@ -284,6 +296,19 @@ edges:
     hotels portfolio"; POST /hotel_inventory/send/{fileName} "Sends hotels portfolio to SFTP server"'
   reason: Syndication of the hotel portfolio/content feed to meta distribution partners, including file
     drop to SFTP — distribution content syndication rather than inventory allocation.
+- tag: OfferPrice
+  spec_file: tui-group-offerprice-api-openapi.yml
+  capability_id: BC-410.40
+  capability_id_l1: BC-410
+  capability_name: Quote & Configuration Management
+  confidence: 0.7
+  evidence: POST /x3/ndc/api/Selling/r3.x/v21.3/OfferPrice "POST OfferPriceRQ v21.3"; schema ...IataMessages.PricedOfferType,
+    FeeType, CurConversionType
+  reason: IATA NDC OfferPrice request prices a selected flight offer including fees, seats and currency
+    conversion, returning a PricedOffer — this is quote/price generation ahead of order creation. Confidence
+    higher than the generic search tags because the operation and PricedOfferType schema name the pricing
+    act explicitly.
+  recovered_from: sweep-20260828T235257Z-edges.json
 - tag: booking/addons
   spec_file: tui-group-booking-addons-api-openapi.yml
   capability_id: BC-4020.60
@@ -327,3 +352,15 @@ edges:
   reason: Payment data is retrieved and typed by booking payment status, i.e. payment at the reservation
     level in an airline PSS, matching booking payment & settlement. Only one read operation, hence moderate
     confidence.
+- tag: pricing
+  spec_file: tui-group-pricing-api-openapi.yml
+  capability_id: BC-440
+  capability_id_l1: BC-440
+  capability_name: Pricing Management
+  confidence: 0.7
+  evidence: '"Creates a pricing offer in the ancillary pricing options service." / "Gets the pricing configuration
+    data from the ancillary pricing options service."'
+  reason: Generates priced offers for ancillary products and exposes pricing configuration/settings —
+    price determination, i.e. Pricing Management. Evidence does not clearly name a single sub-capability
+    (strategy vs price list), so L1 only.
+  recovered_from: sweep-20260828T235257Z-edges.json
