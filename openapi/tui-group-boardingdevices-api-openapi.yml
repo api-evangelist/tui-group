@@ -17,14 +17,14 @@ paths:
     get:
       tags:
       - boardingDevices
-      summary: Generates commands for all BGR actions except for Connect.
+      summary: Generates commands for all BGR actions except for Connect
       description: 'For post-board, separate command lists are returned for different boarding response
 
-        scenarios.  These post-board lists contain tokenized commands, where the tokens should
+        scenarios. These post-board lists contain tokenized commands, where the tokens should
 
         be replaced by the client with a specific passenger''s data before sending the commands
 
-        to the BGR.  Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
+        to the BGR. Supported tokens are %%FirstName%%, %%LastName%%, %%BoardingSequence%%,
 
         %%UnitDesignator%%, and %%ErrorMessage%%.
 
@@ -93,39 +93,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfBgrCommandsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/BgrCommandsResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       additionalProperties: false
@@ -236,6 +203,21 @@ components:
         mustRun:
           type: boolean
           description: True if this command must run, even when other commands fail.
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     BgrCommandsResponse:
       type: object
       additionalProperties: false
@@ -364,6 +346,24 @@ components:
             %%UnitDesignator%%, and %%ErrorMessage%%.'
           items:
             $ref: '#/components/schemas/DeviceCommand'
+    IJsonResponseOfBgrCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/BgrCommandsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

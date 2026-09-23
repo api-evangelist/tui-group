@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: redis
+- name: Redis
 paths:
   /api/v1/redis:
     get:
       tags:
-      - redis
-      summary: Gets all the cache items that exist in redis.
+      - Redis
+      summary: Gets all the cache items that exist in redis
       description: Gets all the cache items that exist in redis.
       operationId: v1_redis_get
       responses:
@@ -77,8 +77,8 @@ paths:
                     data: null
     delete:
       tags:
-      - redis
-      summary: Deletes all cache items.
+      - Redis
+      summary: Deletes all cache items
       description: 'This will ignore all session values. If an in memory cache is configured via "cacheOptions.serverCache" (default is
 
         5 minutes) other API instances may still have locally stale cached data
@@ -142,8 +142,8 @@ paths:
   /api/v1/redis/{name}:
     delete:
       tags:
-      - redis
-      summary: Deletes a specific cache item from redis based on the cache item name.
+      - Redis
+      summary: Deletes a specific cache item from redis based on the cache item name
       description: 'If an in memory cache is configured via "cacheOptions.serverCache" (default is 5 minutes) other API instances may
 
         still have locally stale cached data
@@ -244,43 +244,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfListOfString:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            type: string
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -380,6 +343,43 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    IJsonResponseOfListOfString:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

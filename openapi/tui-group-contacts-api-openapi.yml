@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: contacts
+- name: Contacts
 paths:
   /api/nsk/v1/contacts/searchByPhoneNumber:
     get:
       tags:
-      - contacts
-      summary: Gets the latest contact in a booking with a specific phone number.
+      - Contacts
+      summary: Gets the latest contact in a booking with a specific phone number
       description: 'GraphQL endpoint: contactsByPhoneNumber'
       operationId: nsk_v1_contacts_searchByPhoneNumber_get
       parameters:
@@ -46,22 +46,27 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
+    DistributionOption:
+      type: integer
+      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
+      x-enumNames:
+      - None
+      - Mail
+      - Email
+      - Fax
+      - MailFax
+      - Airport
+      - Hold
+      - Print
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
     Address:
       type: object
       description: "Defines a common address.\n            "
@@ -116,133 +121,22 @@ components:
           description: "The postal code.\n            "
           maxLength: 10
           minLength: 0
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    DistributionOption:
-      type: integer
-      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
-      x-enumNames:
-      - None
-      - Mail
-      - Email
-      - Fax
-      - MailFax
-      - Airport
-      - Hold
-      - Print
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    PhoneNumber:
+    Exception:
       type: object
-      description: "Defines a common phone number.\n            "
       additionalProperties: false
-      required:
-      - number
-      - type
       properties:
-        number:
+        Message:
           type: string
-          description: "The phone number without any formatting characters.\n            "
-          maxLength: 20
-          minLength: 0
-        type:
-          description: "The phone number type.\n            "
-          $ref: '#/components/schemas/PhoneNumberType'
-    Contact:
-      type: object
-      description: "Contact model describing a person contact information.\n            "
-      additionalProperties: false
-      required:
-      - contactTypeCode
-      properties:
-        phoneNumbers:
-          type:
-          - array
-          - 'null'
-          description: "The collection of phone numbers.\nSupported types: Home, Work, Fax, Other.\nThis collections can only contain one number for each supported type.\n            "
-          items:
-            $ref: '#/components/schemas/PhoneNumber'
-        cultureCode:
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
-        address:
-          description: "The contact address.\n            "
-          $ref: '#/components/schemas/Address'
-        emailAddress:
+        StackTrace:
           type:
           - string
           - 'null'
-          description: "The email address of the contact.\n            "
-        customerNumber:
-          type:
-          - string
-          - 'null'
-          description: "The customer number.\n            "
-          maxLength: 20
-          minLength: 0
-        sourceOrganization:
-          type:
-          - string
-          - 'null'
-          description: "Source organization.\n            "
-          maxLength: 10
-          minLength: 0
-        distributionOption:
-          description: "The contact distribution option.\n            "
-          $ref: '#/components/schemas/DistributionOption'
-        notificationPreference:
-          description: "The notification preference of the contact.\n            "
-          $ref: '#/components/schemas/NotificationPreference'
-        companyName:
-          type:
-          - string
-          - 'null'
-          description: "The company name.\n            "
-          maxLength: 64
-          minLength: 0
-        name:
-          description: "The contact's name.\n            "
-          $ref: '#/components/schemas/Name'
-        contactTypeCode:
-          type: string
-          description: "The contact type code. There can only be one contact of a specific type on the booking.\nTypically only one contact is used. Null values will be replaced by the primary contact type code.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-          minLength: 1
-    PhoneNumberType:
-      type: integer
-      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
-      x-enumNames:
-      - Other
-      - Home
-      - Work
-      - Mobile
-      - Fax
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -250,28 +144,6 @@ components:
       properties:
         data:
           description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfContact:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Contact'
         errors:
           type:
           - array
@@ -364,6 +236,101 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    Contact:
+      type: object
+      description: "Contact model describing a person contact information.\n            "
+      additionalProperties: false
+      required:
+      - contactTypeCode
+      properties:
+        phoneNumbers:
+          type:
+          - array
+          - 'null'
+          description: "The collection of phone numbers.\nSupported types: Home, Work, Fax, Other.\nThis collections can only contain one number for each supported type.\n            "
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+        address:
+          description: "The contact address.\n            "
+          $ref: '#/components/schemas/Address'
+        emailAddress:
+          type:
+          - string
+          - 'null'
+          description: "The email address of the contact.\n            "
+        customerNumber:
+          type:
+          - string
+          - 'null'
+          description: "The customer number.\n            "
+          maxLength: 20
+          minLength: 0
+        sourceOrganization:
+          type:
+          - string
+          - 'null'
+          description: "Source organization.\n            "
+          maxLength: 10
+          minLength: 0
+        distributionOption:
+          description: "The contact distribution option.\n            "
+          $ref: '#/components/schemas/DistributionOption'
+        notificationPreference:
+          description: "The notification preference of the contact.\n            "
+          $ref: '#/components/schemas/NotificationPreference'
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: "The company name.\n            "
+          maxLength: 64
+          minLength: 0
+        name:
+          description: "The contact's name.\n            "
+          $ref: '#/components/schemas/Name'
+        contactTypeCode:
+          type: string
+          description: "The contact type code. There can only be one contact of a specific type on the booking.\nTypically only one contact is used. Null values will be replaced by the primary contact type code.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+          minLength: 1
+    PhoneNumberType:
+      type: integer
+      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
+      x-enumNames:
+      - Other
+      - Home
+      - Work
+      - Mobile
+      - Fax
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    PhoneNumber:
+      type: object
+      description: "Defines a common phone number.\n            "
+      additionalProperties: false
+      required:
+      - number
+      - type
+      properties:
+        number:
+          type: string
+          description: "The phone number without any formatting characters.\n            "
+          maxLength: 20
+          minLength: 0
+        type:
+          description: "The phone number type.\n            "
+          $ref: '#/components/schemas/PhoneNumberType'
     NotificationPreference:
       type: integer
       description: "Describes types of notifications the user would prefer.\n            \n\n0 = None\n1 = Promotional"
@@ -413,6 +380,39 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
+    IJsonResponseOfContact:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Contact'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

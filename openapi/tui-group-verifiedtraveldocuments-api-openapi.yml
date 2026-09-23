@@ -17,7 +17,7 @@ paths:
     put:
       tags:
       - verifiedTravelDocuments
-      summary: Updates a list of verified travel documents for a passenger and associated infant.
+      summary: Updates a list of verified travel documents for a passenger and associated…
       description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
 
         problems.`
@@ -172,7 +172,7 @@ paths:
     post:
       tags:
       - verifiedTravelDocuments
-      summary: Adds a new verified travel document to a passenger or the associated infant.
+      summary: Adds a new verified travel document to a passenger or the associated infant
       description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
 
         problems.`
@@ -334,7 +334,7 @@ paths:
     delete:
       tags:
       - verifiedTravelDocuments
-      summary: Deletes the verified travel documents for a passenger and associated infant.
+      summary: Deletes the verified travel documents for a passenger and associated infant
       description: 'Requires agent permissions.
 
         This will delete all verified documents associated with the passenger which includes infant travel documents.
@@ -477,7 +477,7 @@ paths:
   : post:
       tags:
       - verifiedTravelDocuments
-      summary: Adds a new verified travel document to a passenger or the associated infant by the document key.
+      summary: Adds a new verified travel document to a passenger or the associated infant by…
       description: '`IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
 
         problems.`
@@ -645,38 +645,6 @@ components:
           type:
           - string
           - 'null'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    VerifiedTravelDocument:
-      type: object
-      description: "The model for a dotRez verified travel document.\n            "
-      additionalProperties: false
-      required:
-      - documentTypeCode
-      - issuedByCode
-      properties:
-        documentTypeCode:
-          type: string
-          description: "The unique travel document type code.\n            "
-          maxLength: 4
-          minLength: 0
-        issuedByCode:
-          type: string
-          description: "The issuer code for the travel document (country code).\n            "
-          maxLength: 3
-          minLength: 0
-        isInfant:
-          type: boolean
-          description: "Flag for if this verified travel document is for an infant or not.\n            "
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -698,33 +666,36 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    UpdateVerifiedTravelDocumentsRequest:
+    Message:
       type: object
-      description: "The model for a dotRez updated verified travel documents request.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
-      required:
-      - recordLocator
-      - segmentKey
-      - passengerKey
-      - verifiedTravelDocuments
       properties:
-        recordLocator:
-          type: string
-          description: "The record locator of the booking.\n            "
-          minLength: 1
-        segmentKey:
-          type: string
-          description: "The segment key.\n            "
-          minLength: 1
-        passengerKey:
-          type: string
-          description: "The passenger key.\n            "
-          minLength: 1
-        verifiedTravelDocuments:
-          type: array
-          description: "The list of verified travel documents.\n            "
-          items:
-            $ref: '#/components/schemas/VerifiedTravelDocument'
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -773,36 +744,65 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    UpdateVerifiedTravelDocumentsRequest:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "The model for a dotRez updated verified travel documents request.\n            "
       additionalProperties: false
+      required:
+      - recordLocator
+      - segmentKey
+      - passengerKey
+      - verifiedTravelDocuments
       properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+        recordLocator:
+          type: string
+          description: "The record locator of the booking.\n            "
+          minLength: 1
+        segmentKey:
+          type: string
+          description: "The segment key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        verifiedTravelDocuments:
+          type: array
+          description: "The list of verified travel documents.\n            "
+          items:
+            $ref: '#/components/schemas/VerifiedTravelDocument'
+    VerifiedTravelDocument:
+      type: object
+      description: "The model for a dotRez verified travel document.\n            "
+      additionalProperties: false
+      required:
+      - documentTypeCode
+      - issuedByCode
+      properties:
+        documentTypeCode:
+          type: string
+          description: "The unique travel document type code.\n            "
+          maxLength: 4
+          minLength: 0
+        issuedByCode:
+          type: string
+          description: "The issuer code for the travel document (country code).\n            "
+          maxLength: 3
+          minLength: 0
+        isInfant:
+          type: boolean
+          description: "Flag for if this verified travel document is for an infant or not.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

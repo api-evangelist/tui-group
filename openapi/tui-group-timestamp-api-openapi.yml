@@ -59,6 +59,24 @@ paths:
       - timestamp
 components:
   responses:
+    ErrorResponse:
+      description: Response message in case of an error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errorMessage:
+                type: string
+                description: Error description message
+              exception:
+                type: string
+                description: Optional error details or null
+          examples:
+            ErrorMessage:
+              value:
+                errorMessage: No price file mapped to ApiKey YourAppName
+                exception: null
     TimeStampResponse:
       description: Timestamp response message
       content:
@@ -78,24 +96,6 @@ components:
               value:
                 fileName: pricefile.zip
                 timeStamp: '2026-06-15T09:25:36Z'
-    ErrorResponse:
-      description: Response message in case of an error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errorMessage:
-                type: string
-                description: Error description message
-              exception:
-                type: string
-                description: Optional error details or null
-          examples:
-            ErrorMessage:
-              value:
-                errorMessage: No price file mapped to ApiKey YourAppName
-                exception: null
   securitySchemes:
     bearerToken:
       type: http

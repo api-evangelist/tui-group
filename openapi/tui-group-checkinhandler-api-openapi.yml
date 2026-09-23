@@ -43,6 +43,8 @@ paths:
           description: BookingNotFound
         '500':
           description: InternalServerError
+      operationId: getRecordlocator
+      x-operation-id-source: derived
   /checkinavailability:
     get:
       tags:
@@ -69,8 +71,20 @@ paths:
                 $ref: '#/components/schemas/CheckInValidation'
         '500':
           description: InternalServerError
+      operationId: getCheckinavailability
+      x-operation-id-source: derived
 components:
   schemas:
+    LoginStatus:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     CheckInStatus:
       type: object
       properties:
@@ -83,16 +97,6 @@ components:
           - string
           - 'null'
         checkInAvailable:
-          type: boolean
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    LoginStatus:
-      type: object
-      properties:
-        success:
           type: boolean
         errorMessage:
           type:

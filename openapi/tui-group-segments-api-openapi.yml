@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: segments
+- name: Segments
 paths:
   /api/dcs/v1/segments/downline:
     post:
       tags:
-      - segments
-      summary: Retrieves a list of downline segments based on search criteria.
+      - Segments
+      summary: Retrieves a list of downline segments based on search criteria
       description: 'GraphQL endpoint: dcsGetDownlineSegments'
       operationId: dcs_v1_segments_downline_post
       requestBody:
@@ -50,6 +50,37 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    SegmentType:
+      type: integer
+      description: '0 = Normal
+
+        1 = CodeShareOperating
+
+        2 = CodeShareMarketing
+
+        3 = InterlineOutbound
+
+        4 = InterlineInbound
+
+        5 = Passive
+
+        6 = NdcInterline'
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      - NdcInterline
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     Exception:
       type: object
       additionalProperties: false
@@ -66,21 +97,56 @@ components:
           type:
           - string
           - 'null'
-    GetDownlineSegmentsRequest:
+    DownlineSearchSegment:
       type: object
       additionalProperties: false
-      required:
-      - segmentKeys
-      - passengerAlternateKeys
       properties:
-        segmentKeys:
-          type: array
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        segmentStatus:
+          $ref: '#/components/schemas/SegmentStatus'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        isHosted:
+          type: boolean
+        legs:
+          type:
+          - array
+          - 'null'
           items:
-            type: string
-        passengerAlternateKeys:
-          type: array
-          items:
-            type: string
+            $ref: '#/components/schemas/DownlineSearchLeg'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        canSelect:
+          type: boolean
+        isBaggageCheckinAllowed:
+          type: boolean
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -117,6 +183,57 @@ components:
           additionalProperties:
             type: string
         ActivityId:
+          type:
+          - string
+          - 'null'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    DownlineSearchLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        isCheckedIn:
+          type: boolean
+        displayLegStatus:
+          $ref: '#/components/schemas/LegStatus'
+        isProcessedOffline:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/LegStatus'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        legKey:
           type:
           - string
           - 'null'
@@ -183,112 +300,26 @@ components:
       - 12
       - 13
       - 14
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    SegmentType:
-      type: integer
-      description: '0 = Normal
-
-        1 = CodeShareOperating
-
-        2 = CodeShareMarketing
-
-        3 = InterlineOutbound
-
-        4 = InterlineInbound
-
-        5 = Passive
-
-        6 = NdcInterline'
-      x-enumNames:
-      - Normal
-      - CodeShareOperating
-      - CodeShareMarketing
-      - InterlineOutbound
-      - InterlineInbound
-      - Passive
-      - NdcInterline
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
+    GetDownlineSegmentsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengerAlternateKeys
+      properties:
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerAlternateKeys:
+          type: array
+          items:
+            type: string
     IJsonResponse:
       type: object
       additionalProperties: false
       properties:
         data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DownlineSegmentsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        downlineSegments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DownlineSearchSegment'
-    DownlineSearchLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        isCheckedIn:
-          type: boolean
-        displayLegStatus:
-          $ref: '#/components/schemas/LegStatus'
-        isProcessedOffline:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/LegStatus'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        legKey:
-          type:
-          - string
-          - 'null'
-    IJsonResponseOfDownlineSegmentsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/DownlineSegmentsResponse'
         errors:
           type:
           - array
@@ -407,80 +438,49 @@ components:
       - 21
       - 22
       - 23
-    DownlineSearchSegment:
+    DownlineSegmentsResponse:
       type: object
       additionalProperties: false
       properties:
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        segmentStatus:
-          $ref: '#/components/schemas/SegmentStatus'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        isHosted:
-          type: boolean
-        legs:
+        downlineSegments:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/DownlineSearchLeg'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        canSelect:
-          type: boolean
-        isBaggageCheckinAllowed:
-          type: boolean
-    Message:
+            $ref: '#/components/schemas/DownlineSearchSegment'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfDownlineSegmentsResponse:
       type: object
       additionalProperties: false
       properties:
-        code:
+        data:
+          $ref: '#/components/schemas/DownlineSegmentsResponse'
+        errors:
           type:
-          - string
+          - array
           - 'null'
-        type:
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

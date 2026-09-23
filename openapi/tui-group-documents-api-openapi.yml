@@ -11,18 +11,16 @@ servers:
 security:
 - JWT: []
 tags:
-- name: documents
+- name: Documents
 paths:
   /api/dcs/v1/documents/{travelDocumentKey}/scannedData:
     put:
       tags:
-      - documents
-      summary: 'Parses scanner output and updates a specific passenger or infant''s travel document
-
-        for the booking in state.'
+      - Documents
+      summary: Parses scanner output and updates a specific passenger or infant's travel…
       description: 'The scanned data must belong to the same type of document and be issued by the same
 
-        country as the one specified by the given travel document key.  The rest of the
+        country as the one specified by the given travel document key. The rest of the
 
         document''s information will be updated from the scanned data.
 
@@ -70,10 +68,8 @@ paths:
   /api/dcs/v1/documents/scannedData:
     post:
       tags:
-      - documents
-      summary: 'Parses scanner output and creates a new travel document for a specific passenger
-
-        or infant on the booking in state.'
+      - Documents
+      summary: Parses scanner output and creates a new travel document for a specific…
       description: 'Updates booking passenger information with the scanned data if it does not match the document.
 
 
@@ -125,69 +121,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfString:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    ParseScanRequestV2:
-      type: object
-      additionalProperties: false
-      properties:
-        track1:
-          type:
-          - string
-          - 'null'
-        track2:
-          type:
-          - string
-          - 'null'
-        track3:
-          type:
-          - string
-          - 'null'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which parsing rules will be used.  If not specified,
-
-            the default location code from the JWT will be used.'
-        documentTypeCode:
-          type:
-          - string
-          - 'null'
-          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
     IJsonResponse:
       type: object
       additionalProperties: false
@@ -205,20 +138,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    ScannedDocumentRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - passengerKey
-      - scan
-      properties:
-        passengerKey:
-          type: string
-          minLength: 1
-        isInfant:
-          type: boolean
-        scan:
-          $ref: '#/components/schemas/ParseScanRequestV2'
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -282,6 +201,83 @@ components:
           - 'null'
           additionalProperties:
             type: string
+    ScannedDocumentRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - passengerKey
+      - scan
+      properties:
+        passengerKey:
+          type: string
+          minLength: 1
+        isInfant:
+          type: boolean
+        scan:
+          $ref: '#/components/schemas/ParseScanRequestV2'
+    ParseScanRequestV2:
+      type: object
+      additionalProperties: false
+      properties:
+        track1:
+          type:
+          - string
+          - 'null'
+        track2:
+          type:
+          - string
+          - 'null'
+        track3:
+          type:
+          - string
+          - 'null'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which parsing rules will be used.  If not specified,
+
+            the default location code from the JWT will be used.'
+        documentTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

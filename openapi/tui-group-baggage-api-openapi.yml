@@ -21,7 +21,7 @@ paths:
     post:
       tags:
       - baggage
-      summary: Adds baggage to a booking stateless.
+      summary: Adds baggage to a booking stateless
       description: 'Agent only. Requires the booking to be committed.
 
         If you have the booking in state you will need to re-retrieve it to see the added baggage.
@@ -198,7 +198,7 @@ paths:
     delete:
       tags:
       - baggage
-      summary: Sets the 'Removed' status for a bag for a booking stateless.
+      summary: Sets the 'Removed' status for a bag for a booking stateless
       description: 'Agent only. Requires the booking to be committed.
 
         IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
@@ -251,7 +251,7 @@ paths:
     post:
       tags:
       - baggage
-      summary: Adds baggage to a booking stateless.
+      summary: Adds baggage to a booking stateless
       description: 'Agent only. Requires the booking to be committed.
 
         If you have the booking in state you will need to re-retrieve it to see the added baggage.
@@ -406,7 +406,7 @@ paths:
     delete:
       tags:
       - baggage
-      summary: Sets the 'Removed' status for a bag for a booking stateless, by leg key.
+      summary: Sets the 'Removed' status for a bag for a booking stateless, by leg key
       description: 'Agent only. Requires the booking to be committed.
 
         IMPORTANT: This endpoint should NOT be called concurrently using the same session token to avoid performance
@@ -520,7 +520,7 @@ paths:
     put:
       tags:
       - baggage
-      summary: Performs an update and checks-in an individual baggage item for a specific passenger.
+      summary: Performs an update and checks-in an individual baggage item for a specific…
       description: 'If the journey key is set on the request, the request will process all segments associated with the journey,
 
         and will ignore the segment key value.
@@ -716,7 +716,7 @@ paths:
     put:
       tags:
       - baggage
-      summary: Performs an update and checks-in an individual baggage item for a specific passenger.
+      summary: Performs an update and checks-in an individual baggage item for a specific…
       description: 'If the journey key is set on the request, the request will process all segments associated with the journey,
 
         and will ignore the segment key value.
@@ -948,8 +948,19 @@ paths:
     post:
       tags:
       - baggage
-      summary: Adds a list of bags to a booking.
-      description: "Optional record locator determines whether this endpoint behaves statelessly or modifies the booking in state. \n    Including the record locator will add the bags statelessly without assigning any baggage group. \n    Omitting the record locator will add the bags to the booking in state, \n    assigning a baggage group for the specified passenger, \n    with any other passengers specified by otherPassengersAlternateKeys.\n\nGraphQL endpoint: dcsCreateBagsV3"
+      summary: Adds a list of bags to a booking
+      description: 'Optional record locator determines whether this endpoint behaves statelessly or modifies the booking in state.
+
+        Including the record locator will add the bags statelessly without assigning any baggage group.
+
+        Omitting the record locator will add the bags to the booking in state,
+
+        assigning a baggage group for the specified passenger,
+
+        with any other passengers specified by otherPassengersAlternateKeys.
+
+
+        GraphQL endpoint: dcsCreateBagsV3'
       operationId: dcs_v3_baggage_post
       requestBody:
         x-name: request
@@ -986,6 +997,167 @@ paths:
       description: TUI Playground
 components:
   schemas:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    AddBaggageRequest:
+      type: object
+      description: "The add baggage request.\n            "
+      additionalProperties: false
+      required:
+      - recordLocator
+      - journeyKey
+      - passengerKey
+      properties:
+        recordLocator:
+          type: string
+          description: "The record locator.\n            "
+          minLength: 1
+        journeyKey:
+          type: string
+          description: "The journey key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        iataIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The IATA identifier for this request.\n            "
+        nonStandard:
+          type: boolean
+          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
+        allowBaggageOnNonHosted:
+          type: boolean
+          description: "The flag to indicate if the baggage request is allowed to process baggage for non-hosted flights.\n            "
+        baggageInformation:
+          description: "The baggage information/details.\n            "
+          $ref: '#/components/schemas/BaggageInformationRequest'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     RemoveBaggageByLegKeyRequest:
       type: object
       description: "The delete baggage by leg key request.\n            "
@@ -1012,22 +1184,32 @@ components:
           type: string
           description: "The baggage key.\n            "
           minLength: 1
-    Exception:
+    RemoveBaggageRequest:
       type: object
+      description: "The delete baggage request.\n            "
       additionalProperties: false
+      required:
+      - recordLocator
+      - journeyKey
+      - passengerKey
+      - baggageKey
       properties:
-        Message:
+        recordLocator:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
+          description: "The record locator.\n            "
+          minLength: 1
+        journeyKey:
+          type: string
+          description: "The journey key.\n            "
+          minLength: 1
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        baggageKey:
+          type: string
+          description: "The baggage key.\n            "
+          minLength: 1
     WeightType:
       type: integer
       description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
@@ -1093,99 +1275,6 @@ components:
           type: string
           description: "The record locator for the booking to update.\n            "
           minLength: 1
-    RemoveBaggageRequest:
-      type: object
-      description: "The delete baggage request.\n            "
-      additionalProperties: false
-      required:
-      - recordLocator
-      - journeyKey
-      - passengerKey
-      - baggageKey
-      properties:
-        recordLocator:
-          type: string
-          description: "The record locator.\n            "
-          minLength: 1
-        journeyKey:
-          type: string
-          description: "The journey key.\n            "
-          minLength: 1
-        passengerKey:
-          type: string
-          description: "The passenger key.\n            "
-          minLength: 1
-        baggageKey:
-          type: string
-          description: "The baggage key.\n            "
-          minLength: 1
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    AddBaggageRequest:
-      type: object
-      description: "The add baggage request.\n            "
-      additionalProperties: false
-      required:
-      - recordLocator
-      - journeyKey
-      - passengerKey
-      properties:
-        recordLocator:
-          type: string
-          description: "The record locator.\n            "
-          minLength: 1
-        journeyKey:
-          type: string
-          description: "The journey key.\n            "
-          minLength: 1
-        passengerKey:
-          type: string
-          description: "The passenger key.\n            "
-          minLength: 1
-        iataIdentifier:
-          type:
-          - string
-          - 'null'
-          description: "The IATA identifier for this request.\n            "
-        nonStandard:
-          type: boolean
-          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
-        allowBaggageOnNonHosted:
-          type: boolean
-          description: "The flag to indicate if the baggage request is allowed to process baggage for non-hosted flights.\n            "
-        baggageInformation:
-          description: "The baggage information/details.\n            "
-          $ref: '#/components/schemas/BaggageInformationRequest'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     BaggageInformationRequest:
       type: object
       description: "The baggage information request.\n            "
@@ -1214,84 +1303,6 @@ components:
         weightType:
           description: "The weight type for the bag. (Pounds or Kilograms)\n            "
           $ref: '#/components/schemas/WeightType'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     PassengerBagRequestV3:
       type: object
       additionalProperties: false
@@ -1329,68 +1340,11 @@ components:
           format: int32
           maximum: 9999.0
           minimum: 0.0
-    WeightType_2:
-      type: integer
-      description: 'Specifies the weight unit of measure, either Pounds or Kilograms.
-
-
-        1 = Pounds
-
-        2 = Kilograms'
-      x-enumNames:
-      - Pounds
-      - Kilograms
-      enum:
-      - 1
-      - 2
-    BaggageAddResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        baggageKeys:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    MessageStatus_2:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse_2:
       type: object
       additionalProperties: false
       properties:
         data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse_2'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message_2'
-    IJsonResponseOfBaggageAddResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/BaggageAddResponse'
         errors:
           type:
           - array
@@ -1466,6 +1420,16 @@ components:
           - 'null'
           additionalProperties:
             type: string
+    BaggageAddResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        baggageKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
     ProcessBaggageActionType:
       type: integer
       description: '0 = Add
@@ -1513,6 +1477,53 @@ components:
           description: "List of alternate keys for other selected passengers being processed with the passenger getting his/her bag processed.\nThis list will be translated into empty bag requests which NS uses to evaluate baggage allowances \nand fees based on Multi-Passenger Baggage Group, Market Setting, Baggage Rules, etc.\nEmpty list would mean only the passenger getting bag processed is being evaluated by NS.\nThis list is ignored if record locator is provided."
           items:
             type: string
+    IJsonResponseOfBaggageAddResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/BaggageAddResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse_2'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message_2'
+    WeightType_2:
+      type: integer
+      description: 'Specifies the weight unit of measure, either Pounds or Kilograms.
+
+
+        1 = Pounds
+
+        2 = Kilograms'
+      x-enumNames:
+      - Pounds
+      - Kilograms
+      enum:
+      - 1
+      - 2
+    MessageStatus_2:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

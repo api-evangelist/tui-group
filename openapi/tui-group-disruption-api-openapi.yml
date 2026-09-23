@@ -17,9 +17,7 @@ paths:
     post:
       tags:
       - disruption
-      summary: 'Combines a list of segments into a properly formed journey and determines whether that
-
-        journey contains ad hoc connections.'
+      summary: Combines a list of segments into a properly formed journey and determines…
       description: 'GraphQL endpoint: dcsCombineDisruptionSegments'
       operationId: dcs_v1_disruption_combineSegments_post
       requestBody:
@@ -56,10 +54,29 @@ paths:
     get:
       tags:
       - disruption
-      summary: 'Uses search criteria to retrieve a list of legs from which passengers can be moved in
+      summary: Uses search criteria to retrieve a list of legs from which passengers can be…
+      description: 'Use the dotREZ NSK API''s GET /api/nsk/v1/settings/booking/reserveFlights to retrieve
 
-        a disruption.'
-      description: "Use the dotREZ NSK API's GET /api/nsk/v1/settings/booking/reserveFlights to retrieve\nrelated role settings:\n    \n        \n        daysBeforeIrop:  This value must be a positive number, and the departure\n        date of the request must not be more than this number of days after today.\n        \n        \n        allowMove:  This value must not be set to MoveFlightCode.NotAllowed.\n        \n    \nUse the dotREZ NSK API's GET /api/nsk/v1/settings/general/operations to retrieve\nrelated role setting:\n    \n        \n        allowConsoleIrop:  This value must be true.\n\nGraphQL endpoint: dcsGetDisruptionFromLegs"
+        related role settings:
+
+
+        daysBeforeIrop: This value must be a positive number, and the departure
+
+        date of the request must not be more than this number of days after today.
+
+
+        allowMove: This value must not be set to MoveFlightCode.NotAllowed.
+
+
+        Use the dotREZ NSK API''s GET /api/nsk/v1/settings/general/operations to retrieve
+
+        related role setting:
+
+
+        allowConsoleIrop: This value must be true.
+
+
+        GraphQL endpoint: dcsGetDisruptionFromLegs'
       operationId: dcs_v1_disruption_fromLegs_get
       parameters:
       - name: GetIropOnly
@@ -141,9 +158,7 @@ paths:
     get:
       tags:
       - disruption
-      summary: 'Retrieves a list of the final destination journeys for the passengers from a given
-
-        disruption from-leg.'
+      summary: Retrieves a list of the final destination journeys for the passengers from a…
       description: 'GraphQL endpoint: dcsGetDisruptionFinalDestinations'
       operationId: dcs_v1_disruption_fromLegs_legKey_finalDestinations_get
       parameters:
@@ -179,8 +194,54 @@ paths:
     post:
       tags:
       - disruption
-      summary: Performs a disruption move operation (IROP or diversion) for a group of bookings.
-      description: "Use the dotREZ NSK API's GET /api/nsk/v1/settings/booking/reserveFlights to retrieve\nrelated role settings:\n    \n        \n        daysBeforeIrop:  This value must be a positive number, and the departure\n        date of the request must not be more than this number of days after today.\n        \n        \n        allowMove:  This value must not be set to MoveFlightCode.NotAllowed.\n        \n        \n        allowMoveOverbook:  If InventoryControlType in the request is set to\n        OversellSpace, this value must be set to OverbookControl.CanOverbookLeg.\n        \n        \n        allowCreateAdhocConnect:  If ToJourneyKey in the request corresponds to a\n        journey containing any ad hoc connections, this value must be true.\n        \n    \nUse the dotREZ NSK API's GET /api/nsk/v1/settings/general/operations to retrieve\nrelated role settings:\n    \n        \n        allowConsoleIrop:  This value must be true.\n        \n        \n        allowDiversionIrop:  If MoveType in the request is set to\n        DisruptionMoveType.Diversion, this value must be true.\n        \n        \n        allowIropOversellOnToFlight:  If InventoryControlType in the request is set to\n        OversellSpace, this value must be true.\n        \n    \nTo performs a stateful move operation (IROP or diversion), use the dotREZ NSK API's\nPOST /api/nsk/v1/trip/move/irop.\n\nGraphQL endpoint: dcsPerformDisruptionMove"
+      summary: Performs a disruption move operation (IROP or diversion) for a group of bookings
+      description: 'Use the dotREZ NSK API''s GET /api/nsk/v1/settings/booking/reserveFlights to retrieve
+
+        related role settings:
+
+
+        daysBeforeIrop: This value must be a positive number, and the departure
+
+        date of the request must not be more than this number of days after today.
+
+
+        allowMove: This value must not be set to MoveFlightCode.NotAllowed.
+
+
+        allowMoveOverbook: If InventoryControlType in the request is set to
+
+        OversellSpace, this value must be set to OverbookControl.CanOverbookLeg.
+
+
+        allowCreateAdhocConnect: If ToJourneyKey in the request corresponds to a
+
+        journey containing any ad hoc connections, this value must be true.
+
+
+        Use the dotREZ NSK API''s GET /api/nsk/v1/settings/general/operations to retrieve
+
+        related role settings:
+
+
+        allowConsoleIrop: This value must be true.
+
+
+        allowDiversionIrop: If MoveType in the request is set to
+
+        DisruptionMoveType.Diversion, this value must be true.
+
+
+        allowIropOversellOnToFlight: If InventoryControlType in the request is set to
+
+        OversellSpace, this value must be true.
+
+
+        To performs a stateful move operation (IROP or diversion), use the dotREZ NSK API''s
+
+        POST /api/nsk/v1/trip/move/irop.
+
+
+        GraphQL endpoint: dcsPerformDisruptionMove'
       operationId: dcs_v1_disruption_move_post
       requestBody:
         x-name: request
@@ -216,9 +277,7 @@ paths:
     get:
       tags:
       - disruption
-      summary: 'Uses search criteria to retrieve a list of journeys to which passengers can be moved in
-
-        a disruption.'
+      summary: Uses search criteria to retrieve a list of journeys to which passengers can be…
       description: 'GraphQL endpoint: dcsGetDisruptionToJourneys'
       operationId: dcs_v1_disruption_toJourneys_get
       parameters:
@@ -305,6 +364,37 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    SegmentType:
+      type: integer
+      description: '0 = Normal
+
+        1 = CodeShareOperating
+
+        2 = CodeShareMarketing
+
+        3 = InterlineOutbound
+
+        4 = InterlineInbound
+
+        5 = Passive
+
+        6 = NdcInterline'
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      - NdcInterline
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     DisruptionMoveRequest:
       type: object
       additionalProperties: false
@@ -351,226 +441,28 @@ components:
           - 'null'
         isChangeOfStatus:
           type: boolean
-    DisruptionToLeg:
+    IJsonResponseOfListOfDisruptionFromLeg:
       type: object
       additionalProperties: false
       properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        operatedByText:
-          type:
-          - string
-          - 'null'
-        departureTimeVariant:
-          type: integer
-          description: The leg departure local time variant in minutes.
-        arrivalTimeVariant:
-          type: integer
-          description: The leg arrival local time variant in minutes.
-        legKey:
-          type:
-          - string
-          - 'null'
-        manifestLegKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/ToLegStatus'
-        nests:
+        data:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/DisruptionToLegNest'
-    SegmentType:
-      type: integer
-      description: '0 = Normal
-
-        1 = CodeShareOperating
-
-        2 = CodeShareMarketing
-
-        3 = InterlineOutbound
-
-        4 = InterlineInbound
-
-        5 = Passive
-
-        6 = NdcInterline'
-      x-enumNames:
-      - Normal
-      - CodeShareOperating
-      - CodeShareMarketing
-      - InterlineOutbound
-      - InterlineInbound
-      - Passive
-      - NdcInterline
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    DisruptionFinalDestinationSegment:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        availabilitySourceCode:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        legs:
+            $ref: '#/components/schemas/DisruptionFromLeg'
+        errors:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/LegInfo'
-    DisruptionInventoryControlType:
-      type: integer
-      description: 'Defines the different ways inventory can be requested during a disruption move.
-
-
-        0 = ClaimSpace
-
-        1 = OversellSpace
-
-        2 = StandBy'
-      x-enumNames:
-      - ClaimSpace
-      - OversellSpace
-      - StandBy
-      enum:
-      - 0
-      - 1
-      - 2
-    DisruptionMoveResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        successfulRecordLocators:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
           - array
           - 'null'
-          description: List of record locators for the bookings whose passengers were successfully moved.
           items:
-            type: string
-        failedRecordLocators:
-          type:
-          - array
-          - 'null'
-          description: 'List of record locators for the bookings whose passengers were NOT moved, including the
-
-            associated error that prevented the move.  Note: There is one error per failed record
-
-            locator.'
-          items:
-            $ref: '#/components/schemas/DisruptionMoveError'
-    FlightType:
-      type: integer
-      description: '0 = All
-
-        1 = NonStop
-
-        2 = Through
-
-        3 = Direct
-
-        4 = Connect'
-      x-enumNames:
-      - All
-      - NonStop
-      - Through
-      - Direct
-      - Connect
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
+            $ref: '#/components/schemas/Message'
     SegmentStatus:
       type: integer
       description: 'The list of IATA standard booking action codes.
@@ -677,70 +569,46 @@ components:
       - 21
       - 22
       - 23
-    IJsonResponseOfListOfDisruptionToJourney:
+    DisruptionToLegNest:
       type: object
       additionalProperties: false
       properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToJourney'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfListOfDisruptionFinalDestinationJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFinalDestinationJourney'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
+        lid:
+          type: integer
+          description: Maximum number of seats authorized to be sold on a nest.
+        sold:
+          type: integer
+          description: The number of seats sold in this nest.
+        cabinOfService:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    LegInfo:
+          description: The value of the cabin travel class for this nest.
+          maxLength: 1
+    DisruptionFinalDestinationSegment:
       type: object
       additionalProperties: false
       properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        availabilitySourceCode:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
         carrierCode:
           type:
           - string
@@ -767,35 +635,22 @@ components:
         arrivalTime:
           type: string
           format: date-time
-        legKey:
+        legs:
           type:
-          - string
+          - array
           - 'null'
-        manifestLegKey:
-          type:
-          - string
-          - 'null'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfDisruptionMoveResponse:
+          items:
+            $ref: '#/components/schemas/LegInfo'
+    IJsonResponseOfListOfDisruptionToJourney:
       type: object
       additionalProperties: false
       properties:
         data:
-          $ref: '#/components/schemas/DisruptionMoveResponse'
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToJourney'
         errors:
           type:
           - array
@@ -808,22 +663,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    DisruptionCombinedJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-        containsAdHocConnection:
-          type: boolean
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionCombinedSegment'
     Name:
       type: object
       additionalProperties: false
@@ -845,6 +684,325 @@ components:
           - string
           - 'null'
         suffix:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfListOfDisruptionFinalDestinationJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionFinalDestinationJourney'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionFinalDestinationJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+        passengers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionPassenger'
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionFinalDestinationSegment'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    IJsonResponseOfDisruptionCombinedJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DisruptionCombinedJourney'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionMoveResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        successfulRecordLocators:
+          type:
+          - array
+          - 'null'
+          description: List of record locators for the bookings whose passengers were successfully moved.
+          items:
+            type: string
+        failedRecordLocators:
+          type:
+          - array
+          - 'null'
+          description: 'List of record locators for the bookings whose passengers were NOT moved, including the
+
+            associated error that prevented the move.  Note: There is one error per failed record
+
+            locator.'
+          items:
+            $ref: '#/components/schemas/DisruptionMoveError'
+    DisruptionInventoryControlType:
+      type: integer
+      description: 'Defines the different ways inventory can be requested during a disruption move.
+
+
+        0 = ClaimSpace
+
+        1 = OversellSpace
+
+        2 = StandBy'
+      x-enumNames:
+      - ClaimSpace
+      - OversellSpace
+      - StandBy
+      enum:
+      - 0
+      - 1
+      - 2
+    DisruptionPassenger:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          $ref: '#/components/schemas/SegmentStatus'
+        seat:
+          type:
+          - string
+          - 'null'
+        fareClass:
+          type:
+          - string
+          - 'null'
+        passengerCount:
+          type: integer
+          description: The Number of passengers in the booking.
+        priorityCode:
+          type:
+          - string
+          - 'null'
+        guestRecognitionValue:
+          type: integer
+          format: int32
+        name:
+          $ref: '#/components/schemas/Name'
+        passengerNumber:
+          type: integer
+          description: The Passenger's number based on their order in the booking.
+        recordLocator:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfDisruptionMoveResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DisruptionMoveResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionToJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToSegment'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    DisruptionCombinedSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        availabilitySourceCode:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        legKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
           type:
           - string
           - 'null'
@@ -911,58 +1069,74 @@ components:
       - 12
       - 13
       - 14
-    IJsonResponseOfDisruptionCombinedJourney:
+    DisruptionToLeg:
       type: object
       additionalProperties: false
       properties:
-        data:
-          $ref: '#/components/schemas/DisruptionCombinedJourney'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DisruptionFinalDestinationJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        journeyKey:
+        operatingCarrierCode:
           type:
           - string
           - 'null'
-        passengers:
+        operatingFlightNumber:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionPassenger'
-        segments:
+        operatingOpSuffix:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFinalDestinationSegment'
-    DisruptionToLegNest:
-      type: object
-      additionalProperties: false
-      properties:
-        lid:
+        operatedByText:
+          type:
+          - string
+          - 'null'
+        departureTimeVariant:
           type: integer
-          description: Maximum number of seats authorized to be sold on a nest.
-        sold:
+          description: The leg departure local time variant in minutes.
+        arrivalTimeVariant:
           type: integer
-          description: The number of seats sold in this nest.
-        cabinOfService:
+          description: The leg arrival local time variant in minutes.
+        legKey:
+          type:
+          - string
+          - 'null'
+        manifestLegKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
           type: string
-          description: The value of the cabin travel class for this nest.
-          maxLength: 1
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ToLegStatus'
+        nests:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToLegNest'
     DisruptionToSegment:
       type: object
       additionalProperties: false
@@ -1021,31 +1195,15 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/DisruptionToLeg'
-    DisruptionToJourney:
+    DisruptionMoveError:
       type: object
       additionalProperties: false
       properties:
-        journeyKey:
+        recordLocator:
           type:
           - string
           - 'null'
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToSegment'
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
+        errorCode:
           type:
           - string
           - 'null'
@@ -1053,160 +1211,49 @@ components:
           type:
           - string
           - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    IJsonResponseOfListOfDisruptionFromLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFromLeg'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DisruptionPassenger:
-      type: object
-      additionalProperties: false
-      properties:
-        status:
-          $ref: '#/components/schemas/SegmentStatus'
-        seat:
-          type:
-          - string
-          - 'null'
-        fareClass:
-          type:
-          - string
-          - 'null'
-        passengerCount:
-          type: integer
-          description: The Number of passengers in the booking.
-        priorityCode:
-          type:
-          - string
-          - 'null'
-        guestRecognitionValue:
-          type: integer
-          format: int32
-        name:
-          $ref: '#/components/schemas/Name'
-        passengerNumber:
-          type: integer
-          description: The Passenger's number based on their order in the booking.
-        recordLocator:
-          type:
-          - string
-          - 'null'
-    SegmentKeyInfo:
-      type: object
-      additionalProperties: false
-      required:
-      - segmentKey
-      - legKeys
-      properties:
-        segmentKey:
-          type: string
-          minLength: 1
-        legKeys:
-          type: array
-          items:
-            type: string
-    DisruptionMoveType:
+    FlightType:
       type: integer
-      description: 'Defines the different types of disruption moves.
+      description: '0 = All
 
+        1 = NonStop
 
-        0 = Irop
+        2 = Through
 
-        1 = Diversion'
+        3 = Direct
+
+        4 = Connect'
       x-enumNames:
-      - Irop
-      - Diversion
+      - All
+      - NonStop
+      - Through
+      - Direct
+      - Connect
       enum:
       - 0
       - 1
-    DisruptionCombinedSegment:
+      - 2
+      - 3
+      - 4
+    DisruptionCombinedJourney:
       type: object
       additionalProperties: false
       properties:
-        operatingCarrierCode:
+        journeyKey:
           type:
           - string
           - 'null'
-        operatingFlightNumber:
+        containsAdHocConnection:
+          type: boolean
+        segments:
           type:
-          - string
+          - array
           - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        availabilitySourceCode:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionCombinedSegment'
+    LegInfo:
+      type: object
+      additionalProperties: false
+      properties:
         carrierCode:
           type:
           - string
@@ -1233,29 +1280,73 @@ components:
         arrivalTime:
           type: string
           format: date-time
-        legKeys:
+        legKey:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-    IJsonResponse:
+        manifestLegKey:
+          type:
+          - string
+          - 'null'
+    DisruptionMoveType:
+      type: integer
+      description: 'Defines the different types of disruption moves.
+
+
+        0 = Irop
+
+        1 = Diversion'
+      x-enumNames:
+      - Irop
+      - Diversion
+      enum:
+      - 0
+      - 1
+    ToLegStatus:
+      type: integer
+      description: 'Subset of LegStatus enum for use in searches that filter to only return results
+
+        with LegStatus of OnTime or OnTimeClosedPending.
+
+
+        8 = OnTime
+
+        10 = OnTimeClosedPending'
+      x-enumNames:
+      - OnTime
+      - OnTimeClosedPending
+      enum:
+      - 8
+      - 10
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    SegmentKeyInfo:
       type: object
       additionalProperties: false
+      required:
+      - segmentKey
+      - legKeys
       properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
+        segmentKey:
+          type: string
+          minLength: 1
+        legKeys:
+          type: array
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
+            type: string
     DisruptionFromLeg:
       type: object
       additionalProperties: false
@@ -1320,38 +1411,6 @@ components:
           $ref: '#/components/schemas/LegStatus'
         isIrop:
           type: boolean
-    DisruptionMoveError:
-      type: object
-      additionalProperties: false
-      properties:
-        recordLocator:
-          type:
-          - string
-          - 'null'
-        errorCode:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-    ToLegStatus:
-      type: integer
-      description: 'Subset of LegStatus enum for use in searches that filter to only return results
-
-        with LegStatus of OnTime or OnTimeClosedPending.
-
-
-        8 = OnTime
-
-        10 = OnTimeClosedPending'
-      x-enumNames:
-      - OnTime
-      - OnTimeClosedPending
-      enum:
-      - 8
-      - 10
   securitySchemes:
     JWT:
       type: http

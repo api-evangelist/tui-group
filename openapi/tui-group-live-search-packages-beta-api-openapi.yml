@@ -46,6 +46,8 @@ paths:
         schema:
           type: string
           pattern: ^\w+$
+      summary: Get locations
+      x-summary-source: derived
     servers:
     - url: https://prod.api.tui/sales/pip-package/live-search/v1-beta
       description: Prod Server
@@ -169,6 +171,8 @@ paths:
           format: int32
           type: integer
           maximum: 100
+      summary: Get live search
+      x-summary-source: derived
     servers:
     - url: https://prod.api.tui/sales/pip-package/live-search/v1-beta
       description: Prod Server
@@ -205,6 +209,8 @@ paths:
         schema:
           type: string
           pattern: ^\w+$
+      summary: Get accommodations
+      x-summary-source: derived
     servers:
     - url: https://prod.api.tui/sales/pip-package/live-search/v1-beta
       description: Prod Server
@@ -241,6 +247,8 @@ paths:
         schema:
           type: string
           pattern: ^\w+$
+      summary: Get locations
+      x-summary-source: derived
     servers:
     - url: https://prod.api.tui/sales/pip-package/partner
       description: Prod Server
@@ -364,6 +372,8 @@ paths:
           format: int32
           type: integer
           maximum: 100
+      summary: Get live search
+      x-summary-source: derived
     servers:
     - url: https://prod.api.tui/sales/pip-package/partner
       description: Prod Server
@@ -371,52 +381,14 @@ paths:
       description: Pre-prod Server
 components:
   schemas:
-    ApiFlightLeg:
-      properties:
-        typeOfFlightName:
-          type: string
-        typeOfFlightCode:
-          type: string
-        airlineCode:
-          type: string
-        flightCode:
-          type: string
-        arrivalTime:
-          type: string
-        arrivalDate:
-          type: string
-        arrivalCode:
-          type: string
-        departureTime:
-          type: string
-        departureDate:
-          type: string
-        departureCode:
-          type: string
-        legNumber:
-          type: number
-          format: double
-      required:
-      - typeOfFlightName
-      - typeOfFlightCode
-      - airlineCode
-      - flightCode
-      - arrivalTime
-      - arrivalDate
-      - arrivalCode
-      - departureTime
-      - departureDate
-      - departureCode
-      - legNumber
-      type: object
-    AccommodationResponseModel:
+    LocationResponseModel:
       properties:
         total:
           type: number
           format: double
         items:
           items:
-            $ref: '#/components/schemas/AccommodationModel'
+            $ref: '#/components/schemas/LocationModel'
           type: array
       required:
       - total
@@ -441,6 +413,28 @@ components:
       - href
       - imagesHref
       - allInclusive
+      type: object
+      additionalProperties: false
+    ApiPackages:
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+        totalNumberOfItems:
+          type: number
+          format: double
+        version:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ApiPackage'
+          type: array
+      required:
+      - next
+      - totalNumberOfItems
+      - version
+      - items
       type: object
       additionalProperties: false
     ApiPackage:
@@ -510,6 +504,17 @@ components:
       - prices
       type: object
       additionalProperties: false
+    LocationModel:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
     AccommodationModel:
       properties:
         id:
@@ -525,53 +530,6 @@ components:
       - name
       - locations
       - tags
-      type: object
-      additionalProperties: false
-    LocationResponseModel:
-      properties:
-        total:
-          type: number
-          format: double
-        items:
-          items:
-            $ref: '#/components/schemas/LocationModel'
-          type: array
-      required:
-      - total
-      - items
-      type: object
-      additionalProperties: false
-    ApiPackages:
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-        totalNumberOfItems:
-          type: number
-          format: double
-        version:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/ApiPackage'
-          type: array
-      required:
-      - next
-      - totalNumberOfItems
-      - version
-      - items
-      type: object
-      additionalProperties: false
-    LocationModel:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
       type: object
       additionalProperties: false
     ApiPrice:
@@ -605,25 +563,33 @@ components:
       - boardIncluded
       type: object
       additionalProperties: false
-    ApiFlightLeg_2:
+    AccommodationResponseModel:
+      properties:
+        total:
+          type: number
+          format: double
+        items:
+          items:
+            $ref: '#/components/schemas/AccommodationModel'
+          type: array
+      required:
+      - total
+      - items
+      type: object
+      additionalProperties: false
+    ApiFlightLeg:
       properties:
         typeOfFlightName:
           type: string
         typeOfFlightCode:
           type: string
-        airlineName:
-          type: string
         airlineCode:
           type: string
         flightCode:
           type: string
-        flightNumber:
-          type: string
         arrivalTime:
           type: string
         arrivalDate:
-          type: string
-        arrivalName:
           type: string
         arrivalCode:
           type: string
@@ -631,14 +597,14 @@ components:
           type: string
         departureDate:
           type: string
-        departureName:
-          type: string
         departureCode:
           type: string
         legNumber:
           type: number
           format: double
       required:
+      - typeOfFlightName
+      - typeOfFlightCode
       - airlineCode
       - flightCode
       - arrivalTime
@@ -813,6 +779,50 @@ components:
       - boardIncluded
       type: object
       additionalProperties: false
+    ApiFlightLeg_2:
+      properties:
+        typeOfFlightName:
+          type: string
+        typeOfFlightCode:
+          type: string
+        airlineName:
+          type: string
+        airlineCode:
+          type: string
+        flightCode:
+          type: string
+        flightNumber:
+          type: string
+        arrivalTime:
+          type: string
+        arrivalDate:
+          type: string
+        arrivalName:
+          type: string
+        arrivalCode:
+          type: string
+        departureTime:
+          type: string
+        departureDate:
+          type: string
+        departureName:
+          type: string
+        departureCode:
+          type: string
+        legNumber:
+          type: number
+          format: double
+      required:
+      - airlineCode
+      - flightCode
+      - arrivalTime
+      - arrivalDate
+      - arrivalCode
+      - departureTime
+      - departureDate
+      - departureCode
+      - legNumber
+      type: object
   securitySchemes:
     tsoa_auth_prod:
       type: oauth2

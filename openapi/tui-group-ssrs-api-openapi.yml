@@ -17,7 +17,7 @@ paths:
     post:
       tags:
       - ssrs
-      summary: Generates paired SSR comments for a booking.
+      summary: Generates paired SSR comments for a booking
       description: 'Optional record locator on the request determines how the booking is retrieved.
 
         If a record locator is present, this endpoint behaves statelessly, but
@@ -25,7 +25,6 @@ paths:
         omitting the record locator specifies that comments will be generated from the
 
         booking in state.
-
 
 
         SSR pairs and associated comment formats are defined in the setting
@@ -83,43 +82,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfListOfString:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       additionalProperties: false
@@ -137,40 +99,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    PairedSsrCommentsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - segmentKeys
-      - passengerKeys
-      - clearedSsrCode
-      - ssrWasAdded
-      properties:
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: Optional; if no record locator is provided, comments will be generated using the booking in state.
-        segmentKeys:
-          type: array
-          items:
-            type: string
-        passengerKeys:
-          type: array
-          items:
-            type: string
-        clearedSsrCode:
-          type: string
-          description: SSR code of the cleared SSR
-          minLength: 1
-        ssrWasAdded:
-          type: boolean
-          description: Whether the cleared SSR was added
-        reasonCode:
-          type:
-          - string
-          - 'null'
-          description: Reason code for paired SSR
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -234,6 +162,77 @@ components:
           - 'null'
           additionalProperties:
             type: string
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PairedSsrCommentsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengerKeys
+      - clearedSsrCode
+      - ssrWasAdded
+      properties:
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: Optional; if no record locator is provided, comments will be generated using the booking in state.
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        clearedSsrCode:
+          type: string
+          description: SSR code of the cleared SSR
+          minLength: 1
+        ssrWasAdded:
+          type: boolean
+          description: Whether the cleared SSR was added
+        reasonCode:
+          type:
+          - string
+          - 'null'
+          description: Reason code for paired SSR
   securitySchemes:
     JWT:
       type: http

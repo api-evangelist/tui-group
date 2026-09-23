@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: promotions
+- name: Promotions
 paths:
   /api/nsk/v1/promotions:
     get:
       tags:
-      - promotions
-      summary: Gets promotions based on data in the request.
+      - Promotions
+      summary: Gets promotions based on data in the request
       description: 'GraphQL endpoint: promotions'
       operationId: nsk_v1_promotions_get
       parameters:
@@ -86,8 +86,8 @@ paths:
   /api/nsk/v1/promotions/{promotionCode}:
     get:
       tags:
-      - promotions
-      summary: Gets a promotion based on the promotion code.
+      - Promotions
+      summary: Gets a promotion based on the promotion code
       description: 'GraphQL endpoint: promotion'
       operationId: nsk_v1_promotions_promotionCode_get
       parameters:
@@ -114,10 +114,8 @@ paths:
   /api/nsk/v1/promotions/{promotionCode}/validate:
     get:
       tags:
-      - promotions
-      summary: 'Evaluates a promotion code and optional organization code to determine if
-
-        the associated promotion is valid or not.'
+      - Promotions
+      summary: Evaluates a promotion code and optional organization code to determine if the…
       description: 'This validates the promotion code based on the logged-in user if the
 
         organization code is not provided.
@@ -166,99 +164,6 @@ components:
           type:
           - string
           - 'null'
-    PromotionInventoryControl:
-      type: integer
-      description: "Enumeration representing promotion inventory control.\n            \n\n0 = Open\n1 = IfAvailable\n2 = Closed"
-      x-enumNames:
-      - Open
-      - IfAvailable
-      - Closed
-      enum:
-      - 0
-      - 1
-      - 2
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PromotionBase:
-      type: object
-      description: "Defines a promotion base model.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The promotion code.\n            "
-          maxLength: 8
-          minLength: 0
-        isPassengerPromotion:
-          type: boolean
-          description: "The promotion discount is applied at the passenger level.\n            "
-        isBookingPromotion:
-          type: boolean
-          description: "The promotion discount is applied to the entire booking.\n            "
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The description of the promotion.\n            "
-          maxLength: 128
-          minLength: 0
-        activeDate:
-          type: string
-          description: "The date that the promotion becomes active.\n            "
-          format: date-time
-        discontinueDate:
-          type:
-          - string
-          - 'null'
-          description: "The date that the promotion is discontinued.\n            "
-          format: date-time
-        discontinueFeeCode:
-          type:
-          - string
-          - 'null'
-          description: "The discount fee code representing the calculated discount\nfor the promotion.\n            "
-          maxLength: 6
-          minLength: 0
-        fareTypes:
-          type:
-          - array
-          - 'null'
-          description: "The list of fare types associated with the promotion.\n            "
-          items:
-            type: string
-        passengerDiscountCode:
-          type:
-          - string
-          - 'null'
-          description: "The passenger discount code.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerDiscountLimit:
-          type: integer
-          description: "The passenger discount limit.\n            "
-        passengerDiscountSet:
-          type: integer
-          description: "The passenger discount set.\n            "
-        inventoryControl:
-          description: "The promotion inventory control.\n            "
-          $ref: '#/components/schemas/PromotionInventoryControl'
-        totalUnitCount:
-          type: integer
-          description: "The total unit count.\n            "
-        unitsSold:
-          type: integer
-          description: "The total number of units sold.\n            "
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -266,28 +171,6 @@ components:
       properties:
         data:
           description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfPromotion:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Promotion'
         errors:
           type:
           - array
@@ -350,6 +233,62 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    IJsonResponseOfIListOfPromotionBase:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PromotionBase'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     Promotion:
       type: object
       description: "Defines a promotion model.\n            "
@@ -469,36 +408,6 @@ components:
           - string
           - 'null'
           description: "The promotion setting data.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     MatchCriteria:
       type: integer
       description: "Defines the matching criteria for strings.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
@@ -512,18 +421,107 @@ components:
       - 1
       - 2
       - 3
-    IJsonResponseOfIListOfPromotionBase:
+    PromotionInventoryControl:
+      type: integer
+      description: "Enumeration representing promotion inventory control.\n            \n\n0 = Open\n1 = IfAvailable\n2 = Closed"
+      x-enumNames:
+      - Open
+      - IfAvailable
+      - Closed
+      enum:
+      - 0
+      - 1
+      - 2
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PromotionBase:
+      type: object
+      description: "Defines a promotion base model.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The promotion code.\n            "
+          maxLength: 8
+          minLength: 0
+        isPassengerPromotion:
+          type: boolean
+          description: "The promotion discount is applied at the passenger level.\n            "
+        isBookingPromotion:
+          type: boolean
+          description: "The promotion discount is applied to the entire booking.\n            "
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The description of the promotion.\n            "
+          maxLength: 128
+          minLength: 0
+        activeDate:
+          type: string
+          description: "The date that the promotion becomes active.\n            "
+          format: date-time
+        discontinueDate:
+          type:
+          - string
+          - 'null'
+          description: "The date that the promotion is discontinued.\n            "
+          format: date-time
+        discontinueFeeCode:
+          type:
+          - string
+          - 'null'
+          description: "The discount fee code representing the calculated discount\nfor the promotion.\n            "
+          maxLength: 6
+          minLength: 0
+        fareTypes:
+          type:
+          - array
+          - 'null'
+          description: "The list of fare types associated with the promotion.\n            "
+          items:
+            type: string
+        passengerDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger discount code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerDiscountLimit:
+          type: integer
+          description: "The passenger discount limit.\n            "
+        passengerDiscountSet:
+          type: integer
+          description: "The passenger discount set.\n            "
+        inventoryControl:
+          description: "The promotion inventory control.\n            "
+          $ref: '#/components/schemas/PromotionInventoryControl'
+        totalUnitCount:
+          type: integer
+          description: "The total unit count.\n            "
+        unitsSold:
+          type: integer
+          description: "The total number of units sold.\n            "
+    IJsonResponseOfPromotion:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          type:
-          - array
-          - 'null'
           description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/PromotionBase'
+          $ref: '#/components/schemas/Promotion'
         errors:
           type:
           - array

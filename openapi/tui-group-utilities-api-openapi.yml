@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: utilities
+- name: Utilities
 paths:
   /api/nsk/v1/utilities/stationLocalTime/{stationCode}:
     get:
       tags:
-      - utilities
-      summary: Retrieves the station local time.
+      - Utilities
+      summary: Retrieves the station local time
       description: Retrieves the station local time.
       operationId: nsk_v1_utilities_stationLocalTime_stationCode_get
       parameters:
@@ -43,22 +43,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponseOfDateTime'
 components:
   schemas:
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
     IJsonResponseOfDateTime:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -82,17 +66,22 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -192,6 +181,17 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

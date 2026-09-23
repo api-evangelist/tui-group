@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: organizationGroups
+- name: Organization Groups
 paths:
   /api/nsk/v1/organizationGroups/{organizationGroupCode}:
     post:
       tags:
-      - organizationGroups
-      summary: Creates a new organization group.
+      - Organization Groups
+      summary: Creates a new organization group
       description: 'GraphQL endpoint: organizationGroupAdd'
       operationId: nsk_v1_organizationGroups_organizationGroupCode_post
       parameters:
@@ -53,8 +53,8 @@ paths:
       deprecated: true
     put:
       tags:
-      - organizationGroups
-      summary: Modifies an organization group by updating the group name or adding an organization to the organization group.
+      - Organization Groups
+      summary: Modifies an organization group by updating the group name or adding an…
       description: 'GraphQL endpoint: organizationGroupSet'
       operationId: nsk_v1_organizationGroups_organizationGroupCode_put
       parameters:
@@ -89,10 +89,8 @@ paths:
                 $ref: '#/components/schemas/OrganizationGroupDetails'
     delete:
       tags:
-      - organizationGroups
-      summary: 'Deletes an organization group.
-
-        This should not be used if the organization group needs to exist.'
+      - Organization Groups
+      summary: Deletes an organization group.
       description: 'GraphQL endpoint: organizationGroupDelete'
       operationId: nsk_v1_organizationGroups_organizationGroupCode_delete
       parameters:
@@ -113,7 +111,7 @@ paths:
   /api/nsk/v1/organizationGroups/{organizationGroupCode}/organizations:
     put:
       tags:
-      - organizationGroups
+      - Organization Groups
       summary: Updates an organization group by removing all organizations
       description: 'GraphQL endpoint: organizationGroupOrganizationRemoveAll'
       operationId: nsk_v1_organizationGroups_organizationGroupCode_organizations_put
@@ -141,7 +139,7 @@ paths:
   /api/nsk/v1/organizationGroups/{organizationGroupCode}/organizations/{organizationCode}:
     put:
       tags:
-      - organizationGroups
+      - Organization Groups
       summary: Updates an organization group by removing an organization
       description: 'GraphQL endpoint: organizationGroupOrganizationRemove'
       operationId: nsk_v1_organizationGroups_organizationGroupCode_organizations_organizationCode_put
@@ -191,14 +189,13 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfOrganizationGroupDetails:
+    IJsonResponse:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/OrganizationGroupDetails'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -213,6 +210,84 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     OrganizationGroupDetails:
       type: object
       description: "The data for an organization group including details.\n            "
@@ -265,13 +340,27 @@ components:
       - 0
       - 1
       - 2
-    IJsonResponse:
+    OrganizationGroupRequest:
       type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "The data for an organization group request.\n            "
+      additionalProperties: false
+      properties:
+        organizationGroupName:
+          type:
+          - string
+          - 'null'
+          description: "The organization group name.\n            "
+        organization:
+          description: "The organization included in the group.\n            "
+          $ref: '#/components/schemas/OrganizationRecordMinimum'
+    IJsonResponseOfOrganizationGroupDetails:
+      type: object
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OrganizationGroupDetails'
         errors:
           type:
           - array
@@ -286,97 +375,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    OrganizationGroupRequest:
-      type: object
-      description: "The data for an organization group request.\n            "
-      additionalProperties: false
-      properties:
-        organizationGroupName:
-          type:
-          - string
-          - 'null'
-          description: "The organization group name.\n            "
-        organization:
-          description: "The organization included in the group.\n            "
-          $ref: '#/components/schemas/OrganizationRecordMinimum'
   securitySchemes:
     JWT:
       type: http

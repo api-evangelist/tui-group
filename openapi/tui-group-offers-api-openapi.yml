@@ -61,28 +61,32 @@ paths:
           description: Internal server error
 components:
   schemas:
-    LocalTaxResponse:
+    Date:
       required:
-      - exchangeRate
-      - localCurrency
-      - perPersonInLocalCurrency
-      - perPersonInSourceMarketCurrency
-      - totalInLocalCurrency
-      - totalInSourceMarketCurrency
+      - available
+      - date
       type: object
       properties:
-        totalInSourceMarketCurrency:
-          type: number
-        totalInLocalCurrency:
-          type: number
-        perPersonInSourceMarketCurrency:
-          type: number
-        perPersonInLocalCurrency:
-          type: number
-        localCurrency:
+        available:
+          type: boolean
+        date:
           type: string
-        exchangeRate:
-          type: number
+    Dates:
+      required:
+      - count
+      - dates
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        dates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Date'
     AvailabilityResponse:
       required:
       - accommodationId
@@ -290,6 +294,351 @@ components:
           type:
           - number
           - 'null'
+    AvailabilityWrapper:
+      required:
+      - availabilityGroups
+      - filters
+      - roomDescriptions
+      type: object
+      properties:
+        filters:
+          $ref: '#/components/schemas/Filters'
+        roomDescriptions:
+          type: array
+          items:
+            type: string
+        availabilityGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityGroup'
+    Filters:
+      required:
+      - multiSelect
+      - name
+      - singleSelect
+      type: object
+      properties:
+        name:
+          type: string
+        multiSelect:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiSelect'
+        singleSelect:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleSelect'
+        durationsList:
+          allOf:
+          - $ref: '#/components/schemas/Durations'
+        aniteLists:
+          allOf:
+          - $ref: '#/components/schemas/Anite'
+        datesList:
+          allOf:
+          - $ref: '#/components/schemas/Dates'
+        monthsList:
+          allOf:
+          - $ref: '#/components/schemas/MonthsList'
+    FilterResponse:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+    Durations:
+      required:
+      - count
+      - durations
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        durations:
+          type: array
+          items:
+            type: integer
+            format: int32
+    LocalTaxResponse:
+      required:
+      - exchangeRate
+      - localCurrency
+      - perPersonInLocalCurrency
+      - perPersonInSourceMarketCurrency
+      - totalInLocalCurrency
+      - totalInSourceMarketCurrency
+      type: object
+      properties:
+        totalInSourceMarketCurrency:
+          type: number
+        totalInLocalCurrency:
+          type: number
+        perPersonInSourceMarketCurrency:
+          type: number
+        perPersonInLocalCurrency:
+          type: number
+        localCurrency:
+          type: string
+        exchangeRate:
+          type: number
+    SingleSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleSelectItem'
+    Month:
+      type: object
+      properties:
+        month:
+          type:
+          - string
+          - 'null'
+        seasonType:
+          type:
+          - string
+          - 'null'
+        seasonYear:
+          type:
+          - string
+          - 'null'
+        available:
+          type:
+          - string
+          - 'null'
+    MonthsList:
+      type: object
+      properties:
+        months:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Month'
+    Dc:
+      required:
+      - date
+      - value
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/YesNo'
+        date:
+          type: string
+    AvailabilityGroup:
+      required:
+      - accommodationId
+      - boardFilter
+      - offers
+      - priceFilter
+      - totalOffers
+      type: object
+      properties:
+        accommodationId:
+          type: string
+        totalOffers:
+          type: integer
+          format: int32
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityResponse'
+        priceFilter:
+          type: array
+          items:
+            type: number
+            format: double
+        boardFilter:
+          type: array
+          items:
+            type: string
+    SingleSelectItem:
+      required:
+      - code
+      - count
+      type: object
+      properties:
+        code:
+          type: string
+        count:
+          type: string
+        min:
+          type:
+          - string
+          - 'null'
+        max:
+          type:
+          - string
+          - 'null'
+    MultiSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiSelectItem'
+    RoomAllocation:
+      required:
+      - adults
+      - infants
+      - kids
+      - kidsAge
+      type: object
+      properties:
+        adults:
+          type: integer
+          description: Number of adults in this room
+          format: int32
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in this room
+          format: int32
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in this room
+          format: int32
+          example: 0
+        kidsAge:
+          type: array
+          description: Ages of children in this room
+          example:
+          - 5
+          items:
+            type: integer
+            format: int32
+      description: Per-room occupancy for customer-selected multi-room
+    MultiSelectItem:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        count:
+          type:
+          - string
+          - 'null'
+        min:
+          type:
+          - string
+          - 'null'
+        max:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+    Anite:
+      type: object
+      properties:
+        board:
+          type:
+          - string
+          - 'null'
+        departureAirport:
+          type:
+          - string
+          - 'null'
+        depPort:
+          type:
+          - string
+          - 'null'
+        stay:
+          type:
+          - string
+          - 'null'
+        outSlots:
+          type:
+          - string
+          - 'null'
+        inSlots:
+          type:
+          - string
+          - 'null'
+        cabinClass:
+          type:
+          - string
+          - 'null'
+        price:
+          type:
+          - string
+          - 'null'
+        pricePP:
+          type:
+          - string
+          - 'null'
+        discount:
+          type:
+          - string
+          - 'null'
+        deposit:
+          type:
+          - string
+          - 'null'
+        dreamLiner:
+          allOf:
+          - $ref: '#/components/schemas/YesNo'
+        direct:
+          allOf:
+          - $ref: '#/components/schemas/YesNo'
+        inDirect:
+          allOf:
+          - $ref: '#/components/schemas/YesNo'
+        dc:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Dc'
+        carrier:
+          type:
+          - string
+          - 'null'
+        charter:
+          allOf:
+          - $ref: '#/components/schemas/YesNo'
+        nonCharter:
+          allOf:
+          - $ref: '#/components/schemas/YesNo'
+    YesNo:
+      type: string
+      enum:
+      - Y
+      - N
     OfferRequest:
       required:
       - accommodationIds
@@ -466,352 +815,3 @@ components:
           items:
             $ref: '#/components/schemas/RoomAllocation'
       description: Request object for retrieving holiday offers
-    RoomAllocation:
-      required:
-      - adults
-      - infants
-      - kids
-      - kidsAge
-      type: object
-      properties:
-        adults:
-          type: integer
-          description: Number of adults in this room
-          format: int32
-          example: 2
-        kids:
-          type: integer
-          description: Number of children in this room
-          format: int32
-          example: 1
-        infants:
-          type: integer
-          description: Number of infants in this room
-          format: int32
-          example: 0
-        kidsAge:
-          type: array
-          description: Ages of children in this room
-          example:
-          - 5
-          items:
-            type: integer
-            format: int32
-      description: Per-room occupancy for customer-selected multi-room
-    Filters:
-      required:
-      - multiSelect
-      - name
-      - singleSelect
-      type: object
-      properties:
-        name:
-          type: string
-        multiSelect:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiSelect'
-        singleSelect:
-          type: array
-          items:
-            $ref: '#/components/schemas/SingleSelect'
-        durationsList:
-          allOf:
-          - $ref: '#/components/schemas/Durations'
-        aniteLists:
-          allOf:
-          - $ref: '#/components/schemas/Anite'
-        datesList:
-          allOf:
-          - $ref: '#/components/schemas/Dates'
-        monthsList:
-          allOf:
-          - $ref: '#/components/schemas/MonthsList'
-    Durations:
-      required:
-      - count
-      - durations
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        count:
-          type: integer
-          format: int32
-        durations:
-          type: array
-          items:
-            type: integer
-            format: int32
-    Month:
-      type: object
-      properties:
-        month:
-          type:
-          - string
-          - 'null'
-        seasonType:
-          type:
-          - string
-          - 'null'
-        seasonYear:
-          type:
-          - string
-          - 'null'
-        available:
-          type:
-          - string
-          - 'null'
-    Dates:
-      required:
-      - count
-      - dates
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        count:
-          type: integer
-          format: int32
-        dates:
-          type: array
-          items:
-            $ref: '#/components/schemas/Date'
-    YesNo:
-      type: string
-      enum:
-      - Y
-      - N
-    MultiSelectItem:
-      required:
-      - code
-      type: object
-      properties:
-        code:
-          type: string
-        count:
-          type:
-          - string
-          - 'null'
-        min:
-          type:
-          - string
-          - 'null'
-        max:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-    AvailabilityGroup:
-      required:
-      - accommodationId
-      - boardFilter
-      - offers
-      - priceFilter
-      - totalOffers
-      type: object
-      properties:
-        accommodationId:
-          type: string
-        totalOffers:
-          type: integer
-          format: int32
-        offers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailabilityResponse'
-        priceFilter:
-          type: array
-          items:
-            type: number
-            format: double
-        boardFilter:
-          type: array
-          items:
-            type: string
-    AvailabilityWrapper:
-      required:
-      - availabilityGroups
-      - filters
-      - roomDescriptions
-      type: object
-      properties:
-        filters:
-          $ref: '#/components/schemas/Filters'
-        roomDescriptions:
-          type: array
-          items:
-            type: string
-        availabilityGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailabilityGroup'
-    MonthsList:
-      type: object
-      properties:
-        months:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Month'
-    SingleSelectItem:
-      required:
-      - code
-      - count
-      type: object
-      properties:
-        code:
-          type: string
-        count:
-          type: string
-        min:
-          type:
-          - string
-          - 'null'
-        max:
-          type:
-          - string
-          - 'null'
-    Dc:
-      required:
-      - date
-      - value
-      type: object
-      properties:
-        value:
-          $ref: '#/components/schemas/YesNo'
-        date:
-          type: string
-    MultiSelect:
-      required:
-      - code
-      - items
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        code:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiSelectItem'
-    Date:
-      required:
-      - available
-      - date
-      type: object
-      properties:
-        available:
-          type: boolean
-        date:
-          type: string
-    SingleSelect:
-      required:
-      - code
-      - items
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        code:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SingleSelectItem'
-    FilterResponse:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-    Anite:
-      type: object
-      properties:
-        board:
-          type:
-          - string
-          - 'null'
-        departureAirport:
-          type:
-          - string
-          - 'null'
-        depPort:
-          type:
-          - string
-          - 'null'
-        stay:
-          type:
-          - string
-          - 'null'
-        outSlots:
-          type:
-          - string
-          - 'null'
-        inSlots:
-          type:
-          - string
-          - 'null'
-        cabinClass:
-          type:
-          - string
-          - 'null'
-        price:
-          type:
-          - string
-          - 'null'
-        pricePP:
-          type:
-          - string
-          - 'null'
-        discount:
-          type:
-          - string
-          - 'null'
-        deposit:
-          type:
-          - string
-          - 'null'
-        dreamLiner:
-          allOf:
-          - $ref: '#/components/schemas/YesNo'
-        direct:
-          allOf:
-          - $ref: '#/components/schemas/YesNo'
-        inDirect:
-          allOf:
-          - $ref: '#/components/schemas/YesNo'
-        dc:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Dc'
-        carrier:
-          type:
-          - string
-          - 'null'
-        charter:
-          allOf:
-          - $ref: '#/components/schemas/YesNo'
-        nonCharter:
-          allOf:
-          - $ref: '#/components/schemas/YesNo'

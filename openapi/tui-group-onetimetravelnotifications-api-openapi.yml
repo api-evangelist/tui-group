@@ -17,7 +17,7 @@ paths:
     post:
       tags:
       - oneTimeTravelNotifications
-      summary: Creates a one time travel notification.
+      summary: Creates a one time travel notification
       description: 'To get or delete a one time notification, you will need to store the key that is on the location header.
 
 
@@ -44,7 +44,7 @@ paths:
     post:
       tags:
       - oneTimeTravelNotifications
-      summary: Creates a one time travel notification.
+      summary: Creates a one time travel notification
       description: 'GraphQL endpoint: oneTimeTravelNotificationAddv2'
       operationId: nsk_v2_oneTimeTravelNotifications_post
       requestBody:
@@ -336,7 +336,7 @@ paths:
     get:
       tags:
       - oneTimeTravelNotifications
-      summary: Gets a one time travel notification.
+      summary: Gets a one time travel notification
       description: 'GraphQL endpoint: oneTimeTravelNotification'
       operationId: nsk_v1_oneTimeTravelNotifications_oneTimeTravelNotificationKey_get
       parameters:
@@ -364,7 +364,7 @@ paths:
     delete:
       tags:
       - oneTimeTravelNotifications
-      summary: Deletes a one time travel notification.
+      summary: Deletes a one time travel notification
       description: 'GraphQL endpoint: oneTimeTravelNotificationDelete'
       operationId: nsk_v1_oneTimeTravelNotifications_oneTimeTravelNotificationKey_delete
       parameters:
@@ -387,7 +387,7 @@ paths:
     get:
       tags:
       - oneTimeTravelNotifications
-      summary: Gets a one time travel notification through a subscription number.
+      summary: Gets a one time travel notification through a subscription number
       description: 'GraphQL endpoint: oneTimeTravelNotificationv2'
       operationId: nsk_v2_oneTimeTravelNotifications_subscriptionNumber_get
       parameters:
@@ -455,7 +455,7 @@ paths:
     delete:
       tags:
       - oneTimeTravelNotifications
-      summary: Deletes a one time travel notification through a subscription number.
+      summary: Deletes a one time travel notification through a subscription number
       description: 'GraphQL endpoint: oneTimeTravelNotificationDeletev2'
       operationId: nsk_v2_oneTimeTravelNotifications_subscriptionNumber_delete
       parameters:
@@ -503,39 +503,160 @@ paths:
                     data: null
 components:
   schemas:
-    OneTimeNotificationEventType:
-      type: integer
-      description: "Represents the type of notification event type for a one time travel notification event.\n            \n\n0 = DepartureDelay\n1 = ArrivalDelay"
-      x-enumNames:
-      - DepartureDelay
-      - ArrivalDelay
-      enum:
-      - 0
-      - 1
-    TransportationIdentifier:
+    NotificationDestination:
       type: object
-      description: "Represents the transportation identifier model data.\n            "
+      description: "A travel notification destination.\n            "
       additionalProperties: false
       required:
-      - identifier
-      - carrierCode
+      - deliveryMethodCode
       properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
+        deliveryMethodCode:
+          description: "The delivery method code.\n            "
+          $ref: '#/components/schemas/DeliveryMethodCode'
+        destination:
           type:
           - string
           - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
+          description: "The notification destination, an email or phone number.\n            "
+    OneTimeNotificationEventCreateRequest:
+      type: object
+      description: "A one time travel notification event create request.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          description: "The one time travel notification event type.\n            "
+          $ref: '#/components/schemas/OneTimeNotificationEventType'
+    DeliveryMethodCode:
+      type: integer
+      description: "Represents the delivery method codes.\n            \n\n0 = Email\n1 = Sms\n2 = Push"
+      x-enumNames:
+      - Email
+      - Sms
+      - Push
+      enum:
+      - 0
+      - 1
+      - 2
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    NotificationTimedEventCreateRequest:
+      type: object
+      description: "A travel notification timed event create request.\n            "
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        minutesToEvent:
+          type: integer
+          description: "The minutes to the event.\n            "
+          format: int32
+        type:
+          description: "The travel notification timed event type.\n            "
+          $ref: '#/components/schemas/NotificationTimedEventType'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    OneTimeTravelNotificationv2:
+      type: object
+      description: "A one time travel notification.\n            "
+      additionalProperties: false
+      properties:
+        subscriptionNumber:
+          type:
+          - string
+          - 'null'
+          description: "The subscription number.\n            "
+        events:
+          type:
+          - array
+          - 'null'
+          description: "The list of one time travel notification events.\n            "
+          items:
+            $ref: '#/components/schemas/OneTimeNotificationEvent'
+        timedEvents:
+          type:
+          - array
+          - 'null'
+          description: "The list of travel notification timed events.\n            "
+          items:
+            $ref: '#/components/schemas/NotificationTimedEvent'
+        marketInformation:
+          description: "The market information to add a notification to.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+        notificationDestination:
+          description: "The notification destination.\n            "
+          $ref: '#/components/schemas/NotificationDestination'
+        deviceName:
+          type:
+          - string
+          - 'null'
+          description: "The name of the device for the push notification.\n            "
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The expiration date.\n            "
+          format: date-time
     OneTimeTravelNotification:
       type: object
       description: "A one time travel notification.\n            "
@@ -585,6 +706,27 @@ components:
           - 'null'
           description: "The created date of the travel notification.\n            "
           format: date-time
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     OneTimeNotificationCreateRequest:
       type: object
       description: "Request for one time notification creation.\n            "
@@ -620,52 +762,15 @@ components:
         marketInformation:
           description: "The market to create a notification for.\n            "
           $ref: '#/components/schemas/MarketInformation'
-    OneTimeTravelNotificationv2:
-      type: object
-      description: "A one time travel notification.\n            "
-      additionalProperties: false
-      properties:
-        subscriptionNumber:
-          type:
-          - string
-          - 'null'
-          description: "The subscription number.\n            "
-        events:
-          type:
-          - array
-          - 'null'
-          description: "The list of one time travel notification events.\n            "
-          items:
-            $ref: '#/components/schemas/OneTimeNotificationEvent'
-        timedEvents:
-          type:
-          - array
-          - 'null'
-          description: "The list of travel notification timed events.\n            "
-          items:
-            $ref: '#/components/schemas/NotificationTimedEvent'
-        marketInformation:
-          description: "The market information to add a notification to.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-        notificationDestination:
-          description: "The notification destination.\n            "
-          $ref: '#/components/schemas/NotificationDestination'
-        deviceName:
-          type:
-          - string
-          - 'null'
-          description: "The name of the device for the push notification.\n            "
-        expirationDate:
-          type:
-          - string
-          - 'null'
-          description: "The expiration date.\n            "
-          format: date-time
+    NotificationTimedEventType:
+      type: integer
+      description: "Represents the type of timed notification event type for a travel notification event.\nThese are events that have an associated property minutes to event.\n            \n\n0 = Departure\n1 = Arrival"
+      x-enumNames:
+      - Departure
+      - Arrival
+      enum:
+      - 0
+      - 1
     Exception:
       type: object
       additionalProperties: false
@@ -682,98 +787,6 @@ components:
           type:
           - string
           - 'null'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    NotificationTimedEventCreateRequest:
-      type: object
-      description: "A travel notification timed event create request.\n            "
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        minutesToEvent:
-          type: integer
-          description: "The minutes to the event.\n            "
-          format: int32
-        type:
-          description: "The travel notification timed event type.\n            "
-          $ref: '#/components/schemas/NotificationTimedEventType'
-    NotificationDestination:
-      type: object
-      description: "A travel notification destination.\n            "
-      additionalProperties: false
-      required:
-      - deliveryMethodCode
-      properties:
-        deliveryMethodCode:
-          description: "The delivery method code.\n            "
-          $ref: '#/components/schemas/DeliveryMethodCode'
-        destination:
-          type:
-          - string
-          - 'null'
-          description: "The notification destination, an email or phone number.\n            "
-    OneTimeNotificationEventCreateRequest:
-      type: object
-      description: "A one time travel notification event create request.\n            "
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        type:
-          description: "The one time travel notification event type.\n            "
-          $ref: '#/components/schemas/OneTimeNotificationEventType'
-    IJsonResponseOfOneTimeTravelNotification:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/OneTimeTravelNotification'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    NotificationTimedEvent:
-      type: object
-      description: "A travel notification timed event.\n            "
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        type:
-          description: "The travel notification timed event type.\n            "
-          $ref: '#/components/schemas/NotificationTimedEventType'
-        minutesToEvent:
-          type: integer
-          description: "The minutes to the event.\n            "
-          format: int32
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The created date of the travel notification.\n            "
-          format: date-time
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -822,64 +835,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    MarketInformation:
-      type: object
-      description: "Model information about the market arrival and destination details.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      - identifier
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-        identifier:
-          description: "Gets or sets the leg arrival station.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
     OneTimeNotificationEvent:
       type: object
       description: "A one time notification event.\n            "
@@ -896,27 +851,35 @@ components:
           - 'null'
           description: "The created date of the travel notification.\n            "
           format: date-time
-    IJsonResponse:
+    OneTimeNotificationEventType:
+      type: integer
+      description: "Represents the type of notification event type for a one time travel notification event.\n            \n\n0 = DepartureDelay\n1 = ArrivalDelay"
+      x-enumNames:
+      - DepartureDelay
+      - ArrivalDelay
+      enum:
+      - 0
+      - 1
+    NotificationTimedEvent:
       type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "A travel notification timed event.\n            "
       additionalProperties: false
+      required:
+      - type
       properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+        type:
+          description: "The travel notification timed event type.\n            "
+          $ref: '#/components/schemas/NotificationTimedEventType'
+        minutesToEvent:
+          type: integer
+          description: "The minutes to the event.\n            "
+          format: int32
+        createdDate:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "The created date of the travel notification.\n            "
+          format: date-time
     IJsonResponseOfOneTimeTravelNotificationv2:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -939,26 +902,63 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    DeliveryMethodCode:
+    IJsonResponseOfOneTimeTravelNotification:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OneTimeTravelNotification'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    MessageStatus:
       type: integer
-      description: "Represents the delivery method codes.\n            \n\n0 = Email\n1 = Sms\n2 = Push"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - Email
-      - Sms
-      - Push
+      - General
+      - Warning
+      - Critical
       enum:
       - 0
       - 1
       - 2
-    NotificationTimedEventType:
-      type: integer
-      description: "Represents the type of timed notification event type for a travel notification event.\nThese are events that have an associated property minutes to event.\n            \n\n0 = Departure\n1 = Arrival"
-      x-enumNames:
-      - Departure
-      - Arrival
-      enum:
-      - 0
-      - 1
   securitySchemes:
     JWT:
       type: http

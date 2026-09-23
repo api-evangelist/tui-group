@@ -17,7 +17,7 @@ paths:
     get:
       tags:
       - apo
-      summary: Gets the current saved ancillary pricing options data.
+      summary: Gets the current saved ancillary pricing options data
       description: 'GraphQL endpoint: apo'
       operationId: nsk_v1_apo_get
       responses:
@@ -57,7 +57,7 @@ paths:
     post:
       tags:
       - apo
-      summary: Adds new entries to the saved ancillary pricing options data.
+      summary: Adds new entries to the saved ancillary pricing options data
       description: 'GraphQL endpoint: apoAddv2'
       operationId: nsk_v1_apo_post
       requestBody:
@@ -116,7 +116,7 @@ paths:
     put:
       tags:
       - apo
-      summary: Adds new or updates existing ancillary pricing options data.
+      summary: Adds new or updates existing ancillary pricing options data
       description: Adds new or updates existing ancillary pricing options data.
       operationId: nsk_v1_apo_put
       requestBody:
@@ -188,7 +188,7 @@ paths:
     delete:
       tags:
       - apo
-      summary: Deletes all of the saved ancillary pricing options data.
+      summary: Deletes all of the saved ancillary pricing options data
       description: 'GraphQL endpoint: apoDeleteAll'
       operationId: nsk_v1_apo_delete
       responses:
@@ -227,7 +227,7 @@ paths:
     put:
       tags:
       - apo
-      summary: Updates an individual saved ancillary pricing option's data.
+      summary: Updates an individual saved ancillary pricing option's data
       description: 'This will replace the current saved ancillary pricing option''s value with the
 
         given input parameter value, based on the input parameter key.
@@ -312,7 +312,7 @@ paths:
     delete:
       tags:
       - apo
-      summary: Deletes a single saved ancillary pricing option's data.
+      summary: Deletes a single saved ancillary pricing option's data
       description: 'GraphQL endpoint: apoDelete'
       operationId: nsk_v1_apo_inputParameterKey_delete
       parameters:
@@ -399,17 +399,6 @@ components:
           type:
           - string
           - 'null'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -479,28 +468,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfAncillaryPricingOptionsContext:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/AncillaryPricingOptionsContext'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -531,6 +498,28 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    IJsonResponseOfAncillaryPricingOptionsContext:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/AncillaryPricingOptionsContext'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     AncillaryPricingOptionsContext:
       type: object
       description: "Defines the ancillary pricing options context.\n            "
@@ -551,6 +540,17 @@ components:
           description: "The ancillary pricing options input parameters.\n            "
           additionalProperties:
             type: string
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

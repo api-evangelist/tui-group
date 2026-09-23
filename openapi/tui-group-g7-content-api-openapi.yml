@@ -6,7 +6,9 @@ info:
     name: Sales-OTA-TEAM
     url: https://developer.tui/api-catalog/ota-content-api
     email: SalesOTAsupport@TUIGroup.onmicrosoft.com
-  description: "Sales API for OTA services\nThis API can be used to get content for the hotels for TUI packages in json format.\nThis can be used to populate all the content related to hotel, i.e accom name, images, room info, features, facilities etc.\n\nThis url is added in Supply file as contentLocation.\n\nThe infomation from the Supply file can be used to get the content for particular hotel using this API\n   \nAll api's are based on the 3.1 G7 version with a few changes to support TUI packages. The Supply has a \ncustom defined schema.\n"
+  description: 'Sales API for OTA services
+
+    This API can be used to get content for the hotels for TUI packages in json format.'
 servers:
 - url: https://prod.api.tui/sales-ota-content
 tags:
@@ -15,9 +17,7 @@ paths:
   /v2/accommodations/{accommodation-code}:
     get:
       summary: Content API for OTA
-      description: 'This is the request/response for content API
-
-        '
+      description: This is the request/response for content API
       parameters:
       - in: path
         name: accommodation-code
@@ -46,75 +46,64 @@ paths:
                 $ref: '#/components/schemas/ContentResponse'
       tags:
       - G7 content
+      operationId: getV2AccommodationsByAccommodationCode
+      x-operation-id-source: derived
 components:
   schemas:
-    RoomData:
-      type: object
-      properties:
-        roomtypeCode:
-          type: string
-          example: af7fd41d-f507-4098-90b8-0c2b5dbc4e5f
-        roomType:
-          type: string
-          example: tweepersoonskamer
-        roomTitle:
-          type: string
-          example: tweepersoonskamer, 1-2 pers.
-        occupancy:
-          type: object
-          properties:
-            minOccupancy:
-              type: number
-              example: 1
-            maxOccupancy:
-              type: number
-              example: 1
-        usps:
-          type: array
-          items: {}
-        description:
-          type: string
-        galleryImages:
-          $ref: '#/components/schemas/GalleryMediaData'
-        featureCodesAndValues:
-          type: object
-          properties:
-            general:
-              type: array
-              items:
-                type: string
-            tuinlId:
-              type: array
-              items:
-                type: string
-            roomFullTitle:
-              type: array
-              items:
-                type: string
-            roomTypeName:
-              type: array
-              items:
-                type: string
-            kitchen:
-              type: array
-              items:
-                type: string
-            roomTitle:
-              type: array
-              items:
-                type: string
-            bathroom:
-              type: array
-              items:
-                type: string
-            bedroom:
-              type: array
-              items:
-                type: string
-            outside:
-              type: array
-              items:
-                type: string
+    ContentGeoHierarchy:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: string
+            example: 21bcba21-288b-5336-8298-b17883011f2f
+          name:
+            type: string
+            example: Spanje
+          locationType:
+            type: string
+            example: COUNTRY
+          locationLevel:
+            type: string
+            example: 1
+          subCategories:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                name:
+                  type: string
+                  example: Gran Canaria
+                locationType:
+                  type: string
+                  example: DESTINATION
+                locationLevel:
+                  type: string
+                  example: 2
+                subCategories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                      name:
+                        type: string
+                        example: Meloneras
+                      locationType:
+                        type: string
+                        example: RESORT
+                      locationLevel:
+                        type: string
+                        example: 3
+                      subCategories:
+                        type: array
+                        items: {}
     GalleryMediaData:
       type: array
       items:
@@ -133,63 +122,42 @@ components:
             type: string
           caption:
             type: string
-    BoardBasisData:
+    ContentResponse:
+      type: object
       properties:
-        boardbasisCode:
+        code:
           type: string
-          example: GT06-FB
-        name:
+          description: Accommodation code
+          example: A0376761
+        accommodationType:
           type: string
-          example: Volpension
+          description: Accommodation type
+          example: HOTEL
         featureCodesAndValues:
-          $ref: '#/components/schemas/BoardBasisFeatures'
-    BoardBasisFeatures:
-      type: object
-      properties:
-        lunch_included:
+          $ref: '#/components/schemas/AccomFeatures'
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        roomsData:
           type: array
           items:
-            type: string
-            example: 'true'
-        dinner_included:
+            $ref: '#/components/schemas/RoomData'
+        boardBasis:
           type: array
           items:
-            type: string
-            example: 'true'
-        drinks_included:
+            $ref: '#/components/schemas/BoardBasisData'
+        geoHierarchy:
+          type: object
+          properties:
+            geoHierarchy:
+              $ref: '#/components/schemas/ContentGeoHierarchy'
+        facilities:
           type: array
           items:
-            type: string
-            example: 'true'
-        snacks_included:
+            $ref: '#/components/schemas/FacilityData'
+        review:
           type: array
           items:
-            type: string
-            example: 'true'
-        breakfast_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-    ReviewData:
-      type: object
-      properties:
-        source:
-          type: string
-          example: TUI
-        averageRating:
-          type: number
-          example: 3.5
-        tRating:
-          type: number
-          example: 5
-        reviewsCount:
-          type: number
-          example: 200
-        ratingBar:
-          type: string
-        ratingReviewsUrl:
-          type: string
+            $ref: '#/components/schemas/ReviewData'
     AccomFeatures:
       properties:
         introduction:
@@ -257,6 +225,53 @@ components:
           items: {}
           example:
           - seaview
+    ReviewData:
+      type: object
+      properties:
+        source:
+          type: string
+          example: TUI
+        averageRating:
+          type: number
+          example: 3.5
+        tRating:
+          type: number
+          example: 5
+        reviewsCount:
+          type: number
+          example: 200
+        ratingBar:
+          type: string
+        ratingReviewsUrl:
+          type: string
+    BoardBasisFeatures:
+      type: object
+      properties:
+        lunch_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        dinner_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        drinks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        snacks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        breakfast_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
     FacilityData:
       type: object
       properties:
@@ -290,96 +305,83 @@ components:
                   example:
                   - massage
                   - spa
-    ContentGeoHierarchy:
-      type: array
-      items:
-        type: object
-        properties:
-          code:
-            type: string
-            example: 21bcba21-288b-5336-8298-b17883011f2f
-          name:
-            type: string
-            example: Spanje
-          locationType:
-            type: string
-            example: COUNTRY
-          locationLevel:
-            type: string
-            example: 1
-          subCategories:
-            type: array
-            items:
-              type: object
-              properties:
-                code:
-                  type: string
-                  example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
-                name:
-                  type: string
-                  example: Gran Canaria
-                locationType:
-                  type: string
-                  example: DESTINATION
-                locationLevel:
-                  type: string
-                  example: 2
-                subCategories:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
-                      name:
-                        type: string
-                        example: Meloneras
-                      locationType:
-                        type: string
-                        example: RESORT
-                      locationLevel:
-                        type: string
-                        example: 3
-                      subCategories:
-                        type: array
-                        items: {}
-    ContentResponse:
+    BoardBasisData:
+      properties:
+        boardbasisCode:
+          type: string
+          example: GT06-FB
+        name:
+          type: string
+          example: Volpension
+        featureCodesAndValues:
+          $ref: '#/components/schemas/BoardBasisFeatures'
+    RoomData:
       type: object
       properties:
-        code:
+        roomtypeCode:
           type: string
-          description: Accommodation code
-          example: A0376761
-        accommodationType:
+          example: af7fd41d-f507-4098-90b8-0c2b5dbc4e5f
+        roomType:
           type: string
-          description: Accommodation type
-          example: HOTEL
-        featureCodesAndValues:
-          $ref: '#/components/schemas/AccomFeatures'
-        galleryImages:
-          $ref: '#/components/schemas/GalleryMediaData'
-        roomsData:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoomData'
-        boardBasis:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoardBasisData'
-        geoHierarchy:
+          example: tweepersoonskamer
+        roomTitle:
+          type: string
+          example: tweepersoonskamer, 1-2 pers.
+        occupancy:
           type: object
           properties:
-            geoHierarchy:
-              $ref: '#/components/schemas/ContentGeoHierarchy'
-        facilities:
+            minOccupancy:
+              type: number
+              example: 1
+            maxOccupancy:
+              type: number
+              example: 1
+        usps:
           type: array
-          items:
-            $ref: '#/components/schemas/FacilityData'
-        review:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReviewData'
+          items: {}
+        description:
+          type: string
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        featureCodesAndValues:
+          type: object
+          properties:
+            general:
+              type: array
+              items:
+                type: string
+            tuinlId:
+              type: array
+              items:
+                type: string
+            roomFullTitle:
+              type: array
+              items:
+                type: string
+            roomTypeName:
+              type: array
+              items:
+                type: string
+            kitchen:
+              type: array
+              items:
+                type: string
+            roomTitle:
+              type: array
+              items:
+                type: string
+            bathroom:
+              type: array
+              items:
+                type: string
+            bedroom:
+              type: array
+              items:
+                type: string
+            outside:
+              type: array
+              items:
+                type: string
 x-header: 'This API returns the content for particular hotel for TUI''s packages specifically for OTA''s according to the G7 standard.
 
   '

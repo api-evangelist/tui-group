@@ -17,7 +17,7 @@ paths:
     get:
       tags:
       - passengers
-      summary: Uses search criteria to retrieve a list of passengers.
+      summary: Uses search criteria to retrieve a list of passengers
       description: 'GraphQL endpoint: dcsGetPassengers'
       operationId: dcs_v1_passengers_get
       parameters:
@@ -122,28 +122,37 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    IJsonResponseOfListOfPassenger:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Passenger'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
+    SegmentType:
+      type: integer
+      description: '0 = Normal
+
+        1 = CodeShareOperating
+
+        2 = CodeShareMarketing
+
+        3 = InterlineOutbound
+
+        4 = InterlineInbound
+
+        5 = Passive
+
+        6 = NdcInterline'
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      - NdcInterline
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     Exception:
       type: object
       additionalProperties: false
@@ -160,6 +169,23 @@ components:
           type:
           - string
           - 'null'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -199,115 +225,59 @@ components:
           type:
           - string
           - 'null'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    LiftStatus:
-      type: integer
-      description: '0 = Default
-
-        1 = CheckedIn
-
-        2 = Boarded
-
-        3 = NoShow'
-      x-enumNames:
-      - Default
-      - CheckedIn
-      - Boarded
-      - NoShow
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    PassengerSegment:
+    Message:
       type: object
       additionalProperties: false
       properties:
-        segmentKey:
+        code:
           type:
           - string
           - 'null'
-        carrierCode:
+        type:
           type:
           - string
           - 'null'
-        flightNumber:
+        value:
           type:
           - string
           - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
         status:
-          $ref: '#/components/schemas/SegmentStatus'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        legs:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    Passenger:
+      type: object
+      additionalProperties: false
+      properties:
+        customerNumber:
+          type:
+          - string
+          - 'null'
+        passengerProgram:
+          $ref: '#/components/schemas/PassengerProgram'
+        segments:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/PassengerLeg'
-    SegmentType:
-      type: integer
-      description: '0 = Normal
-
-        1 = CodeShareOperating
-
-        2 = CodeShareMarketing
-
-        3 = InterlineOutbound
-
-        4 = InterlineInbound
-
-        5 = Passive
-
-        6 = NdcInterline'
-      x-enumNames:
-      - Normal
-      - CodeShareOperating
-      - CodeShareMarketing
-      - InterlineOutbound
-      - InterlineInbound
-      - Passive
-      - NdcInterline
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
+            $ref: '#/components/schemas/PassengerSegment'
+        passengerAlternateKey:
+          type:
+          - string
+          - 'null'
+        name:
+          $ref: '#/components/schemas/Name'
+        passengerNumber:
+          type: integer
+          description: The Passenger's number based on their order in the booking.
+        recordLocator:
+          type:
+          - string
+          - 'null'
     PassengerProgram:
       type: object
       additionalProperties: false
@@ -358,52 +328,6 @@ components:
           $ref: '#/components/schemas/LiftStatus'
         boardingSequence:
           type: integer
-    Passenger:
-      type: object
-      additionalProperties: false
-      properties:
-        customerNumber:
-          type:
-          - string
-          - 'null'
-        passengerProgram:
-          $ref: '#/components/schemas/PassengerProgram'
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PassengerSegment'
-        passengerAlternateKey:
-          type:
-          - string
-          - 'null'
-        name:
-          $ref: '#/components/schemas/Name'
-        passengerNumber:
-          type: integer
-          description: The Passenger's number based on their order in the booking.
-        recordLocator:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     SegmentStatus:
       type: integer
       description: 'The list of IATA standard booking action codes.
@@ -510,30 +434,6 @@ components:
       - 21
       - 22
       - 23
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
     Name:
       type: object
       additionalProperties: false
@@ -558,6 +458,106 @@ components:
           type:
           - string
           - 'null'
+    IJsonResponseOfListOfPassenger:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Passenger'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PassengerSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/SegmentStatus'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        legs:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PassengerLeg'
+    LiftStatus:
+      type: integer
+      description: '0 = Default
+
+        1 = CheckedIn
+
+        2 = Boarded
+
+        3 = NoShow'
+      x-enumNames:
+      - Default
+      - CheckedIn
+      - Boarded
+      - NoShow
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
   securitySchemes:
     JWT:
       type: http

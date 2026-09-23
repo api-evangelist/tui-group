@@ -11,14 +11,43 @@ servers:
 security:
 - JWT: []
 tags:
-- name: vouchers
+- name: Vouchers
 paths:
   /api/nsk/v2/vouchers:
     get:
       tags:
-      - vouchers
-      summary: Gets vouchers based upon data in the request.
-      description: "This endpoint requires agent permissions.\nOnly vouchers from the agent's non-restricted voucher configurations will be returned. To check which voucher\nconfigurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.\nIf given a date, one of the following properties are required:\n- CustomerName.LastName\n- CustomerNumber\n- Agent\n\t- Agent.Name\n\t- Agent.Domain\nIf only the begin date is given, the default value of the end date will be the day after the begin date.\nIf only the end date is given, the begin date will be required.\nIf at least one of the market properties is provided, all the other market properties are required.\nIf at least one of the agent properties is provided, the other agent property is required.\nIf the customer first name is provided, the customer last name is required.\n\nGraphQL endpoint: vouchersv3"
+      - Vouchers
+      summary: Gets vouchers based upon data in the request
+      description: 'This endpoint requires agent permissions.
+
+        Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
+
+        configurations are allowed, kindly use the GET /api/nsk/v1/settings/booking/paymentCodes endpoint.
+
+        If given a date, one of the following properties are required:
+
+        - CustomerName.LastName
+
+        - CustomerNumber
+
+        - Agent
+
+        - Agent.Name
+
+        - Agent.Domain
+
+        If only the begin date is given, the default value of the end date will be the day after the begin date.
+
+        If only the end date is given, the begin date will be required.
+
+        If at least one of the market properties is provided, all the other market properties are required.
+
+        If at least one of the agent properties is provided, the other agent property is required.
+
+        If the customer first name is provided, the customer last name is required.
+
+
+        GraphQL endpoint: vouchersv3'
       operationId: nsk_v2_vouchers_get
       parameters:
       - name: VoucherIssuanceKey
@@ -501,8 +530,8 @@ paths:
   /api/nsk/v1/vouchers/{voucherKey}:
     get:
       tags:
-      - vouchers
-      summary: Gets a specific voucher based upon the voucher key.
+      - Vouchers
+      summary: Gets a specific voucher based upon the voucher key
       description: 'This endpoint requires agent permissions.
 
 
@@ -531,8 +560,8 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
     patch:
       tags:
-      - vouchers
-      summary: Changes the voucher status, type, or expiration date.
+      - Vouchers
+      summary: Changes the voucher status, type, or expiration date
       description: 'This endpoint requires agent permissions.
 
         Due to system limitations only one field can be updated per call.
@@ -668,8 +697,8 @@ paths:
   /api/nsk/v1/vouchers/{voucherKey}/owner:
     patch:
       tags:
-      - vouchers
-      summary: Changes the voucher owner.
+      - Vouchers
+      summary: Changes the voucher owner
       description: 'This endpoint requires agent permissions.
 
         If the personKey is populated, the voucher owner''s first and last name will be updated to match what
@@ -790,8 +819,8 @@ paths:
   /api/nsk/v2/vouchers/byAgent:
     get:
       tags:
-      - vouchers
-      summary: Gets a collection of vouchers based on the specified agent information.
+      - Vouchers
+      summary: Gets a collection of vouchers based on the specified agent information
       description: 'This endpoint requires agent permissions.
 
         Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
@@ -974,8 +1003,8 @@ paths:
   /api/nsk/v1/vouchers/byDate:
     get:
       tags:
-      - vouchers
-      summary: Searches for vouchers issued within the given date range.
+      - Vouchers
+      summary: Searches for vouchers issued within the given date range
       description: 'This endpoint requires agent permissions.
 
         Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
@@ -1059,8 +1088,8 @@ paths:
   /api/nsk/v2/vouchers/byIssuance/{voucherIssuanceKey}:
     get:
       tags:
-      - vouchers
-      summary: Gets vouchers associated with a voucher issuance.
+      - Vouchers
+      summary: Gets vouchers associated with a voucher issuance
       description: 'This endpoint requires agent permissions.
 
         Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
@@ -1212,8 +1241,8 @@ paths:
   /api/nsk/v2/vouchers/byMarket:
     get:
       tags:
-      - vouchers
-      summary: Gets a collection of vouchers based on the market information.
+      - Vouchers
+      summary: Gets a collection of vouchers based on the market information
       description: 'This endpoint requires agent permissions.
 
         Only vouchers from the agent''s non-restricted voucher configurations will be returned. To check which voucher
@@ -1496,8 +1525,8 @@ paths:
   /api/nsk/v1/vouchers/byReference/{voucherReferenceNumber}:
     get:
       tags:
-      - vouchers
-      summary: Gets a specific voucher based upon the voucher reference number.
+      - Vouchers
+      summary: Gets a specific voucher based upon the voucher reference number
       description: 'This endpoint requires agent permissions. If you are not seeing a voucher reference number, and you are expecting
 
         to,
@@ -1531,8 +1560,8 @@ paths:
   /api/nsk/v1/vouchers/configuration:
     get:
       tags:
-      - vouchers
-      summary: Performs a shallow call to get all available voucher configurations.
+      - Vouchers
+      summary: Performs a shallow call to get all available voucher configurations
       description: 'This endpoint requires agent permissions.
 
         Since this performs a shallow call, some voucher configuration list properties come back empty. To get the complete
@@ -1559,8 +1588,8 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
     post:
       tags:
-      - vouchers
-      summary: Creates a new voucher configuration.
+      - Vouchers
+      summary: Creates a new voucher configuration
       description: 'This endpoint requires agent permissions.
 
 
@@ -1591,8 +1620,8 @@ paths:
       deprecated: true
     put:
       tags:
-      - vouchers
-      summary: Updates a voucher configuration.
+      - Vouchers
+      summary: Updates a voucher configuration
       description: 'This endpoint requires agent permissions.
 
         When updating the market or travel restrictions, you will need to specify the market or travel restrictions
@@ -1734,8 +1763,8 @@ paths:
       deprecated: true
     delete:
       tags:
-      - vouchers
-      summary: Deletes a voucher configuration.
+      - Vouchers
+      summary: Deletes a voucher configuration
       description: 'This endpoint requires agent permissions.
 
         A voucher configuration can only be deleted if no vouchers are associated with it.
@@ -1772,8 +1801,8 @@ paths:
   /api/nsk/v2/vouchers/configuration:
     post:
       tags:
-      - vouchers
-      summary: Creates a new voucher configuration.
+      - Vouchers
+      summary: Creates a new voucher configuration
       description: 'This endpoint requires agent permissions.
 
 
@@ -1803,8 +1832,8 @@ paths:
                 $ref: '#/components/schemas/IJsonResponseOfVoucherConfiguration'
     put:
       tags:
-      - vouchers
-      summary: Updates a voucher configuration.
+      - Vouchers
+      summary: Updates a voucher configuration
       description: 'This endpoint requires agent permissions.
 
         When updating the market or travel restrictions, you will need to specify the market or travel restrictions
@@ -1951,8 +1980,8 @@ paths:
   /api/nsk/v1/vouchers/configuration/{configurationCode}:
     get:
       tags:
-      - vouchers
-      summary: Performs a deep call to get a specific voucher configuration based on the configuration code.
+      - Vouchers
+      summary: Performs a deep call to get a specific voucher configuration based on the…
       description: 'This endpoint requires agent permissions.
 
 
@@ -1981,276 +2010,23 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    VoucherStatusUpdate:
-      type: integer
-      description: "An enumeration to indicate what status the voucher should\nbe changed to.\n            \n\n0 = Reinstate\n1 = Void"
-      x-enumNames:
-      - Reinstate
-      - Void
-      enum:
-      - 0
-      - 1
-    TravelRestrictionType:
-      type: integer
-      description: "The travel restriction type.\n            \n\n0 = Default\n1 = Blackout\n2 = Season"
-      x-enumNames:
-      - Default
-      - Blackout
-      - Season
-      enum:
-      - 0
-      - 1
-      - 2
-    VoucherExpirationControl:
-      type: integer
-      description: "The voucher expiration control.\n            \n\n0 = None\n1 = Fixed\n2 = FixedAtIssuance\n3 = Calculated"
-      x-enumNames:
-      - None
-      - Fixed
-      - FixedAtIssuance
-      - Calculated
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    IJsonResponseOfIListOfVoucherConfiguration:
+    VoucherUpdateRequestv2:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "The voucher update request.\n            "
       additionalProperties: false
       properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherConfiguration'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    VoucherExpirationType:
-      type: integer
-      description: "The voucher expiration type.\n            \n\n0 = TravelBy\n1 = TravelCompleteBy\n2 = BookingBy"
-      x-enumNames:
-      - TravelBy
-      - TravelCompleteBy
-      - BookingBy
-      enum:
-      - 0
-      - 1
-      - 2
-    MarketRestrictionType:
-      type: integer
-      description: "The market restriction type enumeration.\n            \n\n0 = MustBeOne\n1 = MustNot"
-      x-enumNames:
-      - MustBeOne
-      - MustNot
-      enum:
-      - 0
-      - 1
-    FindVoucherSortCriteria:
-      type: integer
-      description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n            \n\n0 = CreatedDateAscending\n1 = Name\n2 = CreatedDateDescending"
-      x-enumNames:
-      - CreatedDateAscending
-      - Name
-      - CreatedDateDescending
-      enum:
-      - 0
-      - 1
-      - 2
-    VouchersSummaryResponse:
-      type: object
-      description: "The voucher by date search response item.\n            "
-      additionalProperties: false
-      properties:
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The key for the last item returned from paging.\n            "
-        vouchers:
-          type:
-          - array
-          - 'null'
-          description: "The collection of vouchers.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherSummary'
-    IJsonResponseOfPagedVouchersResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PagedVouchersResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    VoucherTravelRestriction:
-      type: object
-      description: "The voucher configuration model.\n            "
-      additionalProperties: false
-      properties:
-        voucherConfigurationCode:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration code.\n            "
-        sequence:
-          type: integer
-          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
-        restrictionType:
-          description: "The travel restriction type.\n            "
-          $ref: '#/components/schemas/TravelRestrictionType'
-        initialTravelDate:
-          type:
-          - string
-          - 'null'
-          description: "The beginning travel date.\n            "
-          format: date-time
-        endTravelDate:
-          type:
-          - string
-          - 'null'
-          description: "The ending travel date.\n            "
-          format: date-time
-    VoucherRequirements:
-      type: integer
-      description: "The voucher requirements enumeration.\n            \n\n0 = None\n1 = RecordLocator\n2 = CustomerNumber\n3 = Both"
-      x-enumNames:
-      - None
-      - RecordLocator
-      - CustomerNumber
-      - Both
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    VoucherItem:
-      type: object
-      description: "The voucher item model.\n            "
-      additionalProperties: false
-      properties:
-        voucherKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher key.\n            "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: "The reference number for the voucher.\n            "
-          maxLength: 20
-          minLength: 0
-        configurationCode:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration code.\n            "
-          maxLength: 6
-          minLength: 0
         status:
-          description: "The voucher status.\n            "
-          $ref: '#/components/schemas/VoucherStatus'
-        available:
-          type: number
-          description: "The availability count of the voucher.\n            "
-          format: decimal
-        firstName:
+          description: "The status to update the voucher to.\n            "
+          $ref: '#/components/schemas/VoucherStatusUpdate'
+        type:
+          description: "The voucher type to update the voucher to.\n            "
+          $ref: '#/components/schemas/VoucherUpdateType'
+        expirationDate:
           type:
           - string
           - 'null'
-          description: "The first name associated with the voucher.\n            "
-          maxLength: 64
-          minLength: 0
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: "The last name associated with the voucher.\n            "
-          maxLength: 64
-          minLength: 0
-        personKey:
-          type:
-          - string
-          - 'null'
-          description: "The person key associated with the voucher.\n            "
-        voucherIssuanceKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher issuance key.\n            "
-        expiration:
-          type:
-          - string
-          - 'null'
-          description: "The voucher expiration date.\n            "
+          description: "The expiration date to update the voucher to.\n            "
           format: date-time
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        amount:
-          type: number
-          description: "The amount of currency.\n            "
-          format: decimal
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The created date for the voucher item.\n            "
-          format: date-time
-    IJsonResponseOfVoucherConfiguration:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/VoucherConfiguration'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     VoucherTransactionType:
       type: integer
       description: "Defines voucher transaction type.\n            \n\n0 = Debit\n1 = Credit\n2 = Void\n3 = Reinstate\n4 = Adjustment\n5 = ExpirationDateChange\n6 = VoucherTypeChange\n7 = VoucherOwnerChange"
@@ -2272,677 +2048,6 @@ components:
       - 5
       - 6
       - 7
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    VoucherIssuanceControl:
-      type: integer
-      description: "The voucher issuance control enumeration.\n            \n\n0 = IssuedToPassengers\n1 = IssuedToContact"
-      x-enumNames:
-      - IssuedToPassengers
-      - IssuedToContact
-      enum:
-      - 0
-      - 1
-    VoucherReference:
-      type: object
-      description: "The voucher model.\n            "
-      additionalProperties: false
-      properties:
-        foreignCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The foreign currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignAmount:
-          type: number
-          description: "The amount of foreign currency.\n            "
-          format: decimal
-        type:
-          description: "The voucher type.\n            "
-          $ref: '#/components/schemas/VoucherType'
-        password:
-          type:
-          - string
-          - 'null'
-          description: "The password for the voucher.\n            "
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: "The record locator associated with the voucher.\n            "
-          maxLength: 12
-          minLength: 0
-        transactions:
-          type:
-          - array
-          - 'null'
-          description: "The voucher transactions.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherTransaction'
-        voucherKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher key.\n            "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: "The reference number for the voucher.\n            "
-          maxLength: 20
-          minLength: 0
-        configurationCode:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration code.\n            "
-          maxLength: 6
-          minLength: 0
-        status:
-          description: "The voucher status.\n            "
-          $ref: '#/components/schemas/VoucherStatus'
-        available:
-          type: number
-          description: "The availability count of the voucher.\n            "
-          format: decimal
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: "The first name associated with the voucher.\n            "
-          maxLength: 64
-          minLength: 0
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: "The last name associated with the voucher.\n            "
-          maxLength: 64
-          minLength: 0
-        personKey:
-          type:
-          - string
-          - 'null'
-          description: "The person key associated with the voucher.\n            "
-        voucherIssuanceKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher issuance key.\n            "
-        expiration:
-          type:
-          - string
-          - 'null'
-          description: "The voucher expiration date.\n            "
-          format: date-time
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        amount:
-          type: number
-          description: "The amount of currency.\n            "
-          format: decimal
-        createdDate:
-          type: string
-          description: "The date when the voucher was created.\n            "
-          format: date-time
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfVouchersSummaryResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/VouchersSummaryResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    VoucherStatus:
-      type: integer
-      description: "Defines the status of a voucher.\n            \n\n0 = Available\n1 = Void\n2 = Redeemed\n3 = Expired"
-      x-enumNames:
-      - Available
-      - Void
-      - Redeemed
-      - Expired
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    IssuanceType:
-      type: integer
-      description: "The issuance type.\n            \n\n0 = Individual\n1 = Batch\n2 = FlightBatch\n3 = HighVolumeBatch\n4 = OdBatch"
-      x-enumNames:
-      - Individual
-      - Batch
-      - FlightBatch
-      - HighVolumeBatch
-      - OdBatch
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    VoucherConfigurationRequest:
-      type: object
-      description: "The voucher configuration request model.\n            "
-      deprecated: true
-      x-deprecatedMessage: 4.5.2 - Please use VoucherConfigurationRequestv2
-      additionalProperties: false
-      required:
-      - configurationCode
-      - name
-      - description
-      - expirationDate
-      - currencyCode
-      - note
-      properties:
-        configurationCode:
-          type: string
-          description: "The voucher configuration code.\n            "
-          maxLength: 6
-          minLength: 0
-        name:
-          type: string
-          description: "The voucher configuration name.\n            "
-          maxLength: 64
-          minLength: 0
-        description:
-          type: string
-          description: "The voucher configuration description.\n            "
-          maxLength: 128
-          minLength: 0
-        type:
-          description: "The voucher type.\n            "
-          $ref: '#/components/schemas/VoucherType'
-        issuanceType:
-          description: "The issuance type.\n            "
-          $ref: '#/components/schemas/IssuanceType'
-        voucherUsageType:
-          description: "The voucher usage types.\n            "
-          $ref: '#/components/schemas/VoucherUsageType'
-        tripType:
-          description: "The voucher trip type.\n            "
-          $ref: '#/components/schemas/VoucherTripType'
-        expirationControl:
-          description: "The voucher expiration control.\n            "
-          $ref: '#/components/schemas/VoucherExpirationControl'
-        expirationType:
-          description: "The voucher expiration type.\n            "
-          $ref: '#/components/schemas/VoucherExpirationType'
-        expirationDate:
-          type: string
-          description: "The expiration date.\n            "
-          format: date-time
-          minLength: 1
-        expirationDays:
-          type: integer
-          description: "The voucher expiration days.\n            "
-        currencyCode:
-          type: string
-          description: "The voucher currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        amountControl:
-          description: "The voucher amount control.\n            "
-          $ref: '#/components/schemas/AmountControl'
-        calculatedAmountControl:
-          description: "The voucher calculated amount control.\n            "
-          $ref: '#/components/schemas/CalculatedAmountControl'
-        maximumAmount:
-          type: number
-          description: "The maximum voucher amount.\n            "
-          format: decimal
-        maximumPassengers:
-          type: integer
-          description: "The voucher maximum passenger total.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        maximumVouchersPerBooking:
-          type: integer
-          description: "The voucher maximum number of vouchers per booking.\n            "
-        travelDayOfWeekRestriction:
-          type:
-          - array
-          - 'null'
-          description: "The voucher day of week travel restrictions.\n            "
-          items:
-            $ref: '#/components/schemas/DayOfWeek'
-        nameRestriction:
-          description: "The voucher name restriction.\n            "
-          $ref: '#/components/schemas/VoucherNameRestriction'
-        voucherRequirements:
-          description: "The voucher requirements.\n            "
-          $ref: '#/components/schemas/VoucherRequirements'
-        nextReferenceNumber:
-          type: integer
-          description: "The next reference number for the voucher configuration.\n            "
-          format: int64
-        note:
-          type: string
-          description: "The voucher configuration note.\n            "
-          minLength: 1
-        maximumAmountIsPerPassenger:
-          type: boolean
-          description: "Flag to indicate if the maximum amount is per passenger or not.\n            "
-        calculatedPercentage:
-          type: number
-          description: "The calculated percentage.\n            "
-          format: decimal
-        issuanceControl:
-          description: "The voucher issuance control.\n            "
-          $ref: '#/components/schemas/VoucherIssuanceControl'
-        enableVoucherAdjustments:
-          type: boolean
-          description: "Enables voucher adjustments.\n            "
-        restrictFlightBatchIssuance:
-          description: "The flight batch issuance restrictions.\n            "
-          $ref: '#/components/schemas/RestrictFlightBatchIssuance'
-        voucherUsageBaseFeeType:
-          description: "The voucher usage base fee type.\n            "
-          $ref: '#/components/schemas/VoucherUsageBaseFeeType'
-        issueToRevenuePassengersOnly:
-          type: boolean
-          description: "Enables Issuance to revenue passengers only.\n            "
-        fareClasses:
-          type:
-          - array
-          - 'null'
-          description: "The voucher configuration fare classes.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherConfigurationFareClass'
-        marketRestrictions:
-          type:
-          - array
-          - 'null'
-          description: "The voucher configuration market restrictions.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherMarketRestriction'
-        travelRestrictions:
-          type:
-          - array
-          - 'null'
-          description: "The voucher configuration travel restrictions.\n            "
-          items:
-            $ref: '#/components/schemas/VoucherTravelRestriction'
-        enabled:
-          type:
-          - boolean
-          - 'null'
-          description: "Indicates if the voucher is enabled or disabled.\n            "
-    VoucherSummary:
-      type: object
-      description: "The voucher summary model.\n            "
-      additionalProperties: false
-      properties:
-        voucherKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier for the voucher.\n            "
-        reference:
-          type:
-          - string
-          - 'null'
-          description: "The voucher reference.\n            "
-          maxLength: 20
-          minLength: 0
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: "The record locator associated with the voucher.\n            "
-          maxLength: 12
-          minLength: 0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The optional note associated with the voucher.\n            "
-        amount:
-          type: number
-          description: "The amount of the voucher.\n            "
-          format: decimal
-        expiration:
-          type:
-          - string
-          - 'null'
-          description: "The voucher's expiration.\n            "
-          format: date-time
-    IJsonResponseOfVoucher:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Voucher'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    RegionType:
-      type: integer
-      description: "Enum reprenting the the region type used to indicate the kind of region an item is associated with.\n            \n\n0 = Default\n1 = Station\n2 = City\n3 = ProvinceState\n4 = Country\n5 = FeeZone\n6 = SubZone\n7 = Area\n8 = All\n9 = Mac"
-      x-enumNames:
-      - Default
-      - Station
-      - City
-      - ProvinceState
-      - Country
-      - FeeZone
-      - SubZone
-      - Area
-      - All
-      - Mac
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-    VoucherConfigurationFareClass:
-      type: object
-      description: "The voucher configuration model.\n            "
-      additionalProperties: false
-      properties:
-        configurationCode:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration code.\n            "
-          maxLength: 6
-          minLength: 0
-        classOfService:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration fare class of service.\n            "
-          maxLength: 8
-          minLength: 0
-    VoucherUsageBaseFeeType:
-      type: integer
-      description: "Voucher usage type specifies whether the voucher can be used for included taxes of non-fare components (e.g. SSR\nfees).\n            \n\n0 = None\n1 = BaseFeeOnly"
-      x-enumNames:
-      - None
-      - BaseFeeOnly
-      enum:
-      - 0
-      - 1
-    VoucherTripType:
-      type: integer
-      description: "The types of trips a voucher could be user for.\n            \n\n0 = Any\n1 = OneWay\n2 = RoundTrip\n3 = None"
-      x-enumNames:
-      - Any
-      - OneWay
-      - RoundTrip
-      - None
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    AmountControl:
-      type: integer
-      description: "The amount control enumeration.\n            \n\n0 = Fixed\n1 = FixedAtIssuance\n2 = Calculated"
-      x-enumNames:
-      - Fixed
-      - FixedAtIssuance
-      - Calculated
-      enum:
-      - 0
-      - 1
-      - 2
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfVoucherReference:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/VoucherReference'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    VoucherOwnerUpdateRequest:
-      type: object
-      description: "The voucher owner update request.\n            "
-      additionalProperties: false
-      properties:
-        personKey:
-          type:
-          - string
-          - 'null'
-          description: "The person key to update to as the voucher owner. This can be retrieved via GET /api/nsk/v2/persons.\n            "
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: "The first name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
-          maxLength: 64
-          minLength: 0
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: "The last name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
-          maxLength: 64
-          minLength: 0
-    CalculatedAmountControl:
-      type: integer
-      description: "Represents the different types of service a voucher could be used for.\n            \n\n0 = Default\n1 = Fares\n2 = FaresPlusTaxes\n3 = FaresTaxesAndFees\n4 = FaresTaxesFeesAndOtherServices"
-      x-enumNames:
-      - Default
-      - Fares
-      - FaresPlusTaxes
-      - FaresTaxesAndFees
-      - FaresTaxesFeesAndOtherServices
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    VoucherUsageType:
-      type: integer
-      description: "Voucher usage type specifies what parts of a booking this voucher can pay for.\n            \n\n0 = None\n1 = Fares\n2 = Taxes\n3 = TravelFees\n4 = ServiceFees\n5 = PenaltyFees\n6 = SsrFees\n7 = NonFlightServiceFees\n8 = UpgradeFees\n9 = SeatFees\n10 = SpoilageFees\n11 = NameChangeFees\n12 = ConvenienceFees\n13 = Car\n14 = Hotel\n15 = Insurance\n16 = Activities"
-      x-enumNames:
-      - None
-      - Fares
-      - Taxes
-      - TravelFees
-      - ServiceFees
-      - PenaltyFees
-      - SsrFees
-      - NonFlightServiceFees
-      - UpgradeFees
-      - SeatFees
-      - SpoilageFees
-      - NameChangeFees
-      - ConvenienceFees
-      - Car
-      - Hotel
-      - Insurance
-      - Activities
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-      - 14
-      - 15
-      - 16
-    Directionality:
-      type: integer
-      description: "Enum representing direction of an object.\n            \n\n0 = None\n1 = To\n2 = From\n3 = Between"
-      x-enumNames:
-      - None
-      - To
-      - From
-      - Between
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
     VoucherConfigurationRequestv2:
       type: object
       description: "The voucher configuration request model v2.\n            "
@@ -3092,9 +2197,401 @@ components:
           - boolean
           - 'null'
           description: "Indicates if the voucher is enabled or disabled.\n            "
-    Voucher:
+    VoucherConfigurationFareClass:
       type: object
-      description: "The voucher model.\n            "
+      description: "The voucher configuration model.\n            "
+      additionalProperties: false
+      properties:
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration fare class of service.\n            "
+          maxLength: 8
+          minLength: 0
+    VoucherTravelRestriction:
+      type: object
+      description: "The voucher configuration model.\n            "
+      additionalProperties: false
+      properties:
+        voucherConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+        sequence:
+          type: integer
+          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
+        restrictionType:
+          description: "The travel restriction type.\n            "
+          $ref: '#/components/schemas/TravelRestrictionType'
+        initialTravelDate:
+          type:
+          - string
+          - 'null'
+          description: "The beginning travel date.\n            "
+          format: date-time
+        endTravelDate:
+          type:
+          - string
+          - 'null'
+          description: "The ending travel date.\n            "
+          format: date-time
+    IJsonResponseOfVouchersSummaryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VouchersSummaryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfPagedVouchersResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedVouchersResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherUpdateType:
+      type: integer
+      description: "Defines the type of voucher that can be updated to.\n            \n\n1 = SingleUseCredit\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
+      x-enumNames:
+      - SingleUseCredit
+      - SingleUse
+      - MultiUse
+      - SingleUseNegativeAdjustment
+      - PassengerSelect
+      enum:
+      - 1
+      - 3
+      - 4
+      - 5
+      - 6
+    IJsonResponseOfVoucher:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Voucher'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    TravelRestrictionType:
+      type: integer
+      description: "The travel restriction type.\n            \n\n0 = Default\n1 = Blackout\n2 = Season"
+      x-enumNames:
+      - Default
+      - Blackout
+      - Season
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfVoucherConfiguration:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VoucherConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherUsageType:
+      type: integer
+      description: "Voucher usage type specifies what parts of a booking this voucher can pay for.\n            \n\n0 = None\n1 = Fares\n2 = Taxes\n3 = TravelFees\n4 = ServiceFees\n5 = PenaltyFees\n6 = SsrFees\n7 = NonFlightServiceFees\n8 = UpgradeFees\n9 = SeatFees\n10 = SpoilageFees\n11 = NameChangeFees\n12 = ConvenienceFees\n13 = Car\n14 = Hotel\n15 = Insurance\n16 = Activities"
+      x-enumNames:
+      - None
+      - Fares
+      - Taxes
+      - TravelFees
+      - ServiceFees
+      - PenaltyFees
+      - SsrFees
+      - NonFlightServiceFees
+      - UpgradeFees
+      - SeatFees
+      - SpoilageFees
+      - NameChangeFees
+      - ConvenienceFees
+      - Car
+      - Hotel
+      - Insurance
+      - Activities
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+    Directionality:
+      type: integer
+      description: "Enum representing direction of an object.\n            \n\n0 = None\n1 = To\n2 = From\n3 = Between"
+      x-enumNames:
+      - None
+      - To
+      - From
+      - Between
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    MarketRestrictionType:
+      type: integer
+      description: "The market restriction type enumeration.\n            \n\n0 = MustBeOne\n1 = MustNot"
+      x-enumNames:
+      - MustBeOne
+      - MustNot
+      enum:
+      - 0
+      - 1
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    VoucherIssuanceControl:
+      type: integer
+      description: "The voucher issuance control enumeration.\n            \n\n0 = IssuedToPassengers\n1 = IssuedToContact"
+      x-enumNames:
+      - IssuedToPassengers
+      - IssuedToContact
+      enum:
+      - 0
+      - 1
+    DayOfWeek:
+      type: integer
+      description: "Defines the day of the week with none as an option.\n            \n\n0 = None\n1 = Monday\n2 = Tuesday\n3 = Wednesday\n4 = Thursday\n5 = Friday\n6 = Saturday\n7 = Sunday"
+      x-enumNames:
+      - None
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+      - Sunday
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    VoucherType:
+      type: integer
+      description: "Defines the type of voucher.\n            \n\n0 = Credit\n1 = SingleUseCredit\n2 = Service\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
+      x-enumNames:
+      - Credit
+      - SingleUseCredit
+      - Service
+      - SingleUse
+      - MultiUse
+      - SingleUseNegativeAdjustment
+      - PassengerSelect
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    RestrictFlightBatchIssuance:
+      type: integer
+      description: "The restrict flight batch issuance enumeration\n            \n\n0 = All\n1 = Confirmed\n2 = ConfirmedAndPaidRequired"
+      x-enumNames:
+      - All
+      - Confirmed
+      - ConfirmedAndPaidRequired
+      enum:
+      - 0
+      - 1
+      - 2
+    IssuanceType:
+      type: integer
+      description: "The issuance type.\n            \n\n0 = Individual\n1 = Batch\n2 = FlightBatch\n3 = HighVolumeBatch\n4 = OdBatch"
+      x-enumNames:
+      - Individual
+      - Batch
+      - FlightBatch
+      - HighVolumeBatch
+      - OdBatch
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    IJsonResponseOfIListOfVoucherConfiguration:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherOwnerUpdateRequest:
+      type: object
+      description: "The voucher owner update request.\n            "
+      additionalProperties: false
+      properties:
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key to update to as the voucher owner. This can be retrieved via GET /api/nsk/v2/persons.\n            "
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name to update to as the voucher owner.\nThis must match the name assigned to the person when passing in a personKey. If it does not match, it will\nbe overriden with the first name associated with the person key.\nIf not populated, will default to the name associated with the person key.\nIf you only want to set the name, and it's not one associated with a personKey, then you\ncan pass this in without a personKey, and it will be set accordingly.\n            "
+          maxLength: 64
+          minLength: 0
+    CalculatedAmountControl:
+      type: integer
+      description: "Represents the different types of service a voucher could be used for.\n            \n\n0 = Default\n1 = Fares\n2 = FaresPlusTaxes\n3 = FaresTaxesAndFees\n4 = FaresTaxesFeesAndOtherServices"
+      x-enumNames:
+      - Default
+      - Fares
+      - FaresPlusTaxes
+      - FaresTaxesAndFees
+      - FaresTaxesFeesAndOtherServices
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    VoucherItem:
+      type: object
+      description: "The voucher item model.\n            "
       additionalProperties: false
       properties:
         voucherKey:
@@ -3164,6 +2661,88 @@ components:
           type: number
           description: "The amount of currency.\n            "
           format: decimal
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date for the voucher item.\n            "
+          format: date-time
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    FindVoucherSortCriteria:
+      type: integer
+      description: "Defines the criteria in which the find vouchers result can be sorted. Defaults to `CreatedDateAscending` if not specified or invalid.\n            \n\n0 = CreatedDateAscending\n1 = Name\n2 = CreatedDateDescending"
+      x-enumNames:
+      - CreatedDateAscending
+      - Name
+      - CreatedDateDescending
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherSummary:
+      type: object
+      description: "The voucher summary model.\n            "
+      additionalProperties: false
+      properties:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the voucher.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The voucher reference.\n            "
+          maxLength: 20
+          minLength: 0
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The optional note associated with the voucher.\n            "
+        amount:
+          type: number
+          description: "The amount of the voucher.\n            "
+          format: decimal
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher's expiration.\n            "
+          format: date-time
+    VoucherReference:
+      type: object
+      description: "The voucher model.\n            "
+      additionalProperties: false
+      properties:
         foreignCurrencyCode:
           type:
           - string
@@ -3197,105 +2776,102 @@ components:
           description: "The voucher transactions.\n            "
           items:
             $ref: '#/components/schemas/VoucherTransaction'
-    VoucherMarketRestriction:
-      type: object
-      description: "The voucher market restriction model.\n            "
-      additionalProperties: false
-      properties:
-        voucherConfigurationCode:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher key.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference number for the voucher.\n            "
+          maxLength: 20
+          minLength: 0
+        configurationCode:
           type:
           - string
           - 'null'
           description: "The voucher configuration code.\n            "
-        sequence:
-          type: integer
-          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
-        restrictionType:
-          description: "The market restriction type.\n            "
-          $ref: '#/components/schemas/MarketRestrictionType'
-        directionality:
-          description: "The directionality of the voucher market restriction.\n            "
-          $ref: '#/components/schemas/Directionality'
-        regionType:
-          description: "The region type.\n            "
-          $ref: '#/components/schemas/RegionType'
-        regionCode:
+          maxLength: 6
+          minLength: 0
+        status:
+          description: "The voucher status.\n            "
+          $ref: '#/components/schemas/VoucherStatus'
+        available:
+          type: number
+          description: "The availability count of the voucher.\n            "
+          format: decimal
+        firstName:
           type:
           - string
           - 'null'
-          description: "The region code.\n            "
-        travelRegionType:
-          description: "The travel region type.\n            "
-          $ref: '#/components/schemas/RegionType'
-        travelRegionCode:
+          description: "The first name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
           type:
           - string
           - 'null'
-          description: "The travel region code.\n            "
-    RestrictFlightBatchIssuance:
+          description: "The last name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key associated with the voucher.\n            "
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        createdDate:
+          type: string
+          description: "The date when the voucher was created.\n            "
+          format: date-time
+    RegionType:
       type: integer
-      description: "The restrict flight batch issuance enumeration\n            \n\n0 = All\n1 = Confirmed\n2 = ConfirmedAndPaidRequired"
+      description: "Enum reprenting the the region type used to indicate the kind of region an item is associated with.\n            \n\n0 = Default\n1 = Station\n2 = City\n3 = ProvinceState\n4 = Country\n5 = FeeZone\n6 = SubZone\n7 = Area\n8 = All\n9 = Mac"
       x-enumNames:
+      - Default
+      - Station
+      - City
+      - ProvinceState
+      - Country
+      - FeeZone
+      - SubZone
+      - Area
       - All
-      - Confirmed
-      - ConfirmedAndPaidRequired
+      - Mac
       enum:
       - 0
       - 1
       - 2
-    VoucherUpdateRequestv2:
-      type: object
-      description: "The voucher update request.\n            "
-      additionalProperties: false
-      properties:
-        status:
-          description: "The status to update the voucher to.\n            "
-          $ref: '#/components/schemas/VoucherStatusUpdate'
-        type:
-          description: "The voucher type to update the voucher to.\n            "
-          $ref: '#/components/schemas/VoucherUpdateType'
-        expirationDate:
-          type:
-          - string
-          - 'null'
-          description: "The expiration date to update the voucher to.\n            "
-          format: date-time
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    VoucherUpdateType:
-      type: integer
-      description: "Defines the type of voucher that can be updated to.\n            \n\n1 = SingleUseCredit\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
-      x-enumNames:
-      - SingleUseCredit
-      - SingleUse
-      - MultiUse
-      - SingleUseNegativeAdjustment
-      - PassengerSelect
-      enum:
-      - 1
       - 3
       - 4
       - 5
       - 6
+      - 7
+      - 8
+      - 9
     VoucherConfiguration:
       type: object
       description: "The voucher configuration model.\n            "
@@ -3440,46 +3016,81 @@ components:
         enabled:
           type: boolean
           description: "Indicates if the voucher is enabled or disabled.\n            "
-    VoucherType:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    AmountControl:
       type: integer
-      description: "Defines the type of voucher.\n            \n\n0 = Credit\n1 = SingleUseCredit\n2 = Service\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
+      description: "The amount control enumeration.\n            \n\n0 = Fixed\n1 = FixedAtIssuance\n2 = Calculated"
       x-enumNames:
-      - Credit
-      - SingleUseCredit
-      - Service
-      - SingleUse
-      - MultiUse
-      - SingleUseNegativeAdjustment
-      - PassengerSelect
+      - Fixed
+      - FixedAtIssuance
+      - Calculated
       enum:
       - 0
       - 1
       - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    DayOfWeek:
-      type: integer
-      description: "Defines the day of the week with none as an option.\n            \n\n0 = None\n1 = Monday\n2 = Tuesday\n3 = Wednesday\n4 = Thursday\n5 = Friday\n6 = Saturday\n7 = Sunday"
-      x-enumNames:
-      - None
-      - Monday
-      - Tuesday
-      - Wednesday
-      - Thursday
-      - Friday
-      - Saturday
-      - Sunday
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     PagedVouchersResponse:
       type: object
       description: "The paged voucher search response item.\n            "
@@ -3501,17 +3112,19 @@ components:
           description: "The collection of vouchers.\n            "
           items:
             $ref: '#/components/schemas/VoucherItem'
-    VoucherNameRestriction:
+    VoucherStatus:
       type: integer
-      description: "Defines how the name on the voucher will be validated.\n            \n\n0 = None\n1 = MustBePassenger\n2 = MustBePassengerOrContact"
+      description: "Defines the status of a voucher.\n            \n\n0 = Available\n1 = Void\n2 = Redeemed\n3 = Expired"
       x-enumNames:
-      - None
-      - MustBePassenger
-      - MustBePassengerOrContact
+      - Available
+      - Void
+      - Redeemed
+      - Expired
       enum:
       - 0
       - 1
       - 2
+      - 3
     VoucherConfigurationDeleteRequest:
       type: object
       description: "The voucher configuration delete request model.\n            "
@@ -3530,6 +3143,19 @@ components:
           description: "The expiration date.\n            "
           format: date-time
           minLength: 1
+    VoucherExpirationControl:
+      type: integer
+      description: "The voucher expiration control.\n            \n\n0 = None\n1 = Fixed\n2 = FixedAtIssuance\n3 = Calculated"
+      x-enumNames:
+      - None
+      - Fixed
+      - FixedAtIssuance
+      - Calculated
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
     VoucherTransaction:
       type: object
       description: "The voucher transaction model.\n            "
@@ -3570,6 +3196,409 @@ components:
           - string
           - 'null'
           description: "The record locator associated with the voucher transaction.\n            "
+    VoucherRequirements:
+      type: integer
+      description: "The voucher requirements enumeration.\n            \n\n0 = None\n1 = RecordLocator\n2 = CustomerNumber\n3 = Both"
+      x-enumNames:
+      - None
+      - RecordLocator
+      - CustomerNumber
+      - Both
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    Voucher:
+      type: object
+      description: "The voucher model.\n            "
+      additionalProperties: false
+      properties:
+        voucherKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher key.\n            "
+        reference:
+          type:
+          - string
+          - 'null'
+          description: "The reference number for the voucher.\n            "
+          maxLength: 20
+          minLength: 0
+        configurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        status:
+          description: "The voucher status.\n            "
+          $ref: '#/components/schemas/VoucherStatus'
+        available:
+          type: number
+          description: "The availability count of the voucher.\n            "
+          format: decimal
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name associated with the voucher.\n            "
+          maxLength: 64
+          minLength: 0
+        personKey:
+          type:
+          - string
+          - 'null'
+          description: "The person key associated with the voucher.\n            "
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The amount of foreign currency.\n            "
+          format: decimal
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        password:
+          type:
+          - string
+          - 'null'
+          description: "The password for the voucher.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher transactions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTransaction'
+    VoucherStatusUpdate:
+      type: integer
+      description: "An enumeration to indicate what status the voucher should\nbe changed to.\n            \n\n0 = Reinstate\n1 = Void"
+      x-enumNames:
+      - Reinstate
+      - Void
+      enum:
+      - 0
+      - 1
+    VoucherExpirationType:
+      type: integer
+      description: "The voucher expiration type.\n            \n\n0 = TravelBy\n1 = TravelCompleteBy\n2 = BookingBy"
+      x-enumNames:
+      - TravelBy
+      - TravelCompleteBy
+      - BookingBy
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherMarketRestriction:
+      type: object
+      description: "The voucher market restriction model.\n            "
+      additionalProperties: false
+      properties:
+        voucherConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "The voucher configuration code.\n            "
+        sequence:
+          type: integer
+          description: "The sequence number of the voucher restriction.\nWhen updating the restriction, you will need to specify the sequence number in order to properly update\nthe associated restriction.\nIn order to add a restriction, the sequence number on needs to\nbe set to `-1` to indicate to NewSkies that it is an added restriction.\n            "
+        restrictionType:
+          description: "The market restriction type.\n            "
+          $ref: '#/components/schemas/MarketRestrictionType'
+        directionality:
+          description: "The directionality of the voucher market restriction.\n            "
+          $ref: '#/components/schemas/Directionality'
+        regionType:
+          description: "The region type.\n            "
+          $ref: '#/components/schemas/RegionType'
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: "The region code.\n            "
+        travelRegionType:
+          description: "The travel region type.\n            "
+          $ref: '#/components/schemas/RegionType'
+        travelRegionCode:
+          type:
+          - string
+          - 'null'
+          description: "The travel region code.\n            "
+    VoucherTripType:
+      type: integer
+      description: "The types of trips a voucher could be user for.\n            \n\n0 = Any\n1 = OneWay\n2 = RoundTrip\n3 = None"
+      x-enumNames:
+      - Any
+      - OneWay
+      - RoundTrip
+      - None
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    VouchersSummaryResponse:
+      type: object
+      description: "The voucher by date search response item.\n            "
+      additionalProperties: false
+      properties:
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the last item returned from paging.\n            "
+        vouchers:
+          type:
+          - array
+          - 'null'
+          description: "The collection of vouchers.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherSummary'
+    VoucherUsageBaseFeeType:
+      type: integer
+      description: "Voucher usage type specifies whether the voucher can be used for included taxes of non-fare components (e.g. SSR\nfees).\n            \n\n0 = None\n1 = BaseFeeOnly"
+      x-enumNames:
+      - None
+      - BaseFeeOnly
+      enum:
+      - 0
+      - 1
+    IJsonResponseOfVoucherReference:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VoucherReference'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherNameRestriction:
+      type: integer
+      description: "Defines how the name on the voucher will be validated.\n            \n\n0 = None\n1 = MustBePassenger\n2 = MustBePassengerOrContact"
+      x-enumNames:
+      - None
+      - MustBePassenger
+      - MustBePassengerOrContact
+      enum:
+      - 0
+      - 1
+      - 2
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    VoucherConfigurationRequest:
+      type: object
+      description: "The voucher configuration request model.\n            "
+      deprecated: true
+      x-deprecatedMessage: 4.5.2 - Please use VoucherConfigurationRequestv2
+      additionalProperties: false
+      required:
+      - configurationCode
+      - name
+      - description
+      - expirationDate
+      - currencyCode
+      - note
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        name:
+          type: string
+          description: "The voucher configuration name.\n            "
+          maxLength: 64
+          minLength: 0
+        description:
+          type: string
+          description: "The voucher configuration description.\n            "
+          maxLength: 128
+          minLength: 0
+        type:
+          description: "The voucher type.\n            "
+          $ref: '#/components/schemas/VoucherType'
+        issuanceType:
+          description: "The issuance type.\n            "
+          $ref: '#/components/schemas/IssuanceType'
+        voucherUsageType:
+          description: "The voucher usage types.\n            "
+          $ref: '#/components/schemas/VoucherUsageType'
+        tripType:
+          description: "The voucher trip type.\n            "
+          $ref: '#/components/schemas/VoucherTripType'
+        expirationControl:
+          description: "The voucher expiration control.\n            "
+          $ref: '#/components/schemas/VoucherExpirationControl'
+        expirationType:
+          description: "The voucher expiration type.\n            "
+          $ref: '#/components/schemas/VoucherExpirationType'
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        expirationDays:
+          type: integer
+          description: "The voucher expiration days.\n            "
+        currencyCode:
+          type: string
+          description: "The voucher currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amountControl:
+          description: "The voucher amount control.\n            "
+          $ref: '#/components/schemas/AmountControl'
+        calculatedAmountControl:
+          description: "The voucher calculated amount control.\n            "
+          $ref: '#/components/schemas/CalculatedAmountControl'
+        maximumAmount:
+          type: number
+          description: "The maximum voucher amount.\n            "
+          format: decimal
+        maximumPassengers:
+          type: integer
+          description: "The voucher maximum passenger total.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        maximumVouchersPerBooking:
+          type: integer
+          description: "The voucher maximum number of vouchers per booking.\n            "
+        travelDayOfWeekRestriction:
+          type:
+          - array
+          - 'null'
+          description: "The voucher day of week travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        nameRestriction:
+          description: "The voucher name restriction.\n            "
+          $ref: '#/components/schemas/VoucherNameRestriction'
+        voucherRequirements:
+          description: "The voucher requirements.\n            "
+          $ref: '#/components/schemas/VoucherRequirements'
+        nextReferenceNumber:
+          type: integer
+          description: "The next reference number for the voucher configuration.\n            "
+          format: int64
+        note:
+          type: string
+          description: "The voucher configuration note.\n            "
+          minLength: 1
+        maximumAmountIsPerPassenger:
+          type: boolean
+          description: "Flag to indicate if the maximum amount is per passenger or not.\n            "
+        calculatedPercentage:
+          type: number
+          description: "The calculated percentage.\n            "
+          format: decimal
+        issuanceControl:
+          description: "The voucher issuance control.\n            "
+          $ref: '#/components/schemas/VoucherIssuanceControl'
+        enableVoucherAdjustments:
+          type: boolean
+          description: "Enables voucher adjustments.\n            "
+        restrictFlightBatchIssuance:
+          description: "The flight batch issuance restrictions.\n            "
+          $ref: '#/components/schemas/RestrictFlightBatchIssuance'
+        voucherUsageBaseFeeType:
+          description: "The voucher usage base fee type.\n            "
+          $ref: '#/components/schemas/VoucherUsageBaseFeeType'
+        issueToRevenuePassengersOnly:
+          type: boolean
+          description: "Enables Issuance to revenue passengers only.\n            "
+        fareClasses:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration fare classes.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherConfigurationFareClass'
+        marketRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration market restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherMarketRestriction'
+        travelRestrictions:
+          type:
+          - array
+          - 'null'
+          description: "The voucher configuration travel restrictions.\n            "
+          items:
+            $ref: '#/components/schemas/VoucherTravelRestriction'
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if the voucher is enabled or disabled.\n            "
   securitySchemes:
     JWT:
       type: http

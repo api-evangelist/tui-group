@@ -17,7 +17,7 @@ paths:
     post:
       tags:
       - voucherIssuance
-      summary: Creates vouchers based upon data in the request.
+      summary: Creates vouchers based upon data in the request
       description: 'This endpoint requires agent permissions.
 
         Note that creating high volume voucher issuance results in a batch job which may not process immediately.
@@ -111,7 +111,7 @@ paths:
     post:
       tags:
       - voucherIssuance
-      summary: Creates vouchers based upon data in the request.
+      summary: Creates vouchers based upon data in the request
       description: 'This endpoint requires agent permissions.
 
         Note that creating high volume voucher issuance results in a batch job which may not process immediately.
@@ -237,7 +237,7 @@ paths:
     get:
       tags:
       - voucherIssuance
-      summary: Gets a voucher issuance based upon the voucher issuance key.
+      summary: Gets a voucher issuance based upon the voucher issuance key
       description: 'This endpoint requires agent permissions.
 
 
@@ -266,6 +266,252 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    IJsonResponseOfReducedVoucherResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/ReducedVoucherResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherIssuance:
+      type: object
+      description: "The voucher issuance model.\n            "
+      additionalProperties: false
+      required:
+      - configurationCode
+      - issuanceReasonCode
+      properties:
+        configurationCode:
+          type: string
+          description: "The voucher configuration code.\n            "
+          maxLength: 6
+          minLength: 0
+        issuanceReasonCode:
+          type: string
+          description: "The voucher issuance reason code.\n            "
+          maxLength: 4
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance note.\n            "
+          maxLength: 256
+          minLength: 0
+        market:
+          description: "Market details associated with the voucher issuance.\n            "
+          $ref: '#/components/schemas/VoucherMarketInformation'
+        expiration:
+          type:
+          - string
+          - 'null'
+          description: "The voucher expiration date.\n            "
+          format: date-time
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        voucherIssuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance key.\n            "
+    ReducedVoucherResponse:
+      type: object
+      description: "The reduced voucher response.\n            "
+      additionalProperties: false
+      properties:
+        references:
+          type:
+          - array
+          - 'null'
+          description: "The voucher reference numbers.\n            "
+          items:
+            type: string
+        issuanceKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher issuance keys.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    VoucherMarketInformation:
+      type: object
+      description: "The voucher market request model.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      - carrierCode
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
     VoucherIssuanceRequest:
       type: object
       description: "The voucher issuance request model.\n            "
@@ -360,22 +606,6 @@ components:
           description: "The SSR filter value in this object.\n            "
           maxLength: 4
           minLength: 0
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
     IJsonResponseOfVoucherIssuance:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -409,236 +639,6 @@ components:
       - 0
       - 1
       - 2
-    ReducedVoucherResponse:
-      type: object
-      description: "The reduced voucher response.\n            "
-      additionalProperties: false
-      properties:
-        references:
-          type:
-          - array
-          - 'null'
-          description: "The voucher reference numbers.\n            "
-          items:
-            type: string
-        issuanceKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher issuance keys.\n            "
-    VoucherIssuance:
-      type: object
-      description: "The voucher issuance model.\n            "
-      additionalProperties: false
-      required:
-      - configurationCode
-      - issuanceReasonCode
-      properties:
-        configurationCode:
-          type: string
-          description: "The voucher configuration code.\n            "
-          maxLength: 6
-          minLength: 0
-        issuanceReasonCode:
-          type: string
-          description: "The voucher issuance reason code.\n            "
-          maxLength: 4
-          minLength: 0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The voucher issuance note.\n            "
-          maxLength: 256
-          minLength: 0
-        market:
-          description: "Market details associated with the voucher issuance.\n            "
-          $ref: '#/components/schemas/VoucherMarketInformation'
-        expiration:
-          type:
-          - string
-          - 'null'
-          description: "The voucher expiration date.\n            "
-          format: date-time
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        amount:
-          type: number
-          description: "The amount of currency.\n            "
-          format: decimal
-        voucherIssuanceKey:
-          type:
-          - string
-          - 'null'
-          description: "The voucher issuance key.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    VoucherMarketInformation:
-      type: object
-      description: "The voucher market request model.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      - identifier
-      - carrierCode
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    IJsonResponseOfReducedVoucherResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/ReducedVoucherResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

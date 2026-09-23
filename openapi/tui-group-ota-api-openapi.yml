@@ -10,7 +10,7 @@ servers:
 - url: https://prod.api.tui
 - url: https://playground.api.tui
 tags:
-- name: Ota
+- name: OTA
 paths:
   /ota/getflights:
     get:
@@ -29,7 +29,9 @@ paths:
                   $ref: '#/components/examples/getflightsExample'
       operationId: getflights
       tags:
-      - Ota
+      - OTA
+      summary: Getflights
+      x-summary-source: derived
   /ota/flightavailability:
     get:
       description: Returns flight availability, pricing and seat information for a given route and travel dates.
@@ -110,7 +112,9 @@ paths:
           content: {}
       operationId: flightavailablity
       tags:
-      - Ota
+      - OTA
+      summary: Flightavailablity
+      x-summary-source: derived
   /ota/includedluggage:
     get:
       security:
@@ -152,7 +156,9 @@ paths:
       operationId: includdedluggage
       description: Luggage that's included
       tags:
-      - Ota
+      - OTA
+      summary: Includdedluggage
+      x-summary-source: derived
   /ota/luggage:
     get:
       security:
@@ -193,7 +199,9 @@ paths:
       operationId: luggage
       description: Returns the available checked luggage (hold baggage) options and pricing for a specific flight.
       tags:
-      - Ota
+      - OTA
+      summary: Luggage
+      x-summary-source: derived
   /ota/pricecalculation:
     get:
       description: Calculates the total price for a flight including selected ancillaries. When the "book" parameter is set to 1, it also creates a reservation.
@@ -374,7 +382,9 @@ paths:
                   $ref: '#/components/examples/priceCalculationExample'
       operationId: pricecalculcation
       tags:
-      - Ota
+      - OTA
+      summary: Pricecalculcation
+      x-summary-source: derived
   /ota/pay:
     get:
       security:
@@ -446,7 +456,9 @@ paths:
       operationId: pay
       description: 'Submits a virtual card payment for an existing reservation. Supports two modes: standard payment (cardnumber, cvc, expirydate) or encrypted card payment (cardnumber).'
       tags:
-      - Ota
+      - OTA
+      summary: Pay
+      x-summary-source: derived
     post:
       security:
       - oAuth2ClientCredentials: []
@@ -517,7 +529,9 @@ paths:
       operationId: post_pay
       description: 'Submits a credit card payment for an existing reservation. Supports two modes: standard payment (cardnumber, cvc, expirydate) or encrypted card payment (cardnumber).'
       tags:
-      - Ota
+      - OTA
+      summary: Post pay
+      x-summary-source: derived
   /ota/bookinfo:
     get:
       security:
@@ -550,7 +564,9 @@ paths:
           content: {}
       operationId: bookinfo
       tags:
-      - Ota
+      - OTA
+      summary: Bookinfo
+      x-summary-source: derived
   /ota/servicebundle:
     get:
       security:
@@ -585,7 +601,9 @@ paths:
           content: {}
       operationId: servicebundle
       tags:
-      - Ota
+      - OTA
+      summary: Servicebundle
+      x-summary-source: derived
   /ota/handluggage:
     get:
       security:
@@ -626,7 +644,9 @@ paths:
       operationId: handluggage
       description: 'Returns the possible handluggage options for a specific flight. Codes: PBAG = Personal bag (max 2kg, 40x30x20 cm), HBAG = Hand baggage / cabin trolley (max 10kg, 55x40x20 cm).'
       tags:
-      - Ota
+      - OTA
+      summary: Handluggage
+      x-summary-source: derived
   /ota/sports:
     get:
       security:
@@ -667,7 +687,9 @@ paths:
       operationId: sports
       description: 'Returns the possible sports equipment options for a specific flight. Codes: SURFBOARD = Surfboard, WINTER_SPORTS_EQUIPMENT = Winter sports equipment (skis, snowboard, etc.), PARAGLIDER_PARACHUTE = Paraglider or parachute, GOLF = Golf equipment, DIVE = Diving equipment, BICYCLE = Bicycle.'
       tags:
-      - Ota
+      - OTA
+      summary: Sports
+      x-summary-source: derived
   /ota/assistance:
     get:
       security:
@@ -707,7 +729,9 @@ paths:
       operationId: assistance
       description: 'Returns the possible assistance options for a specific flight. Codes: YPTA = Young passenger travelling alone, WCHS = Wheelchair - cannot walk long distances or climb stairs but can walk to seat, WCHR = Wheelchair - cannot walk long distances but can climb stairs and walk to seat, WCHC = Wheelchair - wheelchair-dependent and unable to walk, WCH = Wheelchair - assistance for reduced mobility, UMNR = Unaccompanied minor, MAAS = Meet and assist at the airport, DPNA = Passengers with a learning or cognitive impairment, DEAF = Deaf or hearing impaired passenger, BLND = Blind or visually impaired passenger.'
       tags:
-      - Ota
+      - OTA
+      summary: Assistance
+      x-summary-source: derived
   /ota/pets:
     get:
       security:
@@ -747,336 +771,989 @@ paths:
       operationId: pets
       description: 'Returns the possible pet transport options for a specific flight. Codes: PETC = Dog/cat up to 8kg (including bag) in the cabin, AVIH = Dog/cat in the heated cargo hold.'
       tags:
-      - Ota
+      - OTA
+      summary: Pets
+      x-summary-source: derived
 components:
-  examples:
-    luggageExample:
-      value:
-        luggage:
-          OUT:
-          - price: 0
-            weight: 0
-          - price: 20
-            weight: 20
-          - price: 25
-            weight: 25
-          - price: 30
-            weight: 30
-          - price: 65
-            weight: 35
-          - price: 100
-            weight: 40
-          - price: 150
-            weight: 45
-    priceCalculationExample:
-      value:
-        currency: EUR
-        totalprice: 379.99
-        totaleuro: 379.99
-        airportTax: 10.86
-        exchangeRate: 1
-        lines:
-        - type: FLIGHT
-          code: ''
-          description: flight with 1 adult(s).
-          price: 379.99
-          details:
-            price:
-              OUT: 379.99
-              RET: 0
-            formula: ''
-            quantity: 0
-            pax: 1
-        - type: LUGGAGE
-          code: BG00
-          description: 00 kg ruimbagage
-          price: 0
-          details:
-          - price: 0
-            formula: X
-            quantity: 1
-            pax: 1
-        flights:
-          OUT:
-            key: TFSBRU20220907202209071661TB
-            totalFree: 9
-            seatsAtThisPrice: 0
-            infantsFree: 9
-            depart:
-              airport:
-                code: TFS
-                name: Tenerife
-              datetime: '2027-01-20T12:35:00'
-            arrival:
-              airport:
-                code: BRU
-                name: Brussels
-              datetime: '2027-01-20T18:25:00'
-            via:
-              airport:
-                code: LPA
-                name: LPA
-            carrier: TB
-            carrierOperatorCode: TB
-            number: 1661
-            fppAvailable: false
-            fppDefault: false
-            daySequence: ''
-            price: 102.99
-            meal:
-              code: X
-            includedLuggage:
-            - paxId: 1
-              included: 20
-              maxPerBag: 0
-              type: C
-              price: 20
-            - paxId: 1
-              included: 10
-              maxPerBag: 10
-              type: H
-            - paxId: 2
-              included: 25
-              maxPerBag: 0
-              type: C
-              price: 25
-            - paxId: 2
-              included: 10
-              maxPerBag: 10
-              type: H
-            carrierName: TUI fly
-          RET:
-            aircrafttype: ''
-            key: TFSBRU20210326175452TB
-            accomodation:
-              date: '2027-01-25'
-            totalFree: 9
-            seatsAtThisPrice: 0
-            infantsFree: 9
-            depart:
-              airport:
-                code: TFS
-                name: Tenerife
-              datetime: '2027-01-25T14:30:00+01:00'
-            arrival:
-              airport:
-                code: BRU
-                name: Brussel
-              datetime: '2027-01-25T20:30:00+01:00'
-            carrier: TB
-            carrierOperatorCode: ''
-            number: '1754'
-            fppAvailable: false
-            fppDefault: false
-            daySequence: 2
-            price: 102.99
-            meal:
-              code: V
-            includedLuggage:
-            - paxId: 1
-              included: 25
-              maxPerBag: 32
-              type: C
-              price: 0
-            - paxId: 1
-              included: 10
-              maxPerBag: 10
-              type: H
-            - paxId: 2
-              included: 25
-              maxPerBag: 32
-              type: C
-              price: 0
-            - paxId: 2
-              included: 10
-              maxPerBag: 10
-              type: H
-            carrierName: TUI fly
-        fppCost: ''
-        details: "\n\n\n\n\n\n\n PRIJS\n VR 19/03  TB 1753 BRU 0825 - LPA 1225 -//- LPA 1255 - TFS 1405 (seq:2)\n VR 26/03  TB 1754 TFS 1430 - BRU 2030 (seq:2)\n      TF.E    TUI fly                  7 NACHTEN  VR 19/03/2021   VR 26/03/2021\n      02900 TUI FLY                    BRU-TFS    TFS-BRU\n      MR.  JOHN DOE         30 jaar N: 102,99   + 102,99\n      MRS. JANE DOE         30 jaar N                                    411,96\n      AIRPORT\n      BRU-TFS\n      20 kg ruimbagage               : JOHN DOE                           20,00\n      25 kg ruimbagage               : JANE DOE                           25,00\n      TFS-BRU\n      25 kg ruimbagage               : JOHN DOE                            0,00\n      25 kg ruimbagage               : JANE DOE                            0,00\n      Geen Standaardmaaltijd op heenreis BRU-TFS\n      Flydeluxe op terugreis TFS-BRU :  65,00X 2                         130,00\n      Geen verzekering\n      Enkelvoudige prestatie\n                                       05/03/2021  (W )     TOTAL....    586,96\n                                                (Incl. Airporttax    40,15 p.p.)\n"
-        travelDirective: CUSTOM
-        saldo: 586.96
-        vouchers: null
-        deposit: 0
-        advance: 586.96
-        tdaAvailable: 1
-        vehicles: []
-        messages: []
-        destinationInfo:
-        - 'Belgische burgers: identiteitskaart (geldig vr de duur van het verblijf)'
-        - 'niet-Belgische burgers: Info bij hun Ambassade of Consulaat'
-        - '-----------------------------------------------------------------------'
-        - 'COVID-19 info :'
-        - 'Meer informatie over de reisformaliteiten op de TUI fly website :'
-        - https://www.tuifly.be/nl/legal/reisformaliteiten
-        flightErrata:
-        - 13/11/20-31/03/21
-        - Een negatieve Covid-19 test dient bij aankomst voorgelegd te
-        - worden. De test mag maximaal 72 uur voor aankomst in
-        - Spanje afgenomen zijn en is verplicht voor volwassenen en
-        - kinderen vanaf 6 jaar.
-        - ''
-        hotelErrata: []
-        indicTransferType: N
-        indicHuurwagen: ''
-        tax:
-          OUT:
-          - paxId: 1
-            code: BE1
-            price: 35.14
-          - paxId: 1
-            code: S3
-            price: 4
-          - paxId: 2
-            code: BE1
-            price: 35.14
-          - paxId: 2
-            code: S3
-            price: 4
-          RET:
-          - paxId: 1
-            code: BE2
-            price: 0.27
-          - paxId: 1
-            code: EG
-            price: 7.75
-          - paxId: 1
-            code: EQ
-            price: 1.82
-          - paxId: 1
-            code: JK
-            price: 2.59
-          - paxId: 2
-            code: BE2
-            price: 0.27
-          - paxId: 2
-            code: EG
-            price: 7.75
-          - paxId: 2
-            code: EQ
-            price: 1.82
-          - paxId: 2
-            code: JK
-            price: 2.59
-        insurance:
-        - code: N
-          price: 0
-        priceDetail:
-        - description: Flydeluxe op terugreis TFS-BRU
-          price: 130
-          type: FLYDEL
-          code: FMVR
-        - description: Geen verzekering
-          type: INS
-    handluggageExample:
-      value:
+  schemas:
+    direction:
+      type: array
+      items:
+        $ref: '#/components/schemas/flightLeg'
+    handluggageResponse:
+      type: object
+      properties:
         handluggage:
-          OUT:
-          - price: 0
-            weight: 2
-            code: PBAG
-            dimensions:
-              unit: cm
-              height: 40
-              length: 30
-              width: 20
-          - price: 22
-            weight: 10
-            code: HBAG
-            dimensions:
-              unit: cm
-              height: 55
-              length: 40
-              width: 20
-    flightavailabilityExample:
-      value:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/directionHandluggage'
+            RET:
+              $ref: '#/components/schemas/directionHandluggage'
+    payResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+    locale:
+      type: string
+      description: Locale used for adjust the request. Defaults to nl_BE.
+      maxLength: 5
+      minLength: 5
+      pattern: ^[a-z]{2}_[A-Z]{2}$
+    priceCalculationPrice:
+      type: object
+      properties:
+        currency:
+          type: string
+        totalprice:
+          type: number
+          format: double
+        totaleuro:
+          type: number
+          format: double
+        airportTax:
+          type: number
+          format: double
+        lines:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              code:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+                format: double
+              details:
+                oneOf:
+                - $ref: '#/components/schemas/detailsObject'
+                - $ref: '#/components/schemas/detailsArray'
+        po:
+          type: string
         flights:
-          OUT:
-            aircrafttype: ''
-            key: BRUTFS20210401175141TB
-            accomodation:
-              date: '2027-01-18'
-            totalFree: 135
-            seatsAtThisPrice: 0
-            infantsFree: 18
-            depart:
-              airport:
-                code: BRU
-                name: Brussel
-              datetime: '2027-01-18T06:15:00+02:00'
-            arrival:
-              airport:
-                code: TFS
-                name: Tenerife
-              datetime: '2027-01-18T10:15:00+02:00'
-            carrier: TB
-            carrierOperatorCode: ''
-            number: 1751
-            fppAvailable: false
-            fppDefault: false
-            daySequence: 1
-            availableMeals:
-              X:
-                code: X
-                price: 0
-                priceChild: 0
-              V:
-                code: V
-                price: 65
-                priceChild: 20
-            defaultMeal: X
-            carrierName: TUI fly
-            occupationMatch: 1
-            bestMatch: 1
-          RET:
-            aircrafttype: ''
-            key: TFSBRU20210404175671TB
-            accomodation:
-              date: '2027-01-25'
-            totalFree: 166
-            seatsAtThisPrice: 0
-            infantsFree: 18
-            depart:
-              airport:
-                code: TFS
-                name: Tenerife
-              datetime: '2027-01-25T17:35:00+02:00'
-            arrival:
-              airport:
-                code: BRU
-                name: Brussel
-              datetime: '2027-01-25T23:25:00+02:00'
-            carrier: TB
-            carrierOperatorCode: ''
-            number: 1756
-            fppAvailable: false
-            fppDefault: false
-            daySequence: 1
-            availableMeals:
-              X:
-                code: X
-                price: 0
-                priceChild: 0
-              V:
-                code: V
-                price: 65
-                priceChild: 20
-            defaultMeal: X
-            carrierName: TUI fly
-            occupationMatch: 1
-            bestMatch: 1
-        messages: []
-        stopPreMeals:
-          OUT: true
-          RET: true
-    petsExample:
-      value:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/flightLegPriceCheck'
+            RET:
+              $ref: '#/components/schemas/flightLegPriceCheck'
+        destinationInfo:
+          type: array
+          items:
+            type: string
+        flightErrata:
+          type: array
+          items:
+            type: string
+    flightLegPriceCheck:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/flightkey'
+        depart:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+            datetime:
+              type: string
+        arrival:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+            datetime:
+              type: string
+        via:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+            departureTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+            arrivalTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+        carrier:
+          type: string
+        carrierOperatorCode:
+          type: string
+        number:
+          type: integer
+        fppAvailable:
+          type: boolean
+        fppDefault:
+          type: boolean
+        includedLuggage:
+          type: array
+          items:
+            type: object
+            properties:
+              paxId:
+                type: integer
+              included:
+                type: integer
+              maxPerBag:
+                type: integer
+              type:
+                type: string
+        daySequence:
+          type: integer
+        price:
+          type: number
+          format: double
+        meal:
+          type: object
+          properties:
+            code:
+              type: string
+        carrierName:
+          type: string
+    detailsObject:
+      type: object
+      properties:
+        price:
+          $ref: '#/components/schemas/priceObjectPriceCheck'
+        formula:
+          type: string
+        quantity:
+          type: integer
+        pax:
+          type: integer
+    sportsResponse:
+      type: object
+      properties:
+        sports:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/directionAncillaries'
+            RET:
+              $ref: '#/components/schemas/directionAncillaries'
+    directionLuggage:
+      type: array
+      items:
+        $ref: '#/components/schemas/luggageInformation'
+    flight:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/flightkey'
+        depcode:
+          $ref: '#/components/schemas/locationCode'
+        depdate:
+          type: string
+          format: yyyy-mm-dd
+        deptime:
+          type: string
+          format: hh:mm
+        arrcode:
+          $ref: '#/components/schemas/locationCode'
+        arrdate:
+          type: string
+          format: yyyy-mm-dd
+        arrtime:
+          type: string
+          format: hh:mm
+        carrier:
+          type: string
+        carriername:
+          type: string
+        nr:
+          type: number
+          format: integer
+        stops:
+          type: number
+          format: integer
+    locationCode:
+      type: string
+      maxLength: 3
+      minLength: 3
+      pattern: ^[A-Z]{3}$
+    directionAncillaries:
+      type: array
+      items:
+        $ref: '#/components/schemas/ancillariesInformation'
+    getflightsResponse:
+      type: object
+      properties:
+        flights:
+          type: array
+          items:
+            $ref: '#/components/schemas/flight'
+    luggageResponse:
+      type: object
+      properties:
+        OUT:
+          $ref: '#/components/schemas/directionLuggage'
+        RET:
+          $ref: '#/components/schemas/directionLuggage'
+    handluggageInformation:
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+        weight:
+          type: number
+        code:
+          type: string
+        dimensions:
+          $ref: '#/components/schemas/dimensions'
+    flightLegCheckout:
+      type: object
+      properties:
+        aircrafttype:
+          type: string
+        key:
+          $ref: '#/components/schemas/flightkey'
+        totalFree:
+          type: integer
+        seatAtThisPrice:
+          type: integer
+        infantsFree:
+          type: integer
+        depart:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+            datetime:
+              type: string
+        arrival:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+            datetime:
+              type: string
+        via:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+            departureTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+            arrivalTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+        carrier:
+          type: string
+        carrierOperatorCode:
+          type: string
+        number:
+          type: integer
+        fppAvailable:
+          type: boolean
+        fppDefault:
+          type: boolean
+        daySequence:
+          type: integer
+        price:
+          type: number
+          format: double
+        meal:
+          type: object
+          properties:
+            code:
+              type: string
+        includedLuggage:
+          type: array
+          items:
+            type: object
+            properties:
+              paxId:
+                type: string
+              included:
+                type: integer
+              maxPerBag:
+                type: integer
+              type:
+                type: string
+              price:
+                type: number
+                format: double
+        carrierName:
+          type: string
+    ancillariesInformation:
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+        code:
+          type: string
+    servicebundleInfo:
+      type: array
+      items:
+        type: object
+        properties:
+          price:
+            type: number
+            format: double
+          currency:
+            type: string
+          code:
+            type: string
+          type:
+            type: string
+    flightkey:
+      type: string
+      description: A flight key. Concatenation of ORIGIN + DESTINATION + DATE + TIME
+    priceObjectPriceCheck:
+      type: object
+      properties:
+        OUT:
+          type: number
+        RET:
+          type: number
+    petsResponse:
+      type: object
+      properties:
         pets:
-          OUT:
-          - price: 60
-            code: PETC
-          - price: 90
-            code: AVIH
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/directionAncillaries'
+            RET:
+              $ref: '#/components/schemas/directionAncillaries'
+    bookinfoResponse:
+      type: object
+      properties:
+        currency:
+          type: string
+        totalprice:
+          type: number
+          format: double
+        airportTax:
+          type: number
+          format: double
+        exchangeRate:
+          type: integer
+        index:
+          type: integer
+        lines:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              code:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+                format: double
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    price:
+                      type: number
+                      format: double
+                    formula:
+                      type: string
+                    quantity:
+                      type: integer
+                    pax:
+                      type: string
+        servicebundle:
+          type: object
+          properties:
+            type:
+              type: string
+            code:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+              format: double
+        serviceMeal:
+          type: object
+          properties:
+            type:
+              type: string
+            code:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+              format: double
+        po:
+          type: string
+        bookingChannel:
+          type: string
+        datetime:
+          type: string
+        bookDate:
+          type: string
+        status:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+        flights:
+          type: object
+          properties:
+            OUT:
+              type: object
+              properties:
+                aircrafttype:
+                  type: string
+                key:
+                  $ref: '#/components/schemas/flightkey'
+                totalFree:
+                  type: integer
+                seatAtThisPrice:
+                  type: integer
+                depart:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                        name:
+                          type: string
+                    datetime:
+                      type: string
+                arrival:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                        name:
+                          type: string
+                    datetime:
+                      type: string
+                via:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                    departureTime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                    arrivalTime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                carrier:
+                  type: string
+                carrierOperatorCode:
+                  type: string
+                number:
+                  type: integer
+                fppAvailable:
+                  type: boolean
+                fppDefault:
+                  type: boolean
+                daySequence:
+                  type: integer
+                price:
+                  type: number
+                  format: double
+                meal:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                includedLuggage:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      paxId:
+                        type: integer
+                      included:
+                        type: integer
+                      maxPerBag:
+                        type: integer
+                      type:
+                        type: integer
+                      price:
+                        type: number
+                        format: double
+                carrierName:
+                  type: string
+            RET:
+              type: object
+              properties:
+                aircrafttype:
+                  type: string
+                key:
+                  $ref: '#/components/schemas/flightkey'
+                totalFree:
+                  type: integer
+                seatAtThisPrice:
+                  type: integer
+                depart:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                        name:
+                          type: string
+                    datetime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                arrival:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                        name:
+                          type: string
+                    datetime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                via:
+                  type: object
+                  properties:
+                    airport:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                    departureTime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                    arrivalTime:
+                      type: string
+                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+                carrier:
+                  type: string
+                carrierOperatorCode:
+                  type: string
+                number:
+                  type: integer
+                fppAvailable:
+                  type: boolean
+                fppDefault:
+                  type: boolean
+                daySequence:
+                  type: integer
+                price:
+                  type: number
+                  format: double
+                meal:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                includedLuggage:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      paxId:
+                        type: integer
+                      included:
+                        type: integer
+                      maxPerBag:
+                        type: integer
+                      type:
+                        type: integer
+                      price:
+                        type: number
+                        format: double
+                carrierName:
+                  type: string
+      example:
+        $ref: '#/components/examples/bookinfoExample'
+    flightLeg:
+      type: object
+      properties:
+        aircrafttype:
+          type: string
+        key:
+          $ref: '#/components/schemas/flightkey'
+        accomodation:
+          type: object
+          properties:
+            date:
+              type: string
+              format: yyyy-mm-dd
+        totalFree:
+          description: Total number of free seats in the plane.
+          type: number
+          format: integer
+        seatsAtThisPrice:
+          description: Number of free seats at the given code.
+          type: number
+          format: integer
+        infantsFree:
+          description: Number of seats free on the infant category
+        depart:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  $ref: '#/components/schemas/locationCode'
+                name:
+                  type: string
+            datetime:
+              type: string
+        arrival:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  $ref: '#/components/schemas/locationCode'
+                name:
+                  type: string
+            datetime:
+              type: string
+        via:
+          type: object
+          properties:
+            airport:
+              type: object
+              properties:
+                code:
+                  type: string
+            departureTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+            arrivalTime:
+              type: string
+              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
+        carrier:
+          type: string
+        carrierOperatorCode:
+          type: string
+        number:
+          type: number
+          format: integer
+        fppAvailable:
+          type: boolean
+        fppDefault:
+          type: boolean
+        daySequence:
+          type: number
+          format: integer
+        price:
+          type: string
+        availableMeals:
+          description: Dictionary of available meals, whose key is the meal code associated to the meal object schema, including the code and prices
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              code:
+                $ref: '#/components/schemas/mealCode'
+              price:
+                type: number
+                format: double
+              priceChild:
+                type: number
+                format: double
+        defaultMeal:
+          $ref: '#/components/schemas/mealCode'
+        carrierName:
+          type: string
+        occupationMatch:
+          type: number
+          format: integer
+    assistanceResponse:
+      type: object
+      properties:
+        assistance:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/directionAncillaries'
+            RET:
+              $ref: '#/components/schemas/directionAncillaries'
+    mealCode:
+      type: string
+      description: "'Meal codes descriptions':\n  * `` - 'None'\n  * `X` - 'No meal'\n  * `S` - 'Standard meal'\n  * `V` - 'Service Plus'\n  * `CC` -  'Comfort Service'\n"
+      enum:
+      - ''
+      - X
+      - S
+      - V
+      - CC
+    directionIncludedLuggage:
+      type: array
+      items:
+        $ref: '#/components/schemas/includedLuggageInformation'
+    servicebundleResponse:
+      type: object
+      properties:
+        servicebundle:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/servicebundleInfo'
+            RET:
+              $ref: '#/components/schemas/servicebundleInfo'
+    dimensions:
+      type: object
+      properties:
+        unit:
+          type: string
+        height:
+          type: number
+        length:
+          type: number
+        width:
+          type: number
+    includedLuggageResponse:
+      type: object
+      properties:
+        OUT:
+          $ref: '#/components/schemas/directionIncludedLuggage'
+        RET:
+          $ref: '#/components/schemas/directionIncludedLuggage'
+    priceNumberPriceCheck:
+      type: number
+    priceCalculationBook:
+      type: object
+      properties:
+        currency:
+          type: string
+        totalprice:
+          type: number
+          format: double
+        airportTax:
+          type: number
+          format: double
+        index:
+          type: integer
+        lines:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              code:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+                format: double
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    price:
+                      type: number
+                      format: double
+                    formula:
+                      type: string
+                    quantity:
+                      type: integer
+                    pax:
+                      type: integer
+        flights:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/flightLegCheckout'
+            RET:
+              $ref: '#/components/schemas/flightLegCheckout'
+        totaleuro:
+          type: number
+        exchangeRate:
+          type: integer
+        fppCost:
+          type: string
+        travelDirective:
+          type: string
+        vouchers:
+          type: array
+          items:
+            type: object
+        saldo:
+          type: number
+        deposit:
+          type: number
+        advance:
+          type: number
+        tdaAvailable:
+          type: integer
+        vehicles:
+          type: array
+          items:
+            type: string
+        messages:
+          type: array
+          items:
+            type: string
+        destinationInfo:
+          type: array
+          items:
+            type: string
+        flightErrata:
+          type: array
+          items:
+            type: string
+        hotelErrata:
+          type: array
+          items:
+            type: string
+        indicTransferType:
+          type: string
+        indicHuurwagen:
+          type: string
+        insurance:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              price:
+                type: number
+                format: double
+        priceDetail:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              type:
+                type: string
+        po:
+          type: string
+    directionHandluggage:
+      type: array
+      items:
+        $ref: '#/components/schemas/handluggageInformation'
+    flightavailabilityResponse:
+      type: object
+      properties:
+        flights:
+          type: object
+          properties:
+            OUT:
+              $ref: '#/components/schemas/direction'
+            RET:
+              $ref: '#/components/schemas/direction'
+        messages:
+          type: array
+          items:
+            type: string
+        stopPreMeals:
+          type: object
+          properties:
+            OUT:
+              type: boolean
+            RET:
+              type: boolean
+      example:
+        $ref: '#/components/examples/flightavailabilityExample'
+    luggageInformation:
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+        weight:
+          type: number
+    detailsArray:
+      type: array
+      items:
+        type: object
+        properties:
+          price:
+            $ref: '#/components/schemas/priceNumberPriceCheck'
+          formula:
+            type: string
+          quantity:
+            type: integer
+          pax:
+            type: integer
+    includedLuggageInformation:
+      type: object
+      properties:
+        paxId:
+          type: string
+        included:
+          type: number
+          format: integer
+        maxPerBag:
+          type: number
+          format: integer
+        type:
+          type: string
+        price:
+          type: number
+          format: double
+  examples:
+    payKoExample:
+      value:
+        status: ERROR
+        code: 0
+        message: This order has already been processed.
+        server: new api server
+    payOkExample:
+      value:
+        status: OK
+        code: 9
     includedluggageExample:
       value:
         includedLuggage:
@@ -1089,42 +1766,22 @@ components:
             included: 10
             maxPerBag: 10
             type: H
-    getflightsExample:
+    sportsExample:
       value:
-        flights:
-        - key: ACEBRU20220209202202091711TB
-          depcode: ACE
-          depdate: '2027-01-12'
-          deptime: '17:35'
-          arrcode: BRU
-          arrdate: '2027-01-12'
-          arrtime: '21:10'
-          carrier: TB
-          carriername: TUI fly
-          nr: 1711
-          stops: 0
-    assistanceExample:
-      value:
-        assistance:
+        sports:
           OUT:
-          - price: 85
-            code: YPTA
-          - price: 0
-            code: WCHS
-          - price: 0
-            code: WCHR
-          - price: 0
-            code: WCHC
-          - price: 85
-            code: UMNR
-          - price: 25
-            code: MAAS
-          - price: 0
-            code: DPNA
-          - price: 0
-            code: DEAF
-          - price: 0
-            code: BLND
+          - price: 55
+            code: SURFBOARD
+          - price: 40
+            code: WINTER_SPORTS_EQUIPMENT
+          - price: 55
+            code: PARAGLIDER_PARACHUTE
+          - price: 40
+            code: GOLF
+          - price: 55
+            code: DIVE
+          - price: 55
+            code: BICYCLE
     bookinfoExample:
       value:
         currency: EUR
@@ -1394,32 +2051,288 @@ components:
           amount: '7399'
           status: '9'
         html: (Contains embed html code)
-    payKoExample:
+    petsExample:
       value:
-        status: ERROR
-        code: 0
-        message: This order has already been processed.
-        server: new api server
-    sportsExample:
-      value:
-        sports:
+        pets:
           OUT:
-          - price: 55
-            code: SURFBOARD
-          - price: 40
-            code: WINTER_SPORTS_EQUIPMENT
-          - price: 55
-            code: PARAGLIDER_PARACHUTE
-          - price: 40
-            code: GOLF
-          - price: 55
-            code: DIVE
-          - price: 55
-            code: BICYCLE
-    payOkExample:
+          - price: 60
+            code: PETC
+          - price: 90
+            code: AVIH
+    handluggageExample:
       value:
-        status: OK
-        code: 9
+        handluggage:
+          OUT:
+          - price: 0
+            weight: 2
+            code: PBAG
+            dimensions:
+              unit: cm
+              height: 40
+              length: 30
+              width: 20
+          - price: 22
+            weight: 10
+            code: HBAG
+            dimensions:
+              unit: cm
+              height: 55
+              length: 40
+              width: 20
+    luggageExample:
+      value:
+        luggage:
+          OUT:
+          - price: 0
+            weight: 0
+          - price: 20
+            weight: 20
+          - price: 25
+            weight: 25
+          - price: 30
+            weight: 30
+          - price: 65
+            weight: 35
+          - price: 100
+            weight: 40
+          - price: 150
+            weight: 45
+    getflightsExample:
+      value:
+        flights:
+        - key: ACEBRU20220209202202091711TB
+          depcode: ACE
+          depdate: '2027-01-12'
+          deptime: '17:35'
+          arrcode: BRU
+          arrdate: '2027-01-12'
+          arrtime: '21:10'
+          carrier: TB
+          carriername: TUI fly
+          nr: 1711
+          stops: 0
+    assistanceExample:
+      value:
+        assistance:
+          OUT:
+          - price: 85
+            code: YPTA
+          - price: 0
+            code: WCHS
+          - price: 0
+            code: WCHR
+          - price: 0
+            code: WCHC
+          - price: 85
+            code: UMNR
+          - price: 25
+            code: MAAS
+          - price: 0
+            code: DPNA
+          - price: 0
+            code: DEAF
+          - price: 0
+            code: BLND
+    priceCalculationExample:
+      value:
+        currency: EUR
+        totalprice: 379.99
+        totaleuro: 379.99
+        airportTax: 10.86
+        exchangeRate: 1
+        lines:
+        - type: FLIGHT
+          code: ''
+          description: flight with 1 adult(s).
+          price: 379.99
+          details:
+            price:
+              OUT: 379.99
+              RET: 0
+            formula: ''
+            quantity: 0
+            pax: 1
+        - type: LUGGAGE
+          code: BG00
+          description: 00 kg ruimbagage
+          price: 0
+          details:
+          - price: 0
+            formula: X
+            quantity: 1
+            pax: 1
+        flights:
+          OUT:
+            key: TFSBRU20220907202209071661TB
+            totalFree: 9
+            seatsAtThisPrice: 0
+            infantsFree: 9
+            depart:
+              airport:
+                code: TFS
+                name: Tenerife
+              datetime: '2027-01-20T12:35:00'
+            arrival:
+              airport:
+                code: BRU
+                name: Brussels
+              datetime: '2027-01-20T18:25:00'
+            via:
+              airport:
+                code: LPA
+                name: LPA
+            carrier: TB
+            carrierOperatorCode: TB
+            number: 1661
+            fppAvailable: false
+            fppDefault: false
+            daySequence: ''
+            price: 102.99
+            meal:
+              code: X
+            includedLuggage:
+            - paxId: 1
+              included: 20
+              maxPerBag: 0
+              type: C
+              price: 20
+            - paxId: 1
+              included: 10
+              maxPerBag: 10
+              type: H
+            - paxId: 2
+              included: 25
+              maxPerBag: 0
+              type: C
+              price: 25
+            - paxId: 2
+              included: 10
+              maxPerBag: 10
+              type: H
+            carrierName: TUI fly
+          RET:
+            aircrafttype: ''
+            key: TFSBRU20210326175452TB
+            accomodation:
+              date: '2027-01-25'
+            totalFree: 9
+            seatsAtThisPrice: 0
+            infantsFree: 9
+            depart:
+              airport:
+                code: TFS
+                name: Tenerife
+              datetime: '2027-01-25T14:30:00+01:00'
+            arrival:
+              airport:
+                code: BRU
+                name: Brussel
+              datetime: '2027-01-25T20:30:00+01:00'
+            carrier: TB
+            carrierOperatorCode: ''
+            number: '1754'
+            fppAvailable: false
+            fppDefault: false
+            daySequence: 2
+            price: 102.99
+            meal:
+              code: V
+            includedLuggage:
+            - paxId: 1
+              included: 25
+              maxPerBag: 32
+              type: C
+              price: 0
+            - paxId: 1
+              included: 10
+              maxPerBag: 10
+              type: H
+            - paxId: 2
+              included: 25
+              maxPerBag: 32
+              type: C
+              price: 0
+            - paxId: 2
+              included: 10
+              maxPerBag: 10
+              type: H
+            carrierName: TUI fly
+        fppCost: ''
+        details: "\n\n\n\n\n\n\n PRIJS\n VR 19/03  TB 1753 BRU 0825 - LPA 1225 -//- LPA 1255 - TFS 1405 (seq:2)\n VR 26/03  TB 1754 TFS 1430 - BRU 2030 (seq:2)\n      TF.E    TUI fly                  7 NACHTEN  VR 19/03/2021   VR 26/03/2021\n      02900 TUI FLY                    BRU-TFS    TFS-BRU\n      MR.  JOHN DOE         30 jaar N: 102,99   + 102,99\n      MRS. JANE DOE         30 jaar N                                    411,96\n      AIRPORT\n      BRU-TFS\n      20 kg ruimbagage               : JOHN DOE                           20,00\n      25 kg ruimbagage               : JANE DOE                           25,00\n      TFS-BRU\n      25 kg ruimbagage               : JOHN DOE                            0,00\n      25 kg ruimbagage               : JANE DOE                            0,00\n      Geen Standaardmaaltijd op heenreis BRU-TFS\n      Flydeluxe op terugreis TFS-BRU :  65,00X 2                         130,00\n      Geen verzekering\n      Enkelvoudige prestatie\n                                       05/03/2021  (W )     TOTAL....    586,96\n                                                (Incl. Airporttax    40,15 p.p.)\n"
+        travelDirective: CUSTOM
+        saldo: 586.96
+        vouchers: null
+        deposit: 0
+        advance: 586.96
+        tdaAvailable: 1
+        vehicles: []
+        messages: []
+        destinationInfo:
+        - 'Belgische burgers: identiteitskaart (geldig vr de duur van het verblijf)'
+        - 'niet-Belgische burgers: Info bij hun Ambassade of Consulaat'
+        - '-----------------------------------------------------------------------'
+        - 'COVID-19 info :'
+        - 'Meer informatie over de reisformaliteiten op de TUI fly website :'
+        - https://www.tuifly.be/nl/legal/reisformaliteiten
+        flightErrata:
+        - 13/11/20-31/03/21
+        - Een negatieve Covid-19 test dient bij aankomst voorgelegd te
+        - worden. De test mag maximaal 72 uur voor aankomst in
+        - Spanje afgenomen zijn en is verplicht voor volwassenen en
+        - kinderen vanaf 6 jaar.
+        - ''
+        hotelErrata: []
+        indicTransferType: N
+        indicHuurwagen: ''
+        tax:
+          OUT:
+          - paxId: 1
+            code: BE1
+            price: 35.14
+          - paxId: 1
+            code: S3
+            price: 4
+          - paxId: 2
+            code: BE1
+            price: 35.14
+          - paxId: 2
+            code: S3
+            price: 4
+          RET:
+          - paxId: 1
+            code: BE2
+            price: 0.27
+          - paxId: 1
+            code: EG
+            price: 7.75
+          - paxId: 1
+            code: EQ
+            price: 1.82
+          - paxId: 1
+            code: JK
+            price: 2.59
+          - paxId: 2
+            code: BE2
+            price: 0.27
+          - paxId: 2
+            code: EG
+            price: 7.75
+          - paxId: 2
+            code: EQ
+            price: 1.82
+          - paxId: 2
+            code: JK
+            price: 2.59
+        insurance:
+        - code: N
+          price: 0
+        priceDetail:
+        - description: Flydeluxe op terugreis TFS-BRU
+          price: 130
+          type: FLYDEL
+          code: FMVR
+        - description: Geen verzekering
+          type: INS
     servicebundleExample:
       value:
         servicebundle:
@@ -1432,974 +2345,87 @@ components:
             currency: EUR
             code: F
             type: CHILD
-  schemas:
-    directionIncludedLuggage:
-      type: array
-      items:
-        $ref: '#/components/schemas/includedLuggageInformation'
-    flightkey:
-      type: string
-      description: A flight key. Concatenation of ORIGIN + DESTINATION + DATE + TIME
-    sportsResponse:
-      type: object
-      properties:
-        sports:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/directionAncillaries'
-            RET:
-              $ref: '#/components/schemas/directionAncillaries'
-    flightLegPriceCheck:
-      type: object
-      properties:
-        key:
-          $ref: '#/components/schemas/flightkey'
-        depart:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-                name:
-                  type: string
-            datetime:
-              type: string
-        arrival:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-                name:
-                  type: string
-            datetime:
-              type: string
-        via:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-            departureTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-            arrivalTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-        carrier:
-          type: string
-        carrierOperatorCode:
-          type: string
-        number:
-          type: integer
-        fppAvailable:
-          type: boolean
-        fppDefault:
-          type: boolean
-        includedLuggage:
-          type: array
-          items:
-            type: object
-            properties:
-              paxId:
-                type: integer
-              included:
-                type: integer
-              maxPerBag:
-                type: integer
-              type:
-                type: string
-        daySequence:
-          type: integer
-        price:
-          type: number
-          format: double
-        meal:
-          type: object
-          properties:
-            code:
-              type: string
-        carrierName:
-          type: string
-    directionLuggage:
-      type: array
-      items:
-        $ref: '#/components/schemas/luggageInformation'
-    priceCalculationBook:
-      type: object
-      properties:
-        currency:
-          type: string
-        totalprice:
-          type: number
-          format: double
-        airportTax:
-          type: number
-          format: double
-        index:
-          type: integer
-        lines:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              code:
-                type: string
-              description:
-                type: string
-              price:
-                type: number
-                format: double
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    price:
-                      type: number
-                      format: double
-                    formula:
-                      type: string
-                    quantity:
-                      type: integer
-                    pax:
-                      type: integer
+    flightavailabilityExample:
+      value:
         flights:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/flightLegCheckout'
-            RET:
-              $ref: '#/components/schemas/flightLegCheckout'
-        totaleuro:
-          type: number
-        exchangeRate:
-          type: integer
-        fppCost:
-          type: string
-        travelDirective:
-          type: string
-        vouchers:
-          type: array
-          items:
-            type: object
-        saldo:
-          type: number
-        deposit:
-          type: number
-        advance:
-          type: number
-        tdaAvailable:
-          type: integer
-        vehicles:
-          type: array
-          items:
-            type: string
-        messages:
-          type: array
-          items:
-            type: string
-        destinationInfo:
-          type: array
-          items:
-            type: string
-        flightErrata:
-          type: array
-          items:
-            type: string
-        hotelErrata:
-          type: array
-          items:
-            type: string
-        indicTransferType:
-          type: string
-        indicHuurwagen:
-          type: string
-        insurance:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-              price:
-                type: number
-                format: double
-        priceDetail:
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-              type:
-                type: string
-        po:
-          type: string
-    flight:
-      type: object
-      properties:
-        key:
-          $ref: '#/components/schemas/flightkey'
-        depcode:
-          $ref: '#/components/schemas/locationCode'
-        depdate:
-          type: string
-          format: yyyy-mm-dd
-        deptime:
-          type: string
-          format: hh:mm
-        arrcode:
-          $ref: '#/components/schemas/locationCode'
-        arrdate:
-          type: string
-          format: yyyy-mm-dd
-        arrtime:
-          type: string
-          format: hh:mm
-        carrier:
-          type: string
-        carriername:
-          type: string
-        nr:
-          type: number
-          format: integer
-        stops:
-          type: number
-          format: integer
-    dimensions:
-      type: object
-      properties:
-        unit:
-          type: string
-        height:
-          type: number
-        length:
-          type: number
-        width:
-          type: number
-    flightLegCheckout:
-      type: object
-      properties:
-        aircrafttype:
-          type: string
-        key:
-          $ref: '#/components/schemas/flightkey'
-        totalFree:
-          type: integer
-        seatAtThisPrice:
-          type: integer
-        infantsFree:
-          type: integer
-        depart:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-                name:
-                  type: string
-            datetime:
-              type: string
-        arrival:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-                name:
-                  type: string
-            datetime:
-              type: string
-        via:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-            departureTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-            arrivalTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-        carrier:
-          type: string
-        carrierOperatorCode:
-          type: string
-        number:
-          type: integer
-        fppAvailable:
-          type: boolean
-        fppDefault:
-          type: boolean
-        daySequence:
-          type: integer
-        price:
-          type: number
-          format: double
-        meal:
-          type: object
-          properties:
-            code:
-              type: string
-        includedLuggage:
-          type: array
-          items:
-            type: object
-            properties:
-              paxId:
-                type: string
-              included:
-                type: integer
-              maxPerBag:
-                type: integer
-              type:
-                type: string
-              price:
-                type: number
-                format: double
-        carrierName:
-          type: string
-    getflightsResponse:
-      type: object
-      properties:
-        flights:
-          type: array
-          items:
-            $ref: '#/components/schemas/flight'
-    luggageResponse:
-      type: object
-      properties:
-        OUT:
-          $ref: '#/components/schemas/directionLuggage'
-        RET:
-          $ref: '#/components/schemas/directionLuggage'
-    flightavailabilityResponse:
-      type: object
-      properties:
-        flights:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/direction'
-            RET:
-              $ref: '#/components/schemas/direction'
-        messages:
-          type: array
-          items:
-            type: string
+          OUT:
+            aircrafttype: ''
+            key: BRUTFS20210401175141TB
+            accomodation:
+              date: '2027-01-18'
+            totalFree: 135
+            seatsAtThisPrice: 0
+            infantsFree: 18
+            depart:
+              airport:
+                code: BRU
+                name: Brussel
+              datetime: '2027-01-18T06:15:00+02:00'
+            arrival:
+              airport:
+                code: TFS
+                name: Tenerife
+              datetime: '2027-01-18T10:15:00+02:00'
+            carrier: TB
+            carrierOperatorCode: ''
+            number: 1751
+            fppAvailable: false
+            fppDefault: false
+            daySequence: 1
+            availableMeals:
+              X:
+                code: X
+                price: 0
+                priceChild: 0
+              V:
+                code: V
+                price: 65
+                priceChild: 20
+            defaultMeal: X
+            carrierName: TUI fly
+            occupationMatch: 1
+            bestMatch: 1
+          RET:
+            aircrafttype: ''
+            key: TFSBRU20210404175671TB
+            accomodation:
+              date: '2027-01-25'
+            totalFree: 166
+            seatsAtThisPrice: 0
+            infantsFree: 18
+            depart:
+              airport:
+                code: TFS
+                name: Tenerife
+              datetime: '2027-01-25T17:35:00+02:00'
+            arrival:
+              airport:
+                code: BRU
+                name: Brussel
+              datetime: '2027-01-25T23:25:00+02:00'
+            carrier: TB
+            carrierOperatorCode: ''
+            number: 1756
+            fppAvailable: false
+            fppDefault: false
+            daySequence: 1
+            availableMeals:
+              X:
+                code: X
+                price: 0
+                priceChild: 0
+              V:
+                code: V
+                price: 65
+                priceChild: 20
+            defaultMeal: X
+            carrierName: TUI fly
+            occupationMatch: 1
+            bestMatch: 1
+        messages: []
         stopPreMeals:
-          type: object
-          properties:
-            OUT:
-              type: boolean
-            RET:
-              type: boolean
-      example:
-        $ref: '#/components/examples/flightavailabilityExample'
-    ancillariesInformation:
-      type: object
-      properties:
-        price:
-          type: number
-          format: double
-        code:
-          type: string
-    includedLuggageInformation:
-      type: object
-      properties:
-        paxId:
-          type: string
-        included:
-          type: number
-          format: integer
-        maxPerBag:
-          type: number
-          format: integer
-        type:
-          type: string
-        price:
-          type: number
-          format: double
-    priceCalculationPrice:
-      type: object
-      properties:
-        currency:
-          type: string
-        totalprice:
-          type: number
-          format: double
-        totaleuro:
-          type: number
-          format: double
-        airportTax:
-          type: number
-          format: double
-        lines:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              code:
-                type: string
-              description:
-                type: string
-              price:
-                type: number
-                format: double
-              details:
-                oneOf:
-                - $ref: '#/components/schemas/detailsObject'
-                - $ref: '#/components/schemas/detailsArray'
-        po:
-          type: string
-        flights:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/flightLegPriceCheck'
-            RET:
-              $ref: '#/components/schemas/flightLegPriceCheck'
-        destinationInfo:
-          type: array
-          items:
-            type: string
-        flightErrata:
-          type: array
-          items:
-            type: string
-    direction:
-      type: array
-      items:
-        $ref: '#/components/schemas/flightLeg'
-    servicebundleInfo:
-      type: array
-      items:
-        type: object
-        properties:
-          price:
-            type: number
-            format: double
-          currency:
-            type: string
-          code:
-            type: string
-          type:
-            type: string
-    bookinfoResponse:
-      type: object
-      properties:
-        currency:
-          type: string
-        totalprice:
-          type: number
-          format: double
-        airportTax:
-          type: number
-          format: double
-        exchangeRate:
-          type: integer
-        index:
-          type: integer
-        lines:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              code:
-                type: string
-              description:
-                type: string
-              price:
-                type: number
-                format: double
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    price:
-                      type: number
-                      format: double
-                    formula:
-                      type: string
-                    quantity:
-                      type: integer
-                    pax:
-                      type: string
-        servicebundle:
-          type: object
-          properties:
-            type:
-              type: string
-            code:
-              type: string
-            description:
-              type: string
-            price:
-              type: number
-              format: double
-        serviceMeal:
-          type: object
-          properties:
-            type:
-              type: string
-            code:
-              type: string
-            description:
-              type: string
-            price:
-              type: number
-              format: double
-        po:
-          type: string
-        bookingChannel:
-          type: string
-        datetime:
-          type: string
-        bookDate:
-          type: string
-        status:
-          type: object
-          properties:
-            code:
-              type: string
-            description:
-              type: string
-        flights:
-          type: object
-          properties:
-            OUT:
-              type: object
-              properties:
-                aircrafttype:
-                  type: string
-                key:
-                  $ref: '#/components/schemas/flightkey'
-                totalFree:
-                  type: integer
-                seatAtThisPrice:
-                  type: integer
-                depart:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                        name:
-                          type: string
-                    datetime:
-                      type: string
-                arrival:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                        name:
-                          type: string
-                    datetime:
-                      type: string
-                via:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                    departureTime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                    arrivalTime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                carrier:
-                  type: string
-                carrierOperatorCode:
-                  type: string
-                number:
-                  type: integer
-                fppAvailable:
-                  type: boolean
-                fppDefault:
-                  type: boolean
-                daySequence:
-                  type: integer
-                price:
-                  type: number
-                  format: double
-                meal:
-                  type: object
-                  properties:
-                    code:
-                      type: string
-                includedLuggage:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      paxId:
-                        type: integer
-                      included:
-                        type: integer
-                      maxPerBag:
-                        type: integer
-                      type:
-                        type: integer
-                      price:
-                        type: number
-                        format: double
-                carrierName:
-                  type: string
-            RET:
-              type: object
-              properties:
-                aircrafttype:
-                  type: string
-                key:
-                  $ref: '#/components/schemas/flightkey'
-                totalFree:
-                  type: integer
-                seatAtThisPrice:
-                  type: integer
-                depart:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                        name:
-                          type: string
-                    datetime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                arrival:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                        name:
-                          type: string
-                    datetime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                via:
-                  type: object
-                  properties:
-                    airport:
-                      type: object
-                      properties:
-                        code:
-                          type: string
-                    departureTime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                    arrivalTime:
-                      type: string
-                      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-                carrier:
-                  type: string
-                carrierOperatorCode:
-                  type: string
-                number:
-                  type: integer
-                fppAvailable:
-                  type: boolean
-                fppDefault:
-                  type: boolean
-                daySequence:
-                  type: integer
-                price:
-                  type: number
-                  format: double
-                meal:
-                  type: object
-                  properties:
-                    code:
-                      type: string
-                includedLuggage:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      paxId:
-                        type: integer
-                      included:
-                        type: integer
-                      maxPerBag:
-                        type: integer
-                      type:
-                        type: integer
-                      price:
-                        type: number
-                        format: double
-                carrierName:
-                  type: string
-      example:
-        $ref: '#/components/examples/bookinfoExample'
-    servicebundleResponse:
-      type: object
-      properties:
-        servicebundle:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/servicebundleInfo'
-            RET:
-              $ref: '#/components/schemas/servicebundleInfo'
-    assistanceResponse:
-      type: object
-      properties:
-        assistance:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/directionAncillaries'
-            RET:
-              $ref: '#/components/schemas/directionAncillaries'
-    handluggageResponse:
-      type: object
-      properties:
-        handluggage:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/directionHandluggage'
-            RET:
-              $ref: '#/components/schemas/directionHandluggage'
-    luggageInformation:
-      type: object
-      properties:
-        price:
-          type: number
-          format: double
-        weight:
-          type: number
-    handluggageInformation:
-      type: object
-      properties:
-        price:
-          type: number
-          format: double
-        weight:
-          type: number
-        code:
-          type: string
-        dimensions:
-          $ref: '#/components/schemas/dimensions'
-    priceObjectPriceCheck:
-      type: object
-      properties:
-        OUT:
-          type: number
-        RET:
-          type: number
-    detailsObject:
-      type: object
-      properties:
-        price:
-          $ref: '#/components/schemas/priceObjectPriceCheck'
-        formula:
-          type: string
-        quantity:
-          type: integer
-        pax:
-          type: integer
-    detailsArray:
-      type: array
-      items:
-        type: object
-        properties:
-          price:
-            $ref: '#/components/schemas/priceNumberPriceCheck'
-          formula:
-            type: string
-          quantity:
-            type: integer
-          pax:
-            type: integer
-    directionAncillaries:
-      type: array
-      items:
-        $ref: '#/components/schemas/ancillariesInformation'
-    locale:
-      type: string
-      description: Locale used for adjust the request. Defaults to nl_BE.
-      maxLength: 5
-      minLength: 5
-      pattern: ^[a-z]{2}_[A-Z]{2}$
-    flightLeg:
-      type: object
-      properties:
-        aircrafttype:
-          type: string
-        key:
-          $ref: '#/components/schemas/flightkey'
-        accomodation:
-          type: object
-          properties:
-            date:
-              type: string
-              format: yyyy-mm-dd
-        totalFree:
-          description: Total number of free seats in the plane.
-          type: number
-          format: integer
-        seatsAtThisPrice:
-          description: Number of free seats at the given code.
-          type: number
-          format: integer
-        infantsFree:
-          description: Number of seats free on the infant category
-        depart:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  $ref: '#/components/schemas/locationCode'
-                name:
-                  type: string
-            datetime:
-              type: string
-        arrival:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  $ref: '#/components/schemas/locationCode'
-                name:
-                  type: string
-            datetime:
-              type: string
-        via:
-          type: object
-          properties:
-            airport:
-              type: object
-              properties:
-                code:
-                  type: string
-            departureTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-            arrivalTime:
-              type: string
-              pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:[+|-]\d{2}:\d{2}$
-        carrier:
-          type: string
-        carrierOperatorCode:
-          type: string
-        number:
-          type: number
-          format: integer
-        fppAvailable:
-          type: boolean
-        fppDefault:
-          type: boolean
-        daySequence:
-          type: number
-          format: integer
-        price:
-          type: string
-        availableMeals:
-          description: Dictionary of available meals, whose key is the meal code associated to the meal object schema, including the code and prices
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              code:
-                $ref: '#/components/schemas/mealCode'
-              price:
-                type: number
-                format: double
-              priceChild:
-                type: number
-                format: double
-        defaultMeal:
-          $ref: '#/components/schemas/mealCode'
-        carrierName:
-          type: string
-        occupationMatch:
-          type: number
-          format: integer
-    payResponse:
-      type: object
-      properties:
-        status:
-          type: string
-        code:
-          type: integer
-    directionHandluggage:
-      type: array
-      items:
-        $ref: '#/components/schemas/handluggageInformation'
-    includedLuggageResponse:
-      type: object
-      properties:
-        OUT:
-          $ref: '#/components/schemas/directionIncludedLuggage'
-        RET:
-          $ref: '#/components/schemas/directionIncludedLuggage'
-    mealCode:
-      type: string
-      description: "'Meal codes descriptions':\n  * `` - 'None'\n  * `X` - 'No meal'\n  * `S` - 'Standard meal'\n  * `V` - 'Service Plus'\n  * `CC` -  'Comfort Service'\n"
-      enum:
-      - ''
-      - X
-      - S
-      - V
-      - CC
-    petsResponse:
-      type: object
-      properties:
-        pets:
-          type: object
-          properties:
-            OUT:
-              $ref: '#/components/schemas/directionAncillaries'
-            RET:
-              $ref: '#/components/schemas/directionAncillaries'
-    locationCode:
-      type: string
-      maxLength: 3
-      minLength: 3
-      pattern: ^[A-Z]{3}$
-    priceNumberPriceCheck:
-      type: number
+          OUT: true
+          RET: true
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

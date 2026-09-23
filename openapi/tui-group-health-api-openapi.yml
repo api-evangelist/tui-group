@@ -15,13 +15,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: health
+- name: Health
 paths:
   /api/v1/health:
     get:
       tags:
-      - health
-      summary: Gets the current environment's health status.
+      - Health
+      summary: Gets the current environment's health status
       operationId: v1_health_get
       responses:
         '200':
@@ -39,8 +39,8 @@ paths:
   /api/v2/health:
     get:
       tags:
-      - health
-      summary: Returns a simple health check that will return a 200 if the server is responding.
+      - Health
+      summary: Returns a simple health check that will return a 200 if the server is responding
       description: 'This health check will not ensure that the required underlying services are working. For a more detailed health
 
         check that will validate configuration and third party services please use a different health endpoint.'
@@ -57,8 +57,8 @@ paths:
   /api/v3/health:
     get:
       tags:
-      - health
-      summary: Performs the health check.
+      - Health
+      summary: Performs the health check
       description: 'This endpoint does not require a token.
 
         If the health check returns an overall status of "Ok", the expected HTTP status code response would be a
@@ -67,7 +67,7 @@ paths:
 
         If the health check returns an overall status of "Warning", the expected HTTP status code response would be
 
-        a "299".  This is a custom code not typically mapped as per industry
+        a "299". This is a custom code not typically mapped as per industry
 
         standards, and was done intentionally to indicate a warning response from the health endpoint.
 
@@ -117,92 +117,36 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfEnvironmentHealth:
+    Message:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/EnvironmentHealth'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    EnvironmentHealth:
-      type: object
-      description: "Defines the environment health details.\n            "
-      additionalProperties: false
-      properties:
-        component:
+        code:
           type:
           - string
           - 'null'
-          description: "The name of the component.\n            "
-        componentType:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-          description: "The type of component.\n            "
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
         details:
           type:
-          - string
+          - object
           - 'null'
-          description: "The optional details of the health check.\n            "
-        status:
-          description: "The current health of the component.\n            "
-          $ref: '#/components/schemas/HealthStatus'
-        nodes:
-          type:
-          - array
-          - 'null'
-          description: "The collection of child health information objects associated with the current object.\n            "
-          items:
-            $ref: '#/components/schemas/HealthInformation'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    HealthInformation:
-      type: object
-      description: "Defines the health information details.\n            "
-      additionalProperties: false
-      properties:
-        component:
-          type:
-          - string
-          - 'null'
-          description: "The name of the component.\n            "
-        componentType:
-          type:
-          - string
-          - 'null'
-          description: "The type of component.\n            "
-        details:
-          type:
-          - string
-          - 'null'
-          description: "The optional details of the health check.\n            "
-        status:
-          description: "The current health of the component.\n            "
-          $ref: '#/components/schemas/HealthStatus'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     HealthStatus:
       type: integer
       description: "Defines the health status for a component.\n            \n\n0 = Unknown\n1 = Ok\n2 = Warning\n3 = Error"
@@ -264,36 +208,92 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    IJsonResponseOfEnvironmentHealth:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        code:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/EnvironmentHealth'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    HealthInformation:
+      type: object
+      description: "Defines the health information details.\n            "
+      additionalProperties: false
+      properties:
+        component:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+          description: "The name of the component.\n            "
+        componentType:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
+          description: "The type of component.\n            "
         details:
           type:
-          - object
+          - string
           - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+          description: "The optional details of the health check.\n            "
+        status:
+          description: "The current health of the component.\n            "
+          $ref: '#/components/schemas/HealthStatus'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    EnvironmentHealth:
+      type: object
+      description: "Defines the environment health details.\n            "
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+          description: "The name of the component.\n            "
+        componentType:
+          type:
+          - string
+          - 'null'
+          description: "The type of component.\n            "
+        details:
+          type:
+          - string
+          - 'null'
+          description: "The optional details of the health check.\n            "
+        status:
+          description: "The current health of the component.\n            "
+          $ref: '#/components/schemas/HealthStatus'
+        nodes:
+          type:
+          - array
+          - 'null'
+          description: "The collection of child health information objects associated with the current object.\n            "
+          items:
+            $ref: '#/components/schemas/HealthInformation'
     HealthStatus_2:
       type: integer
       description: '0 = Unknown
@@ -313,6 +313,24 @@ components:
       - 1
       - 2
       - 3
+    HealthInformation_2:
+      type: object
+      additionalProperties: false
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+        componentType:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/HealthStatus_2'
     EnvironmentHealth_2:
       type: object
       additionalProperties: false
@@ -337,24 +355,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/HealthInformation_2'
-    HealthInformation_2:
-      type: object
-      additionalProperties: false
-      properties:
-        component:
-          type:
-          - string
-          - 'null'
-        componentType:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/HealthStatus_2'
   securitySchemes:
     JWT:
       type: http

@@ -17,7 +17,7 @@ paths:
     get:
       tags:
       - bagTag
-      summary: Gets the bag tag printers.
+      summary: Gets the bag tag printers
       description: 'This information is retrieved based on the logged in user''s location. If a location is not set up,
 
         the returned information will be the default printers configured in printers.xml from UTL\Resource Management.
@@ -56,73 +56,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfIListOfBagTagPrinter:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BagTagPrinter'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BagTagPrinter:
-      type: object
-      description: "The bag tag printer model.\n            "
-      additionalProperties: false
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer name.\n            "
-        location:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer location.\n            "
-        address:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer address.\n            "
-        port:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer port.\n            "
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer description.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -222,6 +155,73 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    BagTagPrinter:
+      type: object
+      description: "The bag tag printer model.\n            "
+      additionalProperties: false
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer name.\n            "
+        location:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer location.\n            "
+        address:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer address.\n            "
+        port:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer port.\n            "
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer description.\n            "
+    IJsonResponseOfIListOfBagTagPrinter:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BagTagPrinter'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

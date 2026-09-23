@@ -15,13 +15,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: graph
+- name: Graph
 paths:
   /api/v1/graph:
     post:
       tags:
-      - graph
-      summary: Invokes a graph query and returns the response.
+      - Graph
+      summary: Invokes a graph query and returns the response
       operationId: v1_graph_post
       requestBody:
         x-name: query
@@ -48,8 +48,8 @@ paths:
   /api/v2/graph/{queryName}:
     post:
       tags:
-      - graph
-      summary: Invokes a graph query and returns the response.
+      - Graph
+      summary: Invokes a graph query and returns the response
       description: Invokes a graph query and returns the response.
       operationId: v2_graph_queryName_post
       parameters:
@@ -103,8 +103,8 @@ paths:
   /api/nsk/v1/graph/{queryName}:
     post:
       tags:
-      - graph
-      summary: Invokes a graph query configured in utilities.
+      - Graph
+      summary: Invokes a graph query configured in utilities
       description: 'When a graph query is configured on the server under Resource Management it allows your payload sizes to be even
 
         smaller.'
@@ -161,78 +161,36 @@ components:
           type:
           - string
           - 'null'
-    GraphQlQuery:
+    Message:
       type: object
-      description: "Graph ql query object.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
-      required:
-      - query
       properties:
-        query:
-          type: string
-          description: "Graph query.\n            "
-          minLength: 1
-        variables:
+        code:
           type:
           - string
           - 'null'
-          description: "Graph variables.\n            "
-        cachedResults:
-          type: boolean
-          description: "Allow caching and the support of etags.\n            "
-        name:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-          description: "Name for the query\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    GraphQlQueryv2:
-      type: object
-      description: "Graph ql query object.\n            "
-      additionalProperties: false
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          description: "Graph query.\n            "
-          minLength: 1
-        variables:
-          description: "Graph variables.\n            "
-        cachedResults:
-          type: boolean
-          description: "Allow caching and the support of etags.\n            "
-    IJsonResponseOfObject:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-        errors:
+          description: "The message type.\n            "
+        value:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - array
+          - object
           - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -281,43 +239,49 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    GraphQlQueryv2:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "Graph ql query object.\n            "
       additionalProperties: false
+      required:
+      - query
       properties:
-        code:
+        query:
+          type: string
+          description: "Graph query.\n            "
+          minLength: 1
+        variables:
+          description: "Graph variables.\n            "
+        cachedResults:
+          type: boolean
+          description: "Allow caching and the support of etags.\n            "
+    GraphQlQuery:
+      type: object
+      description: "Graph ql query object.\n            "
+      additionalProperties: false
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: "Graph query.\n            "
+          minLength: 1
+        variables:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+          description: "Graph variables.\n            "
+        cachedResults:
+          type: boolean
+          description: "Allow caching and the support of etags.\n            "
+        name:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    MessageStatus_2:
+          description: "Name for the query\n            "
+    MessageStatus:
       type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
       - General
       - Warning
@@ -326,35 +290,27 @@ components:
       - 0
       - 1
       - 2
-    GraphQlQueryv2_2:
+    IJsonResponseOfObject:
       type: object
-      additionalProperties: false
-      required:
-      - query
-      properties:
-        query:
-          type: string
-          minLength: 1
-        variables: {}
-        cachedResults:
-          type: boolean
-    IJsonResponseOfObject_2:
-      type: object
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        data: {}
+        data:
+          description: "The payload data.\n            "
         errors:
           type:
           - array
           - 'null'
+          description: "The collection of errors being thrown.\n            "
           items:
-            $ref: '#/components/schemas/ErrorResponse_2'
+            $ref: '#/components/schemas/ErrorResponse'
         messages:
           type:
           - array
           - 'null'
+          description: "The collection of informational messages.\n            "
           items:
-            $ref: '#/components/schemas/Message_2'
+            $ref: '#/components/schemas/Message'
     ErrorResponse_2:
       type: object
       additionalProperties: false
@@ -418,6 +374,50 @@ components:
           - 'null'
           additionalProperties:
             type: string
+    GraphQlQueryv2_2:
+      type: object
+      additionalProperties: false
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          minLength: 1
+        variables: {}
+        cachedResults:
+          type: boolean
+    MessageStatus_2:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfObject_2:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse_2'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message_2'
   securitySchemes:
     JWT:
       type: http

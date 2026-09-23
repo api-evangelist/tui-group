@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: configuration
+- name: Configuration
 paths:
   /api/v1/configuration:
     get:
       tags:
-      - configuration
-      summary: Retrieves the Digital API configuration.
+      - Configuration
+      summary: Retrieves the Digital API configuration
       description: 'This is a server-based configuration of the Digital API. For requests to change the configuration, please log a
 
         support ticket.'
@@ -60,35 +60,6 @@ components:
           type:
           - string
           - 'null'
-    PassengerConfiguration:
-      type: object
-      description: "Defines the passenger-related configuration options.\n            "
-      additionalProperties: false
-      properties:
-        infantSsrCode:
-          type:
-          - string
-          - 'null'
-          description: "The SSR code to be used for passenger infant (infant-on-lap) operations.\nThis SSR can only be sold via the /passengers/{passengerKey}/infant or via /trip and /trip/sell endpoints.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    ApiConfiguration:
-      type: object
-      description: "Defines the configuration (from the `appsettings` file) that the Digital API uses.\n            "
-      additionalProperties: false
-      properties:
-        passengerOptions:
-          description: "Passenger-related configuration options.\n            "
-          $ref: '#/components/schemas/PassengerConfiguration'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -188,6 +159,24 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    PassengerConfiguration:
+      type: object
+      description: "Defines the passenger-related configuration options.\n            "
+      additionalProperties: false
+      properties:
+        infantSsrCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR code to be used for passenger infant (infant-on-lap) operations.\nThis SSR can only be sold via the /passengers/{passengerKey}/infant or via /trip and /trip/sell endpoints.\n            "
+    ApiConfiguration:
+      type: object
+      description: "Defines the configuration (from the `appsettings` file) that the Digital API uses.\n            "
+      additionalProperties: false
+      properties:
+        passengerOptions:
+          description: "Passenger-related configuration options.\n            "
+          $ref: '#/components/schemas/PassengerConfiguration'
     IJsonResponseOfApiConfiguration:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -210,6 +199,17 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

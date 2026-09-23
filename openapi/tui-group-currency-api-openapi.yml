@@ -11,14 +11,19 @@ servers:
 security:
 - JWT: []
 tags:
-- name: currency
+- name: Currency
 paths:
   /api/nsk/v1/currency/converter:
     get:
       tags:
-      - currency
-      summary: Calculates currency conversions.
-      description: "If the currency conversion is inverted, the exchange rate returned is of the reversed to and \nfrom currency code and the rate used in the calculation is 1/(exchange rate of the reverse).\n\nGraphQL endpoint: currencyCalculation"
+      - Currency
+      summary: Calculates currency conversions
+      description: 'If the currency conversion is inverted, the exchange rate returned is of the reversed to and
+
+        from currency code and the rate used in the calculation is 1/(exchange rate of the reverse).
+
+
+        GraphQL endpoint: currencyCalculation'
       operationId: nsk_v1_currency_converter_get
       parameters:
       - name: FromCurrencyCode
@@ -211,17 +216,6 @@ components:
           type:
           - string
           - 'null'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -321,6 +315,17 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     CurrencyConversion:
       type: object
       description: "Model with the information needed to calculate from one currency to another.\n            "

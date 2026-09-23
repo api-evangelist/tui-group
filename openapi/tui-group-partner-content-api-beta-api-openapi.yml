@@ -54,6 +54,8 @@ paths:
         schema:
           type: string
           pattern: ^\w+$
+      summary: Get accommodation images
+      x-summary-source: derived
   /markets/{market}/accommodations/{accommodationId}:
     get:
       operationId: GetAccommodationContent
@@ -97,177 +99,50 @@ paths:
         schema:
           type: string
           pattern: ^\w+$
+      summary: Get accommodation content
+      x-summary-source: derived
 components:
   schemas:
-    Image:
+    Event:
       properties:
-        sortOrder:
-          type: number
-          format: double
-        caption:
-          type:
-          - string
-          - 'null'
-        setting: {}
         href:
           type: string
-        templateHref:
-          type: string
-        sizes:
-          items:
-            $ref: '#/components/schemas/Size'
-          type: array
       required:
-      - sortOrder
-      - caption
-      - setting
       - href
-      - templateHref
-      - sizes
       type: object
       additionalProperties: false
-    ServiceLevel:
-      properties:
-        description:
-          type: string
-        headline:
-          type: string
-        image:
-          type: string
-        level:
-          type: number
-          format: double
-      required:
-      - description
-      - headline
-      - level
-      type: object
-      additionalProperties: false
-    Fact:
-      properties:
-        name:
-          type: string
-        parentTag: {}
-        tag:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - tag
-      - value
-      type: object
-      additionalProperties: false
-    AccommodationImagesResponse:
+    ImageConfiguration:
       properties:
         id:
           type: string
-        href:
-          type: string
-        internal:
-          type: string
-        type:
-          type: string
-        configurations:
+        images:
           items:
-            $ref: '#/components/schemas/ImageConfiguration'
+            $ref: '#/components/schemas/Image'
           type: array
+        mainImage:
+          $ref: '#/components/schemas/Image'
+        backgroundImage: {}
       required:
       - id
-      - href
-      - internal
-      - type
-      - configurations
+      - images
+      - mainImage
+      - backgroundImage
       type: object
       additionalProperties: false
-    CustomerRating:
+    Size:
       properties:
-        answers:
+        width:
           type: number
           format: double
-        name:
-          type: string
-        score:
+        height:
           type: number
           format: double
-      required:
-      - answers
-      - name
-      - score
-      type: object
-      additionalProperties: false
-    Coordinates:
-      properties:
-        latitude:
-          type: number
-          format: double
-        longitude:
-          type: number
-          format: double
-      required:
-      - latitude
-      - longitude
-      type: object
-      additionalProperties: false
-    AccommodationProductResponse:
-      properties:
-        configurations:
-          items:
-            $ref: '#/components/schemas/AccommodationConfiguration'
-          type: array
-        coordinates:
-          $ref: '#/components/schemas/Coordinates'
-        countryCode:
-          type: string
-        customerRating:
-          $ref: '#/components/schemas/CustomerRating'
-        dynamicAccommodationProduct:
-          type: boolean
-        factGroups:
-          items:
-            $ref: '#/components/schemas/FactGroup'
-          type: array
-        geoStructure:
-          $ref: '#/components/schemas/GeoStructure'
-        giataId: {}
-        hotelName:
-          type: string
         href:
           type: string
-        id:
-          type: string
-        locationCategory: {}
-        name:
-          type: string
-        tags:
-          items:
-            type: string
-          type: array
       required:
-      - configurations
-      - countryCode
-      - dynamicAccommodationProduct
-      - factGroups
-      - giataId
-      - hotelName
+      - width
+      - height
       - href
-      - id
-      - locationCategory
-      - name
-      - tags
-      type: object
-      additionalProperties: false
-    GeoStructure:
-      properties:
-        country:
-          $ref: '#/components/schemas/Geo'
-        destination:
-          $ref: '#/components/schemas/Geo'
-        resort:
-          $ref: '#/components/schemas/Geo'
-      required:
-      - country
-      - resort
       type: object
       additionalProperties: false
     AccommodationConfiguration:
@@ -371,62 +246,59 @@ components:
       - text
       type: object
       additionalProperties: false
-    FactGroup:
+    Fact:
       properties:
-        facts:
-          items:
-            $ref: '#/components/schemas/Fact'
-          type: array
-        group:
+        name:
+          type: string
+        parentTag: {}
+        tag:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - tag
+      - value
+      type: object
+      additionalProperties: false
+    CustomerRating:
+      properties:
+        answers:
+          type: number
+          format: double
+        name:
+          type: string
+        score:
+          type: number
+          format: double
+      required:
+      - answers
+      - name
+      - score
+      type: object
+      additionalProperties: false
+    Coordinates:
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+      required:
+      - latitude
+      - longitude
+      type: object
+      additionalProperties: false
+    Period:
+      properties:
+        id:
           type: string
         name:
           type: string
       required:
-      - facts
-      - group
-      - name
-      type: object
-      additionalProperties: false
-    Event:
-      properties:
-        href:
-          type: string
-      required:
-      - href
-      type: object
-      additionalProperties: false
-    Size:
-      properties:
-        width:
-          type: number
-          format: double
-        height:
-          type: number
-          format: double
-        href:
-          type: string
-      required:
-      - width
-      - height
-      - href
-      type: object
-      additionalProperties: false
-    ImageConfiguration:
-      properties:
-        id:
-          type: string
-        images:
-          items:
-            $ref: '#/components/schemas/Image'
-          type: array
-        mainImage:
-          $ref: '#/components/schemas/Image'
-        backgroundImage: {}
-      required:
       - id
-      - images
-      - mainImage
-      - backgroundImage
+      - name
       type: object
       additionalProperties: false
     TopFact:
@@ -443,6 +315,84 @@ components:
       - text
       type: object
       additionalProperties: false
+    AccommodationProductResponse:
+      properties:
+        configurations:
+          items:
+            $ref: '#/components/schemas/AccommodationConfiguration'
+          type: array
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        countryCode:
+          type: string
+        customerRating:
+          $ref: '#/components/schemas/CustomerRating'
+        dynamicAccommodationProduct:
+          type: boolean
+        factGroups:
+          items:
+            $ref: '#/components/schemas/FactGroup'
+          type: array
+        geoStructure:
+          $ref: '#/components/schemas/GeoStructure'
+        giataId: {}
+        hotelName:
+          type: string
+        href:
+          type: string
+        id:
+          type: string
+        locationCategory: {}
+        name:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+      - configurations
+      - countryCode
+      - dynamicAccommodationProduct
+      - factGroups
+      - giataId
+      - hotelName
+      - href
+      - id
+      - locationCategory
+      - name
+      - tags
+      type: object
+      additionalProperties: false
+    ServiceLevel:
+      properties:
+        description:
+          type: string
+        headline:
+          type: string
+        image:
+          type: string
+        level:
+          type: number
+          format: double
+      required:
+      - description
+      - headline
+      - level
+      type: object
+      additionalProperties: false
+    GeoStructure:
+      properties:
+        country:
+          $ref: '#/components/schemas/Geo'
+        destination:
+          $ref: '#/components/schemas/Geo'
+        resort:
+          $ref: '#/components/schemas/Geo'
+      required:
+      - country
+      - resort
+      type: object
+      additionalProperties: false
     Geo:
       properties:
         href:
@@ -457,14 +407,68 @@ components:
       - name
       type: object
       additionalProperties: false
-    Period:
+    AccommodationImagesResponse:
       properties:
         id:
+          type: string
+        href:
+          type: string
+        internal:
+          type: string
+        type:
+          type: string
+        configurations:
+          items:
+            $ref: '#/components/schemas/ImageConfiguration'
+          type: array
+      required:
+      - id
+      - href
+      - internal
+      - type
+      - configurations
+      type: object
+      additionalProperties: false
+    Image:
+      properties:
+        sortOrder:
+          type: number
+          format: double
+        caption:
+          type:
+          - string
+          - 'null'
+        setting: {}
+        href:
+          type: string
+        templateHref:
+          type: string
+        sizes:
+          items:
+            $ref: '#/components/schemas/Size'
+          type: array
+      required:
+      - sortOrder
+      - caption
+      - setting
+      - href
+      - templateHref
+      - sizes
+      type: object
+      additionalProperties: false
+    FactGroup:
+      properties:
+        facts:
+          items:
+            $ref: '#/components/schemas/Fact'
+          type: array
+        group:
           type: string
         name:
           type: string
       required:
-      - id
+      - facts
+      - group
       - name
       type: object
       additionalProperties: false

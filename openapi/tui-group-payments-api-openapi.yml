@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: payments
+- name: Payments
 paths:
   /api/nsk/v1/payments:
     get:
       tags:
-      - payments
-      summary: Gets the payment data based on the specified bank identification number and date range.
+      - Payments
+      summary: Gets the payment data based on the specified bank identification number and…
       description: 'GraphQL endpoint: paymentsSearchByBin'
       operationId: nsk_v1_payments_get
       parameters:
@@ -232,79 +232,6 @@ components:
           type:
           - string
           - 'null'
-    FindBinRangePaymentData:
-      type: object
-      description: "The find payments by bank identification number (BIN) payment data.\n            "
-      additionalProperties: false
-      properties:
-        accountNumber:
-          type:
-          - string
-          - 'null'
-          description: "The account number.\n            "
-        paymentDate:
-          type: string
-          description: "The date when the payment was made.\n            "
-          format: date-time
-        passengerName:
-          description: "The name of the passenger in the booking.\n            "
-          $ref: '#/components/schemas/Name'
-        departureDate:
-          type: string
-          description: "The departure date and time of the flight in the booking.\n            "
-          format: date-time
-        status:
-          description: "The payment status.\n            "
-          $ref: '#/components/schemas/BookingPaymentStatus'
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: "The record locator to which the payment belongs.\n            "
-        origin:
-          type:
-          - string
-          - 'null'
-          description: "The departure station of flight in the booking.\n            "
-        destination:
-          type:
-          - string
-          - 'null'
-          description: "The arrival station of the flight in the booking.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PagedFindPaymentsByBinResponse:
-      type: object
-      description: "The paged find payments by bank identification number (BIN) response.\n            "
-      additionalProperties: false
-      properties:
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The key for the last payment record returned from paged response.\n            "
-        totalCount:
-          type: integer
-          description: "The total number of payment records that satisfies the query.\n            "
-          format: int32
-        paymentRecords:
-          type:
-          - object
-          - 'null'
-          description: "The payment records that matches the query.\n            "
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/FindBinRangePaymentData'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -312,47 +239,6 @@ components:
       properties:
         data:
           description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BookingPaymentStatus:
-      type: integer
-      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
-      x-enumNames:
-      - New
-      - Received
-      - Pending
-      - Approved
-      - Declined
-      - Unknown
-      - PendingCustomerAction
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    IJsonResponseOfPagedFindPaymentsByBinResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PagedFindPaymentsByBinResponse'
         errors:
           type:
           - array
@@ -445,6 +331,90 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    FindBinRangePaymentData:
+      type: object
+      description: "The find payments by bank identification number (BIN) payment data.\n            "
+      additionalProperties: false
+      properties:
+        accountNumber:
+          type:
+          - string
+          - 'null'
+          description: "The account number.\n            "
+        paymentDate:
+          type: string
+          description: "The date when the payment was made.\n            "
+          format: date-time
+        passengerName:
+          description: "The name of the passenger in the booking.\n            "
+          $ref: '#/components/schemas/Name'
+        departureDate:
+          type: string
+          description: "The departure date and time of the flight in the booking.\n            "
+          format: date-time
+        status:
+          description: "The payment status.\n            "
+          $ref: '#/components/schemas/BookingPaymentStatus'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator to which the payment belongs.\n            "
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "The departure station of flight in the booking.\n            "
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "The arrival station of the flight in the booking.\n            "
+    PagedFindPaymentsByBinResponse:
+      type: object
+      description: "The paged find payments by bank identification number (BIN) response.\n            "
+      additionalProperties: false
+      properties:
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key for the last payment record returned from paged response.\n            "
+        totalCount:
+          type: integer
+          description: "The total number of payment records that satisfies the query.\n            "
+          format: int32
+        paymentRecords:
+          type:
+          - object
+          - 'null'
+          description: "The payment records that matches the query.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/FindBinRangePaymentData'
+    IJsonResponseOfPagedFindPaymentsByBinResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedFindPaymentsByBinResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -485,6 +455,36 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
+    BookingPaymentStatus:
+      type: integer
+      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
+      x-enumNames:
+      - New
+      - Received
+      - Pending
+      - Approved
+      - Declined
+      - Unknown
+      - PendingCustomerAction
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

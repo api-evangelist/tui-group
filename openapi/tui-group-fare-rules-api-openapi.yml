@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: fareRules
+- name: Fare Rules
 paths:
   /api/nsk/v1/fareRules/{fareAvailabilityKey}:
     get:
       tags:
-      - fareRules
-      summary: Gets the fare rules from the server based on a fare availability key.
+      - Fare Rules
+      summary: Gets the fare rules from the server based on a fare availability key
       description: 'Note that this defaults to returning the fare rules in HTML format.
 
         The HTML format may not be entirely culture sensitive, so setting the convertToHtml flag to false
@@ -90,8 +90,8 @@ paths:
   /api/nsk/v2/fareRules/category50/journeys/{journeyKey}/segments/{segmentKey}:
     post:
       tags:
-      - fareRules
-      summary: Get the category 50 fare rule information after an availability call.
+      - Fare Rules
+      summary: Get the category 50 fare rule information after an availability call
       description: 'This is functionally a GET but POST is used to reduce URL length overhead.
 
 
@@ -238,93 +238,6 @@ components:
           type:
           - string
           - 'null'
-    Category50Requestv2:
-      type: object
-      description: "Represents a v2 cat 50 request.\n            "
-      additionalProperties: false
-      required:
-      - fareAvailabilityKey
-      - passengerPriceTypes
-      properties:
-        fareAvailabilityKey:
-          type: string
-          description: "The fare availability key.\n            "
-          minLength: 1
-        passengerPriceTypes:
-          type: array
-          description: "The list of passenger types and the counts for each.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerPriceType'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
-        convertToHtml:
-          type:
-          - boolean
-          - 'null'
-          description: "Flag, if true, convert response to html. Defaults to true.\n            "
-    IJsonResponseOfCategory50Responsev2:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Category50Responsev2'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    Category50Responsev2:
-      type: object
-      description: "Represents a cat 50 response.\n            "
-      additionalProperties: false
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title of the category 50 fare rule information.\n            "
-        text:
-          type:
-          - string
-          - 'null'
-          description: "The formatted text for the category 50 fare rule information..\n            "
-        dataType:
-          description: "The content data type of the text.\n            "
-          $ref: '#/components/schemas/ContentDataType'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -332,32 +245,6 @@ components:
       properties:
         data:
           description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfIListOfFareRule:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/FareRule'
         errors:
           type:
           - array
@@ -420,29 +307,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    PassengerPriceType:
-      type: object
-      description: "Represents a cat 50 request.\n            "
-      additionalProperties: false
-      properties:
-        passengerType:
-          type:
-          - string
-          - 'null'
-          description: "The passenger type code assigned to this group of passengers.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerDiscountCode:
-          type:
-          - string
-          - 'null'
-          description: "The passenger discount code assigned to this group of passengers.\nThis value will be overriden if there is a passenger\ndiscount code associated with the availability requests promotion code.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerCount:
-          type: integer
-          description: "The number of passengers in this group with the specified passenger type\nand discount code.\n            "
-          format: int32
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -473,6 +337,35 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    Category50Requestv2:
+      type: object
+      description: "Represents a v2 cat 50 request.\n            "
+      additionalProperties: false
+      required:
+      - fareAvailabilityKey
+      - passengerPriceTypes
+      properties:
+        fareAvailabilityKey:
+          type: string
+          description: "The fare availability key.\n            "
+          minLength: 1
+        passengerPriceTypes:
+          type: array
+          description: "The list of passenger types and the counts for each.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerPriceType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+        convertToHtml:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag, if true, convert response to html. Defaults to true.\n            "
     ContentDataType:
       type: integer
       description: "Defines the content data type enumeration.\n            \n\n0 = Default\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx\n-1 = Unmapped"
@@ -504,6 +397,113 @@ components:
       - 10
       - 11
       - -1
+    Category50Responsev2:
+      type: object
+      description: "Represents a cat 50 response.\n            "
+      additionalProperties: false
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title of the category 50 fare rule information.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The formatted text for the category 50 fare rule information..\n            "
+        dataType:
+          description: "The content data type of the text.\n            "
+          $ref: '#/components/schemas/ContentDataType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfIListOfFareRule:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/FareRule'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PassengerPriceType:
+      type: object
+      description: "Represents a cat 50 request.\n            "
+      additionalProperties: false
+      properties:
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The passenger type code assigned to this group of passengers.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger discount code assigned to this group of passengers.\nThis value will be overriden if there is a passenger\ndiscount code associated with the availability requests promotion code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerCount:
+          type: integer
+          description: "The number of passengers in this group with the specified passenger type\nand discount code.\n            "
+          format: int32
+    IJsonResponseOfCategory50Responsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Category50Responsev2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

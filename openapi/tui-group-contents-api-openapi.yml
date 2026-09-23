@@ -11,14 +11,39 @@ servers:
 security:
 - JWT: []
 tags:
-- name: contents
+- name: Contents
 paths:
   /api/nsk/v1/contents/news:
     get:
       tags:
-      - contents
-      summary: Retrieves the available news metadata.
-      description: "News or sometimes referred to as FYI Content notes are created by management about your carrier operations. They can be viewed by reservation agents and station agents.\n\nNews notes are a quick way for airlines to distribute important information to reservation and check-in agents.\n\nIf your carrier has a new fare rule, you can use FYI Content to enter this information and set the FYI type to specify how and when this information is displayed.You can also determine who reads this information by assigning roles to it. \n\nYou can also use news content to store pertinent station info, such as passenger disruption reports or journal entries. By saving the content as type No Alert, you leave it in the database, where other users can access it with a search.You can group station reports by Domain, Department, Role, Date, Name, and so on.\n\nRelated endpoints:\n- `GET /resources/contents` which contents generic data for all content types including new contents\n- `GET /resources/contents/{contentID}/data` which allows you to view the data for a specific content item including news content.\n\nThe `StartDate` and `EndDate` will default to the current date if not provided.\n\nThe data is only returned if the content data type is text based. Other content data types such as `JPEG` or `PNG` will be returned as null.\n\nGraphQL endpoint: news"
+      - Contents
+      summary: Retrieves the available news metadata
+      description: 'News or sometimes referred to as FYI Content notes are created by management about your carrier operations. They can be viewed by reservation agents and station agents.
+
+
+        News notes are a quick way for airlines to distribute important information to reservation and check-in agents.
+
+
+        If your carrier has a new fare rule, you can use FYI Content to enter this information and set the FYI type to specify how and when this information is displayed.You can also determine who reads this information by assigning roles to it.
+
+
+        You can also use news content to store pertinent station info, such as passenger disruption reports or journal entries. By saving the content as type No Alert, you leave it in the database, where other users can access it with a search.You can group station reports by Domain, Department, Role, Date, Name, and so on.
+
+
+        Related endpoints:
+
+        - `GET /resources/contents` which contents generic data for all content types including new contents
+
+        - `GET /resources/contents/{contentID}/data` which allows you to view the data for a specific content item including news content.
+
+
+        The `StartDate` and `EndDate` will default to the current date if not provided.
+
+
+        The data is only returned if the content data type is text based. Other content data types such as `JPEG` or `PNG` will be returned as null.
+
+
+        GraphQL endpoint: news'
       operationId: nsk_v1_contents_news_get
       parameters:
       - name: PageSize
@@ -431,9 +456,27 @@ paths:
                     data: null
     post:
       tags:
-      - contents
-      summary: Add a new news content item.
-      description: "Add news or sometimes referred to as FYI Content notes.\n\nRelated endpoints:\n- `GET /resources/contents/{contentID}/data`: Allows you to view the data for a specific content item including news content.\n- `GET /contents/news`: Allows you to search for news content items.\n\nThe `OrganizationCode` is automatically set to the `OrganizationCode` of the logged in \nagent if the `DomainCode`, `DepartmentCode`, and `RoleCode` are all set in the request.\n\nOnly text based content data types are allowed. Other content data types such as `JPEG` or `PNG` must be stored elsewhere.\n\nGraphQL endpoint: newsAdd"
+      - Contents
+      summary: Add a new news content item
+      description: 'Add news or sometimes referred to as FYI Content notes.
+
+
+        Related endpoints:
+
+        - `GET /resources/contents/{contentID}/data`: Allows you to view the data for a specific content item including news content.
+
+        - `GET /contents/news`: Allows you to search for news content items.
+
+
+        The `OrganizationCode` is automatically set to the `OrganizationCode` of the logged in
+
+        agent if the `DomainCode`, `DepartmentCode`, and `RoleCode` are all set in the request.
+
+
+        Only text based content data types are allowed. Other content data types such as `JPEG` or `PNG` must be stored elsewhere.
+
+
+        GraphQL endpoint: newsAdd'
       operationId: nsk_v1_contents_news_post
       requestBody:
         x-name: addNewsRequest
@@ -945,35 +988,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    NewsRequestType:
-      type: integer
-      description: "News request type enumeration.\n            \n\n0 = Default\n1 = Unread\n2 = UnreadAlert\n3 = UnreadDailyAndOneTimeRead"
-      x-enumNames:
-      - Default
-      - Unread
-      - UnreadAlert
-      - UnreadDailyAndOneTimeRead
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
     GeneralContentDataType:
       type: integer
       description: "Defines the general content data type enumeration.\n            \n\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx"
@@ -1001,30 +1015,134 @@ components:
       - 9
       - 10
       - 11
-    MessageStatus:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    NewsRequestType:
       type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      description: "News request type enumeration.\n            \n\n0 = Default\n1 = Unread\n2 = UnreadAlert\n3 = UnreadDailyAndOneTimeRead"
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - Default
+      - Unread
+      - UnreadAlert
+      - UnreadDailyAndOneTimeRead
       enum:
       - 0
       - 1
       - 2
-    NewsType:
-      type: integer
-      description: "Indicates how often the news content item will be available for the user.\n            \n\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
-      x-enumNames:
-      - Alert
-      - OneTimeRead
-      - Daily
-      - NoAlert
-      enum:
-      - 1
-      - 2
       - 3
-      - 4
     News:
       type: object
       description: "The News (FYI Notes) content item.\n            "
@@ -1103,47 +1221,14 @@ components:
           - 'null'
           description: "Indicates the length of time this message will be retained in the system. Use this selection for FYIs to save in the system but not make viewable.\nA null value will indicate that the message will remain in the database.\n            "
           format: date-time
-    CreateContentDataType:
-      type: integer
-      description: "Defines the create content data type enumeration. This is a subset of the general content data \ntype enum to be used only for content creation and will only support text based data types.\n            \n\n1 = Text\n2 = RichTextFormat\n8 = Html\n10 = Uri"
-      x-enumNames:
-      - Text
-      - RichTextFormat
-      - Html
-      - Uri
-      enum:
-      - 1
-      - 2
-      - 8
-      - 10
-    PagedFindNewsResponse:
+    IJsonResponseOfPagedFindNewsResponse:
       type: object
-      description: "The paged find news response.\n            "
-      additionalProperties: false
-      properties:
-        newsList:
-          type:
-          - array
-          - 'null'
-          description: "The list of news.\n            "
-          items:
-            $ref: '#/components/schemas/FindNewsItem'
-        totalCount:
-          type: integer
-          description: "The total count of news.\n            "
-          format: int32
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The LastPageKey, where to start paged query.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedFindNewsResponse'
         errors:
           type:
           - array
@@ -1158,6 +1243,34 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    NewsType:
+      type: integer
+      description: "Indicates how often the news content item will be available for the user.\n            \n\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
+      x-enumNames:
+      - Alert
+      - OneTimeRead
+      - Daily
+      - NoAlert
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+    FindNewsType:
+      type: integer
+      description: "Indicates how often the news content item will be available for the user.\n            \n\n0 = All\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
+      x-enumNames:
+      - All
+      - Alert
+      - OneTimeRead
+      - Daily
+      - NoAlert
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
     FindNewsItem:
       type: object
       description: "The News (FYI Notes) content item.\n            "
@@ -1309,21 +1422,38 @@ components:
           type: string
           description: "The content data. This will only support text based content from Text, RichTextFormat, HTML, and URI data types.\n            "
           minLength: 1
-    FindNewsType:
+    MessageStatus:
       type: integer
-      description: "Indicates how often the news content item will be available for the user.\n            \n\n0 = All\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - All
-      - Alert
-      - OneTimeRead
-      - Daily
-      - NoAlert
+      - General
+      - Warning
+      - Critical
       enum:
       - 0
       - 1
       - 2
-      - 3
-      - 4
+    PagedFindNewsResponse:
+      type: object
+      description: "The paged find news response.\n            "
+      additionalProperties: false
+      properties:
+        newsList:
+          type:
+          - array
+          - 'null'
+          description: "The list of news.\n            "
+          items:
+            $ref: '#/components/schemas/FindNewsItem'
+        totalCount:
+          type: integer
+          description: "The total count of news.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The LastPageKey, where to start paged query.\n            "
     AddNewsResponse:
       type: object
       description: "The add news response.\n            "
@@ -1332,106 +1462,19 @@ components:
         news:
           description: "The news added.\n            "
           $ref: '#/components/schemas/News'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    IJsonResponseOfPagedFindNewsResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PagedFindNewsResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+    CreateContentDataType:
+      type: integer
+      description: "Defines the create content data type enumeration. This is a subset of the general content data \ntype enum to be used only for content creation and will only support text based data types.\n            \n\n1 = Text\n2 = RichTextFormat\n8 = Html\n10 = Uri"
+      x-enumNames:
+      - Text
+      - RichTextFormat
+      - Html
+      - Uri
+      enum:
+      - 1
+      - 2
+      - 8
+      - 10
   securitySchemes:
     JWT:
       type: http

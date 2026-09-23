@@ -68,7 +68,7 @@ paths:
     post:
       tags:
       - Hotel Inventory
-      summary: Sends hotels portfolio to SFTP server.
+      summary: Sends hotels portfolio to SFTP server
       description: Sends hotels portfolio to SFTP server.
       operationId: sendHotelInventory
       security:
@@ -119,52 +119,6 @@ paths:
                 $ref: '#/components/schemas/Problem'
 components:
   schemas:
-    HotelInventoryResponse:
-      title: HotelInventoryResponse
-      type: object
-      description: The successful response payload containing the hotel inventory.
-      properties:
-        api_version:
-          type: string
-          description: The API current version.
-          example: v1
-        language:
-          type: string
-          description: The language in the API response.
-          example: en_GB
-        hotels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Hotel'
-      required:
-      - api_version
-      - language
-      - hotels
-    Address:
-      type: object
-      title: Address
-      description: The hotel address details
-      properties:
-        street:
-          type: string
-          description: The street name.
-          example: Main Street
-        city:
-          type: string
-          description: The city name.
-          example: Bad Reichenhall
-        region:
-          type: string
-          description: The region or state if applicable.
-          example: Bavaria
-        country:
-          type: string
-          description: The country code according to ISO 3166-2.
-          example: DE
-        postal_code:
-          type: string
-          description: The postal code.
-          example: '12345'
     Problem:
       type: object
       properties:
@@ -203,6 +157,31 @@ components:
 
             '
           example: /some/uri-reference#specific-occurrence-context
+    Address:
+      type: object
+      title: Address
+      description: The hotel address details
+      properties:
+        street:
+          type: string
+          description: The street name.
+          example: Main Street
+        city:
+          type: string
+          description: The city name.
+          example: Bad Reichenhall
+        region:
+          type: string
+          description: The region or state if applicable.
+          example: Bavaria
+        country:
+          type: string
+          description: The country code according to ISO 3166-2.
+          example: DE
+        postal_code:
+          type: string
+          description: The postal code.
+          example: '12345'
     Hotel:
       title: InventoryHotel
       type: object
@@ -249,6 +228,27 @@ components:
       - longitude
       - phone_number
       - url
+    HotelInventoryResponse:
+      title: HotelInventoryResponse
+      type: object
+      description: The successful response payload containing the hotel inventory.
+      properties:
+        api_version:
+          type: string
+          description: The API current version.
+          example: v1
+        language:
+          type: string
+          description: The language in the API response.
+          example: en_GB
+        hotels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hotel'
+      required:
+      - api_version
+      - language
+      - hotels
   securitySchemes:
     OAuth2PreProdPublic:
       type: oauth2

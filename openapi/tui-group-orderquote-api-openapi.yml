@@ -97,6 +97,8 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderReshopRS'
+      summary: Order quote RQ
+      x-summary-source: derived
   /x3/ndc/api/Servicing/r3.x/v2/OrderQuote:
     post:
       tags:
@@ -180,25 +182,183 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderReshopRS'
+      summary: POST order quote RQ v21 3 DAPI
+      x-summary-source: derived
 components:
   schemas:
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.KeyValueType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GenderCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CollectionPointTaxType:
       type: object
       properties:
-        rsA_KeyValue:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RSA_KeyValueType'
+        airportAmount:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+        station:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.StationType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EmailAddressType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType:
       type: object
       properties:
-        contactTypeText:
+        any:
+          type:
+          - array
+          - 'null'
+          items:
+            type: array
+            items: {}
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesAgentType:
+      type: object
+      properties:
+        salesAgentID:
           type:
           - string
           - 'null'
-        emailAddressText:
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderReshopRS:
+      type: object
+      properties:
+        items:
+          type:
+          - array
+          - 'null'
+          items: {}
+        augmentationPoint:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType'
+        payloadAttributes:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FOID_Type:
+      type: object
+      properties:
+        foiD_ID:
           type:
           - string
           - 'null'
+        foiD_TypeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountrySubDivisionType:
+      type: object
+      properties:
+        countrySubDivisionCode:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CypherDataType:
+      type: object
+      properties:
+        cypherValue:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurParameterType:
+      type: object
+      properties:
+        appCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurAppCodeType'
+        appCodeSpecified:
+          type: boolean
+        curCode:
+          type:
+          - string
+          - 'null'
+        decimalsAllowedNumber:
+          type: number
+          format: double
+        decimalsAllowedNumberSpecified:
+          type: boolean
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedBundleServicesType:
+      type: object
+      properties:
+        selectedServiceDefinitionRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        selectedServiceRefID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCriteriaAddlInfoType:
+      type: object
+      properties:
+        paymentCardCriteriaAddlInfo:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCardCriteriaAddlInfoType'
+        paymentOtherMethodAddlInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RemarkType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgamContractType:
+      type: object
+      properties:
+        contractID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType:
+      type: object
+      properties:
+        characterSetCode:
+          type:
+          - string
+          - 'null'
+        encodingCode:
+          type:
+          - string
+          - 'null'
+        fileName:
+          type:
+          - string
+          - 'null'
+        format:
+          type:
+          - string
+          - 'null'
+        mimE_Code:
+          type:
+          - string
+          - 'null'
+        uniformResourceID:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+          format: byte
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CityType:
       type: object
@@ -212,7 +372,131 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GroupFareCriteriaType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceLocationType:
+      type: object
+      properties:
+        city:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CityType'
+        country:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType'
+        geospatialLocation:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GeospatialLocationType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GeospatialLocationType:
+      type: object
+      properties:
+        naturalAreaGeocode:
+          type:
+          - string
+          - 'null'
+        pointElevationNumber:
+          type: number
+          format: double
+        pointElevationNumberSpecified:
+          type: boolean
+        pointLatitudeNumber:
+          type: number
+          format: double
+        pointLatitudeNumberSpecified:
+          type: boolean
+        pointLongitudeNumber:
+          type: number
+          format: double
+        pointLongitudeNumberSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedSeatType:
+      type: object
+      properties:
+        columnID:
+          type:
+          - string
+          - 'null'
+        seatRowNumber:
+          type: number
+          format: double
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramCriteriaType:
+      type: object
+      properties:
+        companyIndexText:
+          type:
+          - string
+          - 'null'
+        memberStatusText:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
+        prePaidCertificate:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrePaidCertificateType'
+        progamContract:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgamContractType'
+        programAccount:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramAccountType'
+        programOwner:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramOwnerType'
+        typeCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SecurePaymentAuthenticationVersionType:
+      type: object
+      properties:
+        cardEnrollmentVersionText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        supportedVersionText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasurementSystemCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType:
+      type: object
+      properties:
+        airlineDesigCode:
+          type:
+          - string
+          - 'null'
+        duplicateDesigInd:
+          type: boolean
+        duplicateDesigIndSpecified:
+          type: boolean
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareCriteriaType:
       type: object
       properties:
         fareBasisCode:
@@ -221,18 +505,124 @@ components:
           - 'null'
           items:
             type: string
-        paxSegmentRefID:
+        fareSubTypeCode:
           type:
           - array
           - 'null'
           items:
             type: string
+        fareTypeCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        groupFareCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GroupFareCriteriaType'
+        noAdvancePurchaseInd:
+          type: boolean
+        noAdvancePurchaseIndSpecified:
+          type: boolean
+        noPenaltyInd:
+          type: boolean
+        noPenaltyIndSpecified:
+          type: boolean
         prefLevel:
           $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-        ptc:
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LangUsageType:
+      type: object
+      properties:
+        langCode:
           type:
           - string
           - 'null'
+        langUsageText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AffectedOrderItemRequestType:
+      type: object
+      properties:
+        orderItemRefID:
+          type:
+          - string
+          - 'null'
+        respendInd:
+          type: boolean
+        respendIndSpecified:
+          type: boolean
+        retainServiceID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingMethodCriteriaType:
+      type: object
+      properties:
+        bestPricingOptionText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxExemptionQualificationCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainRoleCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferItemType:
+      type: object
+      properties:
+        offerItemRefID:
+          type:
+          - string
+          - 'null'
+        paxRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        selectedALaCarteOfferItem:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedALaCarteOfferItemType'
+        selectedBundleServices:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedBundleServicesType'
+        selectedSeat:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedSeatType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainLinkType:
+      type: object
+      properties:
+        contactInfo:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType'
+        ordinal:
+          type:
+          - string
+          - 'null'
+        orgRole:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainRoleCodeType'
+        participatingOrg:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ParticipatingOrgType'
+        salesAgent:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesAgentType'
+        salesBranch:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesBranchType'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaxType:
       type: object
@@ -313,707 +703,45 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgamContractType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CryptographyKeyType:
       type: object
       properties:
-        contractID:
+        keyNameText:
           type:
           - string
           - 'null'
+        keyValue:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.KeyValueType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferItemType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ServiceCriteriaType:
       type: object
       properties:
-        offerItemRefID:
-          type:
-          - string
-          - 'null'
-        paxRefID:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        selectedALaCarteOfferItem:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedALaCarteOfferItemType'
-        selectedBundleServices:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedBundleServicesType'
-        selectedSeat:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedSeatType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FOID_Type:
-      type: object
-      properties:
-        foiD_ID:
-          type:
-          - string
-          - 'null'
-        foiD_TypeCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.VisaType:
-      type: object
-      properties:
-        entryQty:
-          type: number
-          format: double
-        entryQtySpecified:
+        includeInd:
           type: boolean
-        expiryDate:
-          type: string
-          format: date-time
-        expiryDateSpecified:
-          type: boolean
-        hostCountryCode:
-          type:
-          - string
-          - 'null'
-        issueDate:
-          type: string
-          format: date-time
-        issueDateSpecified:
-          type: boolean
-        issuingCountryCode:
-          type:
-          - string
-          - 'null'
-        stayDuration:
-          type:
-          - string
-          - 'null'
-        visaID:
-          type:
-          - string
-          - 'null'
-        visaTypeCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentAssociatedFunctionsCriteriaType:
-      type: object
-      properties:
-        offerAssociation:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferAssociationType'
-        orderAssociation:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderAssociationType'
-        paymentMethodCriteria:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentMethodCriteriaType'
-        refundMethodCriteria:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundMethodCriteriaType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferAssociationType:
-      type: object
-      properties:
-        offerItemRefID:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        offerRefID:
-          type:
-          - string
-          - 'null'
-        ownerCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LoyaltyProgramType:
-      type: object
-      properties:
-        alliance:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AllianceType'
-        carrier:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType'
-        programCode:
-          type:
-          - string
-          - 'null'
-        programName:
-          type:
-          - string
-          - 'null'
-        providerName:
-          type:
-          - string
-          - 'null'
-        url:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasurementSystemCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCriteriaAddlInfoType:
-      type: object
-      properties:
-        paymentCardCriteriaAddlInfo:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCardCriteriaAddlInfoType'
-        paymentOtherMethodAddlInfo:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RemarkType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PhoneType:
-      type: object
-      properties:
-        areaCodeNumber:
-          type:
-          - string
-          - 'null'
-        contactTypeText:
-          type:
-          - string
-          - 'null'
-        countryDialingCode:
-          type:
-          - string
-          - 'null'
-        extensionNumber:
-          type:
-          - string
-          - 'null'
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedSeatType:
-      type: object
-      properties:
-        columnID:
-          type:
-          - string
-          - 'null'
-        seatRowNumber:
-          type: number
-          format: double
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ClearanceCriteriaType:
-      type: object
-      properties:
-        processRuleCode:
-          type:
-          - string
-          - 'null'
-        remittanceDate:
-          type: string
-          format: date-time
-        remittanceDateSpecified:
-          type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderAssociationType:
-      type: object
-      properties:
-        orderItemRefID:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        orderRefID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferFlightAssociationsType:
-      type: object
-      properties:
-        item: {}
-        itemElementName:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ItemChoiceType1'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.POS_Type:
-      type: object
-      properties:
-        agentDutyText:
-          type:
-          - string
-          - 'null'
-        city:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CityType'
-        country:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType'
-        onlineTrxInd:
-          type: boolean
-        onlineTrxIndSpecified:
-          type: boolean
-        requestTime:
-          type: string
-          format: date-time
-        requestTimeSpecified:
-          type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxExemptionQualificationCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ItemChoiceType1:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxTypeCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IndividualType:
-      type: object
-      properties:
-        addlName:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameType'
-        birthdate:
-          type: string
-          format: date-time
-        birthdateSpecified:
-          type: boolean
-        birthplaceText:
-          type:
-          - string
-          - 'null'
-        genderCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GenderCodeType'
-        genderCodeSpecified:
-          type: boolean
-        givenName:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        individualID:
-          type:
-          - string
-          - 'null'
-        middleName:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        suffixName:
-          type:
-          - string
-          - 'null'
-        surname:
-          type:
-          - string
-          - 'null'
-        titleName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramOwnerType:
-      type: object
-      properties:
-        item: {}
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType:
-      type: object
-      properties:
-        any:
-          type:
-          - array
-          - 'null'
-          items:
-            type: array
-            items: {}
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.StationType:
-      type: object
-      properties:
-        iatA_LocationCode:
-          type:
-          - string
-          - 'null'
-        stationName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType:
-      type: object
-      properties:
-        airlineDesigCode:
-          type:
-          - string
-          - 'null'
-        duplicateDesigInd:
-          type: boolean
-        duplicateDesigIndSpecified:
-          type: boolean
-        name:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CollectionPointTaxType:
-      type: object
-      properties:
-        airportAmount:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
-        station:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.StationType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingParameterType:
-      type: object
-      properties:
-        autoExchInd:
-          type: boolean
-        autoExchIndSpecified:
-          type: boolean
-        awardIncludedInd:
-          type: boolean
-        awardIncludedIndSpecified:
-          type: boolean
-        awardOnlyInd:
-          type: boolean
-        awardOnlyIndSpecified:
-          type: boolean
-        includeUpsellOffersInd:
-          type: boolean
-        includeUpsellOffersIndSpecified:
-          type: boolean
-        overrideCurCode:
-          type:
-          - string
-          - 'null'
-        simplePricingInd:
-          type: boolean
-        simplePricingIndSpecified:
-          type: boolean
-        taxExemption:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxSummaryType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedBundleServicesType:
-      type: object
-      properties:
-        selectedServiceDefinitionRefID:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        selectedServiceRefID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType:
-      type: object
-      properties:
-        characterSetCode:
-          type:
-          - string
-          - 'null'
-        encodingCode:
-          type:
-          - string
-          - 'null'
-        fileName:
-          type:
-          - string
-          - 'null'
-        format:
-          type:
-          - string
-          - 'null'
-        mimE_Code:
-          type:
-          - string
-          - 'null'
-        uniformResourceID:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-          format: byte
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderQuoteRQ:
-      type: object
-      properties:
-        augmentationPoint:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType'
-        distributionChain:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainLinkType'
-        payload:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderQuotePayloadType'
-        payloadAttributes:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType'
-        pos:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.POS_Type'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingMethodCriteriaType:
-      type: object
-      properties:
-        bestPricingOptionText:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentMethodCriteriaType:
-      type: object
-      properties:
-        clearanceCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ClearanceCriteriaType'
-        paymentBrandCode:
-          type:
-          - string
-          - 'null'
-        paymentCriteriaAddlInfo:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCriteriaAddlInfoType'
-        paymentMethodCountryCode:
-          type:
-          - string
-          - 'null'
-        paymentTypeCode:
-          type:
-          - string
-          - 'null'
-        prefLevel:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ParticipatingOrgType:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        orgID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesAgentType:
-      type: object
-      properties:
-        salesAgentID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareCriteriaType:
-      type: object
-      properties:
-        fareBasisCode:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        fareSubTypeCode:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        fareTypeCode:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        groupFareCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GroupFareCriteriaType'
-        noAdvancePurchaseInd:
-          type: boolean
-        noAdvancePurchaseIndSpecified:
-          type: boolean
-        noPenaltyInd:
-          type: boolean
-        noPenaltyIndSpecified:
+        includeIndSpecified:
           type: boolean
         prefLevel:
           $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RepricedOrderType:
-      type: object
-      properties:
-        orderID:
+        rfic:
           type:
           - string
           - 'null'
-        orderItemRefID:
+        rfisc:
           type:
           - array
           - 'null'
           items:
             type: string
-        ownerCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareWaiverType:
-      type: object
-      properties:
-        fareRuleWaiverCode:
-          type:
-          - string
-          - 'null'
-        fareWaiverTypeCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CypherDataType:
-      type: object
-      properties:
-        cypherValue:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceType:
-      type: object
-      properties:
-        deviceCode:
-          type:
-          - string
-          - 'null'
-        deviceOwnerTypeCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType'
-        deviceOwnerTypeCodeSpecified:
+        servicePricingOnlyInd:
           type: boolean
-        presenceTypeCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PresenceTypeCodeType'
-        presenceTypeCodeSpecified:
+        servicePricingOnlyIndSpecified:
           type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BDC_Type:
-      type: object
-      properties:
-        bagRuleCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType'
-        bagRuleCodeSpecified:
-          type: boolean
-        bdC_AnalysisResultCode:
-          type:
-          - string
-          - 'null'
-        bdC_ReasonText:
-          type:
-          - string
-          - 'null'
-        carrierDesigCode:
-          type:
-          - string
-          - 'null'
-        carrierName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundMethodCriteriaType:
-      type: object
-      properties:
-        originalPaymentMethodInd:
-          type: boolean
-        originalPaymentMethodIndSpecified:
-          type: boolean
-        paymentBrandCode:
-          type:
-          - string
-          - 'null'
-        paymentCard:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundPaymentCardType'
-        paymentTypeCode:
-          type:
-          - string
-          - 'null'
-        prefLevel:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasureType:
-      type: object
-      properties:
-        unitCode:
-          type:
-          - string
-          - 'null'
-        value:
-          type: number
-          format: double
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferType:
-      type: object
-      properties:
-        offerRefID:
-          type:
-          - string
-          - 'null'
-        ownerCode:
-          type:
-          - string
-          - 'null'
-        selectedOfferItem:
+        taxonomyCode:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferItemType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OtherAddressType:
-      type: object
-      properties:
-        contactTypeText:
-          type:
-          - string
-          - 'null'
-        otherAddressText:
-          type:
-          - string
-          - 'null'
+            type: string
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PromotionType:
       type: object
@@ -1045,6 +773,93 @@ components:
           - string
           - 'null'
       additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.POS_Type:
+      type: object
+      properties:
+        agentDutyText:
+          type:
+          - string
+          - 'null'
+        city:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CityType'
+        country:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType'
+        onlineTrxInd:
+          type: boolean
+        onlineTrxIndSpecified:
+          type: boolean
+        requestTime:
+          type: string
+          format: date-time
+        requestTimeSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TripPurposeCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SpecialServiceType:
+      type: object
+      properties:
+        addlDataMeasure:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasureType'
+        freeText:
+          type:
+          - string
+          - 'null'
+        qty:
+          type: number
+          format: double
+        qtySpecified:
+          type: boolean
+        specialServiceCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GroupFareCriteriaType:
+      type: object
+      properties:
+        fareBasisCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        paxSegmentRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        prefLevel:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
+        ptc:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurConversionType:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+        conversionRate:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RateType'
+        localAmount:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderQuotePayloadType:
       type: object
       properties:
@@ -1091,147 +906,6 @@ components:
           items:
             $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CryptographyKeyType:
-      type: object
-      properties:
-        keyNameText:
-          type:
-          - string
-          - 'null'
-        keyValue:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.KeyValueType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCardCriteriaAddlInfoType:
-      type: object
-      properties:
-        cardProductTypeCode:
-          type:
-          - string
-          - 'null'
-        cardTypeText:
-          type:
-          - string
-          - 'null'
-        iiN_IINNumber:
-          type:
-          - string
-          - 'null'
-        securePaymentAuthenticationVersion:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SecurePaymentAuthenticationVersionType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GenderCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SpecialServiceType:
-      type: object
-      properties:
-        addlDataMeasure:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasureType'
-        freeText:
-          type:
-          - string
-          - 'null'
-        qty:
-          type: number
-          format: double
-        qtySpecified:
-          type: boolean
-        specialServiceCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType:
-      type: object
-      properties:
-        altLangID:
-          type:
-          - string
-          - 'null'
-        correlationID:
-          type:
-          - string
-          - 'null'
-        primaryLangID:
-          type:
-          - string
-          - 'null'
-        retransmissionInd:
-          type: boolean
-        retransmissionIndSpecified:
-          type: boolean
-        seqNumber:
-          type: number
-          format: double
-        seqNumberSpecified:
-          type: boolean
-        timestamp:
-          type: string
-          format: date-time
-        timestampSpecified:
-          type: boolean
-        trxID:
-          type:
-          - string
-          - 'null'
-        versionNumber:
-          type: number
-          format: double
-        versionNumberSpecified:
-          type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainLinkType:
-      type: object
-      properties:
-        contactInfo:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType'
-        ordinal:
-          type:
-          - string
-          - 'null'
-        orgRole:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainRoleCodeType'
-        participatingOrg:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ParticipatingOrgType'
-        salesAgent:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesAgentType'
-        salesBranch:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesBranchType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SecurePaymentAuthenticationVersionType:
-      type: object
-      properties:
-        cardEnrollmentVersionText:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        supportedVersionText:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LoyaltyProgramAccountType:
       type: object
       properties:
@@ -1262,139 +936,74 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AllianceType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderCriteriaType:
       type: object
       properties:
-        allianceCode:
-          type:
-          - string
-          - 'null'
-        carrier:
+        baggagePricingCriteria:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BaggagePricingCriteriaType'
+        fareCriteria:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType'
-        name:
-          type:
-          - string
-          - 'null'
-        url:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SeatCriteriaType:
-      type: object
-      properties:
-        columnID:
-          type:
-          - string
-          - 'null'
-        rowNumber:
-          type:
-          - string
-          - 'null'
-        seatCharacteristicCode:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareCriteriaType'
+        pricingMethodCriteria:
           type:
           - array
           - 'null'
           items:
-            type: string
-        seatProfileCriteria:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingMethodCriteriaType'
+        programCriteria:
           type:
           - array
           - 'null'
           items:
-            type: string
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundPaymentCardType:
-      type: object
-      properties:
-        cardBrandCode:
-          type:
-          - string
-          - 'null'
-        cardHolderName:
-          type:
-          - string
-          - 'null'
-        cardIssuingCountryCode:
-          type:
-          - string
-          - 'null'
-        cardNumber:
-          type:
-          - string
-          - 'null'
-        cardProductTypeCode:
-          type:
-          - string
-          - 'null'
-        cardSeqNumber:
-          type: number
-          format: double
-        cardSeqNumberSpecified:
-          type: boolean
-        cardTypeText:
-          type:
-          - string
-          - 'null'
-        encryptedData:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EncryptedDataType'
-        expirationDate:
-          type:
-          - string
-          - 'null'
-        paymentInstrumentOwnershipCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType'
-        paymentInstrumentOwnershipCodeSpecified:
-          type: boolean
-        protectedCardID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GeospatialLocationType:
-      type: object
-      properties:
-        naturalAreaGeocode:
-          type:
-          - string
-          - 'null'
-        pointElevationNumber:
-          type: number
-          format: double
-        pointElevationNumberSpecified:
-          type: boolean
-        pointLatitudeNumber:
-          type: number
-          format: double
-        pointLatitudeNumberSpecified:
-          type: boolean
-        pointLongitudeNumber:
-          type: number
-          format: double
-        pointLongitudeNumberSpecified:
-          type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ExistingOrderType:
-      type: object
-      properties:
-        affectedOrderItem:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramCriteriaType'
+        promotionCriteria:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AffectedOrderItemRequestType'
-        orderID:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PromotionType'
+        seatCriteria:
           type:
-          - string
+          - array
           - 'null'
-        ownerCode:
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SeatCriteriaType'
+        serviceCriteria:
           type:
-          - string
+          - array
           - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ServiceCriteriaType'
+        specialNeedsCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SpecialServiceType'
+        tripPurposeCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TripPurposeCodeType'
+        tripPurposeCodeSpecified:
+          type: boolean
+        waitListCriteria:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedALaCarteOfferItemType:
+      type: object
+      properties:
+        offerFlightAssociations:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferFlightAssociationsType'
+        qty:
+          type: number
+          format: double
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RemarkType:
       type: object
@@ -1412,6 +1021,201 @@ components:
           format: date-time
         timestampSpecified:
           type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceType:
+      type: object
+      properties:
+        deviceCode:
+          type:
+          - string
+          - 'null'
+        deviceOwnerTypeCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType'
+        deviceOwnerTypeCodeSpecified:
+          type: boolean
+        presenceTypeCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PresenceTypeCodeType'
+        presenceTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        nameTypeCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType'
+        nameTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentMethodCriteriaType:
+      type: object
+      properties:
+        clearanceCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ClearanceCriteriaType'
+        paymentBrandCode:
+          type:
+          - string
+          - 'null'
+        paymentCriteriaAddlInfo:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCriteriaAddlInfoType'
+        paymentMethodCountryCode:
+          type:
+          - string
+          - 'null'
+        paymentTypeCode:
+          type:
+          - string
+          - 'null'
+        prefLevel:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrePaidCertificateType:
+      type: object
+      properties:
+        appText:
+          type:
+          - string
+          - 'null'
+        effectiveDateTime:
+          type: string
+          format: date-time
+        effectiveDateTimeSpecified:
+          type: boolean
+        expiryDateTime:
+          type: string
+          format: date-time
+        expiryDateTimeSpecified:
+          type: boolean
+        number:
+          type: number
+          format: double
+        numberSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasureType:
+      type: object
+      properties:
+        unitCode:
+          type:
+          - string
+          - 'null'
+        value:
+          type: number
+          format: double
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesTaxRegistrationType:
+      type: object
+      properties:
+        cityName:
+          type:
+          - string
+          - 'null'
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryDialingCode:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+        emailAddressText:
+          type:
+          - string
+          - 'null'
+        phoneNumber:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        postalCode:
+          type:
+          - string
+          - 'null'
+        salesTaxRegistrationID:
+          type:
+          - string
+          - 'null'
+        streetText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundMethodCriteriaType:
+      type: object
+      properties:
+        originalPaymentMethodInd:
+          type: boolean
+        originalPaymentMethodIndSpecified:
+          type: boolean
+        paymentBrandCode:
+          type:
+          - string
+          - 'null'
+        paymentCard:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundPaymentCardType'
+        paymentTypeCode:
+          type:
+          - string
+          - 'null'
+        prefLevel:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PhoneType:
+      type: object
+      properties:
+        areaCodeNumber:
+          type:
+          - string
+          - 'null'
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        countryDialingCode:
+          type:
+          - string
+          - 'null'
+        extensionNumber:
+          type:
+          - string
+          - 'null'
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EmailAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        emailAddressText:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BaggagePricingCriteriaType:
       type: object
@@ -1445,115 +1249,62 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ResponseParametersRequestType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AllianceType:
       type: object
       properties:
-        bdc:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BDC_Type'
-        curParameter:
+        allianceCode:
+          type:
+          - string
+          - 'null'
+        carrier:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurParameterType'
-        device:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceType'
-        deviceLocation:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceLocationType'
-        inventoryGuaranteeInd:
-          type: boolean
-        inventoryGuaranteeIndSpecified:
-          type: boolean
-        langUsage:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LangUsageType'
-        measurementSystemCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasurementSystemCodeType'
-        measurementSystemCodeSpecified:
-          type: boolean
-        paxGroup:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaxGroupType'
-        pricingParameter:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingParameterType'
-        reasonCode:
-          type:
-          - string
-          - 'null'
-        remark:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RemarkType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramCriteriaType:
-      type: object
-      properties:
-        companyIndexText:
-          type:
-          - string
-          - 'null'
-        memberStatusText:
-          type:
-          - string
-          - 'null'
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType'
         name:
           type:
           - string
           - 'null'
-        prePaidCertificate:
+        url:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxSummaryType:
+      type: object
+      properties:
+        allRefundableInd:
+          type: boolean
+        allRefundableIndSpecified:
+          type: boolean
+        approximateInd:
+          type: boolean
+        approximateIndSpecified:
+          type: boolean
+        collectionInd:
+          type: boolean
+        collectionIndSpecified:
+          type: boolean
+        guaranteeTimeLimitDateTime:
+          type: string
+          format: date-time
+        guaranteeTimeLimitDateTimeSpecified:
+          type: boolean
+        refundMethodText:
+          type:
+          - string
+          - 'null'
+        tax:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrePaidCertificateType'
-        progamContract:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgamContractType'
-        programAccount:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramAccountType'
-        programOwner:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramOwnerType'
-        typeCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RSA_KeyValueType:
-      type: object
-      properties:
-        exponent:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
-        modulus:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountrySubDivisionType:
-      type: object
-      properties:
-        countrySubDivisionCode:
-          type:
-          - string
-          - 'null'
-        countrySubDivisionName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceLocationType:
-      type: object
-      properties:
-        city:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CityType'
-        country:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType'
-        geospatialLocation:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GeospatialLocationType'
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxType'
+        totalRefundableTaxAmount:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+        totalTaxAmount:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType:
       type: object
@@ -1565,55 +1316,6 @@ components:
         value:
           type: number
           format: double
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PromotionIssuerType:
-      type: object
-      properties:
-        item: {}
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaxGroupType:
-      type: object
-      properties:
-        contactInfo:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType'
-        intendedPaxQty:
-          type: number
-          format: double
-        intendedPaxQtySpecified:
-          type: boolean
-        paxGroupID:
-          type:
-          - string
-          - 'null'
-        paxGroupName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurParameterType:
-      type: object
-      properties:
-        appCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurAppCodeType'
-        appCodeSpecified:
-          type: boolean
-        curCode:
-          type:
-          - string
-          - 'null'
-        decimalsAllowedNumber:
-          type: number
-          format: double
-        decimalsAllowedNumberSpecified:
-          type: boolean
-        name:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IdentityDocType:
       type: object
@@ -1698,106 +1400,127 @@ components:
           items:
             $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.VisaType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EncryptedDataType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentCardCriteriaAddlInfoType:
       type: object
       properties:
-        cryptographyKey:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CryptographyKeyType'
-        cypherData:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CypherDataType'
-        encryptedCardNumber:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
-        encryptedCardSecurityNumber:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
-        first6DigitsText:
+        cardProductTypeCode:
           type:
           - string
           - 'null'
-        keyNameText:
+        cardTypeText:
           type:
           - string
           - 'null'
-        last4DigitsText:
+        iiN_IINNumber:
           type:
           - string
           - 'null'
+        securePaymentAuthenticationVersion:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SecurePaymentAuthenticationVersionType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderReshopRS:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferAssociationType:
       type: object
       properties:
-        items:
+        offerItemRefID:
           type:
           - array
           - 'null'
-          items: {}
-        augmentationPoint:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType'
-        payloadAttributes:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType'
+          items:
+            type: string
+        offerRefID:
+          type:
+          - string
+          - 'null'
+        ownerCode:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RedressCaseType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RSA_KeyValueType:
       type: object
       properties:
-        countryCode:
+        exponent:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
+        modulus:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.VisaType:
+      type: object
+      properties:
+        entryQty:
+          type: number
+          format: double
+        entryQtySpecified:
+          type: boolean
+        expiryDate:
+          type: string
+          format: date-time
+        expiryDateSpecified:
+          type: boolean
+        hostCountryCode:
           type:
           - string
           - 'null'
-        programName:
+        issueDate:
+          type: string
+          format: date-time
+        issueDateSpecified:
+          type: boolean
+        issuingCountryCode:
           type:
           - string
           - 'null'
-        redressCaseID:
+        stayDuration:
+          type:
+          - string
+          - 'null'
+        visaID:
+          type:
+          - string
+          - 'null'
+        visaTypeCode:
           type:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TripPurposeCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      type: integer
-      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferFlightAssociationsType:
+      type: object
+      properties:
+        item: {}
+        itemElementName:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ItemChoiceType1'
+      additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType:
       type: object
       properties:
         prefLevelCode:
           $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelCodeType'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrePaidCertificateType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PromotionIssuerType:
       type: object
       properties:
-        appText:
+        item: {}
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EmployerType:
+      type: object
+      properties:
+        name:
           type:
           - string
           - 'null'
-        effectiveDateTime:
-          type: string
-          format: date-time
-        effectiveDateTimeSpecified:
+        salesTaxRegistration:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesTaxRegistrationType'
+        taxationExemptionQualifierCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxExemptionQualificationCodeType'
+        taxationExemptionQualifierCodeSpecified:
           type: boolean
-        expiryDateTime:
-          type: string
-          format: date-time
-        expiryDateTimeSpecified:
-          type: boolean
-        number:
-          type: number
-          format: double
-        numberSpecified:
+        taxDeductedatSourceCapabilityInd:
           type: boolean
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurAppCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      type: integer
-      format: int32
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxType:
       type: object
       properties:
@@ -1866,43 +1589,122 @@ components:
         taxTypeCodeSpecified:
           type: boolean
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ServiceCriteriaType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.KeyValueType:
       type: object
       properties:
-        includeInd:
-          type: boolean
-        includeIndSpecified:
-          type: boolean
-        prefLevel:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-        rfic:
+        rsA_KeyValue:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RSA_KeyValueType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentAssociatedFunctionsCriteriaType:
+      type: object
+      properties:
+        offerAssociation:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferAssociationType'
+        orderAssociation:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderAssociationType'
+        paymentMethodCriteria:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaymentMethodCriteriaType'
+        refundMethodCriteria:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundMethodCriteriaType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType:
+      type: object
+      properties:
+        altLangID:
           type:
           - string
           - 'null'
-        rfisc:
+        correlationID:
+          type:
+          - string
+          - 'null'
+        primaryLangID:
+          type:
+          - string
+          - 'null'
+        retransmissionInd:
+          type: boolean
+        retransmissionIndSpecified:
+          type: boolean
+        seqNumber:
+          type: number
+          format: double
+        seqNumberSpecified:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        timestampSpecified:
+          type: boolean
+        trxID:
+          type:
+          - string
+          - 'null'
+        versionNumber:
+          type: number
+          format: double
+        versionNumberSpecified:
+          type: boolean
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderAssociationType:
+      type: object
+      properties:
+        orderItemRefID:
           type:
           - array
           - 'null'
           items:
             type: string
-        servicePricingOnlyInd:
-          type: boolean
-        servicePricingOnlyIndSpecified:
-          type: boolean
-        taxonomyCode:
+        orderRefID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ExistingOrderType:
+      type: object
+      properties:
+        affectedOrderItem:
           type:
           - array
           - 'null'
           items:
-            type: string
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AffectedOrderItemRequestType'
+        orderID:
+          type:
+          - string
+          - 'null'
+        ownerCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EncryptedDataType:
+      type: object
+      properties:
+        cryptographyKey:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CryptographyKeyType'
+        cypherData:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CypherDataType'
+        encryptedCardNumber:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
+        encryptedCardSecurityNumber:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BinaryObjectType'
+        first6DigitsText:
+          type:
+          - string
+          - 'null'
+        keyNameText:
+          type:
+          - string
+          - 'null'
+        last4DigitsText:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType:
       type: object
@@ -1960,41 +1762,180 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxSummaryType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramOwnerType:
       type: object
       properties:
-        allRefundableInd:
-          type: boolean
-        allRefundableIndSpecified:
-          type: boolean
-        approximateInd:
-          type: boolean
-        approximateIndSpecified:
-          type: boolean
-        collectionInd:
-          type: boolean
-        collectionIndSpecified:
-          type: boolean
-        guaranteeTimeLimitDateTime:
-          type: string
-          format: date-time
-        guaranteeTimeLimitDateTimeSpecified:
-          type: boolean
-        refundMethodText:
-          type:
-          - string
-          - 'null'
-        tax:
+        item: {}
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaxGroupType:
+      type: object
+      properties:
+        contactInfo:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxType'
-        totalRefundableTaxAmount:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
-        totalTaxAmount:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ContactInfoType'
+        intendedPaxQty:
+          type: number
+          format: double
+        intendedPaxQtySpecified:
+          type: boolean
+        paxGroupID:
+          type:
+          - string
+          - 'null'
+        paxGroupName:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.StationType:
+      type: object
+      properties:
+        iatA_LocationCode:
+          type:
+          - string
+          - 'null'
+        stationName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BDC_Type:
+      type: object
+      properties:
+        bagRuleCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BagRuleCodeType'
+        bagRuleCodeSpecified:
+          type: boolean
+        bdC_AnalysisResultCode:
+          type:
+          - string
+          - 'null'
+        bdC_ReasonText:
+          type:
+          - string
+          - 'null'
+        carrierDesigCode:
+          type:
+          - string
+          - 'null'
+        carrierName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IndividualType:
+      type: object
+      properties:
+        addlName:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameType'
+        birthdate:
+          type: string
+          format: date-time
+        birthdateSpecified:
+          type: boolean
+        birthplaceText:
+          type:
+          - string
+          - 'null'
+        genderCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.GenderCodeType'
+        genderCodeSpecified:
+          type: boolean
+        givenName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        individualID:
+          type:
+          - string
+          - 'null'
+        middleName:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        suffixName:
+          type:
+          - string
+          - 'null'
+        surname:
+          type:
+          - string
+          - 'null'
+        titleName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramAccountType:
+      type: object
+      properties:
+        accountID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SeatCriteriaType:
+      type: object
+      properties:
+        columnID:
+          type:
+          - string
+          - 'null'
+        rowNumber:
+          type:
+          - string
+          - 'null'
+        seatCharacteristicCode:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        seatProfileCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurAppCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+      format: int32
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType:
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryName:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PresenceTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesBranchType:
       type: object
       properties:
@@ -2003,42 +1944,165 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RateType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ParticipatingOrgType:
       type: object
       properties:
-        baseCurCode:
+        name:
           type:
           - string
           - 'null'
-        baseMultiplierValue:
-          type: number
-          format: double
-        baseMultiplierValueSpecified:
+        orgID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingParameterType:
+      type: object
+      properties:
+        autoExchInd:
           type: boolean
-        baseUnitCode:
-          type:
-          - string
-          - 'null'
-        curCode:
-          type:
-          - string
-          - 'null'
-        format:
-          type:
-          - string
-          - 'null'
-        multiplierValue:
-          type: number
-          format: double
-        multiplierValueSpecified:
+        autoExchIndSpecified:
           type: boolean
-        unitCode:
+        awardIncludedInd:
+          type: boolean
+        awardIncludedIndSpecified:
+          type: boolean
+        awardOnlyInd:
+          type: boolean
+        awardOnlyIndSpecified:
+          type: boolean
+        includeUpsellOffersInd:
+          type: boolean
+        includeUpsellOffersIndSpecified:
+          type: boolean
+        overrideCurCode:
           type:
           - string
           - 'null'
-        value:
-          type: number
-          format: double
+        simplePricingInd:
+          type: boolean
+        simplePricingIndSpecified:
+          type: boolean
+        taxExemption:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxSummaryType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RepricedOrderType:
+      type: object
+      properties:
+        orderID:
+          type:
+          - string
+          - 'null'
+        orderItemRefID:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        ownerCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_OrderQuoteRQ:
+      type: object
+      properties:
+        augmentationPoint:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AugmentationPointType'
+        distributionChain:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainLinkType'
+        payload:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderQuotePayloadType'
+        payloadAttributes:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.IATA_PayloadStandardAttributesType'
+        pos:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.POS_Type'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ResponseParametersRequestType:
+      type: object
+      properties:
+        bdc:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BDC_Type'
+        curParameter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurParameterType'
+        device:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceType'
+        deviceLocation:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DeviceLocationType'
+        inventoryGuaranteeInd:
+          type: boolean
+        inventoryGuaranteeIndSpecified:
+          type: boolean
+        langUsage:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LangUsageType'
+        measurementSystemCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.MeasurementSystemCodeType'
+        measurementSystemCodeSpecified:
+          type: boolean
+        paxGroup:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PaxGroupType'
+        pricingParameter:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingParameterType'
+        reasonCode:
+          type:
+          - string
+          - 'null'
+        remark:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RemarkType'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RedressCaseType:
+      type: object
+      properties:
+        countryCode:
+          type:
+          - string
+          - 'null'
+        programName:
+          type:
+          - string
+          - 'null'
+        redressCaseID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferType:
+      type: object
+      properties:
+        offerRefID:
+          type:
+          - string
+          - 'null'
+        ownerCode:
+          type:
+          - string
+          - 'null'
+        selectedOfferItem:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedOfferItemType'
       additionalProperties: false
     Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PostalAddressType:
       type: object
@@ -2082,214 +2146,154 @@ components:
           items:
             type: string
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EmployerType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ClearanceCriteriaType:
       type: object
       properties:
-        name:
+        processRuleCode:
           type:
           - string
           - 'null'
-        salesTaxRegistration:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesTaxRegistrationType'
-        taxationExemptionQualifierCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TaxExemptionQualificationCodeType'
-        taxationExemptionQualifierCodeSpecified:
-          type: boolean
-        taxDeductedatSourceCapabilityInd:
+        remittanceDate:
+          type: string
+          format: date-time
+        remittanceDateSpecified:
           type: boolean
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AffectedOrderItemRequestType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RefundPaymentCardType:
       type: object
       properties:
-        orderItemRefID:
+        cardBrandCode:
           type:
           - string
           - 'null'
-        respendInd:
-          type: boolean
-        respendIndSpecified:
-          type: boolean
-        retainServiceID:
+        cardHolderName:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
+        cardIssuingCountryCode:
+          type:
+          - string
+          - 'null'
+        cardNumber:
+          type:
+          - string
+          - 'null'
+        cardProductTypeCode:
+          type:
+          - string
+          - 'null'
+        cardSeqNumber:
+          type: number
+          format: double
+        cardSeqNumberSpecified:
+          type: boolean
+        cardTypeText:
+          type:
+          - string
+          - 'null'
+        encryptedData:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.EncryptedDataType'
+        expirationDate:
+          type:
+          - string
+          - 'null'
+        paymentInstrumentOwnershipCode:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OwnershipTypeCodeType'
+        paymentInstrumentOwnershipCodeSpecified:
+          type: boolean
+        protectedCardID:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CurConversionType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RateType:
       type: object
       properties:
-        amount:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
-        conversionRate:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.RateType'
-        localAmount:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AmountType'
+        baseCurCode:
+          type:
+          - string
+          - 'null'
+        baseMultiplierValue:
+          type: number
+          format: double
+        baseMultiplierValueSpecified:
+          type: boolean
+        baseUnitCode:
+          type:
+          - string
+          - 'null'
+        curCode:
+          type:
+          - string
+          - 'null'
+        format:
+          type:
+          - string
+          - 'null'
+        multiplierValue:
+          type: number
+          format: double
+        multiplierValueSpecified:
+          type: boolean
+        unitCode:
+          type:
+          - string
+          - 'null'
+        value:
+          type: number
+          format: double
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SalesTaxRegistrationType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LoyaltyProgramType:
       type: object
       properties:
-        cityName:
+        alliance:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AllianceType'
+        carrier:
+          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CarrierType'
+        programCode:
           type:
           - string
           - 'null'
-        countryCode:
+        programName:
           type:
           - string
           - 'null'
-        countryDialingCode:
+        providerName:
           type:
           - string
           - 'null'
-        countrySubDivisionName:
+        url:
           type:
           - string
           - 'null'
-        emailAddressText:
-          type:
-          - string
-          - 'null'
-        phoneNumber:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        postalCode:
-          type:
-          - string
-          - 'null'
-        salesTaxRegistrationID:
-          type:
-          - string
-          - 'null'
-        streetText:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
       additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PresenceTypeCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.DistributionChainRoleCodeType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OtherAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        otherAddressText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ItemChoiceType1:
       enum:
       - 0
       - 1
       - 2
       type: integer
       format: int32
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SelectedALaCarteOfferItemType:
+    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareWaiverType:
       type: object
       properties:
-        offerFlightAssociations:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OfferFlightAssociationsType'
-        qty:
-          type: number
-          format: double
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramAccountType:
-      type: object
-      properties:
-        accountID:
+        fareRuleWaiverCode:
           type:
           - string
           - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.OrderCriteriaType:
-      type: object
-      properties:
-        baggagePricingCriteria:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.BaggagePricingCriteriaType'
-        fareCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.FareCriteriaType'
-        pricingMethodCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PricingMethodCriteriaType'
-        programCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ProgramCriteriaType'
-        promotionCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PromotionType'
-        seatCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SeatCriteriaType'
-        serviceCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.ServiceCriteriaType'
-        specialNeedsCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.SpecialServiceType'
-        tripPurposeCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.TripPurposeCodeType'
-        tripPurposeCodeSpecified:
-          type: boolean
-        waitListCriteria:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.PrefLevelType'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.CountryType:
-      type: object
-      properties:
-        countryCode:
-          type:
-          - string
-          - 'null'
-        countryName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameType:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        nameTypeCode:
-          $ref: '#/components/schemas/Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.AddlNameTypeCodeType'
-        nameTypeCodeSpecified:
-          type: boolean
-      additionalProperties: false
-    Navitaire.Ndc.Servicing.Application.IataMessageHandlers.v213.IataMessages.LangUsageType:
-      type: object
-      properties:
-        langCode:
-          type:
-          - string
-          - 'null'
-        langUsageText:
+        fareWaiverTypeCode:
           type:
           - string
           - 'null'

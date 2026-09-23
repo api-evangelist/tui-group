@@ -11,15 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: collection
+- name: Collection
 paths:
   /api/nsk/v1/collection/{accountCollectionKey}/expirationDate:
     put:
       tags:
-      - collection
-      summary: 'Updates the expiration of the account collection based on the
-
-        account collection key and data in the request.'
+      - Collection
+      summary: Updates the expiration of the account collection based on the account…
       description: 'GraphQL endpoint: accountCollectionExpirationDateSet'
       operationId: nsk_v1_collection_accountCollectionKey_expirationDate_put
       parameters:
@@ -55,10 +53,8 @@ paths:
   /api/nsk/v1/collection/{accountCollectionKey}/transactions:
     get:
       tags:
-      - collection
-      summary: 'Retrieves the credit transactions based on the account collection key and
-
-        the request data.'
+      - Collection
+      summary: Retrieves the credit transactions based on the account collection key and the…
       description: 'GraphQL endpoint: accountCollectionTransactions'
       operationId: nsk_v1_collection_accountCollectionKey_transactions_get
       parameters:
@@ -177,10 +173,8 @@ paths:
   /api/nsk/v2/collection/{accountCollectionKey}/transactions:
     get:
       tags:
-      - collection
-      summary: 'Retrieves the credit transactions based on the account collection key and
-
-        the request data.'
+      - Collection
+      summary: Retrieves the credit transactions based on the account collection key and the…
       description: 'GraphQL endpoint: accountCollectionTransactionsv2'
       operationId: nsk_v2_collection_accountCollectionKey_transactions_get
       parameters:
@@ -315,177 +309,6 @@ components:
           type:
           - string
           - 'null'
-    Transaction:
-      type: object
-      description: "The transaction model.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      - currencyCode
-      properties:
-        amount:
-          type: number
-          description: "The credit account transaction amount.\n            "
-          format: decimal
-        currencyCode:
-          type: string
-          description: "The credit account transaction currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The credit account transaction note.\n            "
-          maxLength: 128
-          minLength: 0
-        accountTransactionCode:
-          type:
-          - string
-          - 'null'
-          description: "The system-generated code for the transaction.\n            "
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: "The record locator from the refunded booking payment. This property is redundant and the same information can be\nfound on the AccountReference property.\n            "
-          deprecated: true
-          x-deprecatedMessage: 4.4.4 - Please use Account Reference instead.
-        accountReference:
-          type:
-          - string
-          - 'null'
-          description: "The account reference. This property may contain a record locator, account number, string value, or may be null\ndepending on the transaction type.\n            "
-        transactionKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique transaction key.\n            "
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The created date associated with the transaction.\n            "
-          format: date-time
-        foreignAmount:
-          type: number
-          description: "The transaction foreign amount.\n            "
-          format: decimal
-        foreignCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The transaction foreign currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        type:
-          description: "The transaction type.\n            "
-          $ref: '#/components/schemas/TransactionType'
-        paymentId:
-          type: integer
-          description: "The payment ID of the transaction. This will only be non zero on refunded booking payments. A zero signifies that\nno payment ID is found.\n            "
-          format: int64
-        accountCollectionKey:
-          type:
-          - string
-          - 'null'
-          description: "The account collection key associated with the transaction.\n            "
-    IJsonResponseOfPagedTransactionResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PagedTransactionResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PagedTransactionResponse:
-      type: object
-      description: "The paged transaction response.\n            "
-      additionalProperties: false
-      properties:
-        totalCount:
-          type: integer
-          description: "The total count of transactions.\n            "
-          format: int32
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The last page key.\n            "
-        transactions:
-          type:
-          - array
-          - 'null'
-          description: "The collection of transactions.\n            "
-          items:
-            $ref: '#/components/schemas/Transaction'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    AccountExpirationUpdateRequest:
-      type: object
-      description: "The account transaction code model.\n            "
-      additionalProperties: false
-      required:
-      - expirationDate
-      properties:
-        expirationDate:
-          type: string
-          description: "The expiration date.\n            "
-          format: date-time
-          minLength: 1
-        reinstateAmount:
-          type: number
-          description: "The re-instate amount.\n            "
-          format: decimal
-    IJsonResponseOfIListOfTransaction:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/Transaction'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -507,33 +330,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    TransactionType:
-      type: integer
-      description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
-      x-enumNames:
-      - Default
-      - Payment
-      - Adjustment
-      - Supplementary
-      - Transfer
-      - Spoilage
-      - StatementDateAndBalance
-      - PayableCommission
-      - Commission
-      - ChildCommissionTransfer
-      - ParentCommissionTransfer
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -612,6 +408,204 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    TransactionType:
+      type: integer
+      description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
+      x-enumNames:
+      - Default
+      - Payment
+      - Adjustment
+      - Supplementary
+      - Transfer
+      - Spoilage
+      - StatementDateAndBalance
+      - PayableCommission
+      - Commission
+      - ChildCommissionTransfer
+      - ParentCommissionTransfer
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+    IJsonResponseOfPagedTransactionResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedTransactionResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfTransaction:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PagedTransactionResponse:
+      type: object
+      description: "The paged transaction response.\n            "
+      additionalProperties: false
+      properties:
+        totalCount:
+          type: integer
+          description: "The total count of transactions.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The last page key.\n            "
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The collection of transactions.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
+    AccountExpirationUpdateRequest:
+      type: object
+      description: "The account transaction code model.\n            "
+      additionalProperties: false
+      required:
+      - expirationDate
+      properties:
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        reinstateAmount:
+          type: number
+          description: "The re-instate amount.\n            "
+          format: decimal
+    Transaction:
+      type: object
+      description: "The transaction model.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      - currencyCode
+      properties:
+        amount:
+          type: number
+          description: "The credit account transaction amount.\n            "
+          format: decimal
+        currencyCode:
+          type: string
+          description: "The credit account transaction currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The credit account transaction note.\n            "
+          maxLength: 128
+          minLength: 0
+        accountTransactionCode:
+          type:
+          - string
+          - 'null'
+          description: "The system-generated code for the transaction.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator from the refunded booking payment. This property is redundant and the same information can be\nfound on the AccountReference property.\n            "
+          deprecated: true
+          x-deprecatedMessage: 4.4.4 - Please use Account Reference instead.
+        accountReference:
+          type:
+          - string
+          - 'null'
+          description: "The account reference. This property may contain a record locator, account number, string value, or may be null\ndepending on the transaction type.\n            "
+        transactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique transaction key.\n            "
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date associated with the transaction.\n            "
+          format: date-time
+        foreignAmount:
+          type: number
+          description: "The transaction foreign amount.\n            "
+          format: decimal
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The transaction foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        type:
+          description: "The transaction type.\n            "
+          $ref: '#/components/schemas/TransactionType'
+        paymentId:
+          type: integer
+          description: "The payment ID of the transaction. This will only be non zero on refunded booking payments. A zero signifies that\nno payment ID is found.\n            "
+          format: int64
+        accountCollectionKey:
+          type:
+          - string
+          - 'null'
+          description: "The account collection key associated with the transaction.\n            "
   securitySchemes:
     JWT:
       type: http

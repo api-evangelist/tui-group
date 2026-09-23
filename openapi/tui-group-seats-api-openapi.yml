@@ -11,13 +11,13 @@ servers:
 security:
 - JWT: []
 tags:
-- name: seats
+- name: Seats
 paths:
   /api/dcs/v2/seats/block:
     post:
       tags:
-      - seats
-      summary: Blocks seats on a specific piece of equipment.
+      - Seats
+      summary: Blocks seats on a specific piece of equipment
       description: 'A blocked seat cannot be associated with/assigned to a passenger.
 
         The change can be verified on a unit''s availability on a seat map.
@@ -50,8 +50,8 @@ paths:
   /api/dcs/v1/seats/block:
     post:
       tags:
-      - seats
-      summary: Blocks seats on a specific piece of equipment.
+      - Seats
+      summary: Blocks seats on a specific piece of equipment
       description: 'A blocked seat cannot be associated with/assigned to a passenger.
 
         The change can be verified on a unit''s availability on a seat map.
@@ -87,8 +87,8 @@ paths:
   /api/dcs/v1/seats/unblock:
     delete:
       tags:
-      - seats
-      summary: Unblocks seats on a specific piece of equipment.
+      - Seats
+      summary: Unblocks seats on a specific piece of equipment
       description: 'The change can be verified on a unit''s availability on a seat map.
 
 
@@ -120,6 +120,21 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    BlockSeatsRequest:
+      type: object
+      description: "Block seats request.\n            "
+      additionalProperties: false
+      required:
+      - unitKeys
+      properties:
+        unitKeys:
+          type: array
+          description: "The unit keys to block seats on.\n            "
+          items:
+            type: string
+        blockType:
+          description: "The seat block type.\n             "
+          $ref: '#/components/schemas/SeatBlockType'
     Exception:
       type: object
       additionalProperties: false
@@ -136,41 +151,6 @@ components:
           type:
           - string
           - 'null'
-    SeatBlockType:
-      type: integer
-      description: "Enumeration representing all the different seat block types.\n            \n\n0 = Blocked\n1 = Broken"
-      x-enumNames:
-      - Blocked
-      - Broken
-      enum:
-      - 0
-      - 1
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    BlockSeatsRequest:
-      type: object
-      description: "Block seats request.\n            "
-      additionalProperties: false
-      required:
-      - unitKeys
-      properties:
-        unitKeys:
-          type: array
-          description: "The unit keys to block seats on.\n            "
-          items:
-            type: string
-        blockType:
-          description: "The seat block type.\n             "
-          $ref: '#/components/schemas/SeatBlockType'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -270,6 +250,26 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    SeatBlockType:
+      type: integer
+      description: "Enumeration representing all the different seat block types.\n            \n\n0 = Blocked\n1 = Broken"
+      x-enumNames:
+      - Blocked
+      - Broken
+      enum:
+      - 0
+      - 1
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http
