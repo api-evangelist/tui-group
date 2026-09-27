@@ -105,27 +105,29 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Exception:
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfString:
       type: object
       additionalProperties: false
       properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+        data:
           type:
           - string
           - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
         errors:
           type:
           - array
@@ -215,6 +217,39 @@ components:
           type: boolean
         scan:
           $ref: '#/components/schemas/ParseScanRequestV2'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     ParseScanRequestV2:
       type: object
       additionalProperties: false
@@ -243,41 +278,6 @@ components:
           - string
           - 'null'
           description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfString:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - string
-          - 'null'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

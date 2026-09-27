@@ -162,28 +162,50 @@ components:
       - allInclusive
       type: object
       additionalProperties: false
-    ApiPackages:
+    ApiFlightLeg:
       properties:
-        next:
-          type:
-          - string
-          - 'null'
-        totalNumberOfItems:
+        typeOfFlightName:
+          type: string
+        typeOfFlightCode:
+          type: string
+        airlineName:
+          type: string
+        airlineCode:
+          type: string
+        flightCode:
+          type: string
+        flightNumber:
+          type: string
+        arrivalTime:
+          type: string
+        arrivalDate:
+          type: string
+        arrivalName:
+          type: string
+        arrivalCode:
+          type: string
+        departureTime:
+          type: string
+        departureDate:
+          type: string
+        departureName:
+          type: string
+        departureCode:
+          type: string
+        legNumber:
           type: number
           format: double
-        version:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/ApiPackage'
-          type: array
       required:
-      - next
-      - totalNumberOfItems
-      - version
-      - items
+      - airlineCode
+      - flightCode
+      - arrivalTime
+      - arrivalDate
+      - arrivalCode
+      - departureTime
+      - departureDate
+      - departureCode
+      - legNumber
       type: object
-      additionalProperties: false
     ApiPackage:
       properties:
         id:
@@ -322,50 +344,28 @@ components:
       - boardIncluded
       type: object
       additionalProperties: false
-    ApiFlightLeg:
+    ApiPackages:
       properties:
-        typeOfFlightName:
-          type: string
-        typeOfFlightCode:
-          type: string
-        airlineName:
-          type: string
-        airlineCode:
-          type: string
-        flightCode:
-          type: string
-        flightNumber:
-          type: string
-        arrivalTime:
-          type: string
-        arrivalDate:
-          type: string
-        arrivalName:
-          type: string
-        arrivalCode:
-          type: string
-        departureTime:
-          type: string
-        departureDate:
-          type: string
-        departureName:
-          type: string
-        departureCode:
-          type: string
-        legNumber:
+        next:
+          type:
+          - string
+          - 'null'
+        totalNumberOfItems:
           type: number
           format: double
+        version:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ApiPackage'
+          type: array
       required:
-      - airlineCode
-      - flightCode
-      - arrivalTime
-      - arrivalDate
-      - arrivalCode
-      - departureTime
-      - departureDate
-      - departureCode
-      - legNumber
+      - next
+      - totalNumberOfItems
+      - version
+      - items
       type: object
+      additionalProperties: false
   securitySchemes:
     tsoa_auth_prod:
       type: oauth2

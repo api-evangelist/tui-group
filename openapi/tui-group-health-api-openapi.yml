@@ -101,65 +101,39 @@ paths:
       description: TUI Playground
 components:
   schemas:
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    HealthStatus:
+    MessageStatus:
       type: integer
-      description: "Defines the health status for a component.\n            \n\n0 = Unknown\n1 = Ok\n2 = Warning\n3 = Error"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - Unknown
-      - Ok
+      - General
       - Warning
-      - Error
+      - Critical
       enum:
       - 0
       - 1
       - 2
-      - 3
+    IJsonResponseOfEnvironmentHealth:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/EnvironmentHealth'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -208,28 +182,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfEnvironmentHealth:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/EnvironmentHealth'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     HealthInformation:
       type: object
       description: "Defines the health information details.\n            "
@@ -253,17 +205,36 @@ components:
         status:
           description: "The current health of the component.\n            "
           $ref: '#/components/schemas/HealthStatus'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     EnvironmentHealth:
       type: object
       description: "Defines the environment health details.\n            "
@@ -294,15 +265,25 @@ components:
           description: "The collection of child health information objects associated with the current object.\n            "
           items:
             $ref: '#/components/schemas/HealthInformation'
-    HealthStatus_2:
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    HealthStatus:
       type: integer
-      description: '0 = Unknown
-
-        1 = Ok
-
-        2 = Warning
-
-        3 = Error'
+      description: "Defines the health status for a component.\n            \n\n0 = Unknown\n1 = Ok\n2 = Warning\n3 = Error"
       x-enumNames:
       - Unknown
       - Ok
@@ -331,6 +312,25 @@ components:
           - 'null'
         status:
           $ref: '#/components/schemas/HealthStatus_2'
+    HealthStatus_2:
+      type: integer
+      description: '0 = Unknown
+
+        1 = Ok
+
+        2 = Warning
+
+        3 = Error'
+      x-enumNames:
+      - Unknown
+      - Ok
+      - Warning
+      - Error
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
     EnvironmentHealth_2:
       type: object
       additionalProperties: false

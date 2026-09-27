@@ -408,95 +408,17 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    IJsonResponseOfMessageResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/MessageResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -567,6 +489,144 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    MessageAddress:
+      type: object
+      description: "Defines the message address.\n            "
+      additionalProperties: false
+      properties:
+        carrier:
+          type:
+          - string
+          - 'null'
+          description: "The carrier segment of the address.\n            "
+        city:
+          type:
+          - string
+          - 'null'
+          description: "The city segment of the address.\n            "
+        office:
+          type:
+          - string
+          - 'null'
+          description: "The office segment of the address.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    SearchType:
+      type: integer
+      description: "Enumeration of possible ways to do a search inquiry.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
+      x-enumNames:
+      - StartsWith
+      - EndsWith
+      - Contains
+      - ExactMatch
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    MessagesSearchResponse:
+      type: object
+      description: "The paged message response.\n            "
+      additionalProperties: false
+      properties:
+        messageQueueCount:
+          type: integer
+          description: "The total number of messages in the queue.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The last index of the paged response.\n            "
+        teletypeMessages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of messages in the queue.\n            "
+          items:
+            $ref: '#/components/schemas/MessageResponsev2'
+    IJsonResponseOfMessageResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/MessageResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageQueueHiddenOptions:
+      type: integer
+      description: "Represents values for message queue record filter.\n            \n\n0 = NonHiddenRecords\n1 = HiddenRecords\n2 = All"
+      x-enumNames:
+      - NonHiddenRecords
+      - HiddenRecords
+      - All
+      enum:
+      - 0
+      - 1
+      - 2
     MessageResponse:
       type: object
       description: "The message response.\n            "
@@ -615,40 +675,22 @@ components:
           type: string
           description: "The message body.\n            "
           minLength: 1
-    SearchType:
-      type: integer
-      description: "Enumeration of possible ways to do a search inquiry.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
-      x-enumNames:
-      - StartsWith
-      - EndsWith
-      - Contains
-      - ExactMatch
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    MessagesSearchResponse:
+    Exception:
       type: object
-      description: "The paged message response.\n            "
       additionalProperties: false
       properties:
-        messageQueueCount:
-          type: integer
-          description: "The total number of messages in the queue.\n            "
-          format: int32
-        lastPageKey:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The last index of the paged response.\n            "
-        teletypeMessages:
+        StackTrace:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of messages in the queue.\n            "
-          items:
-            $ref: '#/components/schemas/MessageResponsev2'
     MessageResponsev2:
       type: object
       description: "The teletype message response.\n            "
@@ -684,48 +726,6 @@ components:
           type: string
           description: "The date in which the message was created.\n            "
           format: date-time
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    MessageAddress:
-      type: object
-      description: "Defines the message address.\n            "
-      additionalProperties: false
-      properties:
-        carrier:
-          type:
-          - string
-          - 'null'
-          description: "The carrier segment of the address.\n            "
-        city:
-          type:
-          - string
-          - 'null'
-          description: "The city segment of the address.\n            "
-        office:
-          type:
-          - string
-          - 'null'
-          description: "The office segment of the address.\n            "
-    MessageQueueHiddenOptions:
-      type: integer
-      description: "Represents values for message queue record filter.\n            \n\n0 = NonHiddenRecords\n1 = HiddenRecords\n2 = All"
-      x-enumNames:
-      - NonHiddenRecords
-      - HiddenRecords
-      - All
-      enum:
-      - 0
-      - 1
-      - 2
     MessageBase:
       type: object
       description: "The message base model.\n            "

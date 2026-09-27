@@ -2173,55 +2173,105 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    CabinCounts:
+    FlightLoadReportPrintStreamsRequest:
       type: object
       additionalProperties: false
       required:
-      - cabinCode
-      - count
+      - departureDate
+      - origin
+      - carrierCode
+      - printer
       properties:
-        cabinCode:
+        departureDate:
           type: string
-          description: The cabin of service.
-          maxLength: 1
-          minLength: 0
-        count:
-          type: integer
-          description: The number of passengers in the cabin.
-          format: int32
-    PaymentReceiptReportDisplayCurrencySource:
-      type: integer
-      description: '0 = Payment
-
-        1 = Booking'
-      x-enumNames:
-      - Payment
-      - Booking
-      enum:
-      - 0
-      - 1
-    IJsonResponseOfListOfString:
+          format: date-time
+          minLength: 1
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        carrierCode:
+          type: string
+          maxLength: 2
+          minLength: 2
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightCloseReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - sortType
+      - weightType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        sortType:
+          $ref: '#/components/schemas/FlightCloseSortType'
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    Message:
       type: object
       additionalProperties: false
       properties:
-        data:
+        code:
           type:
-          - array
+          - string
           - 'null'
-          items:
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
             type: string
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
+    PrePostFlightManifestReportType:
+      type: integer
+      description: '0 = PostFlightManifest
+
+        1 = PreFlightManifest
+
+        2 = PreFlightManifestWithSeatMap'
+      x-enumNames:
+      - PostFlightManifest
+      - PreFlightManifest
+      - PreFlightManifestWithSeatMap
+      enum:
+      - 0
+      - 1
+      - 2
+    PrePostFlightManifestReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - sortType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          $ref: '#/components/schemas/PrePostFlightManifestReportType'
+        sortType:
+          $ref: '#/components/schemas/PrePostFlightManifestSortType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
     ManifestPassengerSortType:
       type: integer
       description: '0 = ApisStatus
@@ -2321,28 +2371,6 @@ components:
       - 21
       - 22
       - 23
-    FlightSummaryPartialReport:
-      type: object
-      additionalProperties: false
-      properties:
-        zoneCounts:
-          type:
-          - array
-          - 'null'
-          description: 'The rows of data for the zone counts table, ordered as they will be displayed
-
-            in the printed report.'
-          items:
-            $ref: '#/components/schemas/ZoneCounts'
-        baggageCounts:
-          type:
-          - array
-          - 'null'
-          description: 'The rows of data for the baggage counts table, ordered as they will be displayed
-
-            in the printed report.'
-          items:
-            $ref: '#/components/schemas/BaggageCounts'
     InventoryLegOpFileReportPrintStreamsRequest:
       type: object
       additionalProperties: false
@@ -2359,22 +2387,6 @@ components:
           $ref: '#/components/schemas/InventoryLegOpFileReportType'
         printer:
           $ref: '#/components/schemas/PrinterRequest'
-    DeviceProperty:
-      type: object
-      additionalProperties: false
-      required:
-      - key
-      - type
-      - value
-      properties:
-        key:
-          type: string
-          minLength: 1
-        type:
-          $ref: '#/components/schemas/DevicePropertyType'
-        value:
-          type: string
-          minLength: 1
     WeightType:
       type: integer
       description: 'Specifies the weight unit of measure, either Pounds or Kilograms.
@@ -2389,260 +2401,24 @@ components:
       enum:
       - 1
       - 2
-    AvailabilityReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - departureDate
-      - carrierCode
-      - origin
-      - printer
-      properties:
-        departureDate:
-          type: string
-          format: date-time
-          minLength: 1
-        carrierCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-        origin:
-          type: string
-          maxLength: 3
-          minLength: 3
-        destination:
-          type:
-          - string
-          - 'null'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    FlightManifestReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - reportType
-      - printer
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        reportType:
-          $ref: '#/components/schemas/FlightManifestReportType'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    PrePostFlightManifestReportType:
-      type: integer
-      description: '0 = PostFlightManifest
-
-        1 = PreFlightManifest
-
-        2 = PreFlightManifestWithSeatMap'
-      x-enumNames:
-      - PostFlightManifest
-      - PreFlightManifest
-      - PreFlightManifestWithSeatMap
-      enum:
-      - 0
-      - 1
-      - 2
-    EnplanementDeplanementReportSegmentStatus:
-      type: integer
-      description: '0 = Flown
-
-        1 = Open'
-      x-enumNames:
-      - Flown
-      - Open
-      enum:
-      - 0
-      - 1
-    SegmentsByTimeReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - bookingDate
-      - carrierCode
-      - printer
-      properties:
-        bookingDate:
-          type: string
-          format: date-time
-          minLength: 1
-        channelType:
-          $ref: '#/components/schemas/ChannelType'
-        carrierCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    ManifestCounts:
-      type: object
-      additionalProperties: false
-      required:
-      - filterType
-      - cabinCounts
-      properties:
-        filterType:
-          description: The filter type used to generate passenger counts.
-          $ref: '#/components/schemas/ManifestPassengerFilterType'
-        cabinCounts:
-          type: array
-          description: The cabins of service and passenger counts for the filter.
-          items:
-            $ref: '#/components/schemas/CabinCounts'
-    PaymentReceiptReportType:
-      type: integer
-      description: '0 = Summary
-
-        1 = Detailed'
-      x-enumNames:
-      - Summary
-      - Detailed
-      enum:
-      - 0
-      - 1
-    CheckedBaggagePrimarySortType:
-      type: integer
-      description: '0 = FlightNumber
-
-        1 = CityPair
-
-        2 = Sequence'
-      x-enumNames:
-      - FlightNumber
-      - CityPair
-      - Sequence
-      enum:
-      - 0
-      - 1
-      - 2
-    Message:
+    IJsonResponseOfFlightSummaryPartialReport:
       type: object
       additionalProperties: false
       properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    PrinterRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - printerKey
-      properties:
-        printerKey:
-          type: string
-          minLength: 1
-        properties:
+        data:
+          $ref: '#/components/schemas/FlightSummaryPartialReport'
+        errors:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/DeviceProperty'
-        usages:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
           - array
           - 'null'
           items:
-            type: string
-    InboundPassengerAndCountReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - includeIatciFlights
-      - showPassengerNames
-      - printer
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        includeIatciFlights:
-          type: boolean
-        showPassengerNames:
-          type: boolean
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    PrintPreview:
-      type: object
-      additionalProperties: false
-      properties:
-        header:
-          type:
-          - string
-          - 'null'
-          description: The report header text.
-        footer:
-          type:
-          - string
-          - 'null'
-          description: The report footer text.
-        body:
-          type:
-          - array
-          - 'null'
-          description: The lines of text constituting the report body.
-          items:
-            type: string
-    DevicePropertyType:
-      type: integer
-      description: 'Defines the different types of properties that can be associated with an external device.
-
-
-        0 = Unknown
-
-        1 = System
-
-        2 = User
-
-        3 = Permanent'
-      x-enumNames:
-      - Unknown
-      - System
-      - User
-      - Permanent
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    FlightCloseReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - sortType
-      - weightType
-      - printer
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        sortType:
-          $ref: '#/components/schemas/FlightCloseSortType'
-        weightType:
-          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
-          $ref: '#/components/schemas/WeightType'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
+            $ref: '#/components/schemas/Message'
     DepartureManifestReportPrintStreamsRequest:
       type: object
       additionalProperties: false
@@ -2679,6 +2455,206 @@ components:
           type: boolean
         printer:
           $ref: '#/components/schemas/PrinterRequest'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    SegmentsByTimeReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - bookingDate
+      - carrierCode
+      - printer
+      properties:
+        bookingDate:
+          type: string
+          format: date-time
+          minLength: 1
+        channelType:
+          $ref: '#/components/schemas/ChannelType'
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightSummaryPartialReport:
+      type: object
+      additionalProperties: false
+      properties:
+        zoneCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The rows of data for the zone counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/ZoneCounts'
+        baggageCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The rows of data for the baggage counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/BaggageCounts'
+    EnplanementDeplanementReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - startDate
+      - endDate
+      - showSummaryOnly
+      - reportType
+      - segmentStatus
+      - includeConnections
+      - carrierCode
+      - printer
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          minLength: 1
+        endDate:
+          type: string
+          format: date-time
+          minLength: 1
+        showSummaryOnly:
+          type: boolean
+        reportType:
+          $ref: '#/components/schemas/EnplanementDeplanementReportType'
+        segmentStatus:
+          $ref: '#/components/schemas/EnplanementDeplanementReportSegmentStatus'
+        station:
+          type:
+          - string
+          - 'null'
+        includeConnections:
+          type: boolean
+        fareClasses:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        startFlightNumber:
+          type:
+          - string
+          - 'null'
+        endFlightNumber:
+          type:
+          - string
+          - 'null'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    AvailabilityReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - departureDate
+      - carrierCode
+      - origin
+      - printer
+      properties:
+        departureDate:
+          type: string
+          format: date-time
+          minLength: 1
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        destination:
+          type:
+          - string
+          - 'null'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    PaymentReceiptReportDisplayCurrencySource:
+      type: integer
+      description: '0 = Payment
+
+        1 = Booking'
+      x-enumNames:
+      - Payment
+      - Booking
+      enum:
+      - 0
+      - 1
     FlightSummaryPassengerWeightCategory:
       type: integer
       description: '1 = Male
@@ -2706,261 +2682,6 @@ components:
       - 4
       - 5
       - 6
-    IJsonResponseOfFlightSummaryPartialReport:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/FlightSummaryPartialReport'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    CheckedBaggageReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - startDate
-      - endDate
-      - primarySortType
-      - secondarySortType
-      - weightType
-      - includeUnflownPassengers
-      - showSummaryOnly
-      - carrierCode
-      - printer
-      properties:
-        startDate:
-          type: string
-          format: date-time
-          minLength: 1
-        endDate:
-          type: string
-          format: date-time
-          minLength: 1
-        primarySortType:
-          $ref: '#/components/schemas/CheckedBaggagePrimarySortType'
-        secondarySortType:
-          $ref: '#/components/schemas/CheckedBaggageSecondarySortType'
-        weightType:
-          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
-          $ref: '#/components/schemas/WeightType'
-        includeUnflownPassengers:
-          type: boolean
-        showSummaryOnly:
-          type: boolean
-        carrierCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        agentName:
-          type:
-          - string
-          - 'null'
-          description: The username of the agent account that checked the baggage.
-        agentDomain:
-          type:
-          - string
-          - 'null'
-          description: 'The domain of the agent account that checked the baggage.  If agentName is empty,
-
-            this value is ignored.'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    CheckedBaggageSecondarySortType:
-      type: integer
-      description: '0 = Name
-
-        1 = BagTag'
-      x-enumNames:
-      - Name
-      - BagTag
-      enum:
-      - 0
-      - 1
-    CheckInReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - includeThruPassengers
-      - displayNames
-      - displaySeats
-      - printer
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        includeThruPassengers:
-          type: boolean
-        displayNames:
-          type: boolean
-        displaySeats:
-          type: boolean
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    TransferBagTagReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - includeOaAndManualTags
-      - sortType
-      - printer
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        includeOaAndManualTags:
-          type: boolean
-        sortType:
-          $ref: '#/components/schemas/TransferBagTagSortType'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    EnplanementDeplanementReportType:
-      type: integer
-      description: '0 = Enplanement
-
-        1 = Deplanement'
-      x-enumNames:
-      - Enplanement
-      - Deplanement
-      enum:
-      - 0
-      - 1
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    FlightLoadReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - departureDate
-      - origin
-      - carrierCode
-      - printer
-      properties:
-        departureDate:
-          type: string
-          format: date-time
-          minLength: 1
-        origin:
-          type: string
-          maxLength: 3
-          minLength: 3
-        carrierCode:
-          type: string
-          maxLength: 2
-          minLength: 2
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    BagTagTrackingReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - bagTag
-      - date
-      - printer
-      properties:
-        bagTag:
-          type: string
-          maxLength: 32
-          minLength: 0
-        date:
-          type: string
-          format: date-time
-          minLength: 1
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
     BaggageCounts:
       type: object
       additionalProperties: false
@@ -2986,6 +2707,101 @@ components:
           type: integer
           description: The number of bags for this destination with a status of AddedPrinted.
           format: int32
+    ManifestPassengerSearchCriteria:
+      type: object
+      additionalProperties: false
+      properties:
+        bagTagNumber:
+          type:
+          - string
+          - 'null'
+        boardingZone:
+          type:
+          - string
+          - 'null'
+        finalDestination:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+        seatNumber:
+          type:
+          - string
+          - 'null'
+        sequenceNumber:
+          type:
+          - string
+          - 'null'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+    PrePostFlightManifestSortType:
+      type: integer
+      description: '0 = Seat
+
+        1 = Name'
+      x-enumNames:
+      - Seat
+      - Name
+      enum:
+      - 0
+      - 1
+    PassengerVerificationReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeUnverifiedPassenger
+      - includePassengerAddress
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeUnverifiedPassenger:
+          type: boolean
+        includePassengerAddress:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightSummaryReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - weightType
+      - printer
+      - manifestCounts
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        manifestCounts:
+          type: array
+          description: 'The rows of data for the manifest counts table, ordered as they will be displayed
+
+            in the printed report.'
+          items:
+            $ref: '#/components/schemas/ManifestCounts'
     BagWeightByLegReportPrintStreamsRequest:
       type: object
       additionalProperties: false
@@ -3002,6 +2818,271 @@ components:
           $ref: '#/components/schemas/WeightType'
         printer:
           $ref: '#/components/schemas/PrinterRequest'
+    FlightInformationReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - carrierCode
+      - departureDate
+      - origin
+      - printer
+      properties:
+        origin:
+          type: string
+          maxLength: 3
+          minLength: 3
+        carrierCode:
+          type: string
+          maxLength: 3
+          minLength: 2
+        departureDate:
+          type: string
+          format: date-time
+          minLength: 1
+        destination:
+          type:
+          - string
+          - 'null'
+          maxLength: 3
+          minLength: 3
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          maxLength: 1
+          minLength: 0
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    InboundPassengerAndCountReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeIatciFlights
+      - showPassengerNames
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeIatciFlights:
+          type: boolean
+        showPassengerNames:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightManifestReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - reportType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        reportType:
+          $ref: '#/components/schemas/FlightManifestReportType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    FlightManifestReportType:
+      type: integer
+      description: '0 = FlightManifest
+
+        1 = FlightManifestWithApisDetails
+
+        2 = PassengerDocument'
+      x-enumNames:
+      - FlightManifest
+      - FlightManifestWithApisDetails
+      - PassengerDocument
+      enum:
+      - 0
+      - 1
+      - 2
+    PaymentReceiptReportType:
+      type: integer
+      description: '0 = Summary
+
+        1 = Detailed'
+      x-enumNames:
+      - Summary
+      - Detailed
+      enum:
+      - 0
+      - 1
+    DownlinePassengerAndCountReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeIatciFlights
+      - showPassengerNames
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeIatciFlights:
+          type: boolean
+        showPassengerNames:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    CabinCounts:
+      type: object
+      additionalProperties: false
+      required:
+      - cabinCode
+      - count
+      properties:
+        cabinCode:
+          type: string
+          description: The cabin of service.
+          maxLength: 1
+          minLength: 0
+        count:
+          type: integer
+          description: The number of passengers in the cabin.
+          format: int32
+    IJsonResponseOfPrintPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/PrintPreview'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    EnplanementDeplanementReportSegmentStatus:
+      type: integer
+      description: '0 = Flown
+
+        1 = Open'
+      x-enumNames:
+      - Flown
+      - Open
+      enum:
+      - 0
+      - 1
+    TransferBagTagReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeOaAndManualTags
+      - sortType
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeOaAndManualTags:
+          type: boolean
+        sortType:
+          $ref: '#/components/schemas/TransferBagTagSortType'
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    CheckInReportPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - legKey
+      - includeThruPassengers
+      - displayNames
+      - displaySeats
+      - printer
+      properties:
+        legKey:
+          type: string
+          minLength: 1
+        includeThruPassengers:
+          type: boolean
+        displayNames:
+          type: boolean
+        displaySeats:
+          type: boolean
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    WeightCategoryCount:
+      type: object
+      additionalProperties: false
+      properties:
+        weightCategory:
+          description: The weight category of passenger being counted.
+          $ref: '#/components/schemas/FlightSummaryPassengerWeightCategory'
+        count:
+          type: integer
+          description: The number of passengers in the weight category.
+          format: int32
+    InventoryLegOpFileReportType:
+      type: integer
+      description: '0 = Both
+
+        1 = Weather
+
+        2 = Flight'
+      x-enumNames:
+      - Both
+      - Weather
+      - Flight
+      enum:
+      - 0
+      - 1
+      - 2
     PaymentReceiptReportPrintStreamsRequest:
       type: object
       additionalProperties: false
@@ -3059,21 +3140,6 @@ components:
           minLength: 1
         printer:
           $ref: '#/components/schemas/PrinterRequest'
-    FlightManifestReportType:
-      type: integer
-      description: '0 = FlightManifest
-
-        1 = FlightManifestWithApisDetails
-
-        2 = PassengerDocument'
-      x-enumNames:
-      - FlightManifest
-      - FlightManifestWithApisDetails
-      - PassengerDocument
-      enum:
-      - 0
-      - 1
-      - 2
     TransferBagTagSortType:
       type: integer
       description: '0 = PassengerLastName
@@ -3085,21 +3151,6 @@ components:
       enum:
       - 0
       - 1
-    InventoryLegOpFileReportType:
-      type: integer
-      description: '0 = Both
-
-        1 = Weather
-
-        2 = Flight'
-      x-enumNames:
-      - Both
-      - Weather
-      - Flight
-      enum:
-      - 0
-      - 1
-      - 2
     ManifestPassengerFilterType:
       type: integer
       description: '0 = NonThruConfirmed
@@ -3303,124 +3354,46 @@ components:
       - 48
       - 49
       - 50
-    ChannelType:
+    FlightCloseSortType:
       type: integer
-      description: 'Defines the available channel types invoking communication with the server.
+      description: '0 = Name
 
+        1 = Seat
 
-        0 = Default
+        2 = Destination
 
-        1 = Direct
-
-        2 = Web
-
-        3 = Gds
-
-        4 = Api
-
-        5 = DigitalApi
-
-        6 = DigitalWeb
-
-        7 = Ndc'
+        3 = Sequence'
       x-enumNames:
-      - Default
-      - Direct
-      - Web
-      - Gds
-      - Api
-      - DigitalApi
-      - DigitalWeb
-      - Ndc
+      - Name
+      - Seat
+      - Destination
+      - Sequence
       enum:
       - 0
       - 1
       - 2
       - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    StandardLegReportPrintStreamsRequest:
+    PrinterRequest:
       type: object
       additionalProperties: false
       required:
-      - legKey
-      - reportType
-      - printer
+      - printerKey
       properties:
-        legKey:
+        printerKey:
           type: string
           minLength: 1
-        reportType:
-          $ref: '#/components/schemas/StandardLegReportType'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    IJsonResponseOfPrintPreview:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/PrintPreview'
-        errors:
+        properties:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+            $ref: '#/components/schemas/DeviceProperty'
+        usages:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Message'
-    FlightSummaryReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - legKey
-      - weightType
-      - printer
-      - manifestCounts
-      properties:
-        legKey:
-          type: string
-          minLength: 1
-        weightType:
-          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
-          $ref: '#/components/schemas/WeightType'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        manifestCounts:
-          type: array
-          description: 'The rows of data for the manifest counts table, ordered as they will be displayed
-
-            in the printed report.'
-          items:
-            $ref: '#/components/schemas/ManifestCounts'
-    ZoneCounts:
-      type: object
-      additionalProperties: false
-      properties:
-        zoneName:
-          type:
-          - string
-          - 'null'
-          description: The name of the zone.
-        zoneRange:
-          type:
-          - string
-          - 'null'
-          description: The range of the zone.
-        weightCategoryCounts:
-          type:
-          - array
-          - 'null'
-          description: 'The passenger weight categories and counts for the zone, including only the categories that
-
-            will be displayed in the printed report.'
-          items:
-            $ref: '#/components/schemas/WeightCategoryCount'
+            type: string
     StandardLegReportType:
       type: integer
       description: '0 = AircraftZoneReport
@@ -3480,46 +3453,78 @@ components:
       - 11
       - 12
       - 13
-    PrePostFlightManifestSortType:
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    EnplanementDeplanementReportType:
       type: integer
-      description: '0 = Seat
+      description: '0 = Enplanement
 
-        1 = Name'
+        1 = Deplanement'
       x-enumNames:
-      - Seat
-      - Name
+      - Enplanement
+      - Deplanement
       enum:
       - 0
       - 1
-    FlightCloseSortType:
+    CheckedBaggageSecondarySortType:
       type: integer
       description: '0 = Name
 
-        1 = Seat
-
-        2 = Destination
-
-        3 = Sequence'
+        1 = BagTag'
       x-enumNames:
       - Name
-      - Seat
-      - Destination
-      - Sequence
+      - BagTag
       enum:
       - 0
       - 1
-      - 2
-      - 3
-    EnplanementDeplanementReportPrintStreamsRequest:
+    CheckedBaggageReportPrintStreamsRequest:
       type: object
       additionalProperties: false
       required:
       - startDate
       - endDate
+      - primarySortType
+      - secondarySortType
+      - weightType
+      - includeUnflownPassengers
       - showSummaryOnly
-      - reportType
-      - segmentStatus
-      - includeConnections
       - carrierCode
       - printer
       properties:
@@ -3531,197 +3536,192 @@ components:
           type: string
           format: date-time
           minLength: 1
+        primarySortType:
+          $ref: '#/components/schemas/CheckedBaggagePrimarySortType'
+        secondarySortType:
+          $ref: '#/components/schemas/CheckedBaggageSecondarySortType'
+        weightType:
+          description: Pounds or Kilograms (DAPI's weight type Default = Kilograms)
+          $ref: '#/components/schemas/WeightType'
+        includeUnflownPassengers:
+          type: boolean
         showSummaryOnly:
           type: boolean
-        reportType:
-          $ref: '#/components/schemas/EnplanementDeplanementReportType'
-        segmentStatus:
-          $ref: '#/components/schemas/EnplanementDeplanementReportSegmentStatus'
-        station:
-          type:
-          - string
-          - 'null'
-        includeConnections:
-          type: boolean
-        fareClasses:
-          type:
-          - string
-          - 'null'
         carrierCode:
           type: string
           maxLength: 3
           minLength: 2
-        startFlightNumber:
-          type:
-          - string
-          - 'null'
-        endFlightNumber:
-          type:
-          - string
-          - 'null'
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-    FlightInformationReportPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - carrierCode
-      - departureDate
-      - origin
-      - printer
-      properties:
-        origin:
-          type: string
-          maxLength: 3
-          minLength: 3
-        carrierCode:
-          type: string
-          maxLength: 3
-          minLength: 2
-        departureDate:
-          type: string
-          format: date-time
-          minLength: 1
-        destination:
-          type:
-          - string
-          - 'null'
-          maxLength: 3
-          minLength: 3
         flightNumber:
           type:
           - string
           - 'null'
-        opSuffix:
+        origin:
           type:
           - string
           - 'null'
-          maxLength: 1
-          minLength: 0
+        destination:
+          type:
+          - string
+          - 'null'
+        agentName:
+          type:
+          - string
+          - 'null'
+          description: The username of the agent account that checked the baggage.
+        agentDomain:
+          type:
+          - string
+          - 'null'
+          description: 'The domain of the agent account that checked the baggage.  If agentName is empty,
+
+            this value is ignored.'
         printer:
           $ref: '#/components/schemas/PrinterRequest'
-    WeightCategoryCount:
-      type: object
-      additionalProperties: false
-      properties:
-        weightCategory:
-          description: The weight category of passenger being counted.
-          $ref: '#/components/schemas/FlightSummaryPassengerWeightCategory'
-        count:
-          type: integer
-          description: The number of passengers in the weight category.
-          format: int32
-    PassengerVerificationReportPrintStreamsRequest:
+    BagTagTrackingReportPrintStreamsRequest:
       type: object
       additionalProperties: false
       required:
-      - legKey
-      - includeUnverifiedPassenger
-      - includePassengerAddress
+      - bagTag
+      - date
       - printer
       properties:
-        legKey:
+        bagTag:
           type: string
+          maxLength: 32
+          minLength: 0
+        date:
+          type: string
+          format: date-time
           minLength: 1
-        includeUnverifiedPassenger:
-          type: boolean
-        includePassengerAddress:
-          type: boolean
         printer:
           $ref: '#/components/schemas/PrinterRequest'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PrePostFlightManifestReportPrintStreamsRequest:
+    StandardLegReportPrintStreamsRequest:
       type: object
       additionalProperties: false
       required:
       - legKey
       - reportType
-      - sortType
       - printer
       properties:
         legKey:
           type: string
           minLength: 1
         reportType:
-          $ref: '#/components/schemas/PrePostFlightManifestReportType'
-        sortType:
-          $ref: '#/components/schemas/PrePostFlightManifestSortType'
+          $ref: '#/components/schemas/StandardLegReportType'
         printer:
           $ref: '#/components/schemas/PrinterRequest'
-    ManifestPassengerSearchCriteria:
+    ZoneCounts:
       type: object
       additionalProperties: false
       properties:
-        bagTagNumber:
+        zoneName:
           type:
           - string
           - 'null'
-        boardingZone:
+          description: The name of the zone.
+        zoneRange:
           type:
           - string
           - 'null'
-        finalDestination:
+          description: The range of the zone.
+        weightCategoryCounts:
+          type:
+          - array
+          - 'null'
+          description: 'The passenger weight categories and counts for the zone, including only the categories that
+
+            will be displayed in the printed report.'
+          items:
+            $ref: '#/components/schemas/WeightCategoryCount'
+    PrintPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        header:
           type:
           - string
           - 'null'
-          maxLength: 3
-          minLength: 3
-        firstName:
+          description: The report header text.
+        footer:
           type:
           - string
           - 'null'
-        lastName:
+          description: The report footer text.
+        body:
           type:
-          - string
+          - array
           - 'null'
-        recordLocator:
-          type:
-          - string
-          - 'null'
-        seatNumber:
-          type:
-          - string
-          - 'null'
-        sequenceNumber:
-          type:
-          - string
-          - 'null'
-        ssrCode:
-          type:
-          - string
-          - 'null'
-    DownlinePassengerAndCountReportPrintStreamsRequest:
+          description: The lines of text constituting the report body.
+          items:
+            type: string
+    ManifestCounts:
       type: object
       additionalProperties: false
       required:
-      - legKey
-      - includeIatciFlights
-      - showPassengerNames
-      - printer
+      - filterType
+      - cabinCounts
       properties:
-        legKey:
-          type: string
-          minLength: 1
-        includeIatciFlights:
-          type: boolean
-        showPassengerNames:
-          type: boolean
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
+        filterType:
+          description: The filter type used to generate passenger counts.
+          $ref: '#/components/schemas/ManifestPassengerFilterType'
+        cabinCounts:
+          type: array
+          description: The cabins of service and passenger counts for the filter.
+          items:
+            $ref: '#/components/schemas/CabinCounts'
+    CheckedBaggagePrimarySortType:
+      type: integer
+      description: '0 = FlightNumber
+
+        1 = CityPair
+
+        2 = Sequence'
+      x-enumNames:
+      - FlightNumber
+      - CityPair
+      - Sequence
+      enum:
+      - 0
+      - 1
+      - 2
+    ChannelType:
+      type: integer
+      description: 'Defines the available channel types invoking communication with the server.
+
+
+        0 = Default
+
+        1 = Direct
+
+        2 = Web
+
+        3 = Gds
+
+        4 = Api
+
+        5 = DigitalApi
+
+        6 = DigitalWeb
+
+        7 = Ndc'
+      x-enumNames:
+      - Default
+      - Direct
+      - Web
+      - Gds
+      - Api
+      - DigitalApi
+      - DigitalWeb
+      - Ndc
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
   securitySchemes:
     JWT:
       type: http

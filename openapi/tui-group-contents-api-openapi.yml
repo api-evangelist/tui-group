@@ -966,92 +966,17 @@ paths:
                     data: null
 components:
   schemas:
-    IJsonResponseOfAddNewsResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/AddNewsResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    GeneralContentDataType:
+    MessageStatus:
       type: integer
-      description: "Defines the general content data type enumeration.\n            \n\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - Text
-      - RichTextFormat
-      - ImageJpg
-      - ImageGif
-      - ImageBmp
-      - ImagePng
-      - WordDoc
-      - Html
-      - Pdf
-      - Uri
-      - WordDocx
+      - General
+      - Warning
+      - Critical
       enum:
+      - 0
       - 1
       - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -1100,49 +1025,19 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    NewsRequestType:
+    CreateContentDataType:
       type: integer
-      description: "News request type enumeration.\n            \n\n0 = Default\n1 = Unread\n2 = UnreadAlert\n3 = UnreadDailyAndOneTimeRead"
+      description: "Defines the create content data type enumeration. This is a subset of the general content data \ntype enum to be used only for content creation and will only support text based data types.\n            \n\n1 = Text\n2 = RichTextFormat\n8 = Html\n10 = Uri"
       x-enumNames:
-      - Default
-      - Unread
-      - UnreadAlert
-      - UnreadDailyAndOneTimeRead
+      - Text
+      - RichTextFormat
+      - Html
+      - Uri
       enum:
-      - 0
       - 1
       - 2
-      - 3
+      - 8
+      - 10
     News:
       type: object
       description: "The News (FYI Notes) content item.\n            "
@@ -1221,6 +1116,57 @@ components:
           - 'null'
           description: "Indicates the length of time this message will be retained in the system. Use this selection for FYIs to save in the system but not make viewable.\nA null value will indicate that the message will remain in the database.\n            "
           format: date-time
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    AddNewsResponse:
+      type: object
+      description: "The add news response.\n            "
+      additionalProperties: false
+      properties:
+        news:
+          description: "The news added.\n            "
+          $ref: '#/components/schemas/News'
+    NewsType:
+      type: integer
+      description: "Indicates how often the news content item will be available for the user.\n            \n\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
+      x-enumNames:
+      - Alert
+      - OneTimeRead
+      - Daily
+      - NoAlert
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
     IJsonResponseOfPagedFindNewsResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -1243,19 +1189,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    NewsType:
-      type: integer
-      description: "Indicates how often the news content item will be available for the user.\n            \n\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
-      x-enumNames:
-      - Alert
-      - OneTimeRead
-      - Daily
-      - NoAlert
-      enum:
-      - 1
-      - 2
-      - 3
-      - 4
     FindNewsType:
       type: integer
       description: "Indicates how often the news content item will be available for the user.\n            \n\n0 = All\n1 = Alert\n2 = OneTimeRead\n3 = Daily\n4 = NoAlert"
@@ -1271,6 +1204,181 @@ components:
       - 2
       - 3
       - 4
+    PagedFindNewsResponse:
+      type: object
+      description: "The paged find news response.\n            "
+      additionalProperties: false
+      properties:
+        newsList:
+          type:
+          - array
+          - 'null'
+          description: "The list of news.\n            "
+          items:
+            $ref: '#/components/schemas/FindNewsItem'
+        totalCount:
+          type: integer
+          description: "The total count of news.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The LastPageKey, where to start paged query.\n            "
+    GeneralContentDataType:
+      type: integer
+      description: "Defines the general content data type enumeration.\n            \n\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx"
+      x-enumNames:
+      - Text
+      - RichTextFormat
+      - ImageJpg
+      - ImageGif
+      - ImageBmp
+      - ImagePng
+      - WordDoc
+      - Html
+      - Pdf
+      - Uri
+      - WordDocx
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfAddNewsResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/AddNewsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AddNewsRequest:
+      type: object
+      description: "The add news request.\n            "
+      additionalProperties: false
+      required:
+      - name
+      - type
+      - dataType
+      - data
+      properties:
+        domainCode:
+          type:
+          - string
+          - 'null'
+          description: "The domain code. See /resources/Domains for the valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        departmentCode:
+          type:
+          - string
+          - 'null'
+          description: "The department code. See /resources/Departments for the valid codes.\n            "
+          maxLength: 4
+          minLength: 0
+        roleCode:
+          type:
+          - string
+          - 'null'
+          description: "The role code. See /resources/Roles for the valid codes.\n            "
+          maxLength: 4
+          minLength: 0
+        name:
+          type: string
+          description: "The news name.\n            "
+          minLength: 1
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The content description.\n            "
+        type:
+          description: "The news type.\n            "
+          $ref: '#/components/schemas/NewsType'
+        effectiveDate:
+          type:
+          - string
+          - 'null'
+          description: "The date this information will be available in the system. Indicates the date that this message will display to agents. Defaults to today if not provided.\n            "
+          format: date-time
+        discontinueDate:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the date that this message will stop appearing to agents. A null value will indicate that the message should stay active in the system.\n            "
+          format: date-time
+        retentionDate:
+          type:
+          - string
+          - 'null'
+          description: "Indicates the length of time this message will be retained in the system. Use this selection for FYIs to save in the system but not make viewable.\nA null value will indicate that the message will remain in the database.\n            "
+          format: date-time
+        dataType:
+          description: "The content data type. This will only support text based content data types.\n            "
+          $ref: '#/components/schemas/CreateContentDataType'
+        data:
+          type: string
+          description: "The content data. This will only support text based content from Text, RichTextFormat, HTML, and URI data types.\n            "
+          minLength: 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     FindNewsItem:
       type: object
       description: "The News (FYI Notes) content item.\n            "
@@ -1354,127 +1462,19 @@ components:
           - string
           - 'null'
           description: "The content data. This will be null if the content data type is not text-based.\n            "
-    AddNewsRequest:
-      type: object
-      description: "The add news request.\n            "
-      additionalProperties: false
-      required:
-      - name
-      - type
-      - dataType
-      - data
-      properties:
-        domainCode:
-          type:
-          - string
-          - 'null'
-          description: "The domain code. See /resources/Domains for the valid codes.\n            "
-          maxLength: 3
-          minLength: 0
-        departmentCode:
-          type:
-          - string
-          - 'null'
-          description: "The department code. See /resources/Departments for the valid codes.\n            "
-          maxLength: 4
-          minLength: 0
-        roleCode:
-          type:
-          - string
-          - 'null'
-          description: "The role code. See /resources/Roles for the valid codes.\n            "
-          maxLength: 4
-          minLength: 0
-        name:
-          type: string
-          description: "The news name.\n            "
-          minLength: 1
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The content description.\n            "
-        type:
-          description: "The news type.\n            "
-          $ref: '#/components/schemas/NewsType'
-        effectiveDate:
-          type:
-          - string
-          - 'null'
-          description: "The date this information will be available in the system. Indicates the date that this message will display to agents. Defaults to today if not provided.\n            "
-          format: date-time
-        discontinueDate:
-          type:
-          - string
-          - 'null'
-          description: "Indicates the date that this message will stop appearing to agents. A null value will indicate that the message should stay active in the system.\n            "
-          format: date-time
-        retentionDate:
-          type:
-          - string
-          - 'null'
-          description: "Indicates the length of time this message will be retained in the system. Use this selection for FYIs to save in the system but not make viewable.\nA null value will indicate that the message will remain in the database.\n            "
-          format: date-time
-        dataType:
-          description: "The content data type. This will only support text based content data types.\n            "
-          $ref: '#/components/schemas/CreateContentDataType'
-        data:
-          type: string
-          description: "The content data. This will only support text based content from Text, RichTextFormat, HTML, and URI data types.\n            "
-          minLength: 1
-    MessageStatus:
+    NewsRequestType:
       type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      description: "News request type enumeration.\n            \n\n0 = Default\n1 = Unread\n2 = UnreadAlert\n3 = UnreadDailyAndOneTimeRead"
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - Default
+      - Unread
+      - UnreadAlert
+      - UnreadDailyAndOneTimeRead
       enum:
       - 0
       - 1
       - 2
-    PagedFindNewsResponse:
-      type: object
-      description: "The paged find news response.\n            "
-      additionalProperties: false
-      properties:
-        newsList:
-          type:
-          - array
-          - 'null'
-          description: "The list of news.\n            "
-          items:
-            $ref: '#/components/schemas/FindNewsItem'
-        totalCount:
-          type: integer
-          description: "The total count of news.\n            "
-          format: int32
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The LastPageKey, where to start paged query.\n            "
-    AddNewsResponse:
-      type: object
-      description: "The add news response.\n            "
-      additionalProperties: false
-      properties:
-        news:
-          description: "The news added.\n            "
-          $ref: '#/components/schemas/News'
-    CreateContentDataType:
-      type: integer
-      description: "Defines the create content data type enumeration. This is a subset of the general content data \ntype enum to be used only for content creation and will only support text based data types.\n            \n\n1 = Text\n2 = RichTextFormat\n8 = Html\n10 = Uri"
-      x-enumNames:
-      - Text
-      - RichTextFormat
-      - Html
-      - Uri
-      enum:
-      - 1
-      - 2
-      - 8
-      - 10
+      - 3
   securitySchemes:
     JWT:
       type: http

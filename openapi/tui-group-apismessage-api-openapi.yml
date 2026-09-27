@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: NewSkies-Digital-Api APIS Message API
+  title: NewSkies-Digital-Api APIs Message API
   version: 4.8.6.23
   description: Navitaire Digital Api
 servers:
@@ -44,64 +44,17 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    ApisRequestType:
+    MessageStatus:
       type: integer
-      description: "The APIS Message Request Types. Determines which message is queued.\n            \n\n0 = APISRequest\n1 = APISPreRequest\n2 = APISWithFlightVerify\n3 = EUBPreRequest\n4 = EUBCloseRequest\n5 = UNAPISPreRequest\n6 = FlightClose\n7 = ClosePending"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - APISRequest
-      - APISPreRequest
-      - APISWithFlightVerify
-      - EUBPreRequest
-      - EUBCloseRequest
-      - UNAPISPreRequest
-      - FlightClose
-      - ClosePending
+      - General
+      - Warning
+      - Critical
       enum:
       - 0
       - 1
       - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -180,30 +133,77 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    TransportationIdentifier:
+    ApisRequestType:
+      type: integer
+      description: "The APIS Message Request Types. Determines which message is queued.\n            \n\n0 = APISRequest\n1 = APISPreRequest\n2 = APISWithFlightVerify\n3 = EUBPreRequest\n4 = EUBCloseRequest\n5 = UNAPISPreRequest\n6 = FlightClose\n7 = ClosePending"
+      x-enumNames:
+      - APISRequest
+      - APISPreRequest
+      - APISWithFlightVerify
+      - EUBPreRequest
+      - EUBCloseRequest
+      - UNAPISPreRequest
+      - FlightClose
+      - ClosePending
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    ApisQueueRequest:
       type: object
-      description: "Represents the transportation identifier model data.\n            "
+      description: "Request object for SendAPIS transaction. Matches to the SendAPISRequest object in NSK.\n            "
       additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
       properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
+        apisRequestType:
+          description: "Used to specify what type of APIS request this is.\nDefault is APISRequestType.APISRequest.\n            "
+          $ref: '#/components/schemas/ApisRequestType'
+        contactPhone:
           type:
           - string
           - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
+          description: "Gets or Sets ContactPhone property.\n            "
+        faxNumber:
+          type:
+          - string
+          - 'null'
+          description: "Gets or Sets FaxNumber property.\n            "
+        targetCountry:
+          type:
+          - string
+          - 'null'
+          description: "Only send APIS or CLOB to this CountryCode message targets.\n            "
+        contactName:
+          description: "Gets or Sets ContactName property.\n            "
+          $ref: '#/components/schemas/Name'
+        marketInformation:
+          description: "Contains the MarketInformation that identifies a flight.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     MarketInformation:
       type: object
       description: "Model information about the market arrival and destination details.\n            "
@@ -232,6 +232,46 @@ components:
         identifier:
           description: "Gets or sets the leg arrival station.\n            "
           $ref: '#/components/schemas/TransportationIdentifier'
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -272,46 +312,6 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    ApisQueueRequest:
-      type: object
-      description: "Request object for SendAPIS transaction. Matches to the SendAPISRequest object in NSK.\n            "
-      additionalProperties: false
-      properties:
-        apisRequestType:
-          description: "Used to specify what type of APIS request this is.\nDefault is APISRequestType.APISRequest.\n            "
-          $ref: '#/components/schemas/ApisRequestType'
-        contactPhone:
-          type:
-          - string
-          - 'null'
-          description: "Gets or Sets ContactPhone property.\n            "
-        faxNumber:
-          type:
-          - string
-          - 'null'
-          description: "Gets or Sets FaxNumber property.\n            "
-        targetCountry:
-          type:
-          - string
-          - 'null'
-          description: "Only send APIS or CLOB to this CountryCode message targets.\n            "
-        contactName:
-          description: "Gets or Sets ContactName property.\n            "
-          $ref: '#/components/schemas/Name'
-        marketInformation:
-          description: "Contains the MarketInformation that identifies a flight.\n            "
-          $ref: '#/components/schemas/MarketInformation'
   securitySchemes:
     JWT:
       type: http

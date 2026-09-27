@@ -49,39 +49,91 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Exception:
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    ExternalDevice:
       type: object
       additionalProperties: false
       properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+        name:
           type:
           - string
           - 'null'
-        StackTrace:
+          description: The name of the device.
+        generalType:
+          description: The general type of the device.
+          $ref: '#/components/schemas/ExternalDeviceGeneralType'
+        specificType:
           type:
           - string
           - 'null'
-    IJsonResponse:
+          description: 'The specific type of the device.
+
+            Populate using Navitaire.Dcs.Contract.ExternalDevice.Constants.SpecificExternalDeviceType.'
+        commonUseProvider:
+          type:
+          - string
+          - 'null'
+          description: The specific common use provider of the device.
+        properties:
+          type:
+          - array
+          - 'null'
+          description: 'A list of properties associated with this device.
+
+            The properties can either be system controlled or user controlled.'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+        language:
+          type:
+          - string
+          - 'null'
+          description: 'The language of this device.
+
+            Use constant file DeviceLanguage to populate this field.'
+    DeviceManagerInfo:
       type: object
       additionalProperties: false
       properties:
-        data: {}
-        errors:
+        deviceManagerKey:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
+        port:
+          type:
+          - string
+          - 'null'
+        workstationName:
+          type:
+          - string
+          - 'null'
+        devices:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+            $ref: '#/components/schemas/ExternalDevice'
+        connectionId:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -121,6 +173,29 @@ components:
           type:
           - string
           - 'null'
+    ExternalDeviceGeneralType:
+      type: integer
+      description: '0 = Unknown
+
+        1 = Printer
+
+        2 = Scanner
+
+        3 = BoardingGateReader
+
+        4 = SelfBoardingGate'
+      x-enumNames:
+      - Unknown
+      - Printer
+      - Scanner
+      - BoardingGateReader
+      - SelfBoardingGate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
     Message:
       type: object
       additionalProperties: false
@@ -163,69 +238,39 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    ExternalDevice:
+    IJsonResponse:
       type: object
       additionalProperties: false
       properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the device.
-        generalType:
-          description: The general type of the device.
-          $ref: '#/components/schemas/ExternalDeviceGeneralType'
-        specificType:
-          type:
-          - string
-          - 'null'
-          description: 'The specific type of the device.
-
-            Populate using Navitaire.Dcs.Contract.ExternalDevice.Constants.SpecificExternalDeviceType.'
-        commonUseProvider:
-          type:
-          - string
-          - 'null'
-          description: The specific common use provider of the device.
-        properties:
+        data: {}
+        errors:
           type:
           - array
           - 'null'
-          description: 'A list of properties associated with this device.
-
-            The properties can either be system controlled or user controlled.'
           items:
-            $ref: '#/components/schemas/DeviceProperty'
-        language:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-          description: 'The language of this device.
-
-            Use constant file DeviceLanguage to populate this field.'
-    ExternalDeviceGeneralType:
-      type: integer
-      description: '0 = Unknown
-
-        1 = Printer
-
-        2 = Scanner
-
-        3 = BoardingGateReader
-
-        4 = SelfBoardingGate'
-      x-enumNames:
-      - Unknown
-      - Printer
-      - Scanner
-      - BoardingGateReader
-      - SelfBoardingGate
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
+          items:
+            $ref: '#/components/schemas/Message'
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
     DevicePropertyType:
       type: integer
       description: 'Defines the different types of properties that can be associated with an external device.
@@ -248,67 +293,22 @@ components:
       - 1
       - 2
       - 3
-    DeviceProperty:
-      type: object
-      additionalProperties: false
-      required:
-      - key
-      - type
-      - value
-      properties:
-        key:
-          type: string
-          minLength: 1
-        type:
-          $ref: '#/components/schemas/DevicePropertyType'
-        value:
-          type: string
-          minLength: 1
-    DeviceManagerInfo:
+    Exception:
       type: object
       additionalProperties: false
       properties:
-        deviceManagerKey:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-        version:
+        StackTrace:
           type:
           - string
           - 'null'
-        port:
-          type:
-          - string
-          - 'null'
-        workstationName:
-          type:
-          - string
-          - 'null'
-        devices:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ExternalDevice'
-        connectionId:
-          type:
-          - string
-          - 'null'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
   securitySchemes:
     JWT:
       type: http

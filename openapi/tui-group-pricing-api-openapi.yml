@@ -461,60 +461,25 @@ paths:
                     data: null
 components:
   schemas:
-    PriceInputParameters:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfPricingConfiguration:
       type: object
-      description: "Defines the price request model.\n            "
-      additionalProperties: false
-      required:
-      - code
-      properties:
-        code:
-          type: string
-          description: "The input parameter's code.\n            "
-          maxLength: 64
-          minLength: 0
-        values:
-          type:
-          - array
-          - 'null'
-          description: "The values associated with this input parameter.\n            "
-          items:
-            type: string
-    KeyValuePairOfStringAndString:
-      type: object
-      additionalProperties: false
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PricingConfiguration'
         errors:
           type:
           - array
@@ -529,36 +494,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -607,34 +542,41 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    PricingConfiguration:
+    PriceInputParameters:
       type: object
-      description: "Defines the pricing configuration model.\n            "
+      description: "Defines the price request model.\n            "
+      additionalProperties: false
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          description: "The input parameter's code.\n            "
+          maxLength: 64
+          minLength: 0
+        values:
+          type:
+          - array
+          - 'null'
+          description: "The values associated with this input parameter.\n            "
+          items:
+            type: string
+    Exception:
+      type: object
       additionalProperties: false
       properties:
-        chargeCode:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The charge code to be used for all discount records that will be added.\n            "
-        maximumOptimizePercentage:
-          type: number
-          description: "This is the largest sample size active in the service.\n            "
-          format: double
-        settings:
+        StackTrace:
           type:
-          - array
+          - string
           - 'null'
-          description: "The recommendation's settings.\n            "
-          items:
-            $ref: '#/components/schemas/PricingSetting'
-        providers:
-          type:
-          - array
-          - 'null'
-          description: "The recommendation's providers.\n            "
-          items:
-            $ref: '#/components/schemas/PricingProvider'
     PricingProvider:
       type: object
       description: "Defines the pricing provider model.\n            "
@@ -664,6 +606,64 @@ components:
           description: "The recommendation session products.\n            "
           items:
             $ref: '#/components/schemas/PricingProduct'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    PricingConfiguration:
+      type: object
+      description: "Defines the pricing configuration model.\n            "
+      additionalProperties: false
+      properties:
+        chargeCode:
+          type:
+          - string
+          - 'null'
+          description: "The charge code to be used for all discount records that will be added.\n            "
+        maximumOptimizePercentage:
+          type: number
+          description: "This is the largest sample size active in the service.\n            "
+          format: double
+        settings:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation's settings.\n            "
+          items:
+            $ref: '#/components/schemas/PricingSetting'
+        providers:
+          type:
+          - array
+          - 'null'
+          description: "The recommendation's providers.\n            "
+          items:
+            $ref: '#/components/schemas/PricingProvider'
     PricingSetting:
       type: object
       description: "Defines the pricing setting model.\n            "
@@ -705,60 +705,13 @@ components:
           description: "The pricing product type.\n            "
           maxLength: 7
           minLength: 0
-    ApoPriceRequest:
+    IJsonResponse:
       type: object
-      description: "Defines the recommend price request model.\n            "
-      additionalProperties: false
-      properties:
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The charge code to be used for all discount records that will be added.\n            "
-          maxLength: 3
-          minLength: 0
-        passengerType:
-          type:
-          - string
-          - 'null'
-          description: "The passenger type.\n            "
-        externalBookingReference:
-          type:
-          - string
-          - 'null'
-          description: "The booking reference associated by the selling system for this transaction.  This value is optional,\nas it is for data mapping purposes only.\n            "
-        stage:
-          description: "Defines the stage of this transaction.\n            "
-          $ref: '#/components/schemas/ApoPricingStage'
-        inputParameters:
-          type:
-          - array
-          - 'null'
-          description: "The collection of Input Parameters to be used for this session.\n            "
-          items:
-            $ref: '#/components/schemas/PriceInputParameters'
-        valueTypes:
-          type:
-          - array
-          - 'null'
-          description: "Defines the price types to be generated by the system.\n            "
-          items:
-            type: string
-        products:
-          type:
-          - array
-          - 'null'
-          description: "Contains the products that will be processed.\n            "
-          items:
-            $ref: '#/components/schemas/PriceRequestProduct'
-    IJsonResponseOfPricingConfiguration:
-      type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PricingConfiguration'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -851,6 +804,18 @@ components:
           description: "The input parameters associated with this product. \nThis is the RecommendedPriceRequestProduct.ProductAttributes field in APO\n            "
           items:
             $ref: '#/components/schemas/PriceInputParameters'
+    KeyValuePairOfStringAndString:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
     ApoPricingStage:
       type: integer
       description: "An enumeration to indicate the ancillary pricing options pricing stage.\n            \n\n0 = Look\n1 = Sell\n2 = Book"
@@ -914,17 +879,6 @@ components:
           description: "The output parameters. Please refer to the NDP/APO documentation for the output parameters key value pair\nconfiguration.\n            "
           items:
             $ref: '#/components/schemas/KeyValuePairOfStringAndString'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponseOfIListOfPriceOffer:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -951,6 +905,52 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    ApoPriceRequest:
+      type: object
+      description: "Defines the recommend price request model.\n            "
+      additionalProperties: false
+      properties:
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The charge code to be used for all discount records that will be added.\n            "
+          maxLength: 3
+          minLength: 0
+        passengerType:
+          type:
+          - string
+          - 'null'
+          description: "The passenger type.\n            "
+        externalBookingReference:
+          type:
+          - string
+          - 'null'
+          description: "The booking reference associated by the selling system for this transaction.  This value is optional,\nas it is for data mapping purposes only.\n            "
+        stage:
+          description: "Defines the stage of this transaction.\n            "
+          $ref: '#/components/schemas/ApoPricingStage'
+        inputParameters:
+          type:
+          - array
+          - 'null'
+          description: "The collection of Input Parameters to be used for this session.\n            "
+          items:
+            $ref: '#/components/schemas/PriceInputParameters'
+        valueTypes:
+          type:
+          - array
+          - 'null'
+          description: "Defines the price types to be generated by the system.\n            "
+          items:
+            type: string
+        products:
+          type:
+          - array
+          - 'null'
+          description: "Contains the products that will be processed.\n            "
+          items:
+            $ref: '#/components/schemas/PriceRequestProduct'
   securitySchemes:
     JWT:
       type: http

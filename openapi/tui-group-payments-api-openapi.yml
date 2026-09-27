@@ -216,43 +216,17 @@ paths:
                       details: null
 components:
   schemas:
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -301,36 +275,25 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+    BookingPaymentStatus:
+      type: integer
+      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
+      x-enumNames:
+      - New
+      - Received
+      - Pending
+      - Approved
+      - Declined
+      - Unknown
+      - PendingCustomerAction
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     FindBinRangePaymentData:
       type: object
       description: "The find payments by bank identification number (BIN) payment data.\n            "
@@ -370,6 +333,58 @@ components:
           - string
           - 'null'
           description: "The arrival station of the flight in the booking.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    IJsonResponseOfPagedFindPaymentsByBinResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PagedFindPaymentsByBinResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     PagedFindPaymentsByBinResponse:
       type: object
       description: "The paged find payments by bank identification number (BIN) response.\n            "
@@ -393,14 +408,13 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/FindBinRangePaymentData'
-    IJsonResponseOfPagedFindPaymentsByBinResponse:
+    IJsonResponse:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PagedFindPaymentsByBinResponse'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -415,6 +429,22 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -455,36 +485,6 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
-    BookingPaymentStatus:
-      type: integer
-      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
-      x-enumNames:
-      - New
-      - Received
-      - Pending
-      - Approved
-      - Declined
-      - Unknown
-      - PendingCustomerAction
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
   securitySchemes:
     JWT:
       type: http

@@ -46,27 +46,80 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    DistributionOption:
+    MessageStatus:
       type: integer
-      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - None
-      - Mail
-      - Email
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PhoneNumberType:
+      type: integer
+      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
+      x-enumNames:
+      - Other
+      - Home
+      - Work
+      - Mobile
       - Fax
-      - MailFax
-      - Airport
-      - Hold
-      - Print
       enum:
       - 0
       - 1
       - 2
       - 3
       - 4
-      - 5
-      - 6
-      - 7
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     Address:
       type: object
       description: "Defines a common address.\n            "
@@ -121,91 +174,36 @@ components:
           description: "The postal code.\n            "
           maxLength: 10
           minLength: 0
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    DistributionOption:
+      type: integer
+      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
+      x-enumNames:
+      - None
+      - Mail
+      - Email
+      - Fax
+      - MailFax
+      - Airport
+      - Hold
+      - Print
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    NotificationPreference:
+      type: integer
+      description: "Describes types of notifications the user would prefer.\n            \n\n0 = None\n1 = Promotional"
+      x-enumNames:
+      - None
+      - Promotional
+      enum:
+      - 0
+      - 1
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -236,6 +234,22 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    PhoneNumber:
+      type: object
+      description: "Defines a common phone number.\n            "
+      additionalProperties: false
+      required:
+      - number
+      - type
+      properties:
+        number:
+          type: string
+          description: "The phone number without any formatting characters.\n            "
+          maxLength: 20
+          minLength: 0
+        type:
+          description: "The phone number type.\n            "
+          $ref: '#/components/schemas/PhoneNumberType'
     Contact:
       type: object
       description: "Contact model describing a person contact information.\n            "
@@ -300,46 +314,43 @@ components:
           description: "The contact type code. There can only be one contact of a specific type on the booking.\nTypically only one contact is used. Null values will be replaced by the primary contact type code.\nPlease note that this should be a char and not a string.\n            "
           maxLength: 1
           minLength: 1
-    PhoneNumberType:
-      type: integer
-      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
-      x-enumNames:
-      - Other
-      - Home
-      - Work
-      - Mobile
-      - Fax
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    PhoneNumber:
+    IJsonResponse:
       type: object
-      description: "Defines a common phone number.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
-      required:
-      - number
-      - type
       properties:
-        number:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
           type: string
-          description: "The phone number without any formatting characters.\n            "
-          maxLength: 20
-          minLength: 0
-        type:
-          description: "The phone number type.\n            "
-          $ref: '#/components/schemas/PhoneNumberType'
-    NotificationPreference:
-      type: integer
-      description: "Describes types of notifications the user would prefer.\n            \n\n0 = None\n1 = Promotional"
-      x-enumNames:
-      - None
-      - Promotional
-      enum:
-      - 0
-      - 1
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -402,17 +413,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
   securitySchemes:
     JWT:
       type: http

@@ -293,43 +293,33 @@ paths:
                     data: null
 components:
   schemas:
-    Exception:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    AccountExpirationUpdateRequest:
       type: object
+      description: "The account transaction code model.\n            "
       additionalProperties: false
+      required:
+      - expirationDate
       properties:
-        Message:
+        expirationDate:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        reinstateAmount:
+          type: number
+          description: "The re-instate amount.\n            "
+          format: decimal
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -408,6 +398,32 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    IJsonResponseOfIListOfTransaction:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     TransactionType:
       type: integer
       description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
@@ -435,6 +451,48 @@ components:
       - 8
       - 9
       - 10
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PagedTransactionResponse:
+      type: object
+      description: "The paged transaction response.\n            "
+      additionalProperties: false
+      properties:
+        totalCount:
+          type: integer
+          description: "The total count of transactions.\n            "
+          format: int32
+        lastPageKey:
+          type:
+          - string
+          - 'null'
+          description: "The last page key.\n            "
+        transactions:
+          type:
+          - array
+          - 'null'
+          description: "The collection of transactions.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
     IJsonResponseOfPagedTransactionResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -457,80 +515,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    IJsonResponseOfIListOfTransaction:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/Transaction'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PagedTransactionResponse:
-      type: object
-      description: "The paged transaction response.\n            "
-      additionalProperties: false
-      properties:
-        totalCount:
-          type: integer
-          description: "The total count of transactions.\n            "
-          format: int32
-        lastPageKey:
-          type:
-          - string
-          - 'null'
-          description: "The last page key.\n            "
-        transactions:
-          type:
-          - array
-          - 'null'
-          description: "The collection of transactions.\n            "
-          items:
-            $ref: '#/components/schemas/Transaction'
-    AccountExpirationUpdateRequest:
-      type: object
-      description: "The account transaction code model.\n            "
-      additionalProperties: false
-      required:
-      - expirationDate
-      properties:
-        expirationDate:
-          type: string
-          description: "The expiration date.\n            "
-          format: date-time
-          minLength: 1
-        reinstateAmount:
-          type: number
-          description: "The re-instate amount.\n            "
-          format: decimal
     Transaction:
       type: object
       description: "The transaction model.\n            "
@@ -606,6 +590,22 @@ components:
           - string
           - 'null'
           description: "The account collection key associated with the transaction.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     JWT:
       type: http

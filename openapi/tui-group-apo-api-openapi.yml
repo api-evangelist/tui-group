@@ -383,29 +383,25 @@ paths:
                     data: null
 components:
   schemas:
-    Exception:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfAncillaryPricingOptionsContext:
       type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/AncillaryPricingOptionsContext'
         errors:
           type:
           - array
@@ -468,6 +464,26 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    AncillaryPricingOptionsContext:
+      type: object
+      description: "Defines the ancillary pricing options context.\n            "
+      additionalProperties: false
+      properties:
+        samplingRandomNumber:
+          type:
+          - number
+          - 'null'
+          description: "The sampling random number for the ancillary pricing options.\n            "
+          format: double
+          maximum: 1.0
+          minimum: 0.0
+        inputParameters:
+          type:
+          - object
+          - 'null'
+          description: "The ancillary pricing options input parameters.\n            "
+          additionalProperties:
+            type: string
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -498,14 +514,13 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    IJsonResponseOfAncillaryPricingOptionsContext:
+    IJsonResponse:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/AncillaryPricingOptionsContext'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -520,37 +535,22 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    AncillaryPricingOptionsContext:
+    Exception:
       type: object
-      description: "Defines the ancillary pricing options context.\n            "
       additionalProperties: false
       properties:
-        samplingRandomNumber:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
-          - number
+          - string
           - 'null'
-          description: "The sampling random number for the ancillary pricing options.\n            "
-          format: double
-          maximum: 1.0
-          minimum: 0.0
-        inputParameters:
+        StackTrace:
           type:
-          - object
+          - string
           - 'null'
-          description: "The ancillary pricing options input parameters.\n            "
-          additionalProperties:
-            type: string
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
   securitySchemes:
     JWT:
       type: http

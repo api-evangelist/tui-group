@@ -207,6 +207,17 @@ paths:
                     data: null
 components:
   schemas:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     FareRule:
       type: object
       description: "Defines a fare rule and its data.\n            "
@@ -222,43 +233,6 @@ components:
           - string
           - 'null'
           description: "The fare rule content.\n            "
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -337,102 +311,6 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    Category50Requestv2:
-      type: object
-      description: "Represents a v2 cat 50 request.\n            "
-      additionalProperties: false
-      required:
-      - fareAvailabilityKey
-      - passengerPriceTypes
-      properties:
-        fareAvailabilityKey:
-          type: string
-          description: "The fare availability key.\n            "
-          minLength: 1
-        passengerPriceTypes:
-          type: array
-          description: "The list of passenger types and the counts for each.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerPriceType'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
-        convertToHtml:
-          type:
-          - boolean
-          - 'null'
-          description: "Flag, if true, convert response to html. Defaults to true.\n            "
-    ContentDataType:
-      type: integer
-      description: "Defines the content data type enumeration.\n            \n\n0 = Default\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx\n-1 = Unmapped"
-      x-enumNames:
-      - Default
-      - Text
-      - RichTextFormat
-      - ImageJpg
-      - ImageGif
-      - ImageBmp
-      - ImagePng
-      - WordDoc
-      - Html
-      - Pdf
-      - Uri
-      - WordDocx
-      - Unmapped
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - -1
-    Category50Responsev2:
-      type: object
-      description: "Represents a cat 50 response.\n            "
-      additionalProperties: false
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title of the category 50 fare rule information.\n            "
-        text:
-          type:
-          - string
-          - 'null'
-          description: "The formatted text for the category 50 fare rule information..\n            "
-        dataType:
-          description: "The content data type of the text.\n            "
-          $ref: '#/components/schemas/ContentDataType'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     IJsonResponseOfIListOfFareRule:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -445,6 +323,28 @@ components:
           description: "The payload data.\n            "
           items:
             $ref: '#/components/schemas/FareRule'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfCategory50Responsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Category50Responsev2'
         errors:
           type:
           - array
@@ -482,14 +382,13 @@ components:
           type: integer
           description: "The number of passengers in this group with the specified passenger type\nand discount code.\n            "
           format: int32
-    IJsonResponseOfCategory50Responsev2:
+    IJsonResponse:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Category50Responsev2'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -504,6 +403,107 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    Category50Responsev2:
+      type: object
+      description: "Represents a cat 50 response.\n            "
+      additionalProperties: false
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title of the category 50 fare rule information.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The formatted text for the category 50 fare rule information..\n            "
+        dataType:
+          description: "The content data type of the text.\n            "
+          $ref: '#/components/schemas/ContentDataType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+    ContentDataType:
+      type: integer
+      description: "Defines the content data type enumeration.\n            \n\n0 = Default\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx\n-1 = Unmapped"
+      x-enumNames:
+      - Default
+      - Text
+      - RichTextFormat
+      - ImageJpg
+      - ImageGif
+      - ImageBmp
+      - ImagePng
+      - WordDoc
+      - Html
+      - Pdf
+      - Uri
+      - WordDocx
+      - Unmapped
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - -1
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    Category50Requestv2:
+      type: object
+      description: "Represents a v2 cat 50 request.\n            "
+      additionalProperties: false
+      required:
+      - fareAvailabilityKey
+      - passengerPriceTypes
+      properties:
+        fareAvailabilityKey:
+          type: string
+          description: "The fare availability key.\n            "
+          minLength: 1
+        passengerPriceTypes:
+          type: array
+          description: "The list of passenger types and the counts for each.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerPriceType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+        convertToHtml:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag, if true, convert response to html. Defaults to true.\n            "
   securitySchemes:
     JWT:
       type: http

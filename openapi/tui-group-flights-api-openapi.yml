@@ -128,46 +128,40 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ApiFlightPrice:
+    ApiFlightsOnly:
       properties:
-        priceOriginal:
+        last:
+          type:
+          - number
+          - 'null'
+          enum:
+          - null
+        previous:
+          type:
+          - number
+          - 'null'
+          enum:
+          - null
+        totalNumberOfItems:
           type: number
           format: double
-        currentPrice:
-          type: number
-          format: double
-        priceReduced:
-          type: number
-          format: double
-        currency:
+        first:
           type: string
-        available:
-          type: number
-          format: double
-        seatsAvailable:
-          type: number
-          format: double
-        flightClassCode:
-          type: string
-        flightClassName:
-          type: string
-        urlToBooking:
-          type: string
-        campaignName:
+        next:
           type:
           - string
           - 'null'
+        items:
+          items:
+            $ref: '#/components/schemas/ApiFlightOnly'
+          type: array
       required:
-      - priceOriginal
-      - currentPrice
-      - priceReduced
-      - currency
-      - available
-      - seatsAvailable
-      - flightClassCode
-      - flightClassName
-      - urlToBooking
-      - campaignName
+      - last
+      - previous
+      - totalNumberOfItems
+      - first
+      - next
+      - items
       type: object
       additionalProperties: false
     ApiFlightOnly:
@@ -247,42 +241,6 @@ components:
       - prices
       type: object
       additionalProperties: false
-    ApiFlightsOnly:
-      properties:
-        last:
-          type:
-          - number
-          - 'null'
-          enum:
-          - null
-        previous:
-          type:
-          - number
-          - 'null'
-          enum:
-          - null
-        totalNumberOfItems:
-          type: number
-          format: double
-        first:
-          type: string
-        next:
-          type:
-          - string
-          - 'null'
-        items:
-          items:
-            $ref: '#/components/schemas/ApiFlightOnly'
-          type: array
-      required:
-      - last
-      - previous
-      - totalNumberOfItems
-      - first
-      - next
-      - items
-      type: object
-      additionalProperties: false
     ApiFlightLeg:
       properties:
         typeOfFlightName:
@@ -327,6 +285,48 @@ components:
       - departureCode
       - legNumber
       type: object
+    ApiFlightPrice:
+      properties:
+        priceOriginal:
+          type: number
+          format: double
+        currentPrice:
+          type: number
+          format: double
+        priceReduced:
+          type: number
+          format: double
+        currency:
+          type: string
+        available:
+          type: number
+          format: double
+        seatsAvailable:
+          type: number
+          format: double
+        flightClassCode:
+          type: string
+        flightClassName:
+          type: string
+        urlToBooking:
+          type: string
+        campaignName:
+          type:
+          - string
+          - 'null'
+      required:
+      - priceOriginal
+      - currentPrice
+      - priceReduced
+      - currency
+      - available
+      - seatsAvailable
+      - flightClassCode
+      - flightClassName
+      - urlToBooking
+      - campaignName
+      type: object
+      additionalProperties: false
   securitySchemes:
     tsoa_auth_prod:
       type: oauth2

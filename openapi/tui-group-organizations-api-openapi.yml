@@ -63,43 +63,17 @@ paths:
                 $ref: '#/components/schemas/IJsonResponseOfOrganizationGroupDetails'
 components:
   schemas:
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -178,32 +152,23 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    IJsonResponseOfIListOfOrganizationGroup:
+    OrganizationRecordMinimum:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "The data for a simple organization record.\n            "
       additionalProperties: false
+      required:
+      - organizationCode
       properties:
-        data:
+        organizationCode:
+          type: string
+          description: "The organization group code.\n            "
+          maxLength: 10
+          minLength: 1
+        name:
           type:
-          - array
+          - string
           - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/OrganizationGroup'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "The organization company name.\n            "
     OrganizationGroupDetails:
       type: object
       description: "The data for an organization group including details.\n            "
@@ -245,34 +210,69 @@ components:
           - string
           - 'null'
           description: "The organization group name.\n            "
-    OrganizationRecordMinimum:
+    IJsonResponse:
       type: object
-      description: "The data for a simple organization record.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
-      required:
-      - organizationCode
       properties:
-        organizationCode:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfOrganizationGroup:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/OrganizationGroup'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
           type: string
-          description: "The organization group code.\n            "
-          maxLength: 10
-          minLength: 1
-        name:
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The organization company name.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
+        StackTrace:
+          type:
+          - string
+          - 'null'
     IJsonResponseOfOrganizationGroupDetails:
       type: object
       description: "Defines the JSON response contract.\n            "

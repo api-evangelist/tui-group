@@ -114,6 +114,83 @@ paths:
                 $ref: '#/components/schemas/IJsonResponseOfBundleSetDetails'
 components:
   schemas:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    DataRange:
+      type: object
+      description: "The data range model.\n            "
+      additionalProperties: false
+      properties:
+        minimum:
+          type:
+          - integer
+          - 'null'
+          description: "The minimum range.\n            "
+        maximum:
+          type:
+          - integer
+          - 'null'
+          description: "The maximum range.\n            "
+    BundleDates:
+      type: object
+      description: "The bundle dates model.\n            "
+      additionalProperties: false
+      properties:
+        effective:
+          type:
+          - string
+          - 'null'
+          description: "The start date when the bundle application is effective.\n            "
+          format: date-time
+        effectiveSales:
+          type:
+          - string
+          - 'null'
+          description: "The effective sales date.\n            "
+          format: date-time
+        discontinue:
+          type:
+          - string
+          - 'null'
+          description: "The date when the bundle application is discontinued.\n            "
+          format: date-time
+        discontinueSales:
+          type:
+          - string
+          - 'null'
+          description: "The discontinued sales date.\n            "
+          format: date-time
+    IJsonResponseOfBundleSetDetails:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/BundleSetDetails'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     BundleApplication:
       type: object
       description: "The bundle application model.\n            "
@@ -156,113 +233,6 @@ components:
         sequenceNumber:
           type: integer
           description: "The sequence number.\n            "
-    IJsonResponseOfIListOfBundleApplication:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BundleApplication'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BundleDates:
-      type: object
-      description: "The bundle dates model.\n            "
-      additionalProperties: false
-      properties:
-        effective:
-          type:
-          - string
-          - 'null'
-          description: "The start date when the bundle application is effective.\n            "
-          format: date-time
-        effectiveSales:
-          type:
-          - string
-          - 'null'
-          description: "The effective sales date.\n            "
-          format: date-time
-        discontinue:
-          type:
-          - string
-          - 'null'
-          description: "The date when the bundle application is discontinued.\n            "
-          format: date-time
-        discontinueSales:
-          type:
-          - string
-          - 'null'
-          description: "The discontinued sales date.\n            "
-          format: date-time
-    DataRange:
-      type: object
-      description: "The data range model.\n            "
-      additionalProperties: false
-      properties:
-        minimum:
-          type:
-          - integer
-          - 'null'
-          description: "The minimum range.\n            "
-        maximum:
-          type:
-          - integer
-          - 'null'
-          description: "The maximum range.\n            "
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -311,6 +281,18 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    BundleSetDetails:
+      type: object
+      description: "The bundle set details model.\n            "
+      additionalProperties: false
+      properties:
+        bundleCodes:
+          type:
+          - array
+          - 'null'
+          description: "The list of bundle codes associated with the bundle set.\n            "
+          items:
+            type: string
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -341,6 +323,147 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
+    IJsonResponseOfBundleApplicationDetails:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/BundleApplicationDetails'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfBundleApplication:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BundleApplication'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    RegionFilter:
+      type: object
+      description: "The region filter model.\n            "
+      additionalProperties: false
+      properties:
+        origin:
+          description: "The details related to the region of origin for the bundle application.\n            "
+          $ref: '#/components/schemas/RegionIdentifier'
+        destination:
+          description: "The details related to the destination region for the bundle application.\n            "
+          $ref: '#/components/schemas/RegionIdentifier'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    RegionType:
+      type: integer
+      description: "Enum reprenting the the region type used to indicate the kind of region an item is associated with.\n            \n\n0 = Default\n1 = Station\n2 = City\n3 = ProvinceState\n4 = Country\n5 = FeeZone\n6 = SubZone\n7 = Area\n8 = All\n9 = Mac"
+      x-enumNames:
+      - Default
+      - Station
+      - City
+      - ProvinceState
+      - Country
+      - FeeZone
+      - SubZone
+      - Area
+      - All
+      - Mac
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+    RegionIdentifier:
+      type: object
+      description: "The region identifier model.\n            "
+      additionalProperties: false
+      properties:
+        regionTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "The region type code.\n            "
+          maxLength: 5
+          minLength: 0
+        regionType:
+          description: "The region type.\n            "
+          $ref: '#/components/schemas/RegionType'
+        exclude:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag to indicate if this is not in the travel region.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     BundleApplicationDetails:
       type: object
       description: "The bundle application details model.\n            "
@@ -367,129 +490,6 @@ components:
           description: "The list of applicable classes of service.\n            "
           items:
             type: string
-    RegionIdentifier:
-      type: object
-      description: "The region identifier model.\n            "
-      additionalProperties: false
-      properties:
-        regionTypeCode:
-          type:
-          - string
-          - 'null'
-          description: "The region type code.\n            "
-          maxLength: 5
-          minLength: 0
-        regionType:
-          description: "The region type.\n            "
-          $ref: '#/components/schemas/RegionType'
-        exclude:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag to indicate if this is not in the travel region.\n            "
-    BundleSetDetails:
-      type: object
-      description: "The bundle set details model.\n            "
-      additionalProperties: false
-      properties:
-        bundleCodes:
-          type:
-          - array
-          - 'null'
-          description: "The list of bundle codes associated with the bundle set.\n            "
-          items:
-            type: string
-    IJsonResponseOfBundleApplicationDetails:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/BundleApplicationDetails'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfBundleSetDetails:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/BundleSetDetails'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    RegionFilter:
-      type: object
-      description: "The region filter model.\n            "
-      additionalProperties: false
-      properties:
-        origin:
-          description: "The details related to the region of origin for the bundle application.\n            "
-          $ref: '#/components/schemas/RegionIdentifier'
-        destination:
-          description: "The details related to the destination region for the bundle application.\n            "
-          $ref: '#/components/schemas/RegionIdentifier'
-    RegionType:
-      type: integer
-      description: "Enum reprenting the the region type used to indicate the kind of region an item is associated with.\n            \n\n0 = Default\n1 = Station\n2 = City\n3 = ProvinceState\n4 = Country\n5 = FeeZone\n6 = SubZone\n7 = Area\n8 = All\n9 = Mac"
-      x-enumNames:
-      - Default
-      - Station
-      - City
-      - ProvinceState
-      - Country
-      - FeeZone
-      - SubZone
-      - Area
-      - All
-      - Mac
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
   securitySchemes:
     JWT:
       type: http

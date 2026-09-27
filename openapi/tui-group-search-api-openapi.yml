@@ -170,6 +170,50 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    SearchResponse:
+      type: object
+      properties:
+        groups:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FlightGroup'
+          description: Collection of flight groups organized by the specified grouping strategy
+      additionalProperties: false
+      description: Search response containing grouped flight results
+    TripType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    Error:
+      type: object
+      properties:
+        ErrorMessage:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+      description: Error response object for the Api.
+    UnauthorizedError:
+      type: object
+      properties:
+        ErrorMessage:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+      description: Unauthorized error response object for the Api.
     Flight:
       type: object
       properties:
@@ -250,50 +294,45 @@ components:
           description: List of available fares with pricing details
       additionalProperties: false
       description: Flight availability and pricing information
-    UnauthorizedError:
+    StopOverFlight:
       type: object
       properties:
-        ErrorMessage:
+        stationCode:
           type:
           - string
           - 'null'
-        StackTrace:
+          description: Stopover airport code (e.g., MAD, CDG, AMS)
+        carrierCode:
           type:
           - string
           - 'null'
+          description: Marketing carrier code for the stopover leg
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+          description: Operating carrier code if different from marketing carrier
+        flightNumber:
+          type:
+          - string
+          - 'null'
+          description: Flight number for the stopover leg
+        sta:
+          type: string
+          description: Scheduled time of arrival at stopover station
+          format: date-time
+        std:
+          type: string
+          description: Scheduled time of departure from stopover station
+          format: date-time
       additionalProperties: false
-      description: Unauthorized error response object for the Api.
-    TripType:
+      description: Stopover flight information for multi-leg journeys
+    GroupBy:
       enum:
       - 0
       - 1
       type: integer
       format: int32
-    Error:
-      type: object
-      properties:
-        ErrorMessage:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-      description: Error response object for the Api.
-    SearchResponse:
-      type: object
-      properties:
-        groups:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FlightGroup'
-          description: Collection of flight groups organized by the specified grouping strategy
-      additionalProperties: false
-      description: Search response containing grouped flight results
     Fare:
       type: object
       properties:
@@ -366,45 +405,6 @@ components:
           format: double
       additionalProperties: false
       description: Fare pricing and class information
-    StopOverFlight:
-      type: object
-      properties:
-        stationCode:
-          type:
-          - string
-          - 'null'
-          description: Stopover airport code (e.g., MAD, CDG, AMS)
-        carrierCode:
-          type:
-          - string
-          - 'null'
-          description: Marketing carrier code for the stopover leg
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-          description: Operating carrier code if different from marketing carrier
-        flightNumber:
-          type:
-          - string
-          - 'null'
-          description: Flight number for the stopover leg
-        sta:
-          type: string
-          description: Scheduled time of arrival at stopover station
-          format: date-time
-        std:
-          type: string
-          description: Scheduled time of departure from stopover station
-          format: date-time
-      additionalProperties: false
-      description: Stopover flight information for multi-leg journeys
-    GroupBy:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
     FlightGroup:
       required:
       - flights

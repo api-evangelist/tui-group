@@ -656,60 +656,27 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    AccountPasswordChallengeRequest:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfString:
       type: object
-      description: "The request for generating the challenge code when the new reset password flow is enabled.\n            "
-      additionalProperties: false
-      required:
-      - domain
-      - username
-      properties:
-        domain:
-          type: string
-          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
-          maxLength: 3
-          minLength: 0
-        username:
-          type: string
-          description: "The unique username.\n            "
-          maxLength: 64
-          minLength: 0
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          description: "The phone number to send the challenge code to.\n            "
-          maxLength: 20
-          minLength: 0
-        email:
-          type:
-          - string
-          - 'null'
-          description: "The email address to send the challenge code to.\n            "
-          format: email
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          type:
+          - string
+          - 'null'
+          description: "The payload data.\n            "
         errors:
           type:
           - array
@@ -724,36 +691,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -802,6 +739,107 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    AccountPasswordChallengeRequest:
+      type: object
+      description: "The request for generating the challenge code when the new reset password flow is enabled.\n            "
+      additionalProperties: false
+      required:
+      - domain
+      - username
+      properties:
+        domain:
+          type: string
+          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type: string
+          description: "The unique username.\n            "
+          maxLength: 64
+          minLength: 0
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          description: "The phone number to send the challenge code to.\n            "
+          maxLength: 20
+          minLength: 0
+        email:
+          type:
+          - string
+          - 'null'
+          description: "The email address to send the challenge code to.\n            "
+          format: email
+    AccountChangePasswordRequestv2:
+      type: object
+      description: "Defines a change password request.\n            "
+      additionalProperties: false
+      required:
+      - newPassword
+      - credentials
+      properties:
+        newPassword:
+          type: string
+          description: "The new password.\n            "
+          maxLength: 256
+          minLength: 0
+        credentials:
+          description: "The current credentials.\n            "
+          $ref: '#/components/schemas/CredentialsBase'
+    AccountPasswordChallengeVerifyRequest:
+      type: object
+      description: "The request to verify the challenge code for the new reset password flow.\n            "
+      additionalProperties: false
+      required:
+      - domain
+      - username
+      - challengeCode
+      properties:
+        domain:
+          type: string
+          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
+          maxLength: 3
+          minLength: 0
+        username:
+          type: string
+          description: "The unique username.\n            "
+          maxLength: 64
+          minLength: 0
+        challengeCode:
+          type: string
+          description: "The challenge code received from another source like email or text.\n            "
+          maxLength: 8
+          minLength: 0
     AccountPasswordChallengeResetRequest:
       type: object
       description: "The request for the new reset password flow.\n            "
@@ -832,52 +870,27 @@ components:
           description: "The new password to change to.\n            "
           maxLength: 256
           minLength: 0
-    AccountForgotPasswordRequest:
+    IJsonResponse:
       type: object
-      description: "Defines the account forgot password request.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
-      required:
-      - domainCode
       properties:
-        domainCode:
-          type: string
-          description: "The domain the user is located in.\n            "
-          maxLength: 3
-          minLength: 0
-        username:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
           type:
-          - string
+          - array
           - 'null'
-          description: "The unique username.\n            "
-        alternateIdentifier:
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-          description: "The alternate identifier.\n            "
-    AccountPasswordChallengeVerifyRequest:
-      type: object
-      description: "The request to verify the challenge code for the new reset password flow.\n            "
-      additionalProperties: false
-      required:
-      - domain
-      - username
-      - challengeCode
-      properties:
-        domain:
-          type: string
-          description: "The domain code. See GET /resources/Domains for valid codes.\n            "
-          maxLength: 3
-          minLength: 0
-        username:
-          type: string
-          description: "The unique username.\n            "
-          maxLength: 64
-          minLength: 0
-        challengeCode:
-          type: string
-          description: "The challenge code received from another source like email or text.\n            "
-          maxLength: 8
-          minLength: 0
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     CredentialsBase:
       type: object
       description: "Represents the base credential model.\n            "
@@ -913,57 +926,44 @@ components:
           - string
           - 'null'
           description: "The role to log in as.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfString:
+    Exception:
       type: object
-      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        data:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The payload data.\n            "
-        errors:
+        StackTrace:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    AccountChangePasswordRequestv2:
+    AccountForgotPasswordRequest:
       type: object
-      description: "Defines a change password request.\n            "
+      description: "Defines the account forgot password request.\n            "
       additionalProperties: false
       required:
-      - newPassword
-      - credentials
+      - domainCode
       properties:
-        newPassword:
+        domainCode:
           type: string
-          description: "The new password.\n            "
-          maxLength: 256
+          description: "The domain the user is located in.\n            "
+          maxLength: 3
           minLength: 0
-        credentials:
-          description: "The current credentials.\n            "
-          $ref: '#/components/schemas/CredentialsBase'
+        username:
+          type:
+          - string
+          - 'null'
+          description: "The unique username.\n            "
+        alternateIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The alternate identifier.\n            "
   securitySchemes:
     JWT:
       type: http
