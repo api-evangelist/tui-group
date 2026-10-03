@@ -342,27 +342,76 @@ paths:
       x-operation-id-original: POST AirlineProfileRQ v21.3 DAPI
 components:
   schemas:
-    POS_Type:
+    IATA_AirlineProfileRQ:
       type: object
       properties:
-        agentDutyText:
+        augmentationPoint:
+          $ref: '#/components/schemas/AugmentationPointType'
+        distributionChain:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DistributionChainLinkType'
+        payloadAttributes:
+          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
+        pos:
+          $ref: '#/components/schemas/POS_Type'
+        request:
+          $ref: '#/components/schemas/AirlineProfileRequestType'
+      additionalProperties: false
+    AddlNameTypeCodeType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+    IATA_PayloadStandardAttributesType:
+      type: object
+      properties:
+        altLangID:
           type:
           - string
           - 'null'
-        city:
-          $ref: '#/components/schemas/CityType'
-        country:
-          $ref: '#/components/schemas/CountryType'
-        onlineTrxInd:
+        correlationID:
+          type:
+          - string
+          - 'null'
+        primaryLangID:
+          type:
+          - string
+          - 'null'
+        retransmissionInd:
           type: boolean
-        onlineTrxIndSpecified:
+        retransmissionIndSpecified:
           type: boolean
-        requestTime:
+        seqNumber:
+          type: number
+          format: double
+        seqNumberSpecified:
+          type: boolean
+        timestamp:
           type: string
           format: date-time
-        requestTimeSpecified:
+        timestampSpecified:
+          type: boolean
+        trxID:
+          type:
+          - string
+          - 'null'
+        versionNumber:
+          type: number
+          format: double
+        versionNumberSpecified:
           type: boolean
       additionalProperties: false
+    DistributionChainRoleCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
     IndividualType:
       type: object
       properties:
@@ -414,29 +463,26 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    OtherAddressType:
+    POS_Type:
       type: object
       properties:
-        contactTypeText:
+        agentDutyText:
           type:
           - string
           - 'null'
-        otherAddressText:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    EmailAddressType:
-      type: object
-      properties:
-        contactTypeText:
-          type:
-          - string
-          - 'null'
-        emailAddressText:
-          type:
-          - string
-          - 'null'
+        city:
+          $ref: '#/components/schemas/CityType'
+        country:
+          $ref: '#/components/schemas/CountryType'
+        onlineTrxInd:
+          type: boolean
+        onlineTrxIndSpecified:
+          type: boolean
+        requestTime:
+          type: string
+          format: date-time
+        requestTimeSpecified:
+          type: boolean
       additionalProperties: false
     PhoneType:
       type: object
@@ -458,180 +504,6 @@ components:
           - string
           - 'null'
         phoneNumber:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    PostalAddressType:
-      type: object
-      properties:
-        buildingRoomText:
-          type:
-          - string
-          - 'null'
-        cityName:
-          type:
-          - string
-          - 'null'
-        contactTypeText:
-          type:
-          - string
-          - 'null'
-        countryCode:
-          type:
-          - string
-          - 'null'
-        countryName:
-          type:
-          - string
-          - 'null'
-        countrySubDivisionName:
-          type:
-          - string
-          - 'null'
-        pO_BoxCode:
-          type:
-          - string
-          - 'null'
-        postalCode:
-          type:
-          - string
-          - 'null'
-        streetText:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
-    AirlineProfileFilterCriteriaType:
-      type: object
-      properties:
-        airlineProfileCriteria:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FilterAirlineProfileType'
-        allProfilesInd:
-          type: boolean
-        allProfilesIndSpecified:
-          type: boolean
-        mediaURL_Ind:
-          type: boolean
-        mediaURL_IndSpecified:
-          type: boolean
-      additionalProperties: false
-    AirlineProfileRequestType:
-      type: object
-      properties:
-        airlineProfileFilterCriteria:
-          $ref: '#/components/schemas/AirlineProfileFilterCriteriaType'
-      additionalProperties: false
-    IATA_AirlineProfileRS:
-      type: object
-      properties:
-        items:
-          type:
-          - array
-          - 'null'
-          items: {}
-        augmentationPoint:
-          $ref: '#/components/schemas/AugmentationPointType'
-        payloadAttributes:
-          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
-      additionalProperties: false
-    AddlNameTypeCodeType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    CityType:
-      type: object
-      properties:
-        cityName:
-          type:
-          - string
-          - 'null'
-        iatA_LocationCode:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    DistributionChainRoleCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      type: integer
-      format: int32
-    AugmentationPointType:
-      type: object
-      properties:
-        any:
-          type:
-          - array
-          - 'null'
-          items:
-            type: array
-            items: {}
-      additionalProperties: false
-    IATA_PayloadStandardAttributesType:
-      type: object
-      properties:
-        altLangID:
-          type:
-          - string
-          - 'null'
-        correlationID:
-          type:
-          - string
-          - 'null'
-        primaryLangID:
-          type:
-          - string
-          - 'null'
-        retransmissionInd:
-          type: boolean
-        retransmissionIndSpecified:
-          type: boolean
-        seqNumber:
-          type: number
-          format: double
-        seqNumberSpecified:
-          type: boolean
-        timestamp:
-          type: string
-          format: date-time
-        timestampSpecified:
-          type: boolean
-        trxID:
-          type:
-          - string
-          - 'null'
-        versionNumber:
-          type: number
-          format: double
-        versionNumberSpecified:
-          type: boolean
-      additionalProperties: false
-    CountryType:
-      type: object
-      properties:
-        countryCode:
-          type:
-          - string
-          - 'null'
-        countryName:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    SalesBranchType:
-      type: object
-      properties:
-        salesBranchID:
           type:
           - string
           - 'null'
@@ -692,78 +564,22 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    ParticipatingOrgType:
+    CountryType:
       type: object
       properties:
-        name:
+        countryCode:
           type:
           - string
           - 'null'
-        orgID:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    AddlNameType:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        nameTypeCode:
-          $ref: '#/components/schemas/AddlNameTypeCodeType'
-        nameTypeCodeSpecified:
-          type: boolean
-      additionalProperties: false
-    FilterAirlineProfileType:
-      type: object
-      properties:
-        airlineProfileURL:
-          type:
-          - string
-          - 'null'
-        contactInfo:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ContactInfoType'
-        ownerCode:
+        countryName:
           type:
           - string
           - 'null'
       additionalProperties: false
-    GenderCodeType:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      type: integer
-      format: int32
-    IATA_AirlineProfileRQ:
+    SalesBranchType:
       type: object
       properties:
-        augmentationPoint:
-          $ref: '#/components/schemas/AugmentationPointType'
-        distributionChain:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DistributionChainLinkType'
-        payloadAttributes:
-          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
-        pos:
-          $ref: '#/components/schemas/POS_Type'
-        request:
-          $ref: '#/components/schemas/AirlineProfileRequestType'
-      additionalProperties: false
-    SalesAgentType:
-      type: object
-      properties:
-        salesAgentID:
+        salesBranchID:
           type:
           - string
           - 'null'
@@ -785,6 +601,190 @@ components:
           $ref: '#/components/schemas/SalesAgentType'
         salesBranch:
           $ref: '#/components/schemas/SalesBranchType'
+      additionalProperties: false
+    FilterAirlineProfileType:
+      type: object
+      properties:
+        airlineProfileURL:
+          type:
+          - string
+          - 'null'
+        contactInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ContactInfoType'
+        ownerCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    EmailAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        emailAddressText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AirlineProfileFilterCriteriaType:
+      type: object
+      properties:
+        airlineProfileCriteria:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FilterAirlineProfileType'
+        allProfilesInd:
+          type: boolean
+        allProfilesIndSpecified:
+          type: boolean
+        mediaURL_Ind:
+          type: boolean
+        mediaURL_IndSpecified:
+          type: boolean
+      additionalProperties: false
+    CityType:
+      type: object
+      properties:
+        cityName:
+          type:
+          - string
+          - 'null'
+        iatA_LocationCode:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ParticipatingOrgType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        orgID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    IATA_AirlineProfileRS:
+      type: object
+      properties:
+        items:
+          type:
+          - array
+          - 'null'
+          items: {}
+        augmentationPoint:
+          $ref: '#/components/schemas/AugmentationPointType'
+        payloadAttributes:
+          $ref: '#/components/schemas/IATA_PayloadStandardAttributesType'
+      additionalProperties: false
+    AddlNameType:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+        nameTypeCode:
+          $ref: '#/components/schemas/AddlNameTypeCodeType'
+        nameTypeCodeSpecified:
+          type: boolean
+      additionalProperties: false
+    AirlineProfileRequestType:
+      type: object
+      properties:
+        airlineProfileFilterCriteria:
+          $ref: '#/components/schemas/AirlineProfileFilterCriteriaType'
+      additionalProperties: false
+    GenderCodeType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+    AugmentationPointType:
+      type: object
+      properties:
+        any:
+          type:
+          - array
+          - 'null'
+          items:
+            type: array
+            items: {}
+      additionalProperties: false
+    OtherAddressType:
+      type: object
+      properties:
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        otherAddressText:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    SalesAgentType:
+      type: object
+      properties:
+        salesAgentID:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    PostalAddressType:
+      type: object
+      properties:
+        buildingRoomText:
+          type:
+          - string
+          - 'null'
+        cityName:
+          type:
+          - string
+          - 'null'
+        contactTypeText:
+          type:
+          - string
+          - 'null'
+        countryCode:
+          type:
+          - string
+          - 'null'
+        countryName:
+          type:
+          - string
+          - 'null'
+        countrySubDivisionName:
+          type:
+          - string
+          - 'null'
+        pO_BoxCode:
+          type:
+          - string
+          - 'null'
+        postalCode:
+          type:
+          - string
+          - 'null'
+        streetText:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
       additionalProperties: false
   securitySchemes:
     Bearer:

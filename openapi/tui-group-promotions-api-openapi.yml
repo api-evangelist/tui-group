@@ -148,17 +148,32 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    PromotionInventoryControl:
-      type: integer
-      description: "Enumeration representing promotion inventory control.\n            \n\n0 = Open\n1 = IfAvailable\n2 = Closed"
-      x-enumNames:
-      - Open
-      - IfAvailable
-      - Closed
-      enum:
-      - 0
-      - 1
-      - 2
+    IJsonResponseOfIListOfPromotionBase:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PromotionBase'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     MessageStatus:
       type: integer
       description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
@@ -170,6 +185,242 @@ components:
       - 0
       - 1
       - 2
+    MatchCriteria:
+      type: integer
+      description: "Defines the matching criteria for strings.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
+      x-enumNames:
+      - StartsWith
+      - EndsWith
+      - Contains
+      - ExactMatch
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    IJsonResponseOfPromotion:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Promotion'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PromotionBase:
+      type: object
+      description: "Defines a promotion base model.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The promotion code.\n            "
+          maxLength: 8
+          minLength: 0
+        isPassengerPromotion:
+          type: boolean
+          description: "The promotion discount is applied at the passenger level.\n            "
+        isBookingPromotion:
+          type: boolean
+          description: "The promotion discount is applied to the entire booking.\n            "
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The description of the promotion.\n            "
+          maxLength: 128
+          minLength: 0
+        activeDate:
+          type: string
+          description: "The date that the promotion becomes active.\n            "
+          format: date-time
+        discontinueDate:
+          type:
+          - string
+          - 'null'
+          description: "The date that the promotion is discontinued.\n            "
+          format: date-time
+        discontinueFeeCode:
+          type:
+          - string
+          - 'null'
+          description: "The discount fee code representing the calculated discount\nfor the promotion.\n            "
+          maxLength: 6
+          minLength: 0
+        fareTypes:
+          type:
+          - array
+          - 'null'
+          description: "The list of fare types associated with the promotion.\n            "
+          items:
+            type: string
+        passengerDiscountCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger discount code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerDiscountLimit:
+          type: integer
+          description: "The passenger discount limit.\n            "
+        passengerDiscountSet:
+          type: integer
+          description: "The passenger discount set.\n            "
+        inventoryControl:
+          description: "The promotion inventory control.\n            "
+          $ref: '#/components/schemas/PromotionInventoryControl'
+        totalUnitCount:
+          type: integer
+          description: "The total unit count.\n            "
+        unitsSold:
+          type: integer
+          description: "The total number of units sold.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    PromotionSetting:
+      type: object
+      description: "Defines a promotion setting model.\n            "
+      additionalProperties: false
+      required:
+      - promotionSettingTypeCode
+      properties:
+        promotionSettingTypeCode:
+          type: string
+          description: "The promotion setting type code.\n            "
+          minLength: 1
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The setting type name.\n            "
+        inActive:
+          type: boolean
+          description: "In active\n            "
+        schema:
+          type:
+          - string
+          - 'null'
+          description: "The data schema.\n            "
+          maxLength: 2147483647
+          minLength: 0
+        dataVersion:
+          type: integer
+          description: "The promotion setting data version.\n            "
+        data:
+          type:
+          - string
+          - 'null'
+          description: "The promotion setting data.\n            "
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PromotionInventoryControl:
+      type: integer
+      description: "Enumeration representing promotion inventory control.\n            \n\n0 = Open\n1 = IfAvailable\n2 = Closed"
+      x-enumNames:
+      - Open
+      - IfAvailable
+      - Closed
+      enum:
+      - 0
+      - 1
+      - 2
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     Promotion:
       type: object
       description: "Defines a promotion model.\n            "
@@ -255,114 +506,6 @@ components:
           description: "The list of applicable promotion settings.\n            "
           items:
             $ref: '#/components/schemas/PromotionSetting'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfIListOfPromotionBase:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/PromotionBase'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PromotionSetting:
-      type: object
-      description: "Defines a promotion setting model.\n            "
-      additionalProperties: false
-      required:
-      - promotionSettingTypeCode
-      properties:
-        promotionSettingTypeCode:
-          type: string
-          description: "The promotion setting type code.\n            "
-          minLength: 1
-        name:
-          type:
-          - string
-          - 'null'
-          description: "The setting type name.\n            "
-        inActive:
-          type: boolean
-          description: "In active\n            "
-        schema:
-          type:
-          - string
-          - 'null'
-          description: "The data schema.\n            "
-          maxLength: 2147483647
-          minLength: 0
-        dataVersion:
-          type: integer
-          description: "The promotion setting data version.\n            "
-        data:
-          type:
-          - string
-          - 'null'
-          description: "The promotion setting data.\n            "
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -393,149 +536,6 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    MatchCriteria:
-      type: integer
-      description: "Defines the matching criteria for strings.\n            \n\n0 = StartsWith\n1 = EndsWith\n2 = Contains\n3 = ExactMatch"
-      x-enumNames:
-      - StartsWith
-      - EndsWith
-      - Contains
-      - ExactMatch
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    PromotionBase:
-      type: object
-      description: "Defines a promotion base model.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The promotion code.\n            "
-          maxLength: 8
-          minLength: 0
-        isPassengerPromotion:
-          type: boolean
-          description: "The promotion discount is applied at the passenger level.\n            "
-        isBookingPromotion:
-          type: boolean
-          description: "The promotion discount is applied to the entire booking.\n            "
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The description of the promotion.\n            "
-          maxLength: 128
-          minLength: 0
-        activeDate:
-          type: string
-          description: "The date that the promotion becomes active.\n            "
-          format: date-time
-        discontinueDate:
-          type:
-          - string
-          - 'null'
-          description: "The date that the promotion is discontinued.\n            "
-          format: date-time
-        discontinueFeeCode:
-          type:
-          - string
-          - 'null'
-          description: "The discount fee code representing the calculated discount\nfor the promotion.\n            "
-          maxLength: 6
-          minLength: 0
-        fareTypes:
-          type:
-          - array
-          - 'null'
-          description: "The list of fare types associated with the promotion.\n            "
-          items:
-            type: string
-        passengerDiscountCode:
-          type:
-          - string
-          - 'null'
-          description: "The passenger discount code.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerDiscountLimit:
-          type: integer
-          description: "The passenger discount limit.\n            "
-        passengerDiscountSet:
-          type: integer
-          description: "The passenger discount set.\n            "
-        inventoryControl:
-          description: "The promotion inventory control.\n            "
-          $ref: '#/components/schemas/PromotionInventoryControl'
-        totalUnitCount:
-          type: integer
-          description: "The total unit count.\n            "
-        unitsSold:
-          type: integer
-          description: "The total number of units sold.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponseOfPromotion:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Promotion'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

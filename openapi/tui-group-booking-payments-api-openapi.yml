@@ -3987,19 +3987,19 @@ paths:
       description: TUI Playground (Test) Payment Service
 components:
   schemas:
-    OrganizationRefundRequestv2:
+    PaymentReversalRequestv2:
       type: object
-      description: "Defines information needed for an organization account refund, v2.\n            "
+      description: "Defines information needed for reversing a payment in the state booking, v2.\n            "
       additionalProperties: false
       required:
       - amount
-      - organizationCode
+      - paymentMethodCode
       properties:
         parentPaymentKey:
           type:
           - string
           - 'null'
-          description: "The payment identifier used if this refund is being reversed from an existing payment.\nThe refund is assumed to be made at the booking/account level if the value for this property is null or empty.\n            "
+          description: "The payment identifier used if this refund is being reversed from an existing payment, which in turn, creates a\nline item refund.\nWhen set to null, a booking level refund is made instead.\n            "
         amount:
           type: number
           description: "The amount to apply.\n            "
@@ -4018,16 +4018,371 @@ components:
           description: "The currency code. This will default to the bookings currency code.\n            "
           maxLength: 3
           minLength: 0
-        organizationCode:
+        paymentMethodCode:
           type: string
-          description: "The organization code account number to credit to.\n            "
-          maxLength: 34
-          minLength: 0
+          description: "Payment method code.\n            "
+          maxLength: 2
+          minLength: 1
         comment:
           type:
           - string
           - 'null'
-          description: "The organization refund comment.\n            "
+          description: "The payment refund comment.\n            "
+    ApplyCreditAccountRequestv2:
+      type: object
+      description: "Defines a request to apply credit for an account.\n            "
+      additionalProperties: false
+      required:
+      - referenceNumber
+      - amount
+      properties:
+        referenceNumber:
+          type: string
+          description: "The account reference. This will be the record locator, customer account number, or organization code depending on\nthe type.\n            "
+          maxLength: 20
+          minLength: 1
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code of the account.\n            "
+          maxLength: 3
+          minLength: 0
+        type:
+          description: "Defines the type of credit being applied.\n            "
+          $ref: '#/components/schemas/CreditType'
+        amount:
+          type: number
+          description: "The amount of credit.\n            "
+          format: decimal
+        addAsDeposit:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether to add credit as a deposit.\n            "
+        waiveFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The payment comment, also known as the text details.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    MccCurrencyInformationv2:
+      type: object
+      description: "Model with the Mcc curency and rate information.\n            "
+      additionalProperties: false
+      properties:
+        rate:
+          description: "The external rate.\n            "
+          $ref: '#/components/schemas/ExternalRate'
+        currency:
+          description: "The currency.\n            "
+          $ref: '#/components/schemas/Currencyv2'
+        balanceDue:
+          type: number
+          description: "The total balance due using this currency code.\n            "
+          format: decimal
+    ThreeDSecure:
+      type: object
+      description: "Defines three D secure.\n            "
+      additionalProperties: false
+      properties:
+        browserUserAgent:
+          type:
+          - string
+          - 'null'
+          description: "The browser agent being used.\n            "
+        browserAccept:
+          type:
+          - string
+          - 'null'
+          description: "The browser agent accept.\n            "
+        remoteIpAddress:
+          type:
+          - string
+          - 'null'
+          description: "The remote IP address.\n            "
+        termUrl:
+          type:
+          - string
+          - 'null'
+          description: "The return URL from the bank.\n            "
+        paReq:
+          type:
+          - string
+          - 'null'
+          description: "The payload that will be sent to the bank site.\n            "
+        acsUrl:
+          type:
+          - string
+          - 'null'
+          description: "The URL to redirect to for TDS (aka the bank).\n            "
+        paRes:
+          type:
+          - string
+          - 'null'
+          description: "The response that comes back from the bank.\n            "
+        authResult:
+          type:
+          - string
+          - 'null'
+          description: "The result of 3DS.\n            "
+        cavv:
+          type:
+          - string
+          - 'null'
+          description: "The encrypted string of prof that 3DS was processed.\n            "
+        cavvAlgorithm:
+          type:
+          - string
+          - 'null'
+          description: "The algorithm that created the Cavv.\n            "
+        eci:
+          type:
+          - string
+          - 'null'
+          description: "The electronic commerce indicator (the level of 3DS).\n            "
+        xid:
+          type:
+          - string
+          - 'null'
+          description: "The transaction ID specific to the 3DS 3rd party processing.\n            "
+        applicable:
+          type: boolean
+          description: "Flag that indicates if more validation is needed.\n            "
+        successful:
+          type: boolean
+          description: "Flag indicating if 3DS was successful.\n            "
+        threeDSecureSessionId:
+          type:
+          - string
+          - 'null'
+          description: "The three d secure session id. This is returned by device data collection.\nThis ties the device data collection to the 3DSecure Lookup.\n            "
+        challengePreference:
+          description: "The requested challenge preference.\nIndicates whether the merchant would like to force the issuer to present a 3DSecure challenge.\n            "
+          $ref: '#/components/schemas/ChallengePreference'
+        challengeWindowSize:
+          description: "The requested challenge window size.\nIndicates the preferred size of the 3DSecure challenge window.\n            "
+          $ref: '#/components/schemas/ChallengePreferenceWindowSize'
+        transactionIdThreeDSecure:
+          type:
+          - string
+          - 'null'
+          description: "The transaction id three d secure. Used after completing 3DS Native challenge.\nThis is the equivalent of the 3DSecure Redirect PaRes value. For 3DSecure Native authentications,\nthe transaction ID should be populated in lieu of the PaRes.\n            "
+        threeDSecureVersion:
+          type:
+          - string
+          - 'null'
+          description: "The three d secure version. Indicates the version of 3DS that was applied during the authentication.\n            "
+        merchantData:
+          type:
+          - string
+          - 'null'
+          description: "Merchant data.\n            "
+        redirectJwt:
+          type:
+          - string
+          - 'null'
+          description: "The Jwt object created by SkyPay to use when redirecting a customer.\n            "
+        redirectJwtUrl:
+          type:
+          - string
+          - 'null'
+          description: "Secondary url that may be included in lieu or in addition to the Redirect Url.\n            "
+        dsTransactionId:
+          type:
+          - string
+          - 'null'
+          description: "The D S transaction id.\n            "
+        authenticationStatus:
+          description: "The authentication status.\n            "
+          $ref: '#/components/schemas/AuthenticationStatus'
+    IJsonResponseOfBlacklistPaymentEntry:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/BlacklistPaymentEntry'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    RefundState:
+      type: integer
+      description: "Enumeration representing the refund ui state.\n            \n\n0 = Enabled\n1 = Disabled\n2 = Hidden"
+      x-enumNames:
+      - Enabled
+      - Disabled
+      - Hidden
+      enum:
+      - 0
+      - 1
+      - 2
+    ChallengePreference:
+      type: integer
+      description: "Defines the challenge preference.\n            \n\n0 = NoPreference\n1 = NoChallengeRequested\n2 = ChallengeRequested\n3 = ChallengeMandated"
+      x-enumNames:
+      - NoPreference
+      - NoChallengeRequested
+      - ChallengeRequested
+      - ChallengeMandated
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    CustomerCreditRefundRequest:
+      type: object
+      description: "Defines information needed for a customer credit refund.\n            "
+      additionalProperties: false
+      required:
+      - parentPaymentKey
+      - amount
+      - customerNumber
+      properties:
+        parentPaymentKey:
+          type: string
+          description: "The payment identifier used if this refund is being reversed from an existing payment.\n            "
+          minLength: 1
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        customerNumber:
+          type: string
+          description: "The customer account number to credit to.\n            "
+          maxLength: 34
+          minLength: 0
+        accountTransactionCode:
+          type:
+          - string
+          - 'null'
+          description: "The account transaction code associated with the account.\n            "
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The customer credit refund comment.\n            "
+    BookingPaymentStatus:
+      type: integer
+      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
+      x-enumNames:
+      - New
+      - Received
+      - Pending
+      - Approved
+      - Declined
+      - Unknown
+      - PendingCustomerAction
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    ChannelType:
+      type: integer
+      description: "Defines the available channel types doing invoking the communication with the server.\n            \n\n0 = Default\n1 = Direct\n2 = Web\n3 = Gds\n4 = Api\n5 = DigitalApi\n6 = DigitalWeb\n7 = Ndc"
+      x-enumNames:
+      - Default
+      - Direct
+      - Web
+      - Gds
+      - Api
+      - DigitalApi
+      - DigitalWeb
+      - Ndc
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    DirectCurrencyConversion:
+      type: object
+      description: "Defines a direct currency conversion.\n            "
+      additionalProperties: false
+      properties:
+        rateId:
+          type: string
+          description: "The rate ID.\n            "
+          format: guid
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code converted to.\n            "
+          maxLength: 3
+          minLength: 0
+        rateValue:
+          type: number
+          description: "The conversion rate value.\n            "
+          format: decimal
+        amount:
+          type: number
+          description: "The conversion rate amount.\n            "
+          format: decimal
+        putInState:
+          type:
+          - string
+          - 'null'
+          description: "The put in state value.\n            "
+        status:
+          description: "The conversion status.\n            "
+          $ref: '#/components/schemas/DirectCurrencyConversionStatus'
+        applicable:
+          type: boolean
+          description: "Flag indicating if DCC is applicable.\n            "
     OrganizationRefundRequest:
       type: object
       description: "Defines information needed for an organization account refund.\n            "
@@ -4076,6 +4431,530 @@ components:
           - string
           - 'null'
           description: "The organization refund comment.\n            "
+    IJsonResponseOfVoucherInformation:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/VoucherInformation'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfPaymentAllocations:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PaymentAllocations'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PaymentRefundType:
+      type: integer
+      description: "Enum representing whether or not a payment can be refunded.\n            \n\n0 = NotAllowed\n1 = LineItemLevel\n2 = AccountLevel\n3 = BookingLevel"
+      x-enumNames:
+      - NotAllowed
+      - LineItemLevel
+      - AccountLevel
+      - BookingLevel
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    VoucherPaymentRequest:
+      type: object
+      description: "Model to request a voucher payment.\n            "
+      additionalProperties: false
+      required:
+      - referenceCode
+      - paymentMethodCode
+      properties:
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        referenceCode:
+          type: string
+          description: "The voucher reference code.\n            "
+          maxLength: 20
+          minLength: 1
+        paymentMethodCode:
+          type: string
+          description: "The payment method to apply the voucher to. This will default to primary voucher code.\n            "
+          maxLength: 2
+          minLength: 1
+        overrideRestrictions:
+          type:
+          - boolean
+          - 'null'
+          description: "Whether to override voucher restrictions.\n            "
+    CollectType:
+      type: integer
+      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
+      x-enumNames:
+      - SellerChargeable
+      - ExternalChargeable
+      - SellerNonChargeable
+      - ExternalNonChargeable
+      - ExternalChargeableImmediate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    StoredPaymentRequest:
+      type: object
+      description: "Defines a request to apply person stored payment to the booking in state.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+          maximum: 2147483647.0
+          minimum: 0.0
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        installments:
+          type:
+          - integer
+          - 'null'
+          description: "The requested number of installments. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        waiveFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
+    VoucherTransaction:
+      type: object
+      description: "The voucher transaction model.\n            "
+      additionalProperties: false
+      properties:
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The amount of foreign currency.\n            "
+          format: decimal
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of currency.\n            "
+          format: decimal
+        voucherTransactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The voucher transaction key.\n            "
+        type:
+          description: "The voucher transaction type.\n            "
+          $ref: '#/components/schemas/VoucherTransactionType'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator associated with the voucher transaction.\n            "
+    MccPaymentMethodRequest:
+      type: object
+      description: "Defines information needed for a mcc payment requested to be added to the booking in state.\n            "
+      additionalProperties: false
+      required:
+      - paymentMethodCode
+      - amount
+      properties:
+        paymentMethodCode:
+          type: string
+          description: "Payment method code.\n            "
+          maxLength: 2
+          minLength: 1
+        deposit:
+          type:
+          - boolean
+          - 'null'
+          description: "Whether to add the payment as a deposit.\n            "
+        waiveFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+          maximum: 2147483647.0
+          minimum: 0.0
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        installments:
+          type:
+          - integer
+          - 'null'
+          description: "The requested number of installments. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        thirdPartyExternalRate:
+          description: "The third party external rate.\n            "
+          $ref: '#/components/schemas/ExternalRate'
+    PaymentAttachment:
+      type: object
+      description: "Defines a payment attachment.\n            "
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: "The attachment ID.\n            "
+          format: int64
+          maximum: 9.223372036854776e+18
+          minimum: 0.0
+        paymentId:
+          type: integer
+          description: "The payment ID attached to.\n            "
+          format: int64
+          maximum: 9.223372036854776e+18
+          minimum: 0.0
+        attachment:
+          type:
+          - string
+          - 'null'
+          description: "The attachment data.\n            "
+          format: byte
+    PassengerVoucherCustomerProgram:
+      type: object
+      description: "Defines the passenger voucher customer program.\n            "
+      additionalProperties: false
+      properties:
+        programCode:
+          type:
+          - string
+          - 'null'
+          description: "The program code.\n            "
+        programNumber:
+          type:
+          - string
+          - 'null'
+          description: "The program number.\n            "
+    DccAvailabilityBaseRequest:
+      type: object
+      description: "Direct currency conversion request.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      - accountNumber
+      - quotedCurrencyCode
+      properties:
+        amount:
+          type: number
+          description: "The amount being applied as a payment.\n            "
+          format: decimal
+        accountNumber:
+          type: string
+          description: "The account number.\n            "
+          maxLength: 34
+          minLength: 0
+        quotedCurrencyCode:
+          type: string
+          description: "The quoted currency code to convert to.\n            "
+          minLength: 1
+        waiveFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if any payment fee incurred will be waived. Defaults to false if not set.\nThis flag is for agents only.\n            "
+    IJsonResponseOfDirectCurrencyConversionAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/DirectCurrencyConversionAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    AuthorizationStatus:
+      type: integer
+      description: "Defines the different possible payment authorization states.\n            \n\n0 = Unknown\n1 = Acknowledged\n2 = Pending\n3 = InProcess\n4 = Approved\n5 = Declined\n6 = Referral\n7 = PickUpCard\n8 = HotCard\n9 = Voided\n10 = Retrieval\n11 = ChargedBack\n12 = Error\n13 = ValidationFailed\n14 = Address\n15 = VerificationCode\n16 = FraudPrevention\n17 = ForcedApproval\n18 = ForcedDecline\n19 = NoResponse\n20 = BadResponse"
+      x-enumNames:
+      - Unknown
+      - Acknowledged
+      - Pending
+      - InProcess
+      - Approved
+      - Declined
+      - Referral
+      - PickUpCard
+      - HotCard
+      - Voided
+      - Retrieval
+      - ChargedBack
+      - Error
+      - ValidationFailed
+      - Address
+      - VerificationCode
+      - FraudPrevention
+      - ForcedApproval
+      - ForcedDecline
+      - NoResponse
+      - BadResponse
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+    PassengerFee:
+      type: object
+      description: "Model representing passenger fee information.\n            "
+      additionalProperties: false
+      required:
+      - code
+      properties:
+        isConfirmed:
+          type: boolean
+          description: "A status flag to indicate if the fee has been confirmed or not.\n            "
+        isConfirming:
+          type: boolean
+          description: "A status flag to indicate if the fee is confirming or not.\n            "
+        isConfirmingExternal:
+          type: boolean
+          description: "A status flag to indicate if the fee is confirming external or not.\n            "
+        code:
+          type: string
+          description: "The fee code.\n            "
+          maxLength: 6
+          minLength: 0
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The fee detail.\n            "
+          maxLength: 32
+          minLength: 0
+        passengerFeeKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger fee key.\n            "
+        override:
+          type: boolean
+          description: "The fee override.\n            "
+        flightReference:
+          type:
+          - string
+          - 'null'
+          description: "The flight reference which signifies a link to a segment and or leg.\n            "
+          maxLength: 22
+          minLength: 0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The fee notes.\n            "
+          maxLength: 128
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The created date for the fee.\n            "
+          format: date-time
+        isProtected:
+          type: boolean
+          description: "Indicates if the fee is protected.\n            "
+        serviceCharges:
+          type:
+          - array
+          - 'null'
+          description: "The list of service charges for the fee.\n            "
+          items:
+            $ref: '#/components/schemas/ServiceCharge'
+        type:
+          description: "The fee type.\n            "
+          $ref: '#/components/schemas/FeeType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR code.\n            "
+        ssrNumber:
+          type: integer
+          description: "The fee SSR number.\n            "
+        paymentNumber:
+          type: integer
+          description: "The fee payment number.\n            "
+    RefundCurrencyControl:
+      type: integer
+      description: "Enum representing the currency control on a refund.\n            \n\n0 = UseCollectedCurrency\n1 = UseQuotedCurrency"
+      x-enumNames:
+      - UseCollectedCurrency
+      - UseQuotedCurrency
+      enum:
+      - 0
+      - 1
+    IJsonResponseOfPayment:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Payment'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PassengerVoucherUsageType:
+      type: integer
+      description: "Passenger voucher usage type specifies what parts of a booking this voucher can pay for.\n            \n\n0 = None\n1 = Fares\n2 = Taxes\n3 = TravelFees\n4 = ServiceFees\n5 = PenaltyFees\n6 = SsrFees\n7 = NonFlightServiceFees\n8 = UpgradeFees\n9 = SeatFees\n10 = SpoilageFees\n11 = NameChangeFees\n12 = ConvenienceFees\n13 = Car\n14 = Hotel\n15 = Insurance\n16 = Activities\n17 = BaseFeeOnly"
+      x-enumNames:
+      - None
+      - Fares
+      - Taxes
+      - TravelFees
+      - ServiceFees
+      - PenaltyFees
+      - SsrFees
+      - NonFlightServiceFees
+      - UpgradeFees
+      - SeatFees
+      - SpoilageFees
+      - NameChangeFees
+      - ConvenienceFees
+      - Car
+      - Hotel
+      - Insurance
+      - Activities
+      - BaseFeeOnly
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
     Payment:
       type: object
       description: "Defines an applied payment on the booking.\n            "
@@ -4203,63 +5082,85 @@ components:
         passengerVoucher:
           description: "The passenger voucher.\n            "
           $ref: '#/components/schemas/PassengerVoucher'
-    BookingPaymentStatus:
-      type: integer
-      description: "Determines if the booking has been paid for or not.\n            \n\n0 = New\n1 = Received\n2 = Pending\n3 = Approved\n4 = Declined\n5 = Unknown\n6 = PendingCustomerAction"
-      x-enumNames:
-      - New
-      - Received
-      - Pending
-      - Approved
-      - Declined
-      - Unknown
-      - PendingCustomerAction
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    PaymentVoucherDetails:
+    ManualPaymentFeeRequest:
       type: object
-      description: "Payment voucher details. This describes a voucher applied to a payment.\n            "
+      description: "Defines information to be converted to the payment request v2 for a payment fee price request\n            "
       additionalProperties: false
+      required:
+      - amount
       properties:
-        id:
-          type: integer
-          description: "The voucher ID.\n            "
-          format: int64
-          maximum: 9.223372036854776e+18
-          minimum: 0.0
-        transactionId:
-          type: integer
-          description: "The vouchers transactions ID.\n            "
-          format: int64
-          maximum: 9.223372036854776e+18
-          minimum: 0.0
-        overrideRestrictions:
-          type: boolean
-          description: "Flag indicating if the voucher restrictions were overridden.\n            "
-        overrideAmount:
-          type: boolean
-          description: "The amount applied of the voucher.\n            "
-        recordLocator:
+        amount:
+          type: number
+          description: "The amount being payed.\n            "
+          format: decimal
+        currencyCode:
           type:
           - string
           - 'null'
-          description: "The record locator attached to the voucher.\n            "
-          maxLength: 12
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
           minLength: 0
-    IJsonResponseOfBlacklistPaymentEntry:
+        collectedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The optional collected currency code. This will be needed for MCC requests.\n            "
+          maxLength: 3
+          minLength: 0
+        accountNumber:
+          type:
+          - string
+          - 'null'
+          description: "The account number that is used for the PaymentFeePriceRequest\n            "
+          maxLength: 34
+          minLength: 0
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: "The payment method code that is used for the PaymentFeePriceRequest\n            "
+          maxLength: 2
+          minLength: 0
+    ExternalRate:
+      type: object
+      description: "External rate model.\n            "
+      additionalProperties: false
+      properties:
+        rateId:
+          type:
+          - string
+          - 'null'
+          description: "The id for this external rate.\n            "
+        quotedCurrency:
+          type:
+          - string
+          - 'null'
+          description: "The quoted currency for this external rate.\n            "
+          maxLength: 3
+          minLength: 0
+        collectedCurrency:
+          type:
+          - string
+          - 'null'
+          description: "The collected currency for this external rate.\n            "
+          maxLength: 3
+          minLength: 0
+        exchangeRate:
+          type: number
+          description: "The exchange rate for this external rate.\n            "
+          format: decimal
+    IJsonResponseOfIDictionaryOfStringAndMccCurrencyInformationv2:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
+          type:
+          - object
+          - 'null'
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/BlacklistPaymentEntry'
+          additionalProperties:
+            $ref: '#/components/schemas/MccCurrencyInformationv2'
         errors:
           type:
           - array
@@ -4274,14 +5175,170 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    IJsonResponseOfCreditAccount:
+    VoucherStatus:
+      type: integer
+      description: "Defines the status of a voucher.\n            \n\n0 = Available\n1 = Void\n2 = Redeemed\n3 = Expired"
+      x-enumNames:
+      - Available
+      - Void
+      - Redeemed
+      - Expired
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    PaymentInformation:
+      type: object
+      description: "Defines the extra payment information.\n            "
+      additionalProperties: false
+      properties:
+        threeDSecureResponse:
+          description: "The three d secure response after making an initial payment.\n            "
+          $ref: '#/components/schemas/ThreeDSecureResponse'
+        directCurrencyConversionOffer:
+          description: "The direct currency conversion offer after making an initial payment.\n            "
+          $ref: '#/components/schemas/DirectCurrencyConversionOffer'
+    MccPaymentRequest:
+      type: object
+      description: "Defines information needed for a mcc stored payment requested to be added to the booking in state.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+          maximum: 2147483647.0
+          minimum: 0.0
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        installments:
+          type:
+          - integer
+          - 'null'
+          description: "The requested number of installments. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        thirdPartyExternalRate:
+          description: "The third party external rate.\n            "
+          $ref: '#/components/schemas/ExternalRate'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    GetBlacklistPaymentEntryResponse:
+      type: object
+      description: "Defines the response for getting a blacklisted payment.\n            "
+      additionalProperties: false
+      required:
+      - paymentKey
+      properties:
+        reason:
+          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
+          $ref: '#/components/schemas/BlacklistReasonCode'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: "Additional description of the reason for blacklisting the card.\n            "
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
+          format: date-time
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
+          format: date-time
+        paymentKey:
+          type: string
+          description: "The unique identifier of the external payment with the card number to be blacklist.\n            "
+          minLength: 1
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when the blacklist payment was created.\n            "
+          format: date-time
+        modifiedDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when the blacklist payment was modified.\n            "
+          format: date-time
+    IJsonResponseOfIListOfPayment:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
+          type:
+          - array
+          - 'null'
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/CreditAccount'
+          items:
+            $ref: '#/components/schemas/Payment'
         errors:
           type:
           - array
@@ -4296,71 +5353,88 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    PaymentRefundType:
+    PaymentReversalRequest:
+      type: object
+      description: "Defines information needed for reversing a payment in the state booking.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      - paymentMethodCode
+      properties:
+        parentPaymentKey:
+          type:
+          - string
+          - 'null'
+          description: "The payment identifier used if this refund is being reversed from an existing payment, which in turn, creates a\nline item refund.\nWhen set to null, a booking level refund is made instead.\n            "
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        paymentMethodCode:
+          type: string
+          description: "Payment method code.\n            "
+          maxLength: 2
+          minLength: 1
+        accountTransactionCode:
+          type:
+          - string
+          - 'null'
+          description: "The account transaction code associated with the account.\n            "
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The payment refund comment.\n            "
+    DirectCurrencyConversionAvailability:
+      type: object
+      description: "Defines a direct currency conversion availability model.\n            "
+      additionalProperties: false
+      properties:
+        dccKey:
+          type:
+          - string
+          - 'null'
+          description: "The direct currency conversion key.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code converting available to convert to.\n            "
+          maxLength: 3
+          minLength: 0
+        rate:
+          type: number
+          description: "The conversion rate value.\n            "
+          format: decimal
+        amount:
+          type: number
+          description: "The conversion rate amount.\n            "
+          format: decimal
+    DccType:
       type: integer
-      description: "Enum representing whether or not a payment can be refunded.\n            \n\n0 = NotAllowed\n1 = LineItemLevel\n2 = AccountLevel\n3 = BookingLevel"
+      description: "Dynamic Currency Conversion (DCC) types.\n            \n\n0 = None\n1 = ZeroRate\n2 = FullAmount"
       x-enumNames:
-      - NotAllowed
-      - LineItemLevel
-      - AccountLevel
-      - BookingLevel
+      - None
+      - ZeroRate
+      - FullAmount
       enum:
       - 0
       - 1
       - 2
-      - 3
-    ValueType:
-      type: integer
-      description: "This enum represents the value type of an input box.\n            \n\n0 = Unknown\n1 = String\n2 = UpperCaseString\n3 = Numeric\n4 = Alphanumeric\n5 = Amount\n6 = Date\n7 = Mod10\n8 = Name\n9 = Address\n10 = State\n11 = Zip\n12 = Country\n13 = City\n14 = Boolean\n15 = Email"
-      x-enumNames:
-      - Unknown
-      - String
-      - UpperCaseString
-      - Numeric
-      - Alphanumeric
-      - Amount
-      - Date
-      - Mod10
-      - Name
-      - Address
-      - State
-      - Zip
-      - Country
-      - City
-      - Boolean
-      - Email
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-      - 14
-      - 15
-    CollectType:
-      type: integer
-      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
-      x-enumNames:
-      - SellerChargeable
-      - ExternalChargeable
-      - SellerNonChargeable
-      - ExternalNonChargeable
-      - ExternalChargeableImmediate
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
     FeeType:
       type: integer
       description: "Enumeration representing all the different fee types.\n            \n\n0 = All\n1 = Tax\n2 = TravelFee\n3 = ServiceFee\n4 = PaymentFee\n5 = PenaltyFee\n6 = SsrFee\n7 = NonFlightServiceFee\n8 = UpgradeFee\n9 = SeatFee\n10 = BaseFare\n11 = SpoilageFee\n12 = NameChangeFee\n13 = ConvenienceFee\n14 = BaggageFee\n15 = FareSurcharge\n16 = PromotionDiscount\n17 = ServiceBundle\n18 = ExtraBagFee\n19 = ATPCOBagFee"
@@ -4406,79 +5480,14 @@ components:
       - 17
       - 18
       - 19
-    ApplyOrganizationCreditRequest:
-      type: object
-      description: "Defines a request to apply organization credit to the booking in state.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      properties:
-        amount:
-          type: number
-          description: "The amount of credit.\n            "
-          format: decimal
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The payment comment, also known as the text details.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code of the account.\n            "
-          maxLength: 3
-          minLength: 0
-        waiveFees:
-          type:
-          - boolean
-          - 'null'
-          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
-        organizationCreditCode:
-          type:
-          - string
-          - 'null'
-          description: "The payment method credit code of the agent credit line. If not set, will default to the default organization\ncredit code.\nNOTE: It is not recommended to use a custom agency credit payment as it will not have the same\nbehavior nor be validated like the pre-configured `AG` credit payment.\n            "
-        accountReference:
-          type:
-          - string
-          - 'null'
-          description: "The organization account reference. If not set, defaults to the organization code of the logged-in user.\n            "
-          maxLength: 10
-          minLength: 0
-    DeltaMapperOfBlacklistPaymentEntryEditRequest:
-      type: object
-      description: "Map delta changes of a specific type T to another object.\n            "
-      additionalProperties: false
-      properties:
-        reason:
-          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
-          $ref: '#/components/schemas/BlacklistReasonCode'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: "Additional description of the reason for blacklisting the card.\n            "
-        startDate:
-          type:
-          - string
-          - 'null'
-          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
-          format: date-time
-        endDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
-          format: date-time
-    IJsonResponseOfVoucherInformation:
+    IJsonResponseOfPaymentInformation:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/VoucherInformation'
+          $ref: '#/components/schemas/PaymentInformation'
         errors:
           type:
           - array
@@ -4493,46 +5502,315 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    PaymentAllocations:
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    OrganizationRefundRequestv2:
       type: object
-      description: "Defines the booking payment allocations.\n            "
+      description: "Defines information needed for an organization account refund, v2.\n            "
       additionalProperties: false
+      required:
+      - amount
+      - organizationCode
       properties:
-        recordLocator:
+        parentPaymentKey:
           type:
           - string
           - 'null'
-          description: "The record locator.\n            "
+          description: "The payment identifier used if this refund is being reversed from an existing payment.\nThe refund is assumed to be made at the booking/account level if the value for this property is null or empty.\n            "
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
         currencyCode:
           type:
           - string
           - 'null'
-          description: "The booking currency code.\n            "
+          description: "The currency code. This will default to the bookings currency code.\n            "
           maxLength: 3
           minLength: 0
-        totalAllocationAmount:
-          type: number
-          description: "The total allocation amount.\n            "
-          format: decimal
-        paymentAllocationDocuments:
+        organizationCode:
+          type: string
+          description: "The organization code account number to credit to.\n            "
+          maxLength: 34
+          minLength: 0
+        comment:
           type:
-          - array
+          - string
           - 'null'
-          description: "The list of payment allocation documents.\n            "
-          items:
-            $ref: '#/components/schemas/PaymentAllocationDocument'
-    IJsonResponseOfIDictionaryOfStringAndMccCurrencyInformationv2:
+          description: "The organization refund comment.\n            "
+    ChargeType:
+      type: integer
+      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
+      x-enumNames:
+      - FarePrice
+      - Discount
+      - IncludedTravelFee
+      - IncludedTax
+      - TravelFee
+      - Tax
+      - ServiceCharge
+      - PromotionDiscount
+      - ConnectionAdjustmentAmount
+      - AddOnsPrice
+      - FarePoints
+      - DiscountPoints
+      - IncludedAddOnsFee
+      - AddOnsFee
+      - AddOnsMarkup
+      - FareSurcharge
+      - AddOnsCancelFee
+      - Calculated
+      - Note
+      - Points
+      - DynamicFareAdjustment
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 16
+      - 17
+      - 18
+      - 19
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+    DirectCurrencyConversionStatus:
+      type: integer
+      description: "Enumeration that determines the status of a DCC authorization.\n            \n\n0 = DccNotOffered\n1 = DccOfferRejected\n2 = DccOfferAccepted\n3 = DccInitialValue\n4 = MccInUse"
+      x-enumNames:
+      - DccNotOffered
+      - DccOfferRejected
+      - DccOfferAccepted
+      - DccInitialValue
+      - MccInUse
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    PaymentMethodType:
+      type: integer
+      description: "Defines the payment method types.\n            \n\n0 = ExternalAccount\n1 = PrePaid\n2 = AgencyAccount\n3 = CustomerAccount\n4 = Voucher\n5 = Loyalty"
+      x-enumNames:
+      - ExternalAccount
+      - PrePaid
+      - AgencyAccount
+      - CustomerAccount
+      - Voucher
+      - Loyalty
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    DirectCurrencyConversionOffer:
+      type: object
+      description: "Defines the direct currency conversion offer.\n            "
+      additionalProperties: false
+      properties:
+        dccPaymentTransactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The dcc payment transaction key.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code converted to.\n            "
+          maxLength: 3
+          minLength: 0
+        rateValue:
+          type: number
+          description: "The conversion rate value.\n            "
+          format: decimal
+        amount:
+          type: number
+          description: "The conversion rate amount.\n            "
+          format: decimal
+    PaymentDetails:
+      type: object
+      description: "Defines the payment details.\n            "
+      additionalProperties: false
+      properties:
+        accountNumberId:
+          type: integer
+          description: "The reference of an encrypted account number.\n            "
+          format: int64
+        parentPaymentId:
+          type:
+          - integer
+          - 'null'
+          description: "ID of the parent of refunds or divide. Null if none exists.\n            "
+          format: int64
+          maximum: 9.223372036854776e+18
+          minimum: 0.0
+        accountName:
+          type:
+          - string
+          - 'null'
+          description: "The account holder name.\n            "
+          maxLength: 64
+          minLength: 0
+        accountNumber:
+          type:
+          - string
+          - 'null'
+          description: "The account number.\n            "
+          maxLength: 34
+          minLength: 0
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The expiration date.\n            "
+          format: date-time
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The payment added text.\n            "
+          maxLength: 64
+          minLength: 0
+        installments:
+          type: integer
+          description: "The number of installments to be applied.\n            "
+          maximum: 999.0
+          minimum: 0.0
+        binRange:
+          type: integer
+          description: "The first 6 digits of the credit card number.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 0.0
+        fields:
+          type:
+          - object
+          - 'null'
+          description: "The collection of payment fields.\n            "
+          additionalProperties:
+            type: string
+    ThreeDSecureResponse:
+      type: object
+      description: "Defines three D secure response.\n            "
+      additionalProperties: false
+      properties:
+        redirectUrl:
+          type:
+          - string
+          - 'null'
+          description: "The url to visit for 3DS verification.\n            "
+        paReq:
+          type:
+          - string
+          - 'null'
+          description: "The 3DS standard PaReq verification token.\n            "
+        responseUrl:
+          type:
+          - string
+          - 'null'
+          description: "The response url for the bank to use after verification.\n            "
+        md:
+          type:
+          - string
+          - 'null'
+          description: "The 3DS standard MD field used for the merchant session tracker.\n            "
+        raw:
+          type:
+          - string
+          - 'null'
+          description: "The raw html used for a form post as sent by sky pay.\n            "
+        paymentTransactionKey:
+          type:
+          - string
+          - 'null'
+          description: "The payment transaction key.\n            "
+        threeDSecureVersion:
+          type:
+          - string
+          - 'null'
+          description: "The three d secure version. Indicates the version of 3DS that was applied during the authentication.\n            "
+    ThreeDSecurePaymentMethodRequestv3:
+      type: object
+      description: "Defines information needed for a generic payment requested with ThreeDSecure validation.\n            "
+      additionalProperties: false
+      required:
+      - paRes
+      - paymentTransactionKey
+      properties:
+        paRes:
+          type: string
+          description: "The response that comes back from the bank to verify ThreeDSecure validation.\n            "
+          minLength: 1
+        paReq:
+          type:
+          - string
+          - 'null'
+          description: "The original payment authorization request.\n            "
+        paymentTransactionKey:
+          type: string
+          description: "The payment transaction key.\n            "
+          minLength: 1
+    IJsonResponseOfCreditAccount:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          type:
-          - object
-          - 'null'
           description: "The payload data.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/MccCurrencyInformationv2'
+          $ref: '#/components/schemas/CreditAccount'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfGetBlacklistPaymentEntryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/GetBlacklistPaymentEntryResponse'
         errors:
           type:
           - array
@@ -4621,135 +5899,337 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
-    VoucherNameRestriction:
+    PointOfSale:
+      type: object
+      description: "Model related to the point of sale.  This is for read-only operations.\n            "
+      additionalProperties: false
+      properties:
+        agentCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale agent code.\n            "
+        domainCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale domain code.\n            "
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale location code.\n            "
+        organizationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale organization code.\n            "
+    PaymentAllocationDocument:
+      type: object
+      description: "Defines the payment allocation document.\n            "
+      additionalProperties: false
+      properties:
+        issuanceDate:
+          type: string
+          description: "The issuance date.\n            "
+          format: date-time
+        ticketNumber:
+          type:
+          - string
+          - 'null'
+          description: "The ticket number.\n            "
+          maxLength: 14
+          minLength: 13
+        documentType:
+          type:
+          - string
+          - 'null'
+          description: "The document type.\n            "
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key.\n            "
+        passengerName:
+          description: "The passengers name.\n            "
+          $ref: '#/components/schemas/Name'
+        paymentKeys:
+          type:
+          - array
+          - 'null'
+          description: "The list of payment keys allocated to the passenger.\n            "
+          items:
+            type: string
+    RetrieveBookingv2:
+      type: object
+      description: "Model representing the retrieve booking data.\n            "
+      additionalProperties: false
+      required:
+      - recordLocator
+      properties:
+        recordLocator:
+          type: string
+          description: "Record locator being requested.\n            "
+          maxLength: 12
+          minLength: 0
+        emailAddress:
+          type:
+          - string
+          - 'null'
+          description: "The email address of a contact.\n            "
+          maxLength: 266
+          minLength: 0
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "The origin station code.\n            "
+          maxLength: 3
+          minLength: 3
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: "The first name of a passenger or contact.\n            "
+          maxLength: 32
+          minLength: 0
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: "The last name of a passenger or contact.\n            "
+          maxLength: 32
+          minLength: 0
+        customerNumber:
+          type:
+          - string
+          - 'null'
+          description: "One of the passengers customer numbers applied.\n            "
+          maxLength: 20
+          minLength: 0
+        departureDate:
+          type:
+          - string
+          - 'null'
+          description: "The first journeys departure date.\n            "
+          format: date-time
+    ApplyBookingCreditRequestv2:
+      type: object
+      description: "Defines a request to apply credit from state.\n            "
+      additionalProperties: false
+      required:
+      - request
+      - validation
+      properties:
+        request:
+          description: "The credit details requested.\n            "
+          $ref: '#/components/schemas/ApplyCreditRequest'
+        validation:
+          description: "The query to retrieve the booking.\n            "
+          $ref: '#/components/schemas/RetrieveBookingv2'
+    BookingPaymentField:
       type: integer
-      description: "Defines how the name on the voucher will be validated.\n            \n\n0 = None\n1 = MustBePassenger\n2 = MustBePassengerOrContact"
+      description: "This enum represents payment field categories.\n            \n\n0 = Miscellaneous\n1 = AccountNumber\n2 = Amount\n3 = ExpirationDate\n4 = CurrencyCode\n5 = PaymentText\n6 = PrepaidApprovalCode\n7 = Deposit"
       x-enumNames:
-      - None
-      - MustBePassenger
-      - MustBePassengerOrContact
+      - Miscellaneous
+      - AccountNumber
+      - Amount
+      - ExpirationDate
+      - CurrencyCode
+      - PaymentText
+      - PrepaidApprovalCode
+      - Deposit
       enum:
       - 0
       - 1
       - 2
-    ManualPaymentFeeRequest:
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    DeltaMapperOfBlacklistPaymentEntryEditRequest:
       type: object
-      description: "Defines information to be converted to the payment request v2 for a payment fee price request\n            "
+      description: "Map delta changes of a specific type T to another object.\n            "
+      additionalProperties: false
+      properties:
+        reason:
+          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
+          $ref: '#/components/schemas/BlacklistReasonCode'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: "Additional description of the reason for blacklisting the card.\n            "
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
+          format: date-time
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
+          format: date-time
+    PaymentMethod:
+      type: object
+      description: "The payment method model.\n            "
       additionalProperties: false
       required:
-      - amount
+      - paymentMethodCode
+      - name
       properties:
-        amount:
-          type: number
-          description: "The amount being payed.\n            "
-          format: decimal
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        collectedCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The optional collected currency code. This will be needed for MCC requests.\n            "
-          maxLength: 3
-          minLength: 0
-        accountNumber:
-          type:
-          - string
-          - 'null'
-          description: "The account number that is used for the PaymentFeePriceRequest\n            "
-          maxLength: 34
-          minLength: 0
         paymentMethodCode:
-          type:
-          - string
-          - 'null'
-          description: "The payment method code that is used for the PaymentFeePriceRequest\n            "
+          type: string
+          description: "The payment method code for this payment method.\n            "
           maxLength: 2
           minLength: 0
-    StoredPaymentRequest:
-      type: object
-      description: "Defines a request to apply person stored payment to the booking in state.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      properties:
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-          maximum: 2147483647.0
-          minimum: 0.0
-        paymentFields:
+        allowDeposit:
+          type: boolean
+          description: "The allow deposit flag for this payment method.\n            "
+        allowed:
+          type: boolean
+          description: "Deprecated - Please use api/nsk/v1/settings/general/codes endpoint to verify role based access instead.\n            "
+        allowZeroAmount:
+          type: boolean
+          description: "The allow zero amount flag for this payment method.\n            "
+        commissionable:
+          type: boolean
+          description: "The commissionable flag for this payment method.\n            "
+        dccType:
+          description: "The DCC type for this payment method.\n            "
+          $ref: '#/components/schemas/DccType'
+        disallowPartialRefund:
+          type: boolean
+          description: "The disallow partial refund flag for this payment method.\n            "
+        feeCode:
+          type:
+          - string
+          - 'null'
+          description: "The fee code for this payment method.\n            "
+          maxLength: 6
+          minLength: 0
+        inActive:
+          type: boolean
+          description: "The inactive flag for this payment method.\n            "
+        maxInstallments:
+          type: integer
+          description: "The max installments for this payment method.\n            "
+        name:
+          type: string
+          description: "The name for this payment method.\n            "
+          maxLength: 64
+          minLength: 0
+        paymentMethodFields:
           type:
           - object
           - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          description: "The payment method fields for this payment method.\n            "
           additionalProperties:
-            type: string
-        currencyCode:
+            $ref: '#/components/schemas/PaymentMethodField'
+        paymentMethodType:
+          description: "The payment method type for this payment method.\n            "
+          $ref: '#/components/schemas/PaymentMethodType'
+        paymentRefundType:
+          description: "The payment refund type for this payment method.\n            "
+          $ref: '#/components/schemas/PaymentRefundType'
+        proportionalRefund:
+          type: boolean
+          description: "The proportional refund flag for this payment method.\n            "
+        refundableByAgent:
+          type: boolean
+          description: "The refundable by agent flag for this payment method.\n            "
+        refundCurrencyControl:
+          description: "The refund currency control for this payment method.\n            "
+          $ref: '#/components/schemas/RefundCurrencyControl'
+        restrictionHours:
+          type: integer
+          description: "The hours of restriction for this payment method.\n            "
+        systemControlled:
+          type: boolean
+          description: "The system controlled flag for this payment method.\n            "
+        traceQueueCode:
           type:
           - string
           - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
+          description: "The trace queue code for this payment method.\n            "
+          maxLength: 6
           minLength: 0
-        installments:
-          type:
-          - integer
-          - 'null'
-          description: "The requested number of installments. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        waiveFees:
-          type:
-          - boolean
-          - 'null'
-          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
-    VoucherTransaction:
+        validationRequired:
+          type: boolean
+          description: "The validation required flag for this payment method.\n            "
+        enableDeviceDataCollectionWithJwt:
+          type: boolean
+          description: "Whether device data collection with jwt is enabled.\n            "
+    RequiredType:
+      type: integer
+      description: "This enum represents the state of a payment field.\n            \n\n0 = Required\n1 = Optional\n2 = NotAllowed"
+      x-enumNames:
+      - Required
+      - Optional
+      - NotAllowed
+      enum:
+      - 0
+      - 1
+      - 2
+    BlacklistReasonCode:
+      type: integer
+      description: "Defines the reason for blacklisting a card used in an external payment.\nDefaults to `None` if no value is specified.\n            \n\n0 = None\n1 = ChargedBack\n2 = Lost\n3 = Other\n4 = ProvidedByBank\n5 = Stolen"
+      x-enumNames:
+      - None
+      - ChargedBack
+      - Lost
+      - Other
+      - ProvidedByBank
+      - Stolen
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    PassengerVoucher:
       type: object
-      description: "The voucher transaction model.\n            "
+      description: "Defines a passenger voucher.\n            "
       additionalProperties: false
       properties:
-        foreignCurrencyCode:
+        passengerVoucherKey:
           type:
           - string
           - 'null'
-          description: "The foreign currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignAmount:
-          type: number
-          description: "The amount of foreign currency.\n            "
-          format: decimal
-        currencyCode:
+          description: "The passenger voucher key.\n            "
+        passengerKey:
           type:
           - string
           - 'null'
-          description: "The currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        amount:
-          type: number
-          description: "The amount of currency.\n            "
-          format: decimal
-        voucherTransactionKey:
+          description: "The passenger key.\nWill be null if the voucher does not apply to a specific passenger.\n            "
+        voucherConfigurationCode:
           type:
           - string
           - 'null'
-          description: "The voucher transaction key.\n            "
-        type:
-          description: "The voucher transaction type.\n            "
-          $ref: '#/components/schemas/VoucherTransactionType'
-        recordLocator:
+          description: "The voucher configuration code.\n            "
+        voucherUses:
+          type:
+          - array
+          - 'null'
+          description: "The list of voucher uses.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerVoucherUsageType'
+        customerPrograms:
+          type:
+          - array
+          - 'null'
+          description: "The list of customer programs.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerVoucherCustomerProgram'
+        customerNumber:
           type:
           - string
           - 'null'
-          description: "The record locator associated with the voucher transaction.\n            "
+          description: "The customer number of the customer record to which the voucher has been issued.\n            "
     IJsonResponseOfIDictionaryOfStringAndPaymentMethod:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -4776,69 +6256,26 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    PaymentRefundRequestv2:
-      type: object
-      description: "The payment refund request, v2.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      - paymentMethodCode
-      properties:
-        parentPaymentKey:
-          type:
-          - string
-          - 'null'
-          description: "The payment identifier used if this refund is being reversed from an existing payment, which in turn, creates a\nline item refund.\nWhen set to null, a booking level refund is made instead.\n            "
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        paymentMethodCode:
-          type: string
-          description: "Payment method code.\n            "
-          maxLength: 2
-          minLength: 1
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The payment refund comment.\n            "
-    PassengerVoucherUsageType:
+    ValueType:
       type: integer
-      description: "Passenger voucher usage type specifies what parts of a booking this voucher can pay for.\n            \n\n0 = None\n1 = Fares\n2 = Taxes\n3 = TravelFees\n4 = ServiceFees\n5 = PenaltyFees\n6 = SsrFees\n7 = NonFlightServiceFees\n8 = UpgradeFees\n9 = SeatFees\n10 = SpoilageFees\n11 = NameChangeFees\n12 = ConvenienceFees\n13 = Car\n14 = Hotel\n15 = Insurance\n16 = Activities\n17 = BaseFeeOnly"
+      description: "This enum represents the value type of an input box.\n            \n\n0 = Unknown\n1 = String\n2 = UpperCaseString\n3 = Numeric\n4 = Alphanumeric\n5 = Amount\n6 = Date\n7 = Mod10\n8 = Name\n9 = Address\n10 = State\n11 = Zip\n12 = Country\n13 = City\n14 = Boolean\n15 = Email"
       x-enumNames:
-      - None
-      - Fares
-      - Taxes
-      - TravelFees
-      - ServiceFees
-      - PenaltyFees
-      - SsrFees
-      - NonFlightServiceFees
-      - UpgradeFees
-      - SeatFees
-      - SpoilageFees
-      - NameChangeFees
-      - ConvenienceFees
-      - Car
-      - Hotel
-      - Insurance
-      - Activities
-      - BaseFeeOnly
+      - Unknown
+      - String
+      - UpperCaseString
+      - Numeric
+      - Alphanumeric
+      - Amount
+      - Date
+      - Mod10
+      - Name
+      - Address
+      - State
+      - Zip
+      - Country
+      - City
+      - Boolean
+      - Email
       enum:
       - 0
       - 1
@@ -4856,32 +6293,90 @@ components:
       - 13
       - 14
       - 15
-      - 16
-      - 17
-    BookingPaymentField:
-      type: integer
-      description: "This enum represents payment field categories.\n            \n\n0 = Miscellaneous\n1 = AccountNumber\n2 = Amount\n3 = ExpirationDate\n4 = CurrencyCode\n5 = PaymentText\n6 = PrepaidApprovalCode\n7 = Deposit"
-      x-enumNames:
-      - Miscellaneous
-      - AccountNumber
-      - Amount
-      - ExpirationDate
-      - CurrencyCode
-      - PaymentText
-      - PrepaidApprovalCode
-      - Deposit
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    PaymentReversalRequest:
+    Currencyv2:
       type: object
-      description: "Defines information needed for reversing a payment in the state booking.\n            "
+      description: "The currency model.\n            "
+      additionalProperties: false
+      required:
+      - currencyCode
+      properties:
+        currencyCode:
+          type: string
+          description: "The unique currency code of currency.\n            "
+          maxLength: 3
+          minLength: 1
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The description of currency.\n            "
+          maxLength: 128
+          minLength: 0
+        roundFactor:
+          type: number
+          description: "The round factor of currency.\n            "
+          format: decimal
+        displayDigits:
+          type: integer
+          description: "The display digits of currency.\n            "
+          format: int32
+        displayPrefix:
+          type:
+          - string
+          - 'null'
+          description: "The digit prefix of currency.\n            "
+          maxLength: 3
+          minLength: 0
+        displaySuffix:
+          type:
+          - string
+          - 'null'
+          description: "The digit suffix of currency.\n            "
+          maxLength: 3
+          minLength: 0
+        inActive:
+          type: boolean
+          description: "The flag indicating if the currency is inactive.\n            "
+    CreditShellRefundRequest:
+      type: object
+      description: "Defines information needed for a credit shell refund.\n            "
+      additionalProperties: false
+      required:
+      - parentPaymentKey
+      - amount
+      - accountTransactionCode
+      - accountType
+      properties:
+        parentPaymentKey:
+          type: string
+          description: "The payment identifier used if this refund is being reversed from an existing payment to a credit shell.\n            "
+          minLength: 1
+        amount:
+          type: number
+          description: "The amount to apply.\n            "
+          format: decimal
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code. This will default to the bookings currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        accountTransactionCode:
+          type: string
+          description: "The account transaction code associated with the refund.\n            "
+          minLength: 1
+        accountType:
+          description: "The credit shell account type.\n            "
+          $ref: '#/components/schemas/CreditShellAccountType'
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The credit shell refund comment.\n            "
+    PaymentRefundRequest:
+      type: object
+      description: "Defines information needed for a generic voucher payment requested to be added to the booking in state.\n            "
       additionalProperties: false
       required:
       - amount
@@ -4936,9 +6431,91 @@ components:
       - 0
       - 1
       - 2
-    PaymentRefundRequest:
+    PaymentAmounts:
       type: object
-      description: "Defines information needed for a generic voucher payment requested to be added to the booking in state.\n            "
+      description: "Defines the different applied payment amounts for a single payment.\n            "
+      additionalProperties: false
+      properties:
+        amount:
+          type: number
+          description: "The amount in the booking currency (based off the origin).\n            "
+          format: decimal
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The payment amount currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        collected:
+          type: number
+          description: "The collected amount post DCC or MCC.\n            "
+          format: decimal
+        collectedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The collected amounts currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        quoted:
+          type: number
+          description: "The pre DCC or MCC amount (maybe different than the booking).\n            "
+          format: decimal
+        quotedCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The quoted currency code.\n            "
+          maxLength: 3
+          minLength: 0
+    VoucherTransactionType:
+      type: integer
+      description: "Defines voucher transaction type.\n            \n\n0 = Debit\n1 = Credit\n2 = Void\n3 = Reinstate\n4 = Adjustment\n5 = ExpirationDateChange\n6 = VoucherTypeChange\n7 = VoucherOwnerChange"
+      x-enumNames:
+      - Debit
+      - Credit
+      - Void
+      - Reinstate
+      - Adjustment
+      - ExpirationDateChange
+      - VoucherTypeChange
+      - VoucherOwnerChange
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    ApplyCreditRequest:
+      type: object
+      description: "Defines a request to apply credit from state.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      properties:
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code of the account.\n            "
+          maxLength: 3
+          minLength: 0
+        amount:
+          type: number
+          description: "The amount of credit.\n            "
+          format: decimal
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The payment comment, also known as the text details.\n            "
+    PaymentRefundRequestv2:
+      type: object
+      description: "The payment refund request, v2.\n            "
       additionalProperties: false
       required:
       - amount
@@ -4972,620 +6549,11 @@ components:
           description: "Payment method code.\n            "
           maxLength: 2
           minLength: 1
-        accountTransactionCode:
-          type:
-          - string
-          - 'null'
-          description: "The account transaction code associated with the account.\n            "
         comment:
           type:
           - string
           - 'null'
           description: "The payment refund comment.\n            "
-    ThreeDSecureResponse:
-      type: object
-      description: "Defines three D secure response.\n            "
-      additionalProperties: false
-      properties:
-        redirectUrl:
-          type:
-          - string
-          - 'null'
-          description: "The url to visit for 3DS verification.\n            "
-        paReq:
-          type:
-          - string
-          - 'null'
-          description: "The 3DS standard PaReq verification token.\n            "
-        responseUrl:
-          type:
-          - string
-          - 'null'
-          description: "The response url for the bank to use after verification.\n            "
-        md:
-          type:
-          - string
-          - 'null'
-          description: "The 3DS standard MD field used for the merchant session tracker.\n            "
-        raw:
-          type:
-          - string
-          - 'null'
-          description: "The raw html used for a form post as sent by sky pay.\n            "
-        paymentTransactionKey:
-          type:
-          - string
-          - 'null'
-          description: "The payment transaction key.\n            "
-        threeDSecureVersion:
-          type:
-          - string
-          - 'null'
-          description: "The three d secure version. Indicates the version of 3DS that was applied during the authentication.\n            "
-    Currencyv2:
-      type: object
-      description: "The currency model.\n            "
-      additionalProperties: false
-      required:
-      - currencyCode
-      properties:
-        currencyCode:
-          type: string
-          description: "The unique currency code of currency.\n            "
-          maxLength: 3
-          minLength: 1
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The description of currency.\n            "
-          maxLength: 128
-          minLength: 0
-        roundFactor:
-          type: number
-          description: "The round factor of currency.\n            "
-          format: decimal
-        displayDigits:
-          type: integer
-          description: "The display digits of currency.\n            "
-          format: int32
-        displayPrefix:
-          type:
-          - string
-          - 'null'
-          description: "The digit prefix of currency.\n            "
-          maxLength: 3
-          minLength: 0
-        displaySuffix:
-          type:
-          - string
-          - 'null'
-          description: "The digit suffix of currency.\n            "
-          maxLength: 3
-          minLength: 0
-        inActive:
-          type: boolean
-          description: "The flag indicating if the currency is inactive.\n            "
-    ThreeDSecure:
-      type: object
-      description: "Defines three D secure.\n            "
-      additionalProperties: false
-      properties:
-        browserUserAgent:
-          type:
-          - string
-          - 'null'
-          description: "The browser agent being used.\n            "
-        browserAccept:
-          type:
-          - string
-          - 'null'
-          description: "The browser agent accept.\n            "
-        remoteIpAddress:
-          type:
-          - string
-          - 'null'
-          description: "The remote IP address.\n            "
-        termUrl:
-          type:
-          - string
-          - 'null'
-          description: "The return URL from the bank.\n            "
-        paReq:
-          type:
-          - string
-          - 'null'
-          description: "The payload that will be sent to the bank site.\n            "
-        acsUrl:
-          type:
-          - string
-          - 'null'
-          description: "The URL to redirect to for TDS (aka the bank).\n            "
-        paRes:
-          type:
-          - string
-          - 'null'
-          description: "The response that comes back from the bank.\n            "
-        authResult:
-          type:
-          - string
-          - 'null'
-          description: "The result of 3DS.\n            "
-        cavv:
-          type:
-          - string
-          - 'null'
-          description: "The encrypted string of prof that 3DS was processed.\n            "
-        cavvAlgorithm:
-          type:
-          - string
-          - 'null'
-          description: "The algorithm that created the Cavv.\n            "
-        eci:
-          type:
-          - string
-          - 'null'
-          description: "The electronic commerce indicator (the level of 3DS).\n            "
-        xid:
-          type:
-          - string
-          - 'null'
-          description: "The transaction ID specific to the 3DS 3rd party processing.\n            "
-        applicable:
-          type: boolean
-          description: "Flag that indicates if more validation is needed.\n            "
-        successful:
-          type: boolean
-          description: "Flag indicating if 3DS was successful.\n            "
-        threeDSecureSessionId:
-          type:
-          - string
-          - 'null'
-          description: "The three d secure session id. This is returned by device data collection.\nThis ties the device data collection to the 3DSecure Lookup.\n            "
-        challengePreference:
-          description: "The requested challenge preference.\nIndicates whether the merchant would like to force the issuer to present a 3DSecure challenge.\n            "
-          $ref: '#/components/schemas/ChallengePreference'
-        challengeWindowSize:
-          description: "The requested challenge window size.\nIndicates the preferred size of the 3DSecure challenge window.\n            "
-          $ref: '#/components/schemas/ChallengePreferenceWindowSize'
-        transactionIdThreeDSecure:
-          type:
-          - string
-          - 'null'
-          description: "The transaction id three d secure. Used after completing 3DS Native challenge.\nThis is the equivalent of the 3DSecure Redirect PaRes value. For 3DSecure Native authentications,\nthe transaction ID should be populated in lieu of the PaRes.\n            "
-        threeDSecureVersion:
-          type:
-          - string
-          - 'null'
-          description: "The three d secure version. Indicates the version of 3DS that was applied during the authentication.\n            "
-        merchantData:
-          type:
-          - string
-          - 'null'
-          description: "Merchant data.\n            "
-        redirectJwt:
-          type:
-          - string
-          - 'null'
-          description: "The Jwt object created by SkyPay to use when redirecting a customer.\n            "
-        redirectJwtUrl:
-          type:
-          - string
-          - 'null'
-          description: "Secondary url that may be included in lieu or in addition to the Redirect Url.\n            "
-        dsTransactionId:
-          type:
-          - string
-          - 'null'
-          description: "The D S transaction id.\n            "
-        authenticationStatus:
-          description: "The authentication status.\n            "
-          $ref: '#/components/schemas/AuthenticationStatus'
-    PaymentFeeResponse:
-      type: object
-      description: "Defines information for the payment fee response.\n            "
-      additionalProperties: false
-      required:
-      - feeAmount
-      properties:
-        feeAmount:
-          type: number
-          description: "The amount being payed.\n            "
-          format: decimal
-        isFixedAmount:
-          type: boolean
-          description: "Is a fixed amount.\n            "
-        passengerFees:
-          type:
-          - array
-          - 'null'
-          description: "Passenger fee details.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerFee'
-    DirectCurrencyConversionOffer:
-      type: object
-      description: "Defines the direct currency conversion offer.\n            "
-      additionalProperties: false
-      properties:
-        dccPaymentTransactionKey:
-          type:
-          - string
-          - 'null'
-          description: "The dcc payment transaction key.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code converted to.\n            "
-          maxLength: 3
-          minLength: 0
-        rateValue:
-          type: number
-          description: "The conversion rate value.\n            "
-          format: decimal
-        amount:
-          type: number
-          description: "The conversion rate amount.\n            "
-          format: decimal
-    CreditShellAccountType:
-      type: integer
-      description: "Account types used for credit shell refunds.\n            \n\n0 = CustomerNumber\n1 = ReservationCredit"
-      x-enumNames:
-      - CustomerNumber
-      - ReservationCredit
-      enum:
-      - 0
-      - 1
-    VoucherStatus:
-      type: integer
-      description: "Defines the status of a voucher.\n            \n\n0 = Available\n1 = Void\n2 = Redeemed\n3 = Expired"
-      x-enumNames:
-      - Available
-      - Void
-      - Redeemed
-      - Expired
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    ApplyCreditRequest:
-      type: object
-      description: "Defines a request to apply credit from state.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      properties:
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code of the account.\n            "
-          maxLength: 3
-          minLength: 0
-        amount:
-          type: number
-          description: "The amount of credit.\n            "
-          format: decimal
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The payment comment, also known as the text details.\n            "
-    ChallengePreference:
-      type: integer
-      description: "Defines the challenge preference.\n            \n\n0 = NoPreference\n1 = NoChallengeRequested\n2 = ChallengeRequested\n3 = ChallengeMandated"
-      x-enumNames:
-      - NoPreference
-      - NoChallengeRequested
-      - ChallengeRequested
-      - ChallengeMandated
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    DccAvailabilityBaseRequest:
-      type: object
-      description: "Direct currency conversion request.\n            "
-      additionalProperties: false
-      required:
-      - amount
-      - accountNumber
-      - quotedCurrencyCode
-      properties:
-        amount:
-          type: number
-          description: "The amount being applied as a payment.\n            "
-          format: decimal
-        accountNumber:
-          type: string
-          description: "The account number.\n            "
-          maxLength: 34
-          minLength: 0
-        quotedCurrencyCode:
-          type: string
-          description: "The quoted currency code to convert to.\n            "
-          minLength: 1
-        waiveFees:
-          type:
-          - boolean
-          - 'null'
-          description: "Indicates if any payment fee incurred will be waived. Defaults to false if not set.\nThis flag is for agents only.\n            "
-    DirectCurrencyConversionStatus:
-      type: integer
-      description: "Enumeration that determines the status of a DCC authorization.\n            \n\n0 = DccNotOffered\n1 = DccOfferRejected\n2 = DccOfferAccepted\n3 = DccInitialValue\n4 = MccInUse"
-      x-enumNames:
-      - DccNotOffered
-      - DccOfferRejected
-      - DccOfferAccepted
-      - DccInitialValue
-      - MccInUse
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    PassengerFee:
-      type: object
-      description: "Model representing passenger fee information.\n            "
-      additionalProperties: false
-      required:
-      - code
-      properties:
-        isConfirmed:
-          type: boolean
-          description: "A status flag to indicate if the fee has been confirmed or not.\n            "
-        isConfirming:
-          type: boolean
-          description: "A status flag to indicate if the fee is confirming or not.\n            "
-        isConfirmingExternal:
-          type: boolean
-          description: "A status flag to indicate if the fee is confirming external or not.\n            "
-        code:
-          type: string
-          description: "The fee code.\n            "
-          maxLength: 6
-          minLength: 0
-        detail:
-          type:
-          - string
-          - 'null'
-          description: "The fee detail.\n            "
-          maxLength: 32
-          minLength: 0
-        passengerFeeKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger fee key.\n            "
-        override:
-          type: boolean
-          description: "The fee override.\n            "
-        flightReference:
-          type:
-          - string
-          - 'null'
-          description: "The flight reference which signifies a link to a segment and or leg.\n            "
-          maxLength: 22
-          minLength: 0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The fee notes.\n            "
-          maxLength: 128
-          minLength: 0
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The created date for the fee.\n            "
-          format: date-time
-        isProtected:
-          type: boolean
-          description: "Indicates if the fee is protected.\n            "
-        serviceCharges:
-          type:
-          - array
-          - 'null'
-          description: "The list of service charges for the fee.\n            "
-          items:
-            $ref: '#/components/schemas/ServiceCharge'
-        type:
-          description: "The fee type.\n            "
-          $ref: '#/components/schemas/FeeType'
-        ssrCode:
-          type:
-          - string
-          - 'null'
-          description: "The SSR code.\n            "
-        ssrNumber:
-          type: integer
-          description: "The fee SSR number.\n            "
-        paymentNumber:
-          type: integer
-          description: "The fee payment number.\n            "
-    DccRequestBasev2:
-      type: object
-      description: "Model representing the DCC request without a unique key.\n            "
-      additionalProperties: false
-      properties:
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        offerAccepted:
-          type:
-          - boolean
-          - 'null'
-          description: "Indication of whether the DCC offer was accepted or not. This will default to true if not set.\n            "
-        deposit:
-          type:
-          - boolean
-          - 'null'
-          description: "Indicates if the payment will be added as deposit.\nDefaults to false if not set.\n            "
-        installments:
-          type:
-          - integer
-          - 'null'
-          description: "The requested number of installments.\n            "
-    CustomerCreditRefundRequest:
-      type: object
-      description: "Defines information needed for a customer credit refund.\n            "
-      additionalProperties: false
-      required:
-      - parentPaymentKey
-      - amount
-      - customerNumber
-      properties:
-        parentPaymentKey:
-          type: string
-          description: "The payment identifier used if this refund is being reversed from an existing payment.\n            "
-          minLength: 1
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        customerNumber:
-          type: string
-          description: "The customer account number to credit to.\n            "
-          maxLength: 34
-          minLength: 0
-        accountTransactionCode:
-          type:
-          - string
-          - 'null'
-          description: "The account transaction code associated with the account.\n            "
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The customer credit refund comment.\n            "
-    RefundCurrencyControl:
-      type: integer
-      description: "Enum representing the currency control on a refund.\n            \n\n0 = UseCollectedCurrency\n1 = UseQuotedCurrency"
-      x-enumNames:
-      - UseCollectedCurrency
-      - UseQuotedCurrency
-      enum:
-      - 0
-      - 1
-    ServiceCharge:
-      type: object
-      description: "Model that represents the fare service charge information.\n            "
-      additionalProperties: false
-      properties:
-        amount:
-          type: number
-          description: "The service charge amount.\n            "
-          format: decimal
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The service charge code.\n            "
-        detail:
-          type:
-          - string
-          - 'null'
-          description: "The service charge detail.\n            "
-          maxLength: 10
-          minLength: 0
-        type:
-          description: "The service charge type.\n            "
-          $ref: '#/components/schemas/ChargeType'
-        collectType:
-          description: "The service charge collect type.\n            "
-          $ref: '#/components/schemas/CollectType'
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge foreign currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignAmount:
-          type: number
-          description: "The service charge foreign amount.\n            "
-          format: decimal
-        ticketCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge ticket code.\n            "
-          maxLength: 3
-          minLength: 0
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    MccCurrencyInformationv2:
-      type: object
-      description: "Model with the Mcc curency and rate information.\n            "
-      additionalProperties: false
-      properties:
-        rate:
-          description: "The external rate.\n            "
-          $ref: '#/components/schemas/ExternalRate'
-        currency:
-          description: "The currency.\n            "
-          $ref: '#/components/schemas/Currencyv2'
-        balanceDue:
-          type: number
-          description: "The total balance due using this currency code.\n            "
-          format: decimal
     PaymentMethodField:
       type: object
       description: "The payment method field model.\n            "
@@ -5644,6 +6612,174 @@ components:
         valueType:
           description: "The value type for this payment field.\n            "
           $ref: '#/components/schemas/ValueType'
+    ServiceCharge:
+      type: object
+      description: "Model that represents the fare service charge information.\n            "
+      additionalProperties: false
+      properties:
+        amount:
+          type: number
+          description: "The service charge amount.\n            "
+          format: decimal
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The service charge code.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The service charge detail.\n            "
+          maxLength: 10
+          minLength: 0
+        type:
+          description: "The service charge type.\n            "
+          $ref: '#/components/schemas/ChargeType'
+        collectType:
+          description: "The service charge collect type.\n            "
+          $ref: '#/components/schemas/CollectType'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The service charge foreign amount.\n            "
+          format: decimal
+        ticketCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge ticket code.\n            "
+          maxLength: 3
+          minLength: 0
+    IJsonResponseOfThreeDSecureResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/ThreeDSecureResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    VoucherNameRestriction:
+      type: integer
+      description: "Defines how the name on the voucher will be validated.\n            \n\n0 = None\n1 = MustBePassenger\n2 = MustBePassengerOrContact"
+      x-enumNames:
+      - None
+      - MustBePassenger
+      - MustBePassengerOrContact
+      enum:
+      - 0
+      - 1
+      - 2
+    BlacklistPaymentEntry:
+      type: object
+      description: "Defines the request for a card used in an external payment to be blacklisted.\n            "
+      additionalProperties: false
+      required:
+      - paymentKey
+      properties:
+        reason:
+          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
+          $ref: '#/components/schemas/BlacklistReasonCode'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: "Additional description of the reason for blacklisting the card.\n            "
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
+          format: date-time
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
+          format: date-time
+        paymentKey:
+          type: string
+          description: "The unique identifier of the external payment with the card number to be blacklist.\n            "
+          minLength: 1
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    IJsonResponseOfPaymentFeeResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PaymentFeeResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     ChallengePreferenceWindowSize:
       type: integer
       description: "Defines the challenge preference window size.\n            \n\n0 = SizeFullPage\n1 = Size250X400\n2 = Size390X400\n3 = Size500X600\n4 = Size600X400"
@@ -5659,458 +6795,34 @@ components:
       - 2
       - 3
       - 4
-    PaymentMethodRequest:
+    PaymentAllocations:
       type: object
-      description: "Defines a request to apply payment to the booking in state.\n            "
+      description: "Defines the booking payment allocations.\n            "
       additionalProperties: false
-      required:
-      - amount
-      - paymentMethodCode
-      properties:
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-          maximum: 2147483647.0
-          minimum: 0.0
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        installments:
-          type:
-          - integer
-          - 'null'
-          description: "The requested number of installments. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        paymentMethodCode:
-          type: string
-          description: "Payment method code.\n            "
-          maxLength: 2
-          minLength: 1
-        deposit:
-          type:
-          - boolean
-          - 'null'
-          description: "Whether to add the payment as a deposit.\n            "
-        waiveFees:
-          type:
-          - boolean
-          - 'null'
-          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
-    ChargeType:
-      type: integer
-      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
-      x-enumNames:
-      - FarePrice
-      - Discount
-      - IncludedTravelFee
-      - IncludedTax
-      - TravelFee
-      - Tax
-      - ServiceCharge
-      - PromotionDiscount
-      - ConnectionAdjustmentAmount
-      - AddOnsPrice
-      - FarePoints
-      - DiscountPoints
-      - IncludedAddOnsFee
-      - AddOnsFee
-      - AddOnsMarkup
-      - FareSurcharge
-      - AddOnsCancelFee
-      - Calculated
-      - Note
-      - Points
-      - DynamicFareAdjustment
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 16
-      - 17
-      - 18
-      - 19
-      - 21
-      - 22
-      - 23
-      - 24
-      - 25
-    RetrieveBookingv2:
-      type: object
-      description: "Model representing the retrieve booking data.\n            "
-      additionalProperties: false
-      required:
-      - recordLocator
       properties:
         recordLocator:
-          type: string
-          description: "Record locator being requested.\n            "
-          maxLength: 12
-          minLength: 0
-        emailAddress:
           type:
           - string
           - 'null'
-          description: "The email address of a contact.\n            "
-          maxLength: 266
-          minLength: 0
-        origin:
-          type:
-          - string
-          - 'null'
-          description: "The origin station code.\n            "
-          maxLength: 3
-          minLength: 3
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: "The first name of a passenger or contact.\n            "
-          maxLength: 32
-          minLength: 0
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: "The last name of a passenger or contact.\n            "
-          maxLength: 32
-          minLength: 0
-        customerNumber:
-          type:
-          - string
-          - 'null'
-          description: "One of the passengers customer numbers applied.\n            "
-          maxLength: 20
-          minLength: 0
-        departureDate:
-          type:
-          - string
-          - 'null'
-          description: "The first journeys departure date.\n            "
-          format: date-time
-    PassengerVoucherCustomerProgram:
-      type: object
-      description: "Defines the passenger voucher customer program.\n            "
-      additionalProperties: false
-      properties:
-        programCode:
-          type:
-          - string
-          - 'null'
-          description: "The program code.\n            "
-        programNumber:
-          type:
-          - string
-          - 'null'
-          description: "The program number.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PaymentAttachment:
-      type: object
-      description: "Defines a payment attachment.\n            "
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-          description: "The attachment ID.\n            "
-          format: int64
-          maximum: 9.223372036854776e+18
-          minimum: 0.0
-        paymentId:
-          type: integer
-          description: "The payment ID attached to.\n            "
-          format: int64
-          maximum: 9.223372036854776e+18
-          minimum: 0.0
-        attachment:
-          type:
-          - string
-          - 'null'
-          description: "The attachment data.\n            "
-          format: byte
-    VoucherPaymentRequest:
-      type: object
-      description: "Model to request a voucher payment.\n            "
-      additionalProperties: false
-      required:
-      - referenceCode
-      - paymentMethodCode
-      properties:
+          description: "The record locator.\n            "
         currencyCode:
           type:
           - string
           - 'null'
-          description: "The currency code.\n            "
+          description: "The booking currency code.\n            "
           maxLength: 3
           minLength: 0
-        amount:
+        totalAllocationAmount:
           type: number
-          description: "The amount of currency.\n            "
+          description: "The total allocation amount.\n            "
           format: decimal
-        referenceCode:
-          type: string
-          description: "The voucher reference code.\n            "
-          maxLength: 20
-          minLength: 1
-        paymentMethodCode:
-          type: string
-          description: "The payment method to apply the voucher to. This will default to primary voucher code.\n            "
-          maxLength: 2
-          minLength: 1
-        overrideRestrictions:
-          type:
-          - boolean
-          - 'null'
-          description: "Whether to override voucher restrictions.\n            "
-    AuthenticationStatus:
-      type: integer
-      description: "Defines the different possible payment authentication statuses for 3DS.\n            \n\n0 = Unknown\n1 = AuthenticationSuccessful\n2 = AuthenticationFailed\n3 = AuthenticationCouldNotBePerformed\n4 = AuthenticationAttemptProcessing\n5 = AuthenticationRejected"
-      x-enumNames:
-      - Unknown
-      - AuthenticationSuccessful
-      - AuthenticationFailed
-      - AuthenticationCouldNotBePerformed
-      - AuthenticationAttemptProcessing
-      - AuthenticationRejected
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    ApplyBookingCreditRequestv2:
-      type: object
-      description: "Defines a request to apply credit from state.\n            "
-      additionalProperties: false
-      required:
-      - request
-      - validation
-      properties:
-        request:
-          description: "The credit details requested.\n            "
-          $ref: '#/components/schemas/ApplyCreditRequest'
-        validation:
-          description: "The query to retrieve the booking.\n            "
-          $ref: '#/components/schemas/RetrieveBookingv2'
-    BlacklistReasonCode:
-      type: integer
-      description: "Defines the reason for blacklisting a card used in an external payment.\nDefaults to `None` if no value is specified.\n            \n\n0 = None\n1 = ChargedBack\n2 = Lost\n3 = Other\n4 = ProvidedByBank\n5 = Stolen"
-      x-enumNames:
-      - None
-      - ChargedBack
-      - Lost
-      - Other
-      - ProvidedByBank
-      - Stolen
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    PaymentDetails:
-      type: object
-      description: "Defines the payment details.\n            "
-      additionalProperties: false
-      properties:
-        accountNumberId:
-          type: integer
-          description: "The reference of an encrypted account number.\n            "
-          format: int64
-        parentPaymentId:
-          type:
-          - integer
-          - 'null'
-          description: "ID of the parent of refunds or divide. Null if none exists.\n            "
-          format: int64
-          maximum: 9.223372036854776e+18
-          minimum: 0.0
-        accountName:
-          type:
-          - string
-          - 'null'
-          description: "The account holder name.\n            "
-          maxLength: 64
-          minLength: 0
-        accountNumber:
-          type:
-          - string
-          - 'null'
-          description: "The account number.\n            "
-          maxLength: 34
-          minLength: 0
-        expirationDate:
-          type:
-          - string
-          - 'null'
-          description: "The expiration date.\n            "
-          format: date-time
-        text:
-          type:
-          - string
-          - 'null'
-          description: "The payment added text.\n            "
-          maxLength: 64
-          minLength: 0
-        installments:
-          type: integer
-          description: "The number of installments to be applied.\n            "
-          maximum: 999.0
-          minimum: 0.0
-        binRange:
-          type: integer
-          description: "The first 6 digits of the credit card number.\n            "
-          format: int32
-          maximum: 2147483647.0
-          minimum: 0.0
-        fields:
-          type:
-          - object
-          - 'null'
-          description: "The collection of payment fields.\n            "
-          additionalProperties:
-            type: string
-    DirectCurrencyConversion:
-      type: object
-      description: "Defines a direct currency conversion.\n            "
-      additionalProperties: false
-      properties:
-        rateId:
-          type: string
-          description: "The rate ID.\n            "
-          format: guid
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code converted to.\n            "
-          maxLength: 3
-          minLength: 0
-        rateValue:
-          type: number
-          description: "The conversion rate value.\n            "
-          format: decimal
-        amount:
-          type: number
-          description: "The conversion rate amount.\n            "
-          format: decimal
-        putInState:
-          type:
-          - string
-          - 'null'
-          description: "The put in state value.\n            "
-        status:
-          description: "The conversion status.\n            "
-          $ref: '#/components/schemas/DirectCurrencyConversionStatus'
-        applicable:
-          type: boolean
-          description: "Flag indicating if DCC is applicable.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+        paymentAllocationDocuments:
           type:
           - array
           - 'null'
-          description: "The collection of errors being thrown.\n            "
+          description: "The list of payment allocation documents.\n            "
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    CreditShellRefundRequest:
-      type: object
-      description: "Defines information needed for a credit shell refund.\n            "
-      additionalProperties: false
-      required:
-      - parentPaymentKey
-      - amount
-      - accountTransactionCode
-      - accountType
-      properties:
-        parentPaymentKey:
-          type: string
-          description: "The payment identifier used if this refund is being reversed from an existing payment to a credit shell.\n            "
-          minLength: 1
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        accountTransactionCode:
-          type: string
-          description: "The account transaction code associated with the refund.\n            "
-          minLength: 1
-        accountType:
-          description: "The credit shell account type.\n            "
-          $ref: '#/components/schemas/CreditShellAccountType'
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The credit shell refund comment.\n            "
+            $ref: '#/components/schemas/PaymentAllocationDocument'
     VoucherInformation:
       type: object
       description: "Voucher information. This model describes a voucher information after being queried by the voucher code.\n            "
@@ -6258,6 +6970,129 @@ components:
           type: number
           description: "The total amount available on the voucher for use in the currency that the booking in state is in.\n            "
           format: decimal
+    AuthenticationStatus:
+      type: integer
+      description: "Defines the different possible payment authentication statuses for 3DS.\n            \n\n0 = Unknown\n1 = AuthenticationSuccessful\n2 = AuthenticationFailed\n3 = AuthenticationCouldNotBePerformed\n4 = AuthenticationAttemptProcessing\n5 = AuthenticationRejected"
+      x-enumNames:
+      - Unknown
+      - AuthenticationSuccessful
+      - AuthenticationFailed
+      - AuthenticationCouldNotBePerformed
+      - AuthenticationAttemptProcessing
+      - AuthenticationRejected
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    ApplyOrganizationCreditRequest:
+      type: object
+      description: "Defines a request to apply organization credit to the booking in state.\n            "
+      additionalProperties: false
+      required:
+      - amount
+      properties:
+        amount:
+          type: number
+          description: "The amount of credit.\n            "
+          format: decimal
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The payment comment, also known as the text details.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The currency code of the account.\n            "
+          maxLength: 3
+          minLength: 0
+        waiveFees:
+          type:
+          - boolean
+          - 'null'
+          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
+        organizationCreditCode:
+          type:
+          - string
+          - 'null'
+          description: "The payment method credit code of the agent credit line. If not set, will default to the default organization\ncredit code.\nNOTE: It is not recommended to use a custom agency credit payment as it will not have the same\nbehavior nor be validated like the pre-configured `AG` credit payment.\n            "
+        accountReference:
+          type:
+          - string
+          - 'null'
+          description: "The organization account reference. If not set, defaults to the organization code of the logged-in user.\n            "
+          maxLength: 10
+          minLength: 0
+    DccRequestBasev2:
+      type: object
+      description: "Model representing the DCC request without a unique key.\n            "
+      additionalProperties: false
+      properties:
+        paymentFields:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
+          additionalProperties:
+            type: string
+        offerAccepted:
+          type:
+          - boolean
+          - 'null'
+          description: "Indication of whether the DCC offer was accepted or not. This will default to true if not set.\n            "
+        deposit:
+          type:
+          - boolean
+          - 'null'
+          description: "Indicates if the payment will be added as deposit.\nDefaults to false if not set.\n            "
+        installments:
+          type:
+          - integer
+          - 'null'
+          description: "The requested number of installments.\n            "
+    PaymentVoucherDetails:
+      type: object
+      description: "Payment voucher details. This describes a voucher applied to a payment.\n            "
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: "The voucher ID.\n            "
+          format: int64
+          maximum: 9.223372036854776e+18
+          minimum: 0.0
+        transactionId:
+          type: integer
+          description: "The vouchers transactions ID.\n            "
+          format: int64
+          maximum: 9.223372036854776e+18
+          minimum: 0.0
+        overrideRestrictions:
+          type: boolean
+          description: "Flag indicating if the voucher restrictions were overridden.\n            "
+        overrideAmount:
+          type: boolean
+          description: "The amount applied of the voucher.\n            "
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator attached to the voucher.\n            "
+          maxLength: 12
+          minLength: 0
+    CreditShellAccountType:
+      type: integer
+      description: "Account types used for credit shell refunds.\n            \n\n0 = CustomerNumber\n1 = ReservationCredit"
+      x-enumNames:
+      - CustomerNumber
+      - ReservationCredit
+      enum:
+      - 0
+      - 1
     VoucherType:
       type: integer
       description: "Defines the type of voucher.\n            \n\n0 = Credit\n1 = SingleUseCredit\n2 = Service\n3 = SingleUse\n4 = MultiUse\n5 = SingleUseNegativeAdjustment\n6 = PassengerSelect"
@@ -6277,102 +7112,55 @@ components:
       - 4
       - 5
       - 6
-    PaymentReversalRequestv2:
+    PaymentFeeResponse:
       type: object
-      description: "Defines information needed for reversing a payment in the state booking, v2.\n            "
+      description: "Defines information for the payment fee response.\n            "
+      additionalProperties: false
+      required:
+      - feeAmount
+      properties:
+        feeAmount:
+          type: number
+          description: "The amount being payed.\n            "
+          format: decimal
+        isFixedAmount:
+          type: boolean
+          description: "Is a fixed amount.\n            "
+        passengerFees:
+          type:
+          - array
+          - 'null'
+          description: "Passenger fee details.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerFee'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PaymentMethodRequest:
+      type: object
+      description: "Defines a request to apply payment to the booking in state.\n            "
       additionalProperties: false
       required:
       - amount
       - paymentMethodCode
-      properties:
-        parentPaymentKey:
-          type:
-          - string
-          - 'null'
-          description: "The payment identifier used if this refund is being reversed from an existing payment, which in turn, creates a\nline item refund.\nWhen set to null, a booking level refund is made instead.\n            "
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        paymentMethodCode:
-          type: string
-          description: "Payment method code.\n            "
-          maxLength: 2
-          minLength: 1
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The payment refund comment.\n            "
-    PaymentAmounts:
-      type: object
-      description: "Defines the different applied payment amounts for a single payment.\n            "
-      additionalProperties: false
-      properties:
-        amount:
-          type: number
-          description: "The amount in the booking currency (based off the origin).\n            "
-          format: decimal
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The payment amount currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        collected:
-          type: number
-          description: "The collected amount post DCC or MCC.\n            "
-          format: decimal
-        collectedCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The collected amounts currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        quoted:
-          type: number
-          description: "The pre DCC or MCC amount (maybe different than the booking).\n            "
-          format: decimal
-        quotedCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The quoted currency code.\n            "
-          maxLength: 3
-          minLength: 0
-    DccType:
-      type: integer
-      description: "Dynamic Currency Conversion (DCC) types.\n            \n\n0 = None\n1 = ZeroRate\n2 = FullAmount"
-      x-enumNames:
-      - None
-      - ZeroRate
-      - FullAmount
-      enum:
-      - 0
-      - 1
-      - 2
-    MccPaymentRequest:
-      type: object
-      description: "Defines information needed for a mcc stored payment requested to be added to the booking in state.\n            "
-      additionalProperties: false
-      required:
-      - amount
       properties:
         amount:
           type: number
@@ -6401,536 +7189,6 @@ components:
           description: "The requested number of installments. Defaults to 1.\n            "
           maximum: 32767.0
           minimum: 1.0
-        thirdPartyExternalRate:
-          description: "The third party external rate.\n            "
-          $ref: '#/components/schemas/ExternalRate'
-    PaymentAllocationDocument:
-      type: object
-      description: "Defines the payment allocation document.\n            "
-      additionalProperties: false
-      properties:
-        issuanceDate:
-          type: string
-          description: "The issuance date.\n            "
-          format: date-time
-        ticketNumber:
-          type:
-          - string
-          - 'null'
-          description: "The ticket number.\n            "
-          maxLength: 14
-          minLength: 13
-        documentType:
-          type:
-          - string
-          - 'null'
-          description: "The document type.\n            "
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger key.\n            "
-        passengerName:
-          description: "The passengers name.\n            "
-          $ref: '#/components/schemas/Name'
-        paymentKeys:
-          type:
-          - array
-          - 'null'
-          description: "The list of payment keys allocated to the passenger.\n            "
-          items:
-            type: string
-    IJsonResponseOfPaymentInformation:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PaymentInformation'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BlacklistPaymentEntry:
-      type: object
-      description: "Defines the request for a card used in an external payment to be blacklisted.\n            "
-      additionalProperties: false
-      required:
-      - paymentKey
-      properties:
-        reason:
-          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
-          $ref: '#/components/schemas/BlacklistReasonCode'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: "Additional description of the reason for blacklisting the card.\n            "
-        startDate:
-          type:
-          - string
-          - 'null'
-          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
-          format: date-time
-        endDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
-          format: date-time
-        paymentKey:
-          type: string
-          description: "The unique identifier of the external payment with the card number to be blacklist.\n            "
-          minLength: 1
-    PassengerVoucher:
-      type: object
-      description: "Defines a passenger voucher.\n            "
-      additionalProperties: false
-      properties:
-        passengerVoucherKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger voucher key.\n            "
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger key.\nWill be null if the voucher does not apply to a specific passenger.\n            "
-        voucherConfigurationCode:
-          type:
-          - string
-          - 'null'
-          description: "The voucher configuration code.\n            "
-        voucherUses:
-          type:
-          - array
-          - 'null'
-          description: "The list of voucher uses.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerVoucherUsageType'
-        customerPrograms:
-          type:
-          - array
-          - 'null'
-          description: "The list of customer programs.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerVoucherCustomerProgram'
-        customerNumber:
-          type:
-          - string
-          - 'null'
-          description: "The customer number of the customer record to which the voucher has been issued.\n            "
-    IJsonResponseOfPayment:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Payment'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PaymentInformation:
-      type: object
-      description: "Defines the extra payment information.\n            "
-      additionalProperties: false
-      properties:
-        threeDSecureResponse:
-          description: "The three d secure response after making an initial payment.\n            "
-          $ref: '#/components/schemas/ThreeDSecureResponse'
-        directCurrencyConversionOffer:
-          description: "The direct currency conversion offer after making an initial payment.\n            "
-          $ref: '#/components/schemas/DirectCurrencyConversionOffer'
-    PointOfSale:
-      type: object
-      description: "Model related to the point of sale.  This is for read-only operations.\n            "
-      additionalProperties: false
-      properties:
-        agentCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale agent code.\n            "
-        domainCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale domain code.\n            "
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale location code.\n            "
-        organizationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale organization code.\n            "
-    GetBlacklistPaymentEntryResponse:
-      type: object
-      description: "Defines the response for getting a blacklisted payment.\n            "
-      additionalProperties: false
-      required:
-      - paymentKey
-      properties:
-        reason:
-          description: "The reason why the card is being blacklisted.\nDefaults to None of no value is specified.\n            "
-          $ref: '#/components/schemas/BlacklistReasonCode'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: "Additional description of the reason for blacklisting the card.\n            "
-        startDate:
-          type:
-          - string
-          - 'null'
-          description: "The start date for the card to be blacklisted.\nDefaults to the current UTC-based date if not specified.\n            "
-          format: date-time
-        endDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when the card will be removed from the blacklist.\nIf not specified or set to null, the payment is blacklisted without expiration.\n            "
-          format: date-time
-        paymentKey:
-          type: string
-          description: "The unique identifier of the external payment with the card number to be blacklist.\n            "
-          minLength: 1
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when the blacklist payment was created.\n            "
-          format: date-time
-        modifiedDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when the blacklist payment was modified.\n            "
-          format: date-time
-    AuthorizationStatus:
-      type: integer
-      description: "Defines the different possible payment authorization states.\n            \n\n0 = Unknown\n1 = Acknowledged\n2 = Pending\n3 = InProcess\n4 = Approved\n5 = Declined\n6 = Referral\n7 = PickUpCard\n8 = HotCard\n9 = Voided\n10 = Retrieval\n11 = ChargedBack\n12 = Error\n13 = ValidationFailed\n14 = Address\n15 = VerificationCode\n16 = FraudPrevention\n17 = ForcedApproval\n18 = ForcedDecline\n19 = NoResponse\n20 = BadResponse"
-      x-enumNames:
-      - Unknown
-      - Acknowledged
-      - Pending
-      - InProcess
-      - Approved
-      - Declined
-      - Referral
-      - PickUpCard
-      - HotCard
-      - Voided
-      - Retrieval
-      - ChargedBack
-      - Error
-      - ValidationFailed
-      - Address
-      - VerificationCode
-      - FraudPrevention
-      - ForcedApproval
-      - ForcedDecline
-      - NoResponse
-      - BadResponse
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-      - 14
-      - 15
-      - 16
-      - 17
-      - 18
-      - 19
-      - 20
-    IJsonResponseOfGetBlacklistPaymentEntryResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/GetBlacklistPaymentEntryResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PaymentMethod:
-      type: object
-      description: "The payment method model.\n            "
-      additionalProperties: false
-      required:
-      - paymentMethodCode
-      - name
-      properties:
-        paymentMethodCode:
-          type: string
-          description: "The payment method code for this payment method.\n            "
-          maxLength: 2
-          minLength: 0
-        allowDeposit:
-          type: boolean
-          description: "The allow deposit flag for this payment method.\n            "
-        allowed:
-          type: boolean
-          description: "Deprecated - Please use api/nsk/v1/settings/general/codes endpoint to verify role based access instead.\n            "
-        allowZeroAmount:
-          type: boolean
-          description: "The allow zero amount flag for this payment method.\n            "
-        commissionable:
-          type: boolean
-          description: "The commissionable flag for this payment method.\n            "
-        dccType:
-          description: "The DCC type for this payment method.\n            "
-          $ref: '#/components/schemas/DccType'
-        disallowPartialRefund:
-          type: boolean
-          description: "The disallow partial refund flag for this payment method.\n            "
-        feeCode:
-          type:
-          - string
-          - 'null'
-          description: "The fee code for this payment method.\n            "
-          maxLength: 6
-          minLength: 0
-        inActive:
-          type: boolean
-          description: "The inactive flag for this payment method.\n            "
-        maxInstallments:
-          type: integer
-          description: "The max installments for this payment method.\n            "
-        name:
-          type: string
-          description: "The name for this payment method.\n            "
-          maxLength: 64
-          minLength: 0
-        paymentMethodFields:
-          type:
-          - object
-          - 'null'
-          description: "The payment method fields for this payment method.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/PaymentMethodField'
-        paymentMethodType:
-          description: "The payment method type for this payment method.\n            "
-          $ref: '#/components/schemas/PaymentMethodType'
-        paymentRefundType:
-          description: "The payment refund type for this payment method.\n            "
-          $ref: '#/components/schemas/PaymentRefundType'
-        proportionalRefund:
-          type: boolean
-          description: "The proportional refund flag for this payment method.\n            "
-        refundableByAgent:
-          type: boolean
-          description: "The refundable by agent flag for this payment method.\n            "
-        refundCurrencyControl:
-          description: "The refund currency control for this payment method.\n            "
-          $ref: '#/components/schemas/RefundCurrencyControl'
-        restrictionHours:
-          type: integer
-          description: "The hours of restriction for this payment method.\n            "
-        systemControlled:
-          type: boolean
-          description: "The system controlled flag for this payment method.\n            "
-        traceQueueCode:
-          type:
-          - string
-          - 'null'
-          description: "The trace queue code for this payment method.\n            "
-          maxLength: 6
-          minLength: 0
-        validationRequired:
-          type: boolean
-          description: "The validation required flag for this payment method.\n            "
-        enableDeviceDataCollectionWithJwt:
-          type: boolean
-          description: "Whether device data collection with jwt is enabled.\n            "
-    RefundState:
-      type: integer
-      description: "Enumeration representing the refund ui state.\n            \n\n0 = Enabled\n1 = Disabled\n2 = Hidden"
-      x-enumNames:
-      - Enabled
-      - Disabled
-      - Hidden
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfDirectCurrencyConversionAvailability:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/DirectCurrencyConversionAvailability'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PaymentMethodType:
-      type: integer
-      description: "Defines the payment method types.\n            \n\n0 = ExternalAccount\n1 = PrePaid\n2 = AgencyAccount\n3 = CustomerAccount\n4 = Voucher\n5 = Loyalty"
-      x-enumNames:
-      - ExternalAccount
-      - PrePaid
-      - AgencyAccount
-      - CustomerAccount
-      - Voucher
-      - Loyalty
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    VoucherTransactionType:
-      type: integer
-      description: "Defines voucher transaction type.\n            \n\n0 = Debit\n1 = Credit\n2 = Void\n3 = Reinstate\n4 = Adjustment\n5 = ExpirationDateChange\n6 = VoucherTypeChange\n7 = VoucherOwnerChange"
-      x-enumNames:
-      - Debit
-      - Credit
-      - Void
-      - Reinstate
-      - Adjustment
-      - ExpirationDateChange
-      - VoucherTypeChange
-      - VoucherOwnerChange
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    RequiredType:
-      type: integer
-      description: "This enum represents the state of a payment field.\n            \n\n0 = Required\n1 = Optional\n2 = NotAllowed"
-      x-enumNames:
-      - Required
-      - Optional
-      - NotAllowed
-      enum:
-      - 0
-      - 1
-      - 2
-    ThreeDSecurePaymentMethodRequestv3:
-      type: object
-      description: "Defines information needed for a generic payment requested with ThreeDSecure validation.\n            "
-      additionalProperties: false
-      required:
-      - paRes
-      - paymentTransactionKey
-      properties:
-        paRes:
-          type: string
-          description: "The response that comes back from the bank to verify ThreeDSecure validation.\n            "
-          minLength: 1
-        paReq:
-          type:
-          - string
-          - 'null'
-          description: "The original payment authorization request.\n            "
-        paymentTransactionKey:
-          type: string
-          description: "The payment transaction key.\n            "
-          minLength: 1
-    ExternalRate:
-      type: object
-      description: "External rate model.\n            "
-      additionalProperties: false
-      properties:
-        rateId:
-          type:
-          - string
-          - 'null'
-          description: "The id for this external rate.\n            "
-        quotedCurrency:
-          type:
-          - string
-          - 'null'
-          description: "The quoted currency for this external rate.\n            "
-          maxLength: 3
-          minLength: 0
-        collectedCurrency:
-          type:
-          - string
-          - 'null'
-          description: "The collected currency for this external rate.\n            "
-          maxLength: 3
-          minLength: 0
-        exchangeRate:
-          type: number
-          description: "The exchange rate for this external rate.\n            "
-          format: decimal
-    MccPaymentMethodRequest:
-      type: object
-      description: "Defines information needed for a mcc payment requested to be added to the booking in state.\n            "
-      additionalProperties: false
-      required:
-      - paymentMethodCode
-      - amount
-      properties:
         paymentMethodCode:
           type: string
           description: "Payment method code.\n            "
@@ -6946,264 +7204,6 @@ components:
           - boolean
           - 'null'
           description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
-        amount:
-          type: number
-          description: "The amount to apply.\n            "
-          format: decimal
-          maximum: 2147483647.0
-          minimum: 0.0
-        paymentFields:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic field information used for validation related to the specific payment type.\nSee the PaymentMethodsAvailable view model / PaymentMethodFieldList\n            "
-          additionalProperties:
-            type: string
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code. This will default to the bookings currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        installments:
-          type:
-          - integer
-          - 'null'
-          description: "The requested number of installments. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        thirdPartyExternalRate:
-          description: "The third party external rate.\n            "
-          $ref: '#/components/schemas/ExternalRate'
-    IJsonResponseOfPaymentFeeResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PaymentFeeResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfThreeDSecureResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/ThreeDSecureResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfIListOfPayment:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/Payment'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfPaymentAllocations:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PaymentAllocations'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    DirectCurrencyConversionAvailability:
-      type: object
-      description: "Defines a direct currency conversion availability model.\n            "
-      additionalProperties: false
-      properties:
-        dccKey:
-          type:
-          - string
-          - 'null'
-          description: "The direct currency conversion key.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code converting available to convert to.\n            "
-          maxLength: 3
-          minLength: 0
-        rate:
-          type: number
-          description: "The conversion rate value.\n            "
-          format: decimal
-        amount:
-          type: number
-          description: "The conversion rate amount.\n            "
-          format: decimal
-    ApplyCreditAccountRequestv2:
-      type: object
-      description: "Defines a request to apply credit for an account.\n            "
-      additionalProperties: false
-      required:
-      - referenceNumber
-      - amount
-      properties:
-        referenceNumber:
-          type: string
-          description: "The account reference. This will be the record locator, customer account number, or organization code depending on\nthe type.\n            "
-          maxLength: 20
-          minLength: 1
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The currency code of the account.\n            "
-          maxLength: 3
-          minLength: 0
-        type:
-          description: "Defines the type of credit being applied.\n            "
-          $ref: '#/components/schemas/CreditType'
-        amount:
-          type: number
-          description: "The amount of credit.\n            "
-          format: decimal
-        addAsDeposit:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag indicating whether to add credit as a deposit.\n            "
-        waiveFees:
-          type:
-          - boolean
-          - 'null'
-          description: "Determines if the system calculated payment fee should be waived when adding this payment. This flag is for agents\nonly.\n            "
-        comment:
-          type:
-          - string
-          - 'null'
-          description: "The payment comment, also known as the text details.\n            "
-    ChannelType:
-      type: integer
-      description: "Defines the available channel types doing invoking the communication with the server.\n            \n\n0 = Default\n1 = Direct\n2 = Web\n3 = Gds\n4 = Api\n5 = DigitalApi\n6 = DigitalWeb\n7 = Ndc"
-      x-enumNames:
-      - Default
-      - Direct
-      - Web
-      - Gds
-      - Api
-      - DigitalApi
-      - DigitalWeb
-      - Ndc
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
   securitySchemes:
     JWT:
       type: http

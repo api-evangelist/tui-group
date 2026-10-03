@@ -55,6 +55,18 @@ paths:
       - Download
 components:
   responses:
+    PriceFileResponse:
+      description: "Response for a price file. The response body is base64 encoded \nand must be decoded before extracting the zip archive."
+      content:
+        application/zip:
+          schema:
+            type: string
+            format: binary
+      headers:
+        Content-Transfer-Encoding:
+          schema:
+            type: string
+          description: Will contain base64 on binary file response to indicate that the response is base64 encoded
     ErrorResponse:
       description: Response message in case of an error
       content:
@@ -73,18 +85,6 @@ components:
               value:
                 errorMessage: No price file mapped to ApiKey YourAppName
                 exception: null
-    PriceFileResponse:
-      description: "Response for a price file. The response body is base64 encoded \nand must be decoded before extracting the zip archive."
-      content:
-        application/zip:
-          schema:
-            type: string
-            format: binary
-      headers:
-        Content-Transfer-Encoding:
-          schema:
-            type: string
-          description: Will contain base64 on binary file response to indicate that the response is base64 encoded
   securitySchemes:
     bearerToken:
       type: http

@@ -119,6 +119,27 @@ paths:
                 $ref: '#/components/schemas/Problem'
 components:
   schemas:
+    HotelInventoryResponse:
+      title: HotelInventoryResponse
+      type: object
+      description: The successful response payload containing the hotel inventory.
+      properties:
+        api_version:
+          type: string
+          description: The API current version.
+          example: v1
+        language:
+          type: string
+          description: The language in the API response.
+          example: en_GB
+        hotels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hotel'
+      required:
+      - api_version
+      - language
+      - hotels
     Problem:
       type: object
       properties:
@@ -203,27 +224,6 @@ components:
       - longitude
       - phone_number
       - url
-    HotelInventoryResponse:
-      title: HotelInventoryResponse
-      type: object
-      description: The successful response payload containing the hotel inventory.
-      properties:
-        api_version:
-          type: string
-          description: The API current version.
-          example: v1
-        language:
-          type: string
-          description: The language in the API response.
-          example: en_GB
-        hotels:
-          type: array
-          items:
-            $ref: '#/components/schemas/Hotel'
-      required:
-      - api_version
-      - language
-      - hotels
     Address:
       type: object
       title: Address

@@ -813,39 +813,114 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    CheckinPassengerLiftStatus:
+    CheckinPassengerRestriction:
       type: object
-      description: "Defines a single passengers checkin status for a specific segment.\n            "
+      description: "Defines a passengers restriction for the current segment trying to be checked into.\n            "
       additionalProperties: false
       properties:
-        status:
-          description: "The lift status of the passenger for a specific segment.\n            "
-          $ref: '#/components/schemas/LiftStatus'
-        identifier:
-          description: "The transportation identifier.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-    CheckinPassengerRestrictionType:
+        restriction:
+          description: "The passenger restriction type.\n            "
+          $ref: '#/components/schemas/CheckinPassengerRestrictionType'
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The description of the restriction.\n            "
+    CheckinPassengerRequestv2:
+      type: object
+      description: "Defines the individual passenger checkin request.\n            "
+      additionalProperties: false
+      required:
+      - passengerKey
+      properties:
+        passengerKey:
+          type: string
+          description: "The unique passenger key being checked in.\n            "
+          minLength: 1
+        transitType:
+          description: "The passengers transit type.\n            "
+          $ref: '#/components/schemas/TransitType'
+        processApps:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to process APPS.\n            "
+        verifiedTravelDocumentKeys:
+          type:
+          - array
+          - 'null'
+          description: "The value specifying the verified travel document(s) associated with this checkin.\n            "
+          items:
+            type: string
+    CheckinPassengerRequest:
+      type: object
+      description: "Defines the individual passenger checkin request.\n            "
+      additionalProperties: false
+      required:
+      - passengerKey
+      properties:
+        passengerKey:
+          type: string
+          description: "The unique passenger key being checked in.\n            "
+          minLength: 1
+        transitType:
+          description: "The passengers transit type.\n            "
+          $ref: '#/components/schemas/TransitType'
+        processApps:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to process APPS.\n            "
+        verifiedReference:
+          type:
+          - string
+          - 'null'
+          description: "The value specifying the verified travel document(s) associated with this checkin.\n            "
+    CheckinPassengersRequest:
+      type: object
+      description: "Defines the checkin passengers request.\n            "
+      additionalProperties: false
+      required:
+      - passengers
+      properties:
+        seatsRequired:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether a seat is required for checkin.\n            "
+        skipSecurityChecks:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
+        isStandby:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether the collection of passengers are for standby checkin.\n            "
+        passengers:
+          type: array
+          description: "The collection of passengers to checkin.\n            "
+          items:
+            $ref: '#/components/schemas/CheckinPassengerRequest'
+    GovernmentDocumentFieldType:
       type: integer
-      description: "Defines the checkin passenger restriction types.\n            \n\n0 = NotFound\n1 = MissingDestinationAddress\n2 = MissingCountryOrResidence\n3 = OnLockQueue\n4 = MissingRequiredSsrs\n5 = ContainsRestrictedSsrs\n6 = IsSelectee\n7 = MissingSeat\n8 = NotConfirmed\n9 = NotStandby\n10 = ContainsUnknownSsr\n11 = MissingApisRequirement\n12 = MissingDocuments\n13 = MissingName\n14 = MissingInfantName\n15 = MissingDateOfBirth\n16 = MissingInfantDateOfBirth\n17 = RestrictedInfantInLap"
+      description: "Defines all the different travel document fields that a government program can require to be prompted/required.\n            \n\n0 = FirstName\n1 = MiddleName\n2 = LastName\n3 = Title\n4 = Suffix\n5 = DateOfBirth\n6 = BirthCountry\n7 = Gender\n8 = Nationality\n9 = Number\n10 = IssuingCountry\n11 = ExpirationDate\n12 = IssuedDate\n13 = Verified"
       x-enumNames:
-      - NotFound
-      - MissingDestinationAddress
-      - MissingCountryOrResidence
-      - OnLockQueue
-      - MissingRequiredSsrs
-      - ContainsRestrictedSsrs
-      - IsSelectee
-      - MissingSeat
-      - NotConfirmed
-      - NotStandby
-      - ContainsUnknownSsr
-      - MissingApisRequirement
-      - MissingDocuments
-      - MissingName
-      - MissingInfantName
-      - MissingDateOfBirth
-      - MissingInfantDateOfBirth
-      - RestrictedInfantInLap
+      - FirstName
+      - MiddleName
+      - LastName
+      - Title
+      - Suffix
+      - DateOfBirth
+      - BirthCountry
+      - Gender
+      - Nationality
+      - Number
+      - IssuingCountry
+      - ExpirationDate
+      - IssuedDate
+      - Verified
       enum:
       - 0
       - 1
@@ -861,10 +936,112 @@ components:
       - 11
       - 12
       - 13
-      - 14
-      - 15
-      - 16
-      - 17
+    CheckinDocumentRequirementsv2:
+      type: object
+      description: "Defines passenger checkin document requirements version 2.\n            "
+      additionalProperties: false
+      properties:
+        documentsOnFile:
+          type:
+          - array
+          - 'null'
+          description: "The collection of document type codes that already exist on the passenger.\n            "
+          items:
+            type: string
+        governmentDocumentInstances:
+          type:
+          - array
+          - 'null'
+          description: "The collection of unhandled documents at each acting government entity.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentPassengerDocumentRequirementv2'
+        isValid:
+          type: boolean
+          description: "Flag indicating if the checkin document requirements are all met and ready/valid for checkin.\n            "
+    GovernmentProgramRequirements:
+      type: object
+      description: "Defines a government programs document requirements.\n            "
+      additionalProperties: false
+      properties:
+        governmentInstance:
+          type:
+          - string
+          - 'null'
+          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
+        requiredDocumentFields:
+          type:
+          - array
+          - 'null'
+          description: "The collection of required document fields to be collected.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentFieldType'
+        additionalDataRequired:
+          type:
+          - array
+          - 'null'
+          description: "The collection of additional data that is required that are not related to documents.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentAdditionalDataType'
+        programDescription:
+          type:
+          - string
+          - 'null'
+          description: "User-friendly label or description that should be used for all prompts and error messages\nto the user.\n            "
+        messageType:
+          type:
+          - string
+          - 'null'
+          description: "Message type associated with these requirements.\n            "
+        minVerifiedDocumentCount:
+          type: integer
+          description: "The minimum number of verified documents required.\n            "
+          format: int32
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    GovernmentPassengerDocumentRequirementv2:
+      type: object
+      description: "Defines a specific government document requirements for a specific passenger. Version 2\n            "
+      additionalProperties: false
+      properties:
+        governmentInstance:
+          type:
+          - string
+          - 'null'
+          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
+        numberOfMissingDocuments:
+          type: integer
+          description: "The number of documents still missing.\n            "
+        eligibleDocuments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of eligible documents that have not already been added by the passenger.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentRequirement'
+        verifiableDocuments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of verifiable documents at each acting government entity.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentRequirement'
+        documentVerificationRequired:
+          type: boolean
+          description: "Boolean to confirm documents need to be verified.\n***Note***\nIf it is TRUE, document verification is required.\nIf it is FALSE, it could be\n1) No document verification is required, or\n2) The given Travel Documents Type and Count matches the government program driver requirements, BUT this\ndoes not ensure that all government security document requirements have been met.\n            "
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -895,14 +1072,14 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    IJsonResponseOfCheckinRequirementsv2:
+    IJsonResponseOfCheckinRequirements:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/CheckinRequirementsv2'
+          $ref: '#/components/schemas/CheckinRequirements'
         errors:
           type:
           - array
@@ -917,48 +1094,46 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    CheckinMissingSegmentRequiredSsr:
+    CheckinPassengerRequirementsv2:
       type: object
-      description: "Defines the a segments collection of missing SSR's.\n            "
+      description: "Defines an individual passengers checkin requirements.\n            "
       additionalProperties: false
       properties:
-        codes:
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The associated passenger key.\n            "
+        documentRequirements:
+          description: "The passengers document requirements.\n            "
+          $ref: '#/components/schemas/CheckinDocumentRequirementsv2'
+        addressRequirements:
+          description: "The passengers address requirements.\n            "
+          $ref: '#/components/schemas/CheckinAddressRequirements'
+        invalidSsrs:
           type:
           - array
           - 'null'
-          description: "The collection of SSR's missing.\n            "
+          description: "The collection of checkin restricted/invalid SSR's the passenger contains.\n            "
           items:
             type: string
-        designator:
-          description: "The transportation designator that the SSR codes are missing from.\n            "
-          $ref: '#/components/schemas/TransportationDesignator'
-    CheckinPassengersRequest:
-      type: object
-      description: "Defines the checkin passengers request.\n            "
-      additionalProperties: false
-      required:
-      - passengers
-      properties:
-        seatsRequired:
+        requiredSsrs:
           type:
-          - boolean
+          - array
           - 'null'
-          description: "The flag indicating whether a seat is required for checkin.\n            "
-        skipSecurityChecks:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
-        isStandby:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag indicating whether the collection of passengers are for standby checkin.\n            "
-        passengers:
-          type: array
-          description: "The collection of passengers to checkin.\n            "
+          description: "The collection of checkin required SSR's the passenger is missing for each segment.\n            "
           items:
-            $ref: '#/components/schemas/CheckinPassengerRequest'
+            $ref: '#/components/schemas/CheckinMissingSegmentRequiredSsr'
+        restrictions:
+          type:
+          - array
+          - 'null'
+          description: "The list of passengers restrictions that will restrict passenger from checkin.\n            "
+          items:
+            $ref: '#/components/schemas/CheckinPassengerRestriction'
+        isValid:
+          type: boolean
+          description: "Flag indicating if the specific passenger checkin is valid.\n            "
     CheckinPassengerRequirements:
       type: object
       description: "Defines an individual passengers checkin requirements.\n            "
@@ -1001,17 +1176,416 @@ components:
           description: "The list of passengers restrictions that will restrict passenger from checkin.\n            "
           items:
             $ref: '#/components/schemas/CheckinPassengerRestriction'
-    MessageStatus:
+    CheckinPassengerLiftStatus:
+      type: object
+      description: "Defines a single passengers checkin status for a specific segment.\n            "
+      additionalProperties: false
+      properties:
+        status:
+          description: "The lift status of the passenger for a specific segment.\n            "
+          $ref: '#/components/schemas/LiftStatus'
+        identifier:
+          description: "The transportation identifier.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    CheckinRequirementsv2:
+      type: object
+      description: "Defines the pre checkin requirements.\n            "
+      additionalProperties: false
+      properties:
+        passengers:
+          type:
+          - object
+          - 'null'
+          description: "The collection of passengers and there requirements to checkin.\nKey is the PassengerKey.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/CheckinPassengerRequirementsv2'
+        governmentProgramRequirements:
+          type:
+          - object
+          - 'null'
+          description: "The collection of government programs requirements.\nKey is the Government Driver Instance Name, e.g. 'USDHS', 'CBSA', 'KRKIS', 'APPS', etc.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/GovernmentProgramRequirements'
+        restrictions:
+          type:
+          - array
+          - 'null'
+          description: "The list of any non passenger related checkin restrictions that will restrict the desired segments to be checked\nin.\nThe checkin restriction type = ('Closed', 'NotOpened', 'PnrLocked', 'MarketingCodeShareNotAllowed',\n'NotPaidInFull', 'PaymentsPending',\n'PaymentsPendingCustomerAction', 'RestrictedOnAnotherSystem', 'NotAllowed', 'ApisNotAllowed', 'AppsNotAllowed',\n'SegmentNotFound', 'InvalidPrice').\n            "
+          items:
+            $ref: '#/components/schemas/CheckinRestrictionType'
+        isValid:
+          type: boolean
+          description: "Flag indicating if the ability to checkin is valid.\n            "
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    CheckinRequirements:
+      type: object
+      description: "Defines the pre checkin requirements.\n            "
+      deprecated: true
+      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
+      additionalProperties: false
+      properties:
+        isValid:
+          type: boolean
+          description: "Flag indicating if the ability to checkin is valid.\n            "
+        passengers:
+          type:
+          - object
+          - 'null'
+          description: "The collection of passengers and there requirements to checkin.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/CheckinPassengerRequirements'
+        governmentProgramRequirements:
+          type:
+          - object
+          - 'null'
+          description: "The collection of government programs requirements.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/GovernmentProgramRequirements'
+        restrictions:
+          type:
+          - array
+          - 'null'
+          description: "The list of any non passenger related checkin restrictions that will restrict the desired segments to be checked\nin.\nThe checkin restriction type = ('Closed', 'NotOpened', 'PnrLocked', 'MarketingCodeShareNotAllowed',\n'NotPaidInFull', 'PaymentsPending',\n'PaymentsPendingCustomerAction', 'RestrictedOnAnotherSystem', 'NotAllowed', 'ApisNotAllowed', 'AppsNotAllowed',\n'SegmentNotFound', 'InvalidPrice').\n            "
+          items:
+            $ref: '#/components/schemas/CheckinRestrictionType'
+    CheckinPassengerRestrictionType:
       type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      description: "Defines the checkin passenger restriction types.\n            \n\n0 = NotFound\n1 = MissingDestinationAddress\n2 = MissingCountryOrResidence\n3 = OnLockQueue\n4 = MissingRequiredSsrs\n5 = ContainsRestrictedSsrs\n6 = IsSelectee\n7 = MissingSeat\n8 = NotConfirmed\n9 = NotStandby\n10 = ContainsUnknownSsr\n11 = MissingApisRequirement\n12 = MissingDocuments\n13 = MissingName\n14 = MissingInfantName\n15 = MissingDateOfBirth\n16 = MissingInfantDateOfBirth\n17 = RestrictedInfantInLap"
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - NotFound
+      - MissingDestinationAddress
+      - MissingCountryOrResidence
+      - OnLockQueue
+      - MissingRequiredSsrs
+      - ContainsRestrictedSsrs
+      - IsSelectee
+      - MissingSeat
+      - NotConfirmed
+      - NotStandby
+      - ContainsUnknownSsr
+      - MissingApisRequirement
+      - MissingDocuments
+      - MissingName
+      - MissingInfantName
+      - MissingDateOfBirth
+      - MissingInfantDateOfBirth
+      - RestrictedInfantInLap
       enum:
       - 0
       - 1
       - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+    GovernmentAdditionalDataType:
+      type: integer
+      description: "Defines the additional data that is required for a government program but are not collected with documents.\n            \n\n0 = CountryOfResidence\n1 = InTransitOrigin\n2 = InTransitDestination\n3 = DateOfBirth\n4 = Gender\n5 = FirstName\n6 = LastName"
+      x-enumNames:
+      - CountryOfResidence
+      - InTransitOrigin
+      - InTransitDestination
+      - DateOfBirth
+      - Gender
+      - FirstName
+      - LastName
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    CheckinRestrictionType:
+      type: integer
+      description: "Defines the checkin level restriction types.\n            \n\n0 = Closed\n1 = NotOpened\n2 = PnrLocked\n3 = MarketingCodeShareNotAllowed\n4 = NotPaidInFull\n5 = PaymentsPending\n6 = PaymentsPendingCustomerAction\n7 = RestrictedOnAnotherSystem\n8 = NotAllowed\n9 = ApisNotAllowed\n10 = AppsNotAllowed\n11 = SegmentNotFound\n12 = InvalidPrice\n13 = MissingEMDCoupon"
+      x-enumNames:
+      - Closed
+      - NotOpened
+      - PnrLocked
+      - MarketingCodeShareNotAllowed
+      - NotPaidInFull
+      - PaymentsPending
+      - PaymentsPendingCustomerAction
+      - RestrictedOnAnotherSystem
+      - NotAllowed
+      - ApisNotAllowed
+      - AppsNotAllowed
+      - SegmentNotFound
+      - InvalidPrice
+      - MissingEMDCoupon
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+    CheckinPassengersRequestv3:
+      type: object
+      description: "Defines the checkin passengers request v3 model.\n            "
+      additionalProperties: false
+      required:
+      - passengers
+      properties:
+        passengers:
+          type: array
+          description: "The collection of passengers to checkin.\n            "
+          items:
+            $ref: '#/components/schemas/CheckinPassengerRequestv2'
+        seatsRequired:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether a seat is required for checkin.\n            "
+        skipSecurityChecks:
+          type:
+          - boolean
+          - 'null'
+          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
+    TransitType:
+      type: integer
+      description: "Defines the different type of transit states.\n            \n\n0 = Default\n1 = Origin\n2 = Destination\n3 = Both"
+      x-enumNames:
+      - Default
+      - Origin
+      - Destination
+      - Both
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    GovernmentPassengerDocumentRequirement:
+      type: object
+      description: "Defines a specific government document requirements for a specific passenger.\n            "
+      deprecated: true
+      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
+      additionalProperties: false
+      properties:
+        governmentInstance:
+          type:
+          - string
+          - 'null'
+          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
+        numberOfMissingDocuments:
+          type: integer
+          description: "The number of documents still missing.\n            "
+        eligibleDocuments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of eligible documents that have not already been added by the passenger.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentRequirement'
+    TransportationDesignator:
+      type: object
+      description: "Model information about the traveling arrival and destination details.\n            "
+      additionalProperties: false
+      properties:
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        arrival:
+          type: string
+          description: "The arrival date and time local to the arrival station.\n            "
+          format: date-time
+        departure:
+          type: string
+          description: "The departure date and time local to the departure station.\n            "
+          format: date-time
+    IJsonResponseOfIDictionaryOfStringAndIListOfCheckinPassengerLiftStatus:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - object
+          - 'null'
+          description: "The payload data.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/CheckinPassengerLiftStatus'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfCheckinRequirementsv2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/CheckinRequirementsv2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    CheckinDocumentRequirements:
+      type: object
+      description: "Defines a passenger checkin document requirements.\n            "
+      deprecated: true
+      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
+      additionalProperties: false
+      properties:
+        isValid:
+          type: boolean
+          description: "Flag indicating if the checkin document requirements are all meet and ready/valid for checkin.\n            "
+        documentsOnFile:
+          type:
+          - array
+          - 'null'
+          description: "The collection of document type codes that already exist on the passenger.\n            "
+          items:
+            type: string
+        unhandledDocuments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of unhandled documents at each acting government entity.\n            "
+          items:
+            $ref: '#/components/schemas/GovernmentPassengerDocumentRequirement'
+        documentVerificationRequired:
+          type: boolean
+          description: "Boolean to confirm documents need to be verified.\n***Note***\nIf it is TRUE, document verification is required.\nIf it is FALSE, it could be\n1) No document verification is required, or\n2) The given Travel Documents Type and Count matches the government program driver requirements, BUT this\ndoes not ensure that all government security document requirements have been met.\n            "
+    LiftStatus:
+      type: integer
+      description: "Lift status enumeration.\n            \n\n0 = Default\n1 = CheckedIn\n2 = Boarded\n3 = NoShow"
+      x-enumNames:
+      - Default
+      - CheckedIn
+      - Boarded
+      - NoShow
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
     CheckinAddressRequirements:
       type: object
       description: "Defines a passenger checkin address requirements.\n            "
@@ -1034,6 +1608,30 @@ components:
           description: "The collection of unhandled tagged to station addresses required.\n            "
           items:
             type: string
+    GovernmentDocumentRequirement:
+      type: object
+      description: "Defines a certain document requirement regarding a specific government instance.\n            "
+      additionalProperties: false
+      properties:
+        group:
+          description: "The document group.\n            "
+          $ref: '#/components/schemas/DocumentGroup'
+        documentTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "The documents type code.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     DocumentGroup:
       type: integer
       description: "The document grouping enumeration.\n            \n\n0 = Unknown\n1 = AlienRegistrationCard\n2 = PermanentResidentCard\n3 = FacilitationDocument\n4 = InsPass\n5 = MilitaryId\n6 = Passport\n7 = ReEntryPermit\n8 = CreditCard\n9 = TravelVisa\n10 = OaFrequentFlyer\n11 = ParoleLetter\n12 = NoticeOfAction\n13 = TransportationLetter\n14 = BorderCrossingCard\n15 = PilotLicense\n16 = UsNaturalizationCertificate\n17 = RefugeeTravelDocument\n18 = GovernmentId\n19 = DriversLicense\n20 = RedressNumber\n21 = KnownTravelerId\n22 = FormOfId\n23 = Nexus\n24 = SecondaryExempt"
@@ -1089,292 +1687,6 @@ components:
       - 22
       - 23
       - 24
-    CheckinPassengerRestriction:
-      type: object
-      description: "Defines a passengers restriction for the current segment trying to be checked into.\n            "
-      additionalProperties: false
-      properties:
-        restriction:
-          description: "The passenger restriction type.\n            "
-          $ref: '#/components/schemas/CheckinPassengerRestrictionType'
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The description of the restriction.\n            "
-    CheckinRestrictionType:
-      type: integer
-      description: "Defines the checkin level restriction types.\n            \n\n0 = Closed\n1 = NotOpened\n2 = PnrLocked\n3 = MarketingCodeShareNotAllowed\n4 = NotPaidInFull\n5 = PaymentsPending\n6 = PaymentsPendingCustomerAction\n7 = RestrictedOnAnotherSystem\n8 = NotAllowed\n9 = ApisNotAllowed\n10 = AppsNotAllowed\n11 = SegmentNotFound\n12 = InvalidPrice\n13 = MissingEMDCoupon"
-      x-enumNames:
-      - Closed
-      - NotOpened
-      - PnrLocked
-      - MarketingCodeShareNotAllowed
-      - NotPaidInFull
-      - PaymentsPending
-      - PaymentsPendingCustomerAction
-      - RestrictedOnAnotherSystem
-      - NotAllowed
-      - ApisNotAllowed
-      - AppsNotAllowed
-      - SegmentNotFound
-      - InvalidPrice
-      - MissingEMDCoupon
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-    CheckinRequirementsv2:
-      type: object
-      description: "Defines the pre checkin requirements.\n            "
-      additionalProperties: false
-      properties:
-        passengers:
-          type:
-          - object
-          - 'null'
-          description: "The collection of passengers and there requirements to checkin.\nKey is the PassengerKey.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/CheckinPassengerRequirementsv2'
-        governmentProgramRequirements:
-          type:
-          - object
-          - 'null'
-          description: "The collection of government programs requirements.\nKey is the Government Driver Instance Name, e.g. 'USDHS', 'CBSA', 'KRKIS', 'APPS', etc.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/GovernmentProgramRequirements'
-        restrictions:
-          type:
-          - array
-          - 'null'
-          description: "The list of any non passenger related checkin restrictions that will restrict the desired segments to be checked\nin.\nThe checkin restriction type = ('Closed', 'NotOpened', 'PnrLocked', 'MarketingCodeShareNotAllowed',\n'NotPaidInFull', 'PaymentsPending',\n'PaymentsPendingCustomerAction', 'RestrictedOnAnotherSystem', 'NotAllowed', 'ApisNotAllowed', 'AppsNotAllowed',\n'SegmentNotFound', 'InvalidPrice').\n            "
-          items:
-            $ref: '#/components/schemas/CheckinRestrictionType'
-        isValid:
-          type: boolean
-          description: "Flag indicating if the ability to checkin is valid.\n            "
-    GovernmentAdditionalDataType:
-      type: integer
-      description: "Defines the additional data that is required for a government program but are not collected with documents.\n            \n\n0 = CountryOfResidence\n1 = InTransitOrigin\n2 = InTransitDestination\n3 = DateOfBirth\n4 = Gender\n5 = FirstName\n6 = LastName"
-      x-enumNames:
-      - CountryOfResidence
-      - InTransitOrigin
-      - InTransitDestination
-      - DateOfBirth
-      - Gender
-      - FirstName
-      - LastName
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    IJsonResponseOfCheckinRequirements:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/CheckinRequirements'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    CheckinPassengerRequirementsv2:
-      type: object
-      description: "Defines an individual passengers checkin requirements.\n            "
-      additionalProperties: false
-      properties:
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The associated passenger key.\n            "
-        documentRequirements:
-          description: "The passengers document requirements.\n            "
-          $ref: '#/components/schemas/CheckinDocumentRequirementsv2'
-        addressRequirements:
-          description: "The passengers address requirements.\n            "
-          $ref: '#/components/schemas/CheckinAddressRequirements'
-        invalidSsrs:
-          type:
-          - array
-          - 'null'
-          description: "The collection of checkin restricted/invalid SSR's the passenger contains.\n            "
-          items:
-            type: string
-        requiredSsrs:
-          type:
-          - array
-          - 'null'
-          description: "The collection of checkin required SSR's the passenger is missing for each segment.\n            "
-          items:
-            $ref: '#/components/schemas/CheckinMissingSegmentRequiredSsr'
-        restrictions:
-          type:
-          - array
-          - 'null'
-          description: "The list of passengers restrictions that will restrict passenger from checkin.\n            "
-          items:
-            $ref: '#/components/schemas/CheckinPassengerRestriction'
-        isValid:
-          type: boolean
-          description: "Flag indicating if the specific passenger checkin is valid.\n            "
-    CheckinRequirements:
-      type: object
-      description: "Defines the pre checkin requirements.\n            "
-      deprecated: true
-      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
-      additionalProperties: false
-      properties:
-        isValid:
-          type: boolean
-          description: "Flag indicating if the ability to checkin is valid.\n            "
-        passengers:
-          type:
-          - object
-          - 'null'
-          description: "The collection of passengers and there requirements to checkin.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/CheckinPassengerRequirements'
-        governmentProgramRequirements:
-          type:
-          - object
-          - 'null'
-          description: "The collection of government programs requirements.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/GovernmentProgramRequirements'
-        restrictions:
-          type:
-          - array
-          - 'null'
-          description: "The list of any non passenger related checkin restrictions that will restrict the desired segments to be checked\nin.\nThe checkin restriction type = ('Closed', 'NotOpened', 'PnrLocked', 'MarketingCodeShareNotAllowed',\n'NotPaidInFull', 'PaymentsPending',\n'PaymentsPendingCustomerAction', 'RestrictedOnAnotherSystem', 'NotAllowed', 'ApisNotAllowed', 'AppsNotAllowed',\n'SegmentNotFound', 'InvalidPrice').\n            "
-          items:
-            $ref: '#/components/schemas/CheckinRestrictionType'
-    TransitType:
-      type: integer
-      description: "Defines the different type of transit states.\n            \n\n0 = Default\n1 = Origin\n2 = Destination\n3 = Both"
-      x-enumNames:
-      - Default
-      - Origin
-      - Destination
-      - Both
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    TransportationDesignator:
-      type: object
-      description: "Model information about the traveling arrival and destination details.\n            "
-      additionalProperties: false
-      properties:
-        destination:
-          type:
-          - string
-          - 'null'
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type:
-          - string
-          - 'null'
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        arrival:
-          type: string
-          description: "The arrival date and time local to the arrival station.\n            "
-          format: date-time
-        departure:
-          type: string
-          description: "The departure date and time local to the departure station.\n            "
-          format: date-time
-    GovernmentDocumentRequirement:
-      type: object
-      description: "Defines a certain document requirement regarding a specific government instance.\n            "
-      additionalProperties: false
-      properties:
-        group:
-          description: "The document group.\n            "
-          $ref: '#/components/schemas/DocumentGroup'
-        documentTypeCode:
-          type:
-          - string
-          - 'null'
-          description: "The documents type code.\n            "
-    GovernmentPassengerDocumentRequirementv2:
-      type: object
-      description: "Defines a specific government document requirements for a specific passenger. Version 2\n            "
-      additionalProperties: false
-      properties:
-        governmentInstance:
-          type:
-          - string
-          - 'null'
-          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
-        numberOfMissingDocuments:
-          type: integer
-          description: "The number of documents still missing.\n            "
-        eligibleDocuments:
-          type:
-          - array
-          - 'null'
-          description: "The collection of eligible documents that have not already been added by the passenger.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentRequirement'
-        verifiableDocuments:
-          type:
-          - array
-          - 'null'
-          description: "The collection of verifiable documents at each acting government entity.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentRequirement'
-        documentVerificationRequired:
-          type: boolean
-          description: "Boolean to confirm documents need to be verified.\n***Note***\nIf it is TRUE, document verification is required.\nIf it is FALSE, it could be\n1) No document verification is required, or\n2) The given Travel Documents Type and Count matches the government program driver requirements, BUT this\ndoes not ensure that all government security document requirements have been met.\n            "
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -1396,333 +1708,21 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    LiftStatus:
-      type: integer
-      description: "Lift status enumeration.\n            \n\n0 = Default\n1 = CheckedIn\n2 = Boarded\n3 = NoShow"
-      x-enumNames:
-      - Default
-      - CheckedIn
-      - Boarded
-      - NoShow
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    GovernmentProgramRequirements:
+    CheckinMissingSegmentRequiredSsr:
       type: object
-      description: "Defines a government programs document requirements.\n            "
+      description: "Defines the a segments collection of missing SSR's.\n            "
       additionalProperties: false
       properties:
-        governmentInstance:
-          type:
-          - string
-          - 'null'
-          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
-        requiredDocumentFields:
+        codes:
           type:
           - array
           - 'null'
-          description: "The collection of required document fields to be collected.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentFieldType'
-        additionalDataRequired:
-          type:
-          - array
-          - 'null'
-          description: "The collection of additional data that is required that are not related to documents.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentAdditionalDataType'
-        programDescription:
-          type:
-          - string
-          - 'null'
-          description: "User-friendly label or description that should be used for all prompts and error messages\nto the user.\n            "
-        messageType:
-          type:
-          - string
-          - 'null'
-          description: "Message type associated with these requirements.\n            "
-        minVerifiedDocumentCount:
-          type: integer
-          description: "The minimum number of verified documents required.\n            "
-          format: int32
-    CheckinPassengerRequest:
-      type: object
-      description: "Defines the individual passenger checkin request.\n            "
-      additionalProperties: false
-      required:
-      - passengerKey
-      properties:
-        passengerKey:
-          type: string
-          description: "The unique passenger key being checked in.\n            "
-          minLength: 1
-        transitType:
-          description: "The passengers transit type.\n            "
-          $ref: '#/components/schemas/TransitType'
-        processApps:
-          type:
-          - boolean
-          - 'null'
-          description: "Flag indicating to process APPS.\n            "
-        verifiedReference:
-          type:
-          - string
-          - 'null'
-          description: "The value specifying the verified travel document(s) associated with this checkin.\n            "
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    CheckinDocumentRequirements:
-      type: object
-      description: "Defines a passenger checkin document requirements.\n            "
-      deprecated: true
-      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
-      additionalProperties: false
-      properties:
-        isValid:
-          type: boolean
-          description: "Flag indicating if the checkin document requirements are all meet and ready/valid for checkin.\n            "
-        documentsOnFile:
-          type:
-          - array
-          - 'null'
-          description: "The collection of document type codes that already exist on the passenger.\n            "
+          description: "The collection of SSR's missing.\n            "
           items:
             type: string
-        unhandledDocuments:
-          type:
-          - array
-          - 'null'
-          description: "The collection of unhandled documents at each acting government entity.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentPassengerDocumentRequirement'
-        documentVerificationRequired:
-          type: boolean
-          description: "Boolean to confirm documents need to be verified.\n***Note***\nIf it is TRUE, document verification is required.\nIf it is FALSE, it could be\n1) No document verification is required, or\n2) The given Travel Documents Type and Count matches the government program driver requirements, BUT this\ndoes not ensure that all government security document requirements have been met.\n            "
-    GovernmentPassengerDocumentRequirement:
-      type: object
-      description: "Defines a specific government document requirements for a specific passenger.\n            "
-      deprecated: true
-      x-deprecatedMessage: Obsolete as of 4.4.4, please use the v2.
-      additionalProperties: false
-      properties:
-        governmentInstance:
-          type:
-          - string
-          - 'null'
-          description: "Identifies which instance of government security is associated with these specific requirements.\n            "
-        numberOfMissingDocuments:
-          type: integer
-          description: "The number of documents still missing.\n            "
-        eligibleDocuments:
-          type:
-          - array
-          - 'null'
-          description: "The collection of eligible documents that have not already been added by the passenger.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentRequirement'
-    CheckinPassengersRequestv3:
-      type: object
-      description: "Defines the checkin passengers request v3 model.\n            "
-      additionalProperties: false
-      required:
-      - passengers
-      properties:
-        passengers:
-          type: array
-          description: "The collection of passengers to checkin.\n            "
-          items:
-            $ref: '#/components/schemas/CheckinPassengerRequestv2'
-        seatsRequired:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag indicating whether a seat is required for checkin.\n            "
-        skipSecurityChecks:
-          type:
-          - boolean
-          - 'null'
-          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
-    IJsonResponseOfIDictionaryOfStringAndIListOfCheckinPassengerLiftStatus:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - object
-          - 'null'
-          description: "The payload data.\n            "
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/CheckinPassengerLiftStatus'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    TransportationIdentifier:
-      type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    CheckinDocumentRequirementsv2:
-      type: object
-      description: "Defines passenger checkin document requirements version 2.\n            "
-      additionalProperties: false
-      properties:
-        documentsOnFile:
-          type:
-          - array
-          - 'null'
-          description: "The collection of document type codes that already exist on the passenger.\n            "
-          items:
-            type: string
-        governmentDocumentInstances:
-          type:
-          - array
-          - 'null'
-          description: "The collection of unhandled documents at each acting government entity.\n            "
-          items:
-            $ref: '#/components/schemas/GovernmentPassengerDocumentRequirementv2'
-        isValid:
-          type: boolean
-          description: "Flag indicating if the checkin document requirements are all met and ready/valid for checkin.\n            "
-    CheckinPassengerRequestv2:
-      type: object
-      description: "Defines the individual passenger checkin request.\n            "
-      additionalProperties: false
-      required:
-      - passengerKey
-      properties:
-        passengerKey:
-          type: string
-          description: "The unique passenger key being checked in.\n            "
-          minLength: 1
-        transitType:
-          description: "The passengers transit type.\n            "
-          $ref: '#/components/schemas/TransitType'
-        processApps:
-          type:
-          - boolean
-          - 'null'
-          description: "Flag indicating to process APPS.\n            "
-        verifiedTravelDocumentKeys:
-          type:
-          - array
-          - 'null'
-          description: "The value specifying the verified travel document(s) associated with this checkin.\n            "
-          items:
-            type: string
-    GovernmentDocumentFieldType:
-      type: integer
-      description: "Defines all the different travel document fields that a government program can require to be prompted/required.\n            \n\n0 = FirstName\n1 = MiddleName\n2 = LastName\n3 = Title\n4 = Suffix\n5 = DateOfBirth\n6 = BirthCountry\n7 = Gender\n8 = Nationality\n9 = Number\n10 = IssuingCountry\n11 = ExpirationDate\n12 = IssuedDate\n13 = Verified"
-      x-enumNames:
-      - FirstName
-      - MiddleName
-      - LastName
-      - Title
-      - Suffix
-      - DateOfBirth
-      - BirthCountry
-      - Gender
-      - Nationality
-      - Number
-      - IssuingCountry
-      - ExpirationDate
-      - IssuedDate
-      - Verified
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
+        designator:
+          description: "The transportation designator that the SSR codes are missing from.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
   securitySchemes:
     JWT:
       type: http

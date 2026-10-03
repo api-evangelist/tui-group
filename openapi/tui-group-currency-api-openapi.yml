@@ -189,6 +189,111 @@ components:
       - 0
       - 1
       - 2
+    IJsonResponseOfCurrencyConversion:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/CurrencyConversion'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    CurrencyConversion:
+      type: object
+      description: "Model with the information needed to calculate from one currency to another.\n            "
+      additionalProperties: false
+      required:
+      - fromCurrencyCode
+      - toCurrencyCode
+      - amount
+      - convertedAmount
+      - exchangeRate
+      properties:
+        fromCurrencyCode:
+          type: string
+          description: "The currency code that the amount is currently in.\n            "
+          maxLength: 3
+          minLength: 1
+        toCurrencyCode:
+          type: string
+          description: "The currency code we want the amount converted to.\n            "
+          maxLength: 3
+          minLength: 1
+        amount:
+          type: number
+          description: "The amount to be converted. This will be in the FromCurrencyCode currency.\n            "
+          format: decimal
+        inverted:
+          type:
+          - boolean
+          - 'null'
+          description: "If set to true, the endpoint will use 1/(exchange rate of the reverse) during the conversion. Defaults to false if no value is set.\n            "
+        convertedAmount:
+          type: number
+          description: "The converted amount. This will be in the ToCurrencyCode currency.\n            "
+          format: decimal
+        exchangeRate:
+          type: number
+          description: "Gets or sets the exchange rate for this external rate.\n            "
+          format: decimal
+        roundingFactor:
+          type: number
+          description: "The default rounding factor of the currency conversion.\n            "
+          format: decimal
+        marketingRoundingFactor:
+          type: number
+          description: "The marketing rounding factor of the currency conversion.\n            "
+          format: decimal
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -267,111 +372,6 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    CurrencyConversion:
-      type: object
-      description: "Model with the information needed to calculate from one currency to another.\n            "
-      additionalProperties: false
-      required:
-      - fromCurrencyCode
-      - toCurrencyCode
-      - amount
-      - convertedAmount
-      - exchangeRate
-      properties:
-        fromCurrencyCode:
-          type: string
-          description: "The currency code that the amount is currently in.\n            "
-          maxLength: 3
-          minLength: 1
-        toCurrencyCode:
-          type: string
-          description: "The currency code we want the amount converted to.\n            "
-          maxLength: 3
-          minLength: 1
-        amount:
-          type: number
-          description: "The amount to be converted. This will be in the FromCurrencyCode currency.\n            "
-          format: decimal
-        inverted:
-          type:
-          - boolean
-          - 'null'
-          description: "If set to true, the endpoint will use 1/(exchange rate of the reverse) during the conversion. Defaults to false if no value is set.\n            "
-        convertedAmount:
-          type: number
-          description: "The converted amount. This will be in the ToCurrencyCode currency.\n            "
-          format: decimal
-        exchangeRate:
-          type: number
-          description: "Gets or sets the exchange rate for this external rate.\n            "
-          format: decimal
-        roundingFactor:
-          type: number
-          description: "The default rounding factor of the currency conversion.\n            "
-          format: decimal
-        marketingRoundingFactor:
-          type: number
-          description: "The marketing rounding factor of the currency conversion.\n            "
-          format: decimal
-    IJsonResponseOfCurrencyConversion:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/CurrencyConversion'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
   securitySchemes:
     JWT:
       type: http

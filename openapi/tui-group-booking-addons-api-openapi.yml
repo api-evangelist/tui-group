@@ -148,73 +148,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    ComponentPaymentType:
-      type: object
-      description: "Defines a component allowed payment type.\n            "
-      additionalProperties: false
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The payment method type code.\n            "
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The payment description.\n            "
-        modType:
-          description: "The modulus check to perform.\n            "
-          $ref: '#/components/schemas/PaymentModType'
-        expiration:
-          description: "The field usage for expiration date.\n            "
-          $ref: '#/components/schemas/FieldUsage'
-        cvv:
-          description: "The field usage for CVV.\n            "
-          $ref: '#/components/schemas/FieldUsage'
-        name:
-          description: "The field usage for card holder name.\n            "
-          $ref: '#/components/schemas/FieldUsage'
-        issueNumber:
-          description: "The field usage for issue number.\n            "
-          $ref: '#/components/schemas/FieldUsage'
-    PhoneNumberType:
-      type: integer
-      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
-      x-enumNames:
-      - Other
-      - Home
-      - Work
-      - Mobile
-      - Fax
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    PaymentModType:
-      type: integer
-      description: "Defines the different payment modulus types.\n            \n\n0 = None\n10 = Mod10\n11 = Mod11"
-      x-enumNames:
-      - None
-      - Mod10
-      - Mod11
-      enum:
-      - 0
-      - 10
-      - 11
     Address:
       type: object
       description: "Defines a common address.\n            "
@@ -269,54 +202,17 @@ components:
           description: "The postal code.\n            "
           maxLength: 10
           minLength: 0
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    PaymentModType:
+      type: integer
+      description: "Defines the different payment modulus types.\n            \n\n0 = None\n10 = Mod10\n11 = Mod11"
+      x-enumNames:
+      - None
+      - Mod10
+      - Mod11
+      enum:
+      - 0
+      - 10
+      - 11
     AddOnAllowedPayments:
       type: object
       description: "Defines a components allowed payment types.\n            "
@@ -334,99 +230,32 @@ components:
           description: "The collection of allowed payment types.\n            "
           items:
             $ref: '#/components/schemas/ComponentPaymentType'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    IJsonResponseOfIDictionaryOfStringAndAddOnAllowedPayments:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - object
-          - 'null'
-          description: "The payload data.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/AddOnAllowedPayments'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PhoneNumber:
-      type: object
-      description: "Defines a common phone number.\n            "
-      additionalProperties: false
-      required:
-      - number
-      - type
-      properties:
-        number:
-          type: string
-          description: "The phone number without any formatting characters.\n            "
-          maxLength: 20
-          minLength: 0
-        type:
-          description: "The phone number type.\n            "
-          $ref: '#/components/schemas/PhoneNumberType'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    PhoneNumberType:
+      type: integer
+      description: "Defines the types of phone numbers. Note: New Skies does not support Mobile for booking contacts.\n            \n\n0 = Other\n1 = Home\n2 = Work\n3 = Mobile\n4 = Fax"
+      x-enumNames:
+      - Other
+      - Home
+      - Work
+      - Mobile
+      - Fax
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
     FieldUsage:
       type: integer
       description: "Defines the field usage.\n            \n\n0 = Prompt\n1 = DoNotPrompt\n2 = Required"
@@ -438,6 +267,52 @@ components:
       - 0
       - 1
       - 2
+    ComponentPaymentType:
+      type: object
+      description: "Defines a component allowed payment type.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The payment method type code.\n            "
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The payment description.\n            "
+        modType:
+          description: "The modulus check to perform.\n            "
+          $ref: '#/components/schemas/PaymentModType'
+        expiration:
+          description: "The field usage for expiration date.\n            "
+          $ref: '#/components/schemas/FieldUsage'
+        cvv:
+          description: "The field usage for CVV.\n            "
+          $ref: '#/components/schemas/FieldUsage'
+        name:
+          description: "The field usage for card holder name.\n            "
+          $ref: '#/components/schemas/FieldUsage'
+        issueNumber:
+          description: "The field usage for issue number.\n            "
+          $ref: '#/components/schemas/FieldUsage'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     OrderPaymentBase:
       type: object
       description: "Defines the order payment base details.\n            "
@@ -498,6 +373,27 @@ components:
           description: "The collection of phone numbers.\n            "
           items:
             $ref: '#/components/schemas/PhoneNumber'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     IJsonResponseOfAddOnAllowedPayments:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -520,22 +416,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -576,6 +456,126 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    IJsonResponseOfIDictionaryOfStringAndAddOnAllowedPayments:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - object
+          - 'null'
+          description: "The payload data.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/AddOnAllowedPayments'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PhoneNumber:
+      type: object
+      description: "Defines a common phone number.\n            "
+      additionalProperties: false
+      required:
+      - number
+      - type
+      properties:
+        number:
+          type: string
+          description: "The phone number without any formatting characters.\n            "
+          maxLength: 20
+          minLength: 0
+        type:
+          description: "The phone number type.\n            "
+          $ref: '#/components/schemas/PhoneNumberType'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
   securitySchemes:
     JWT:
       type: http

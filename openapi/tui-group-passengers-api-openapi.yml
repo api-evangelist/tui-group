@@ -122,6 +122,40 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    PassengerLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        liftStatus:
+          $ref: '#/components/schemas/LiftStatus'
+        boardingSequence:
+          type: integer
     MessageStatus:
       type: integer
       description: '0 = General
@@ -137,6 +171,28 @@ components:
       - 0
       - 1
       - 2
+    IJsonResponseOfListOfPassenger:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Passenger'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     Passenger:
       type: object
       additionalProperties: false
@@ -166,71 +222,71 @@ components:
           type:
           - string
           - 'null'
-    ErrorResponse:
+    PassengerSegment:
       type: object
       additionalProperties: false
       properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
+        segmentKey:
           type:
           - string
           - 'null'
-        code:
+        carrierCode:
           type:
           - string
           - 'null'
-        message:
+        flightNumber:
           type:
           - string
           - 'null'
-        type:
+        opSuffix:
           type:
           - string
           - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
+        origin:
           type:
           - string
           - 'null'
-    PassengerProgram:
-      type: object
-      additionalProperties: false
-      properties:
-        programCode:
+        destination:
           type:
           - string
           - 'null'
-        programLevelCode:
-          type:
-          - string
-          - 'null'
-        programNumber:
-          type:
-          - string
-          - 'null'
-    IJsonResponseOfListOfPassenger:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/SegmentStatus'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        legs:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Passenger'
+            $ref: '#/components/schemas/PassengerLeg'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
         errors:
           type:
           - array
@@ -349,125 +405,6 @@ components:
       - 21
       - 22
       - 23
-    PassengerSegment:
-      type: object
-      additionalProperties: false
-      properties:
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/SegmentStatus'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        legs:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PassengerLeg'
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    PassengerLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        liftStatus:
-          $ref: '#/components/schemas/LiftStatus'
-        boardingSequence:
-          type: integer
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     SegmentType:
       type: integer
       description: '0 = Normal
@@ -499,41 +436,6 @@ components:
       - 4
       - 5
       - 6
-    LiftStatus:
-      type: integer
-      description: '0 = Default
-
-        1 = CheckedIn
-
-        2 = Boarded
-
-        3 = NoShow'
-      x-enumNames:
-      - Default
-      - CheckedIn
-      - Boarded
-      - NoShow
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
     Name:
       type: object
       additionalProperties: false
@@ -555,6 +457,104 @@ components:
           - string
           - 'null'
         suffix:
+          type:
+          - string
+          - 'null'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    LiftStatus:
+      type: integer
+      description: '0 = Default
+
+        1 = CheckedIn
+
+        2 = Boarded
+
+        3 = NoShow'
+      x-enumNames:
+      - Default
+      - CheckedIn
+      - Boarded
+      - NoShow
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    PassengerProgram:
+      type: object
+      additionalProperties: false
+      properties:
+        programCode:
+          type:
+          - string
+          - 'null'
+        programLevelCode:
+          type:
+          - string
+          - 'null'
+        programNumber:
           type:
           - string
           - 'null'

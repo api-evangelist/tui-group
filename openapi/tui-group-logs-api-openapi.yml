@@ -97,6 +97,32 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    LogLevel:
+      type: integer
+      description: 'Defines the available channel types invoking communication with the server.
+
+
+        0 = Verbose
+
+        1 = Information
+
+        2 = Warning
+
+        3 = Error
+
+        4 = Critical'
+      x-enumNames:
+      - Verbose
+      - Information
+      - Warning
+      - Error
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
     MessageStatus:
       type: integer
       description: '0 = General
@@ -132,6 +158,73 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    LogRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - machineName
+      - action
+      - errorType
+      - logLevel
+      - message
+      properties:
+        machineName:
+          type: string
+          minLength: 1
+        action:
+          type: string
+          minLength: 1
+        errorType:
+          type: string
+          minLength: 1
+        logLevel:
+          $ref: '#/components/schemas/LogLevel'
+        errorCode:
+          type:
+          - string
+          - 'null'
+        message:
+          type: string
+          minLength: 1
+        additionalData:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -190,99 +283,6 @@ components:
         status:
           $ref: '#/components/schemas/MessageStatus'
         details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    LogLevel:
-      type: integer
-      description: 'Defines the available channel types invoking communication with the server.
-
-
-        0 = Verbose
-
-        1 = Information
-
-        2 = Warning
-
-        3 = Error
-
-        4 = Critical'
-      x-enumNames:
-      - Verbose
-      - Information
-      - Warning
-      - Error
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    LogRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - machineName
-      - action
-      - errorType
-      - logLevel
-      - message
-      properties:
-        machineName:
-          type: string
-          minLength: 1
-        action:
-          type: string
-          minLength: 1
-        errorType:
-          type: string
-          minLength: 1
-        logLevel:
-          $ref: '#/components/schemas/LogLevel'
-        errorCode:
-          type:
-          - string
-          - 'null'
-        message:
-          type: string
-          minLength: 1
-        additionalData:
           type:
           - object
           - 'null'

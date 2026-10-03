@@ -68,38 +68,74 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    BoardingPassScanV2:
+    Exception:
       type: object
       additionalProperties: false
       properties:
-        recordLocator:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-        firstName:
+        StackTrace:
           type:
           - string
           - 'null'
-        lastName:
+    CombinedScanV3:
+      type: object
+      additionalProperties: false
+      properties:
+        bagTagScan:
+          $ref: '#/components/schemas/BagTagScanV2'
+        boardingPassScan:
+          $ref: '#/components/schemas/BoardingPassScanV2'
+        creditCardScan:
+          $ref: '#/components/schemas/CreditCardScanV3'
+        deviceIdScan:
           type:
           - string
           - 'null'
-        departureDayOfMonth:
-          type: integer
-          description: 'Some boarding pass barcode formats only provide a day-of-month.  The first segment''s
+        documentScan:
+          $ref: '#/components/schemas/DocumentScanV2'
+        itineraryScan:
+          $ref: '#/components/schemas/ItineraryScanV2'
+        membershipCardScan:
+          $ref: '#/components/schemas/MembershipCardScanV3'
+        recordLocatorScan:
+          type:
+          - string
+          - 'null'
+    ParseScanRequestV2:
+      type: object
+      additionalProperties: false
+      properties:
+        track1:
+          type:
+          - string
+          - 'null'
+        track2:
+          type:
+          - string
+          - 'null'
+        track3:
+          type:
+          - string
+          - 'null'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which parsing rules will be used.  If not specified,
 
-            DepartureTime should be checked first, and if it is not set, then this should be used.'
-          format: int32
-        mobileBarcode:
+            the default location code from the JWT will be used.'
+        documentTypeCode:
           type:
           - string
           - 'null'
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/BoardingPassSegmentV2'
+          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
     Message:
       type: object
       additionalProperties: false
@@ -124,41 +160,24 @@ components:
           - 'null'
           additionalProperties:
             type: string
-    DocumentV2:
+    BagTagScanV2:
       type: object
       additionalProperties: false
       properties:
-        documentTypeCode:
+        bagTag:
           type:
           - string
           - 'null'
-        group:
-          description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
-
-            DocumentTypeCode).'
-          $ref: '#/components/schemas/DocumentGroup'
-        issuingCountryCode:
+        carrierCode:
           type:
           - string
           - 'null'
-        documentDetails:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataField'
-    DataField:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
+        taggedToStation:
           type:
           - string
           - 'null'
-        field:
-          type:
-          - string
-          - 'null'
+        isDesignatedAsManual:
+          type: boolean
     BoardingPassSegmentV2:
       type: object
       additionalProperties: false
@@ -195,34 +214,218 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/BoardingPassLegV2'
-    ParseScanRequestV2:
+    BoardingPassScanV2:
       type: object
       additionalProperties: false
       properties:
-        track1:
+        recordLocator:
           type:
           - string
           - 'null'
-        track2:
+        firstName:
           type:
           - string
           - 'null'
-        track3:
+        lastName:
           type:
           - string
           - 'null'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which parsing rules will be used.  If not specified,
+        departureDayOfMonth:
+          type: integer
+          description: 'Some boarding pass barcode formats only provide a day-of-month.  The first segment''s
 
-            the default location code from the JWT will be used.'
-        documentTypeCode:
+            DepartureTime should be checked first, and if it is not set, then this should be used.'
+          format: int32
+        mobileBarcode:
           type:
           - string
           - 'null'
-          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/BoardingPassSegmentV2'
+    Name:
+      type: object
+      additionalProperties: false
+      properties:
+        first:
+          type:
+          - string
+          - 'null'
+        middle:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        suffix:
+          type:
+          - string
+          - 'null'
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    CreditCardScanV3:
+      type: object
+      additionalProperties: false
+      properties:
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+        accountHolder:
+          type:
+          - string
+          - 'null'
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        expirationMonth:
+          type:
+          - string
+          - 'null'
+        name:
+          $ref: '#/components/schemas/Name'
+    BoardingPassLegV2:
+      type: object
+      additionalProperties: false
+      properties:
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        boardingSequence:
+          type: integer
+        unitDesignator:
+          type:
+          - string
+          - 'null'
+          description: The assigned seat.
+    MembershipCardScanV3:
+      type: object
+      additionalProperties: false
+      properties:
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        tierCode:
+          type:
+          - string
+          - 'null'
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        expirationMonth:
+          type:
+          - string
+          - 'null'
+        name:
+          $ref: '#/components/schemas/Name'
+    DataField:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+        field:
+          type:
+          - string
+          - 'null'
+    ItineraryScanV2:
+      type: object
+      additionalProperties: false
+      properties:
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+    DocumentScanV2:
+      type: object
+      additionalProperties: false
+      properties:
+        document:
+          $ref: '#/components/schemas/DocumentV2'
+        name:
+          $ref: '#/components/schemas/Name'
     MessageStatus:
       type: integer
       description: '0 = General
@@ -346,64 +549,29 @@ components:
       - 22
       - 23
       - 24
-    ItineraryScanV2:
+    DocumentV2:
       type: object
       additionalProperties: false
       properties:
-        flightNumber:
+        documentTypeCode:
           type:
           - string
           - 'null'
-        origin:
+        group:
+          description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
+
+            DocumentTypeCode).'
+          $ref: '#/components/schemas/DocumentGroup'
+        issuingCountryCode:
           type:
           - string
           - 'null'
-        destination:
+        documentDetails:
           type:
-          - string
+          - array
           - 'null'
-    DocumentScanV2:
-      type: object
-      additionalProperties: false
-      properties:
-        document:
-          $ref: '#/components/schemas/DocumentV2'
-        name:
-          $ref: '#/components/schemas/Name'
-    BagTagScanV2:
-      type: object
-      additionalProperties: false
-      properties:
-        bagTag:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        taggedToStation:
-          type:
-          - string
-          - 'null'
-        isDesignatedAsManual:
-          type: boolean
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
+          items:
+            $ref: '#/components/schemas/DataField'
     IJsonResponse:
       type: object
       additionalProperties: false
@@ -421,174 +589,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    CombinedScanV3:
-      type: object
-      additionalProperties: false
-      properties:
-        bagTagScan:
-          $ref: '#/components/schemas/BagTagScanV2'
-        boardingPassScan:
-          $ref: '#/components/schemas/BoardingPassScanV2'
-        creditCardScan:
-          $ref: '#/components/schemas/CreditCardScanV3'
-        deviceIdScan:
-          type:
-          - string
-          - 'null'
-        documentScan:
-          $ref: '#/components/schemas/DocumentScanV2'
-        itineraryScan:
-          $ref: '#/components/schemas/ItineraryScanV2'
-        membershipCardScan:
-          $ref: '#/components/schemas/MembershipCardScanV3'
-        recordLocatorScan:
-          type:
-          - string
-          - 'null'
-    BoardingPassLegV2:
-      type: object
-      additionalProperties: false
-      properties:
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        boardingSequence:
-          type: integer
-        unitDesignator:
-          type:
-          - string
-          - 'null'
-          description: The assigned seat.
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    CreditCardScanV3:
-      type: object
-      additionalProperties: false
-      properties:
-        paymentMethodCode:
-          type:
-          - string
-          - 'null'
-        accountHolder:
-          type:
-          - string
-          - 'null'
-        accountNumber:
-          type:
-          - string
-          - 'null'
-        expirationMonth:
-          type:
-          - string
-          - 'null'
-        name:
-          $ref: '#/components/schemas/Name'
-    MembershipCardScanV3:
-      type: object
-      additionalProperties: false
-      properties:
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        tierCode:
-          type:
-          - string
-          - 'null'
-        accountNumber:
-          type:
-          - string
-          - 'null'
-        expirationMonth:
-          type:
-          - string
-          - 'null'
-        name:
-          $ref: '#/components/schemas/Name'
-    Name:
-      type: object
-      additionalProperties: false
-      properties:
-        first:
-          type:
-          - string
-          - 'null'
-        middle:
-          type:
-          - string
-          - 'null'
-        last:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        suffix:
-          type:
-          - string
-          - 'null'
   securitySchemes:
     JWT:
       type: http

@@ -548,93 +548,119 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    DeleteBookingQueueItemBaseRequest:
+    Exception:
       type: object
-      description: "API request object used to delete a booking queue item.\n            "
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    TravelQueueItemRequest:
+      type: object
+      description: "API request object used to enqueue a new travel queue item.\n            "
       additionalProperties: false
       required:
-      - authorizedBy
-      - notes
+      - item
+      - queue
       properties:
-        authorizedBy:
+        item:
+          description: "Flight queue item to enqueue on the matching flight queues.\n            "
+          $ref: '#/components/schemas/TravelQueueItemBase'
+        queue:
+          description: "Queue information about this item.\n            "
+          $ref: '#/components/schemas/TravelQueueRequest'
+        queueEventCode:
+          type:
+          - string
+          - 'null'
+          description: "Queue event code used for matching flight queues.\n            "
+        timeEventCode:
+          type:
+          - string
+          - 'null'
+          description: "Time event code used for matching flight queues.\n            "
+    IJsonResponseOfDequeueTravelSummary:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/DequeueTravelSummary'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MoveBookingQueueItemBase:
+      type: object
+      description: "Defines a move booking queue item request\n            "
+      additionalProperties: false
+      required:
+      - bookingKey
+      - newQueueCode
+      properties:
+        bookingKey:
           type: string
-          description: "Information about who authorized the deletion of the booking queue item.\n            "
-          minLength: 1
-        notes:
-          type: string
-          description: "Notes associated with the deletion of the booking queue item.\n            "
+          description: "The existing booking key.\n            "
           minLength: 1
         password:
           type:
           - string
           - 'null'
-          description: "The password if needed for the booking queue.\n            "
-    TravelSummary:
+          description: "The current password if required for the queue.\n            "
+          maxLength: 16
+          minLength: 0
+        newQueueCode:
+          type: string
+          description: "The new booking queue the item will be moved to.\n            "
+          maxLength: 6
+          minLength: 0
+        newQueuePassword:
+          type:
+          - string
+          - 'null'
+          description: "The password if required for the new queue.\n            "
+          maxLength: 16
+          minLength: 0
+    QueueResults:
       type: object
-      description: "Represents the travel summary information.\n            "
+      description: "Base class for all queue model objects\n            "
       additionalProperties: false
       properties:
-        status:
-          description: "Status of the flight summary.\n            "
-          $ref: '#/components/schemas/LegStatus'
-        number:
+        queues:
           type:
-          - string
+          - array
           - 'null'
-          description: "Number of the flight.\n            "
-        scheduledDepartureTime:
-          type: string
-          description: "Scheduled departure time.\n            "
-          format: date-time
-        scheduledArrivalTime:
-          type: string
-          description: "Scheduled arrival time.\n            "
-          format: date-time
-        estimatedDepartureTime:
-          type: string
-          description: "Estimated departure time.\n            "
-          format: date-time
-        estimatedArrivalTime:
-          type: string
-          description: "Estimated arrival time.\n            "
-          format: date-time
-        actualDepartureTime:
-          type: string
-          description: "Actual departure time.\n            "
-          format: date-time
-        actualArrivalTime:
-          type: string
-          description: "Actual arrival time.\n            "
-          format: date-time
-        departureLtv:
+          description: "Queues.\n            "
+          items:
+            $ref: '#/components/schemas/Queue'
+        totalCount:
           type: integer
-          description: "Departure LTV time offset in minutes.  To convert from Local time to UTC time you would\nneed to subtract this value for the current local time.\n            "
-        arrivalLtv:
+          description: "The total available count.\n            "
+          format: int32
+        lastPageIndex:
           type: integer
-          description: "Arrival LTV time offset in minutes.  To convert from Local time to UTC time you would\nneed to subtract this value for the current local time.\n            "
-        equipmentType:
-          type:
-          - string
-          - 'null'
-          description: "Equipment type.\n            "
-        equipmentTypeSuffix:
-          type:
-          - string
-          - 'null'
-          description: "Equipment type suffix.\n            "
-        marketingConfigurationCode:
-          type:
-          - string
-          - 'null'
-          description: "Marketing configuration code.\n            "
-        salesConfigurationCode:
-          type:
-          - string
-          - 'null'
-          description: "Sales configuration code.\n            "
-        market:
-          description: "InventoryLegKey about the flight.\n            "
-          $ref: '#/components/schemas/MarketInformation'
+          description: "Last page index used for paging.\n            "
+          format: int64
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -715,167 +741,22 @@ components:
         summary:
           description: "Travel summary.\n            "
           $ref: '#/components/schemas/TravelSummary'
-    QueueProcessState:
-      type: integer
-      description: "QueueProcessState specifies the basis by which queue filters are created.\n            \n\n0 = Default\n1 = SegmentsConfirmed\n2 = BookingBalanced\n4 = Other\n7 = Complete"
-      x-enumNames:
-      - Default
-      - SegmentsConfirmed
-      - BookingBalanced
-      - Other
-      - Complete
-      enum:
-      - 0
-      - 1
-      - 2
-      - 4
-      - 7
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    BookingQueueStatus:
-      type: integer
-      description: "Defines the status for booking queues.\n            \n\n0 = Open\n1 = Locked\n2 = Internal"
-      x-enumNames:
-      - Open
-      - Locked
-      - Internal
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfDequeueTravelSummary:
+    TravelQueueRequest:
       type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/DequeueTravelSummary'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    QueueResults:
-      type: object
-      description: "Base class for all queue model objects\n            "
-      additionalProperties: false
-      properties:
-        queues:
-          type:
-          - array
-          - 'null'
-          description: "Queues.\n            "
-          items:
-            $ref: '#/components/schemas/Queue'
-        totalCount:
-          type: integer
-          description: "The total available count.\n            "
-          format: int32
-        lastPageIndex:
-          type: integer
-          description: "Last page index used for paging.\n            "
-          format: int64
-    BookingQueueRestriction:
-      type: integer
-      description: "Defines the restrictions associated with a BookingQueue\n            \n\n0 = Restricted\n1 = AddAllowedOnly\n2 = Allowed"
-      x-enumNames:
-      - Restricted
-      - AddAllowedOnly
-      - Allowed
-      enum:
-      - 0
-      - 1
-      - 2
-    MoveBookingQueueItemBase:
-      type: object
-      description: "Defines a move booking queue item request\n            "
+      description: "Defines a travel queue query.\n            "
       additionalProperties: false
       required:
-      - bookingKey
-      - newQueueCode
+      - travelQueueCode
       properties:
-        bookingKey:
+        travelQueueCode:
           type: string
-          description: "The existing booking key.\n            "
+          description: "The required queue code.\n            "
           minLength: 1
-        password:
+        subQueueCode:
           type:
           - string
           - 'null'
-          description: "The current password if required for the queue.\n            "
-          maxLength: 16
-          minLength: 0
-        newQueueCode:
-          type: string
-          description: "The new booking queue the item will be moved to.\n            "
-          maxLength: 6
-          minLength: 0
-        newQueuePassword:
-          type:
-          - string
-          - 'null'
-          description: "The password if required for the new queue.\n            "
-          maxLength: 16
-          minLength: 0
-    TravelQueueItemRequest:
-      type: object
-      description: "API request object used to enqueue a new travel queue item.\n            "
-      additionalProperties: false
-      required:
-      - item
-      - queue
-      properties:
-        item:
-          description: "Flight queue item to enqueue on the matching flight queues.\n            "
-          $ref: '#/components/schemas/TravelQueueItemBase'
-        queue:
-          description: "Queue information about this item.\n            "
-          $ref: '#/components/schemas/TravelQueueRequest'
-        queueEventCode:
-          type:
-          - string
-          - 'null'
-          description: "Queue event code used for matching flight queues.\n            "
-        timeEventCode:
-          type:
-          - string
-          - 'null'
-          description: "Time event code used for matching flight queues.\n            "
+          description: "The optional sub queue code.\n            "
     QueueProcessStatus:
       type: integer
       description: "QueueProcessStatus specifies the basis by which queue filters are created.\n            \n\n0 = Ready\n1 = Pending"
@@ -885,32 +766,27 @@ components:
       enum:
       - 0
       - 1
-    IJsonResponseOfIListOfQueue:
+    DeleteBookingQueueItemBaseRequest:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "API request object used to delete a booking queue item.\n            "
       additionalProperties: false
+      required:
+      - authorizedBy
+      - notes
       properties:
-        data:
+        authorizedBy:
+          type: string
+          description: "Information about who authorized the deletion of the booking queue item.\n            "
+          minLength: 1
+        notes:
+          type: string
+          description: "Notes associated with the deletion of the booking queue item.\n            "
+          minLength: 1
+        password:
           type:
-          - array
+          - string
           - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/Queue'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "The password if needed for the booking queue.\n            "
     TravelQueueItemBase:
       type: object
       description: "Model representing the travel queue item without a unique key.\n            "
@@ -953,13 +829,134 @@ components:
           - 'null'
           description: "Priority date.\n            "
           format: date-time
-    IJsonResponse:
+    MarketInformation:
       type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    Name:
+      type: object
+      description: "Defines a common name.\n            "
+      additionalProperties: false
+      properties:
+        first:
+          type:
+          - string
+          - 'null'
+          description: "The given first name.\n            "
+          maxLength: 32
+          minLength: 0
+        middle:
+          type:
+          - string
+          - 'null'
+          description: "The given middle name.\n            "
+          maxLength: 32
+          minLength: 0
+        last:
+          type:
+          - string
+          - 'null'
+          description: "The given last name.\n            "
+          maxLength: 32
+          minLength: 0
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title.\n            "
+          maxLength: 6
+          minLength: 0
+        suffix:
+          type:
+          - string
+          - 'null'
+          description: "The suffix.\n            "
+          maxLength: 6
+          minLength: 0
+    IJsonResponseOfIListOfQueue:
+      type: object
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/Queue'
         errors:
           type:
           - array
@@ -974,6 +971,125 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    LegStatus:
+      type: integer
+      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      x-enumNames:
+      - Normal
+      - Closed
+      - Canceled
+      - Suspended
+      - ClosedPending
+      - BlockAllActivities
+      - Mishap
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 5
+      - 6
+      - 7
+    BookingQueueReleaseRequest:
+      type: object
+      description: "Defines a booking queue query\n            "
+      additionalProperties: false
+      properties:
+        queuePassword:
+          type:
+          - string
+          - 'null'
+          description: "The password for the queue if required.\n            "
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    TravelSummary:
+      type: object
+      description: "Represents the travel summary information.\n            "
+      additionalProperties: false
+      properties:
+        status:
+          description: "Status of the flight summary.\n            "
+          $ref: '#/components/schemas/LegStatus'
+        number:
+          type:
+          - string
+          - 'null'
+          description: "Number of the flight.\n            "
+        scheduledDepartureTime:
+          type: string
+          description: "Scheduled departure time.\n            "
+          format: date-time
+        scheduledArrivalTime:
+          type: string
+          description: "Scheduled arrival time.\n            "
+          format: date-time
+        estimatedDepartureTime:
+          type: string
+          description: "Estimated departure time.\n            "
+          format: date-time
+        estimatedArrivalTime:
+          type: string
+          description: "Estimated arrival time.\n            "
+          format: date-time
+        actualDepartureTime:
+          type: string
+          description: "Actual departure time.\n            "
+          format: date-time
+        actualArrivalTime:
+          type: string
+          description: "Actual arrival time.\n            "
+          format: date-time
+        departureLtv:
+          type: integer
+          description: "Departure LTV time offset in minutes.  To convert from Local time to UTC time you would\nneed to subtract this value for the current local time.\n            "
+        arrivalLtv:
+          type: integer
+          description: "Arrival LTV time offset in minutes.  To convert from Local time to UTC time you would\nneed to subtract this value for the current local time.\n            "
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "Equipment type.\n            "
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "Equipment type suffix.\n            "
+        marketingConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "Marketing configuration code.\n            "
+        salesConfigurationCode:
+          type:
+          - string
+          - 'null'
+          description: "Sales configuration code.\n            "
+        market:
+          description: "InventoryLegKey about the flight.\n            "
+          $ref: '#/components/schemas/MarketInformation'
     BookingQueueItemBase:
       type: object
       description: "Defines a Booking Queue item.\n            "
@@ -1052,25 +1168,65 @@ components:
           - 'null'
           description: "The date and time when the booking was queued.\n            "
           format: date-time
-    LegStatus:
+    QueueProcessState:
       type: integer
-      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      description: "QueueProcessState specifies the basis by which queue filters are created.\n            \n\n0 = Default\n1 = SegmentsConfirmed\n2 = BookingBalanced\n4 = Other\n7 = Complete"
       x-enumNames:
-      - Normal
-      - Closed
-      - Canceled
-      - Suspended
-      - ClosedPending
-      - BlockAllActivities
-      - Mishap
+      - Default
+      - SegmentsConfirmed
+      - BookingBalanced
+      - Other
+      - Complete
       enum:
       - 0
       - 1
       - 2
-      - 3
-      - 5
-      - 6
+      - 4
       - 7
+    IJsonResponseOfQueueResults:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/QueueResults'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BookingQueueRestriction:
+      type: integer
+      description: "Defines the restrictions associated with a BookingQueue\n            \n\n0 = Restricted\n1 = AddAllowedOnly\n2 = Allowed"
+      x-enumNames:
+      - Restricted
+      - AddAllowedOnly
+      - Allowed
+      enum:
+      - 0
+      - 1
+      - 2
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     QueueEventType:
       type: integer
       description: "Describes the different queue event types.\n            \n\n0 = Default\n1 = BookingBalanceDue\n2 = BookingNegativeBalance\n3 = BookingCustomerComment\n4 = DeclinedPaymentInitial\n5 = DeclinedPaymentChange\n6 = FareOverride\n7 = ScheduleTimeChange\n8 = ScheduleTimeChangeMisconnect\n9 = ScheduleCancellation\n10 = FlightDesignatorChange\n11 = ReaccommodationMove\n12 = GdsCancelWithPendingPayment\n13 = InvalidPriceStatusOverride\n14 = FareRestrictionOverride\n15 = HeldBookings\n16 = InvalidPriceStatus\n17 = Watchlist\n18 = NonFlightServiceFee\n19 = NotAllTicketNumbersReceived\n20 = BookingSegmentOversold\n21 = ReaccommodationCancel\n22 = ExternalSsrAutoConfirmed\n23 = OpCarrierSegUpdate\n24 = OpCarrierSsrUpdate\n25 = OpCarrierOtherUpdate\n26 = NameChangeNotAllowed\n27 = InboundAscNotProcessed\n28 = OpCarrierInformationChange\n29 = BookingComponentUpdate\n30 = GroupBookings\n31 = BankDirectPnrOutOfBalance\n32 = NoSeatAssigned\n33 = SeatNumberChange\n34 = SsrNotSupportedOnNewSeat\n35 = FewerSeatPreferencesMetOnNewSeat\n36 = AosUnableToConfirmCancel\n37 = ETicketIssue\n38 = ETicketFollowup\n39 = InvoluntaryFlyAhead\n40 = ManualClearanceOnOutage\n41 = UnbalancedPoints\n42 = OpCarrierTimeChange\n43 = OaCarrierTimeChange\n44 = VoluntaryFlightChange\n45 = InvoluntaryFlightChange\n46 = HoldCancellationFailed\n47 = ScheduleTimeChangeWithDynamicQueueCode\n48 = ReaccommodationMoveWithDynamicQueueCode\n49 = ItineraryIntegrity\n50 = ReducePartyNotProcessed\n51 = CheckedPassengerUpdate\n52 = MustBeSeatGroupViolation\n57 = NameChangeWithinRule\n58 = IncompletePassengerEMDCoupon\n59 = ASVCUpdateFailed\n60 = FailedFareClassRealignment\n61 = ScheduleTimeChangeMisconnectBelowMinimum\n62 = ScheduleTimeChangeMisconnectAboveMaximum\n63 = OpCarrierMisconnect\n64 = InventoryQueuing\n65 = SelfServiceAsm\n66 = SelfServiceDelay\n67 = SelfServiceFlightCancellation\n68 = SelfServiceIrop\n69 = SelfServiceScheduleChange\n70 = SelfServiceTimeChange\n71 = AosAddOrCancelNotSuccessful\n72 = MissingGdsFareFamily\n73 = ChangeCabinQueue\n74 = PendingPaymentQueue\n75 = TicketDisplayToDetermineIncludedServiceBundleFailed\n76 = DuplicateTicketsInBooking\n77 = TicketCouponUpdateQueue\n78 = ETicketRefund\n79 = ExternalEticketVoidCheck\n80 = ExternalEticketVoidCheckFollowUp\n81 = NoAssignedSeatOnNewFlightFromEquipmentChange"
@@ -1232,54 +1388,60 @@ components:
       - 79
       - 80
       - 81
-    ErrorResponse:
+    IJsonResponseOfBookingQueueItemBase:
       type: object
-      description: "Defines a unique error response.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/BookingQueueItemBase'
+        errors:
           type:
-          - string
+          - array
           - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
           type:
-          - string
+          - array
           - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BookingQueueStatus:
+      type: integer
+      description: "Defines the status for booking queues.\n            \n\n0 = Open\n1 = Locked\n2 = Internal"
+      x-enumNames:
+      - Open
+      - Locked
+      - Internal
+      enum:
+      - 0
+      - 1
+      - 2
     Queue:
       type: object
       description: "Base class for all queue model objects.\n            "
@@ -1317,168 +1479,6 @@ components:
         status:
           description: "Status of the queue.\n            "
           $ref: '#/components/schemas/BookingQueueStatus'
-    IJsonResponseOfQueueResults:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/QueueResults'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    TransportationIdentifier:
-      type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    MarketInformation:
-      type: object
-      description: "Model information about the market arrival and destination details.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      - identifier
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-        identifier:
-          description: "Gets or sets the leg arrival station.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-    IJsonResponseOfBookingQueueItemBase:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/BookingQueueItemBase'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    TravelQueueRequest:
-      type: object
-      description: "Defines a travel queue query.\n            "
-      additionalProperties: false
-      required:
-      - travelQueueCode
-      properties:
-        travelQueueCode:
-          type: string
-          description: "The required queue code.\n            "
-          minLength: 1
-        subQueueCode:
-          type:
-          - string
-          - 'null'
-          description: "The optional sub queue code.\n            "
-    BookingQueueReleaseRequest:
-      type: object
-      description: "Defines a booking queue query\n            "
-      additionalProperties: false
-      properties:
-        queuePassword:
-          type:
-          - string
-          - 'null'
-          description: "The password for the queue if required.\n            "
-    Name:
-      type: object
-      description: "Defines a common name.\n            "
-      additionalProperties: false
-      properties:
-        first:
-          type:
-          - string
-          - 'null'
-          description: "The given first name.\n            "
-          maxLength: 32
-          minLength: 0
-        middle:
-          type:
-          - string
-          - 'null'
-          description: "The given middle name.\n            "
-          maxLength: 32
-          minLength: 0
-        last:
-          type:
-          - string
-          - 'null'
-          description: "The given last name.\n            "
-          maxLength: 32
-          minLength: 0
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title.\n            "
-          maxLength: 6
-          minLength: 0
-        suffix:
-          type:
-          - string
-          - 'null'
-          description: "The suffix.\n            "
-          maxLength: 6
-          minLength: 0
   securitySchemes:
     JWT:
       type: http

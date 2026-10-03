@@ -629,6 +629,27 @@ paths:
                     data: null
 components:
   schemas:
+    VerifiedTravelDocument:
+      type: object
+      description: "The model for a dotRez verified travel document.\n            "
+      additionalProperties: false
+      required:
+      - documentTypeCode
+      - issuedByCode
+      properties:
+        documentTypeCode:
+          type: string
+          description: "The unique travel document type code.\n            "
+          maxLength: 4
+          minLength: 0
+        issuedByCode:
+          type: string
+          description: "The issuer code for the travel document (country code).\n            "
+          maxLength: 3
+          minLength: 0
+        isInfant:
+          type: boolean
+          description: "Flag for if this verified travel document is for an infant or not.\n            "
     MessageStatus:
       type: integer
       description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
@@ -640,6 +661,43 @@ components:
       - 0
       - 1
       - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     UpdateVerifiedTravelDocumentsRequest:
       type: object
       description: "The model for a dotRez updated verified travel documents request.\n            "
@@ -745,64 +803,6 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    VerifiedTravelDocument:
-      type: object
-      description: "The model for a dotRez verified travel document.\n            "
-      additionalProperties: false
-      required:
-      - documentTypeCode
-      - issuedByCode
-      properties:
-        documentTypeCode:
-          type: string
-          description: "The unique travel document type code.\n            "
-          maxLength: 4
-          minLength: 0
-        issuedByCode:
-          type: string
-          description: "The issuer code for the travel document (country code).\n            "
-          maxLength: 3
-          minLength: 0
-        isInfant:
-          type: boolean
-          description: "Flag for if this verified travel document is for an infant or not.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
   securitySchemes:
     JWT:
       type: http

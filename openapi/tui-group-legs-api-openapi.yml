@@ -320,110 +320,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    GovernmentProgramType:
-      type: integer
-      description: '0 = None
-
-        1 = Aqq
-
-        2 = SecureFlight
-
-        3 = Apps
-
-        4 = Apis
-
-        5 = Iapp
-
-        6 = Eub
-
-        7 = Iatci
-
-        8 = DocCheck
-
-        9 = DocsOnly
-
-        10 = Pnrgov
-
-        11 = DigiYatra
-
-        12 = Pfms'
-      x-enumNames:
-      - None
-      - Aqq
-      - SecureFlight
-      - Apps
-      - Apis
-      - Iapp
-      - Eub
-      - Iatci
-      - DocCheck
-      - DocsOnly
-      - Pnrgov
-      - DigiYatra
-      - Pfms
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-    OperationComment:
-      type: object
-      additionalProperties: false
-      properties:
-        commentKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identification number for the comment.\n            "
-        text:
-          type:
-          - string
-          - 'null'
-          description: "Represents the comment text.\n            "
-        type:
-          description: "Represents the comment type.\n            "
-          $ref: '#/components/schemas/OperationCommentType'
-        createdDate:
-          type: string
-          description: "Represents the datetime (UTC) of when the comment was created.\n            "
-          format: date-time
-        modifiedDate:
-          type: string
-          description: "Represents the datetime (UTC) of when the comment was last modified.\n            "
-          format: date-time
     Leg:
       type: object
       additionalProperties: false
@@ -535,6 +431,308 @@ components:
       - 3
       - 4
       - 5
+    GovernmentDocumentFieldType:
+      type: integer
+      description: '0 = FirstName
+
+        1 = MiddleName
+
+        2 = LastName
+
+        3 = Title
+
+        4 = Suffix
+
+        5 = DateOfBirth
+
+        6 = BirthCountry
+
+        7 = Gender
+
+        8 = Nationality
+
+        9 = Number
+
+        10 = IssuingCountry
+
+        11 = ExpirationDate
+
+        12 = IssuedDate
+
+        13 = Verified'
+      x-enumNames:
+      - FirstName
+      - MiddleName
+      - LastName
+      - Title
+      - Suffix
+      - DateOfBirth
+      - BirthCountry
+      - Gender
+      - Nationality
+      - Number
+      - IssuingCountry
+      - ExpirationDate
+      - IssuedDate
+      - Verified
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+    OperationHistory:
+      type: object
+      additionalProperties: false
+      properties:
+        historyKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identification for the trip operation history.\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "Represents the code for the event that triggered an entry into history.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "Represents the history details.\n            "
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when this history item was created.\n            "
+          format: date-time
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    OperationCrew:
+      type: object
+      additionalProperties: false
+      properties:
+        crewKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the trip crew operation.\n            "
+        type:
+          description: "The crew personnel type.\n            "
+          $ref: '#/components/schemas/CrewType'
+    LegCloseSecurityRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        governmentProgram:
+          type:
+          - string
+          - 'null'
+          description: The name of the government program.
+        governmentProgramType:
+          description: The type of the government program.
+          $ref: '#/components/schemas/GovernmentProgramType'
+        programDescription:
+          type:
+          - string
+          - 'null'
+          description: A description of the government program.
+        eligibleDocuments:
+          type:
+          - array
+          - 'null'
+          description: 'A list of documents that are eligible for satisfying the goverment program. '
+          items:
+            $ref: '#/components/schemas/DocumentRequirement'
+        documentRequiredFields:
+          type:
+          - array
+          - 'null'
+          description: 'A list of document fields that are required for a document to contain in order to satisfy the government program. '
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentFieldType'
+        additionalDataRequiredFields:
+          type:
+          - array
+          - 'null'
+          description: 'A list of additional data fields that are required to satisfy the government program.  '
+          items:
+            $ref: '#/components/schemas/GovernmentAdditionalDataType'
+        minVerifiedDocumentCount:
+          type: integer
+          description: 'The minimum amount of eligible documents needed to safisty the government program.  '
+          format: int32
+        flightCloseCountryCodes:
+          type:
+          - array
+          - 'null'
+          description: 'The list of country codes in which the government program requirement applies. More information on a given country code can be found via GET /api/nsk/v2/resources/countries/{countryCode}  '
+          items:
+            type: string
+    OperationDelay:
+      type: object
+      additionalProperties: false
+      properties:
+        delayKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identification for the trip operation delay.\n            "
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The date the status was created.\n            "
+          format: date-time
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The delay code.\n            "
+        minutes:
+          type: integer
+          description: "The number of minutes for this delay.\n            "
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The note for this delay, containing extra information about the delay\n(if any).\n            "
+        includeMvtMessage:
+          type: boolean
+          description: "The flag to include the MVT message.\n            "
+    OperationComment:
+      type: object
+      additionalProperties: false
+      properties:
+        commentKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identification number for the comment.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "Represents the comment text.\n            "
+        type:
+          description: "Represents the comment type.\n            "
+          $ref: '#/components/schemas/OperationCommentType'
+        createdDate:
+          type: string
+          description: "Represents the datetime (UTC) of when the comment was created.\n            "
+          format: date-time
+        modifiedDate:
+          type: string
+          description: "Represents the datetime (UTC) of when the comment was last modified.\n            "
+          format: date-time
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    DocumentRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        typeCode:
+          type:
+          - string
+          - 'null'
+          description: The type code of the document
+        group:
+          description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
+
+            DocumentTypeCode).'
+          $ref: '#/components/schemas/DocumentGroup'
+        typeName:
+          type:
+          - string
+          - 'null'
+          description: The type name of the document
+        isPrimary:
+          type: boolean
+          description: Whether or not the document can be considered a primary document.
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
     IJsonResponseOfListOfLegCloseSecurityRequirement:
       type: object
       additionalProperties: false
@@ -557,103 +755,208 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    MessageStatus:
+    GovernmentAdditionalDataType:
       type: integer
-      description: '0 = General
+      description: '0 = CountryOfResidence
 
-        1 = Warning
+        1 = InTransitAtOrigin
 
-        2 = Critical'
+        2 = InTransitAtDestination
+
+        3 = DateOfBirth
+
+        4 = Gender
+
+        5 = FirstName
+
+        6 = LastName
+
+        7 = StayType
+
+        8 = Nationality'
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - CountryOfResidence
+      - InTransitAtOrigin
+      - InTransitAtDestination
+      - DateOfBirth
+      - Gender
+      - FirstName
+      - LastName
+      - StayType
+      - Nationality
       enum:
       - 0
       - 1
       - 2
-    DocumentGroup:
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+    OperationalTimes:
+      type: object
+      additionalProperties: false
+      properties:
+        estimatedTouchDownTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated touch down time.\n            "
+          format: date-time
+        actualTouchDownTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the actual touch down time.\n            "
+          format: date-time
+        forcedTouchDownTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the forced touch down time.\n            "
+          format: date-time
+        estimatedOnBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated on block time.\n            "
+          format: date-time
+        actualOnBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the actual on block time.\n            "
+          format: date-time
+        forcedOnBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the forced on block time.\n            "
+          format: date-time
+        estimatedDepartureTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated departure time.\n            "
+          format: date-time
+        offBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the off-block time for this flight operation.\n            "
+          format: date-time
+        airborneTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the airborne time for this flight operation.\n            "
+          format: date-time
+        crewReportTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the crew report time for this flight operation.\n            "
+          format: date-time
+        takeOffTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the take-off time for this flight operation.\n            "
+          format: date-time
+        movementAfterPushBackTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the movement after push-back time (taxi) for this flight operation.\n            "
+          format: date-time
+        nextInformationTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the next information time for this flight operation.\n            "
+          format: date-time
+        reclearanceTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the re-clearance time for this flight operation.\n            "
+          format: date-time
+        returnToRampTime:
+          type:
+          - string
+          - 'null'
+          description: "Represents the return to ramp time for this flight operation.\n            "
+          format: date-time
+    IJsonResponseOfListOfLegInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/LegInfo'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    LegStatus:
       type: integer
-      description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
+      description: '0 = Blocked
 
-        DocumentTypeCode).
+        1 = Boarding
 
+        2 = BoardingClosedPending
 
-        0 = Unknown
+        3 = Canceled
 
-        1 = AlienRegistrationCard
+        4 = Delayed
 
-        2 = PermanentResidentCard
+        5 = Departed
 
-        3 = FacilitationDocument
+        6 = DepartedClosed
 
-        4 = InsPass
+        7 = DepartedClosedPending
 
-        5 = MilitaryId
+        8 = OnTime
 
-        6 = Passport
+        9 = Closed
 
-        7 = ReEntryPermit
+        10 = OnTimeClosedPending
 
-        8 = CreditCard
+        11 = Early
 
-        9 = TravelVisa
+        12 = Suspended
 
-        10 = OAFrequentFlyer
+        13 = EarlyClosedPending
 
-        11 = ParoleLetter
-
-        12 = NoticeOfAction
-
-        13 = TransportationLetter
-
-        14 = BorderCrossingCard
-
-        15 = PilotLicense
-
-        16 = USNaturalizationCertificate
-
-        17 = RefugeeTravelDocument
-
-        18 = GovernmentId
-
-        19 = DriversLicense
-
-        20 = RedressNumber
-
-        21 = KnownTravelerId
-
-        22 = FormOfId
-
-        23 = Nexus
-
-        24 = SecondaryExempt'
+        14 = DelayedClosedPending'
       x-enumNames:
-      - Unknown
-      - AlienRegistrationCard
-      - PermanentResidentCard
-      - FacilitationDocument
-      - InsPass
-      - MilitaryId
-      - Passport
-      - ReEntryPermit
-      - CreditCard
-      - TravelVisa
-      - OAFrequentFlyer
-      - ParoleLetter
-      - NoticeOfAction
-      - TransportationLetter
-      - BorderCrossingCard
-      - PilotLicense
-      - USNaturalizationCertificate
-      - RefugeeTravelDocument
-      - GovernmentId
-      - DriversLicense
-      - RedressNumber
-      - KnownTravelerId
-      - FormOfId
-      - Nexus
-      - SecondaryExempt
+      - Blocked
+      - Boarding
+      - BoardingClosedPending
+      - Canceled
+      - Delayed
+      - Departed
+      - DepartedClosed
+      - DepartedClosedPending
+      - OnTime
+      - Closed
+      - OnTimeClosedPending
+      - Early
+      - Suspended
+      - EarlyClosedPending
+      - DelayedClosedPending
       enum:
       - 0
       - 1
@@ -670,16 +973,23 @@ components:
       - 12
       - 13
       - 14
-      - 15
-      - 16
-      - 17
-      - 18
-      - 19
-      - 20
-      - 21
-      - 22
-      - 23
-      - 24
+    CrewType:
+      type: integer
+      description: "Defines the different types of crew members.\n            \n\n0 = Default\n1 = Pilot\n2 = CoPilot\n3 = CockpitJumpseat\n4 = CabinJumpseat\n5 = CabinCrew"
+      x-enumNames:
+      - Default
+      - Pilot
+      - CoPilot
+      - CockpitJumpseat
+      - CabinJumpseat
+      - CabinCrew
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
     OperationsInfo:
       type: object
       additionalProperties: false
@@ -835,80 +1145,6 @@ components:
         boardingTimeOffset:
           type: integer
           description: "Represents the number of minutes before a flight departs that boarding is scheduled to begin. \n            "
-    GovernmentAdditionalDataType:
-      type: integer
-      description: '0 = CountryOfResidence
-
-        1 = InTransitAtOrigin
-
-        2 = InTransitAtDestination
-
-        3 = DateOfBirth
-
-        4 = Gender
-
-        5 = FirstName
-
-        6 = LastName
-
-        7 = StayType
-
-        8 = Nationality'
-      x-enumNames:
-      - CountryOfResidence
-      - InTransitAtOrigin
-      - InTransitAtDestination
-      - DateOfBirth
-      - Gender
-      - FirstName
-      - LastName
-      - StayType
-      - Nationality
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-    OperationCommentType:
-      type: integer
-      description: "The operation comment type enumeration.\n            \n\n0 = Default\n1 = Reservation\n2 = Operation\n3 = PitLoad\n4 = Irop\n5 = AppsOverride\n6 = ManualAppsOverride"
-      x-enumNames:
-      - Default
-      - Reservation
-      - Operation
-      - PitLoad
-      - Irop
-      - AppsOverride
-      - ManualAppsOverride
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
     LegInfo:
       type: object
       additionalProperties: false
@@ -947,60 +1183,25 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponseOfOperationsInfo:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/OperationsInfo'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    OperationPayload:
-      type: object
-      additionalProperties: false
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The type of payload this model represents, expressed as a single\ncharacter.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        compartment:
-          type:
-          - string
-          - 'null'
-          description: "The compartment for the payload this model represents, expressed\nas a single character.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        count:
-          type: integer
-          description: "The payload count.\n            "
-          format: int32
-        weight:
-          type: integer
-          description: "The total payload weight.\n            "
-          format: int32
-    OperationCrew:
-      type: object
-      additionalProperties: false
-      properties:
-        crewKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier for the trip crew operation.\n            "
-        type:
-          description: "The crew personnel type.\n            "
-          $ref: '#/components/schemas/CrewType'
+    OperationCommentType:
+      type: integer
+      description: "The operation comment type enumeration.\n            \n\n0 = Default\n1 = Reservation\n2 = Operation\n3 = PitLoad\n4 = Irop\n5 = AppsOverride\n6 = ManualAppsOverride"
+      x-enumNames:
+      - Default
+      - Reservation
+      - Operation
+      - PitLoad
+      - Irop
+      - AppsOverride
+      - ManualAppsOverride
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     OperationCounts:
       type: object
       additionalProperties: false
@@ -1085,321 +1286,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    OperationalTimes:
-      type: object
-      additionalProperties: false
-      properties:
-        estimatedTouchDownTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the estimated touch down time.\n            "
-          format: date-time
-        actualTouchDownTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the actual touch down time.\n            "
-          format: date-time
-        forcedTouchDownTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the forced touch down time.\n            "
-          format: date-time
-        estimatedOnBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the estimated on block time.\n            "
-          format: date-time
-        actualOnBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the actual on block time.\n            "
-          format: date-time
-        forcedOnBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the forced on block time.\n            "
-          format: date-time
-        estimatedDepartureTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the estimated departure time.\n            "
-          format: date-time
-        offBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the off-block time for this flight operation.\n            "
-          format: date-time
-        airborneTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the airborne time for this flight operation.\n            "
-          format: date-time
-        crewReportTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the crew report time for this flight operation.\n            "
-          format: date-time
-        takeOffTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the take-off time for this flight operation.\n            "
-          format: date-time
-        movementAfterPushBackTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the movement after push-back time (taxi) for this flight operation.\n            "
-          format: date-time
-        nextInformationTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the next information time for this flight operation.\n            "
-          format: date-time
-        reclearanceTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the re-clearance time for this flight operation.\n            "
-          format: date-time
-        returnToRampTime:
-          type:
-          - string
-          - 'null'
-          description: "Represents the return to ramp time for this flight operation.\n            "
-          format: date-time
-    OperationDelay:
-      type: object
-      additionalProperties: false
-      properties:
-        delayKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identification for the trip operation delay.\n            "
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The date the status was created.\n            "
-          format: date-time
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The delay code.\n            "
-        minutes:
-          type: integer
-          description: "The number of minutes for this delay.\n            "
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The note for this delay, containing extra information about the delay\n(if any).\n            "
-        includeMvtMessage:
-          type: boolean
-          description: "The flag to include the MVT message.\n            "
-    LegStatus:
-      type: integer
-      description: '0 = Blocked
-
-        1 = Boarding
-
-        2 = BoardingClosedPending
-
-        3 = Canceled
-
-        4 = Delayed
-
-        5 = Departed
-
-        6 = DepartedClosed
-
-        7 = DepartedClosedPending
-
-        8 = OnTime
-
-        9 = Closed
-
-        10 = OnTimeClosedPending
-
-        11 = Early
-
-        12 = Suspended
-
-        13 = EarlyClosedPending
-
-        14 = DelayedClosedPending'
-      x-enumNames:
-      - Blocked
-      - Boarding
-      - BoardingClosedPending
-      - Canceled
-      - Delayed
-      - Departed
-      - DepartedClosed
-      - DepartedClosedPending
-      - OnTime
-      - Closed
-      - OnTimeClosedPending
-      - Early
-      - Suspended
-      - EarlyClosedPending
-      - DelayedClosedPending
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-      - 14
-    LegCloseSecurityRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        governmentProgram:
-          type:
-          - string
-          - 'null'
-          description: The name of the government program.
-        governmentProgramType:
-          description: The type of the government program.
-          $ref: '#/components/schemas/GovernmentProgramType'
-        programDescription:
-          type:
-          - string
-          - 'null'
-          description: A description of the government program.
-        eligibleDocuments:
-          type:
-          - array
-          - 'null'
-          description: 'A list of documents that are eligible for satisfying the goverment program. '
-          items:
-            $ref: '#/components/schemas/DocumentRequirement'
-        documentRequiredFields:
-          type:
-          - array
-          - 'null'
-          description: 'A list of document fields that are required for a document to contain in order to satisfy the government program. '
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentFieldType'
-        additionalDataRequiredFields:
-          type:
-          - array
-          - 'null'
-          description: 'A list of additional data fields that are required to satisfy the government program.  '
-          items:
-            $ref: '#/components/schemas/GovernmentAdditionalDataType'
-        minVerifiedDocumentCount:
-          type: integer
-          description: 'The minimum amount of eligible documents needed to safisty the government program.  '
-          format: int32
-        flightCloseCountryCodes:
-          type:
-          - array
-          - 'null'
-          description: 'The list of country codes in which the government program requirement applies. More information on a given country code can be found via GET /api/nsk/v2/resources/countries/{countryCode}  '
-          items:
-            type: string
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    IJsonResponseOfListOfLegInfo:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/LegInfo'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     ArrivalStatus:
       type: integer
       description: '0 = Default
@@ -1423,16 +1309,121 @@ components:
       - 2
       - 3
       - 4
-    CrewType:
+    MessageStatus:
       type: integer
-      description: "Defines the different types of crew members.\n            \n\n0 = Default\n1 = Pilot\n2 = CoPilot\n3 = CockpitJumpseat\n4 = CabinJumpseat\n5 = CabinCrew"
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
       x-enumNames:
-      - Default
-      - Pilot
-      - CoPilot
-      - CockpitJumpseat
-      - CabinJumpseat
-      - CabinCrew
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponseOfOperationsInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/OperationsInfo'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DocumentGroup:
+      type: integer
+      description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
+
+        DocumentTypeCode).
+
+
+        0 = Unknown
+
+        1 = AlienRegistrationCard
+
+        2 = PermanentResidentCard
+
+        3 = FacilitationDocument
+
+        4 = InsPass
+
+        5 = MilitaryId
+
+        6 = Passport
+
+        7 = ReEntryPermit
+
+        8 = CreditCard
+
+        9 = TravelVisa
+
+        10 = OAFrequentFlyer
+
+        11 = ParoleLetter
+
+        12 = NoticeOfAction
+
+        13 = TransportationLetter
+
+        14 = BorderCrossingCard
+
+        15 = PilotLicense
+
+        16 = USNaturalizationCertificate
+
+        17 = RefugeeTravelDocument
+
+        18 = GovernmentId
+
+        19 = DriversLicense
+
+        20 = RedressNumber
+
+        21 = KnownTravelerId
+
+        22 = FormOfId
+
+        23 = Nexus
+
+        24 = SecondaryExempt'
+      x-enumNames:
+      - Unknown
+      - AlienRegistrationCard
+      - PermanentResidentCard
+      - FacilitationDocument
+      - InsPass
+      - MilitaryId
+      - Passport
+      - ReEntryPermit
+      - CreditCard
+      - TravelVisa
+      - OAFrequentFlyer
+      - ParoleLetter
+      - NoticeOfAction
+      - TransportationLetter
+      - BorderCrossingCard
+      - PilotLicense
+      - USNaturalizationCertificate
+      - RefugeeTravelDocument
+      - GovernmentId
+      - DriversLicense
+      - RedressNumber
+      - KnownTravelerId
+      - FormOfId
+      - Nexus
+      - SecondaryExempt
       enum:
       - 0
       - 1
@@ -1440,6 +1431,49 @@ components:
       - 3
       - 4
       - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+    OperationPayload:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The type of payload this model represents, expressed as a single\ncharacter.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        compartment:
+          type:
+          - string
+          - 'null'
+          description: "The compartment for the payload this model represents, expressed\nas a single character.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        count:
+          type: integer
+          description: "The payload count.\n            "
+          format: int32
+        weight:
+          type: integer
+          description: "The total payload weight.\n            "
+          format: int32
     CodeShareIndicator:
       type: integer
       description: 'Specifies the type of code share agreement.
@@ -1470,97 +1504,64 @@ components:
       - 3
       - 4
       - 5
-    OperationHistory:
+    IJsonResponse:
       type: object
       additionalProperties: false
       properties:
-        historyKey:
+        data: {}
+        errors:
           type:
-          - string
+          - array
           - 'null'
-          description: "The unique identification for the trip operation history.\n            "
-        code:
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
-          description: "Represents the code for the event that triggered an entry into history.\n            "
-        detail:
-          type:
-          - string
-          - 'null'
-          description: "Represents the history details.\n            "
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when this history item was created.\n            "
-          format: date-time
-    DocumentRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        typeCode:
-          type:
-          - string
-          - 'null'
-          description: The type code of the document
-        group:
-          description: 'Corresponds to what NewSkies calls the DocumentType (which is different from the
-
-            DocumentTypeCode).'
-          $ref: '#/components/schemas/DocumentGroup'
-        typeName:
-          type:
-          - string
-          - 'null'
-          description: The type name of the document
-        isPrimary:
-          type: boolean
-          description: Whether or not the document can be considered a primary document.
-    GovernmentDocumentFieldType:
+          items:
+            $ref: '#/components/schemas/Message'
+    GovernmentProgramType:
       type: integer
-      description: '0 = FirstName
+      description: '0 = None
 
-        1 = MiddleName
+        1 = Aqq
 
-        2 = LastName
+        2 = SecureFlight
 
-        3 = Title
+        3 = Apps
 
-        4 = Suffix
+        4 = Apis
 
-        5 = DateOfBirth
+        5 = Iapp
 
-        6 = BirthCountry
+        6 = Eub
 
-        7 = Gender
+        7 = Iatci
 
-        8 = Nationality
+        8 = DocCheck
 
-        9 = Number
+        9 = DocsOnly
 
-        10 = IssuingCountry
+        10 = Pnrgov
 
-        11 = ExpirationDate
+        11 = DigiYatra
 
-        12 = IssuedDate
-
-        13 = Verified'
+        12 = Pfms'
       x-enumNames:
-      - FirstName
-      - MiddleName
-      - LastName
-      - Title
-      - Suffix
-      - DateOfBirth
-      - BirthCountry
-      - Gender
-      - Nationality
-      - Number
-      - IssuingCountry
-      - ExpirationDate
-      - IssuedDate
-      - Verified
+      - None
+      - Aqq
+      - SecureFlight
+      - Apps
+      - Apis
+      - Iapp
+      - Eub
+      - Iatci
+      - DocCheck
+      - DocsOnly
+      - Pnrgov
+      - DigiYatra
+      - Pfms
       enum:
       - 0
       - 1
@@ -1575,7 +1576,6 @@ components:
       - 10
       - 11
       - 12
-      - 13
   securitySchemes:
     JWT:
       type: http

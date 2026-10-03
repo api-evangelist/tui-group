@@ -67,33 +67,176 @@ paths:
           content: {}
 components:
   schemas:
-    UnitAllocationType:
+    BoardType:
       type: string
       enum:
-      - ROOM
-      - VILLA
-    Problem:
+      - GT06-AO
+      - GT06-BR
+      - GT06-HB
+      - GT06-FB
+      - GT06-AI
+      - GT06-HB_ST06-PL
+      - GT06-FB_ST06-PL
+      - A24
+      - AB
+      - AI
+      - AI+
+      - BB
+      - CB
+      - FB
+      - FB+
+      - HB
+      - HB+
+      - IT
+      - PI
+      - RO
+      - SC
+      - SC+
+      - SSC
+    SegmentAncillary:
+      type: object
+      required:
+      - ancillaries
+      - travellers
+      properties:
+        ancillaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ancillary'
+        traveller:
+          $ref: '#/components/schemas/TravellerRef'
+    PriceInfo:
+      type: object
+      required:
+      - value
+      - level
+      - category
+      - travellers
+      properties:
+        category:
+          type: string
+          example: NET
+          enum:
+          - NET
+          - DISCOUNT
+          - LOCAL_COST
+        level:
+          type: string
+          example: PER_PAX
+          enum:
+          - PER_PAX
+          - PER_ITEM
+        value:
+          $ref: '#/components/schemas/MoneyV1'
+        travellers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        exchangeRate:
+          type: number
+          format: double
+          description: Exchange rate on the particular date
+          example: 250.0
+        exchangeDate:
+          type: string
+          format: date
+          description: Exchange date
+          example: '2025-08-06'
+    SearchRequestUnitAllocation:
+      required:
+      - number
+      - paxAge
+      - paxID
+      - unitType
+      type: object
+      minItems: 1
+      properties:
+        paxID:
+          minimum: 1
+          type: number
+          format: integer
+          description: id of the pax
+          example: 1
+        paxAge:
+          minimum: 0
+          type: number
+          format: integer
+          description: age of the pax
+          example: 18
+        number:
+          minimum: 1
+          type: number
+          format: integer
+          description: in which room pax goes, room number
+          example: 1
+        unitType:
+          $ref: '#/components/schemas/UnitAllocationType'
+    DirectionType:
+      type: string
+      description: type of the direction
+      example: INBOUND
+      enum:
+      - INBOUND
+      - OUTBOUND
+    PriceCalendarResponse:
+      type: object
+      required:
+      - offers
+      properties:
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceOffersResponse'
+    SearchRequestDeparture:
       type: object
       properties:
+        code:
+          type: string
+          description: Airport IATA code
+          pattern: '[A-Z]{3}'
+          example: BRU
         type:
           type: string
-        system:
+          pattern: (AIRPORT)
+          description: type from where we go, currently it is only AIRPORT
+          example: AIRPORT
+    SupplierDetails:
+      type: object
+      properties:
+        roomId:
           type: string
-        title:
+          example: 796e41b3-fb33-43a0-a1be-fc3b20b3376c
+        roomVersion:
           type: string
-        details:
+          example: und
+        roomType:
           type: string
-    CurrencyUSL:
-      type: string
-      example: USD
-      minLength: 3
-      maxLength: 3
-    ChannelUSL:
-      type: string
-      enum:
-      - B2B
-      - B2C
-      - B2B2C
+          example: f6babf7a-679d-4061-93ae-827bd14f5a11
+        boardId:
+          type: string
+          example: a8739bb3-c124-4185-841c-03d824a8409b
+        boardVersion:
+          type: string
+          example: und
+        boardExtraInfo:
+          type: string
+          example: HB:HB:RO
+    StayDurationV1:
+      required:
+      - checkInDate
+      - checkOutDate
+      type: object
+      properties:
+        checkInDate:
+          type: string
+          format: date
+          description: accommodation check in date
+          example: '2023-06-07'
+        checkOutDate:
+          type: string
+          format: date
+          description: accommodation check out date
+          example: '2023-06-14'
     PriceDetails:
       type: object
       description: this is only available in NG like WR
@@ -128,411 +271,6 @@ components:
             $ref: '#/components/schemas/TravellerRef'
         value:
           $ref: '#/components/schemas/MoneyV1'
-    DirectionType:
-      type: string
-      description: type of the direction
-      example: INBOUND
-      enum:
-      - INBOUND
-      - OUTBOUND
-    DimensionAllowance:
-      type: object
-      required:
-      - height
-      - width
-      - length
-      - unit
-      properties:
-        height:
-          type: integer
-          format: int32
-          description: Maximum height allowed for the baggage.
-          example: 2
-        width:
-          type: integer
-          format: int32
-          description: Maximum width allowed for the baggage.
-          example: 2
-        length:
-          type: integer
-          format: int32
-          description: Maximum length allowed for the baggage.
-          example: 2
-        unit:
-          type: string
-          description: Unit defined for dimension
-          example: cm
-    PieceAllowance:
-      type: object
-      required:
-      - totalQty
-      properties:
-        totalQty:
-          type: integer
-          format: int32
-          description: No of piece of baggage allowance allowed
-          example: 2
-    SourcingCategory:
-      type: string
-      description: flight sourcing either contracted or dynamic
-      example: CONTRACTED
-      enum:
-      - CONTRACTED
-      - DYNAMIC
-    RoomBoardRate:
-      required:
-      - room
-      - sourcedUnitId
-      - boardType
-      - travellers
-      - prices
-      - availability
-      type: object
-      properties:
-        room:
-          $ref: '#/components/schemas/RoomV1'
-        sourcedUnitId:
-          type: string
-          description: atcomId for NR / sourceUnitId for WR
-          example: 26929514-237c-11ed-861d-0242ac120002 or 1149172371
-        boardType:
-          $ref: '#/components/schemas/BoardType'
-        travellers:
-          type: array
-          description: Travellers list for this room
-          items:
-            $ref: '#/components/schemas/TravellerRef'
-        prices:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/PriceInfo'
-        payAtSupplierPrices:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/PriceDetails'
-        availability:
-          type: integer
-          description: number of available rooms
-          example: 20
-        sourcingInfo:
-          $ref: '#/components/schemas/RoomSourcing'
-    StayDurationV1:
-      required:
-      - checkInDate
-      - checkOutDate
-      type: object
-      properties:
-        checkInDate:
-          type: string
-          format: date
-          description: accommodation check in date
-          example: '2023-06-07'
-        checkOutDate:
-          type: string
-          format: date
-          description: accommodation check out date
-          example: '2023-06-14'
-    TravellerV1:
-      type: object
-      required:
-      - id
-      - age
-      - type
-      properties:
-        id:
-          type: string
-          description: passenger id
-          x-field-extra-annotation: '@NotBlank'
-        age:
-          type: number
-          format: integer
-          description: passenger age
-          example: 6
-          minimum: 0
-        type:
-          type: string
-          enum:
-          - ADULT
-          - CHILD
-          - INFANT
-    MediumUSL:
-      type: string
-      enum:
-      - TUI_STORE
-      - MOBILE_AGENT
-      - THIRD_PARTY_AGENT
-      - CSC
-      - CUSTOMER_UI
-      - OTA
-      - TUI_PARTNER
-      - TUI_STAFF
-      - TUI_BUSINESS
-      - SHARER
-      - GDS
-      - TUI_APP
-    PackageOfferStay:
-      required:
-      - accommodation
-      - duration
-      - roomBoardRates
-      type: object
-      properties:
-        accommodation:
-          type: object
-          required:
-          - code
-          properties:
-            code:
-              type: string
-              description: accommodation code i.e. Epic id for NR or DOD code for WR
-              example: '953874'
-            promotionCode:
-              type: string
-              description: Promotion code defined by @com for NR
-              example: BTHV
-            sourceCode:
-              type: string
-              description: Accommodation source code defined by @com for NR
-              example: GRRH0035
-        duration:
-          $ref: '#/components/schemas/StayDurationV1'
-        roomBoardRates:
-          type: array
-          minItems: 1
-          description: Number of rooms associated to the offer
-          items:
-            $ref: '#/components/schemas/RoomBoardRate'
-    RoomSourcing:
-      type: object
-      required:
-      - isExternal
-      properties:
-        isExternal:
-          type: boolean
-          example: true
-          description: Identify whether accommodation is external or not
-        unit:
-          type: string
-          description: uuid of the unit
-          example: 90040fae-5d4d-4ebb-a7d7-0bf6c3fe9b13
-        board:
-          type: string
-          description: board id of the unit
-          example: HB:HB:BB
-        system:
-          type: string
-          description: system which is providing dynamic units
-          example: DAS
-        supplier:
-          type: string
-          description: Supplier information in case of desti accommodation
-          example: HB:HB
-        supplierDetails:
-          $ref: '#/components/schemas/SupplierDetails'
-    Ancillary:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: Contains the List Of all the ancillaries( Baggage OR Service Bundles).
-          enum:
-          - BAGGAGE
-          - SERVICE_BUNDLE
-        details:
-          $ref: '#/components/schemas/AncillaryDetails'
-    StayRequestV1:
-      type: object
-      required:
-      - accommodation
-      properties:
-        accommodation:
-          type: object
-          required:
-          - code
-          properties:
-            code:
-              type: string
-              description: accommodation code i.e. Epic id for NR or DOD code for WR
-              example: 009933(NR) / A0380320(WR)
-        boardType:
-          $ref: '#/components/schemas/BoardType'
-    RoomV1:
-      type: object
-      description: Specifies the type of room and its occupancy
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: NR room type code as defined by sourcing or WR productUnitId (uuid)
-          example: TW01 or 26929514-237c-11ed-861d-0242ac120002
-        minimumOccupancy:
-          type: integer
-          format: int32
-          description: Minimum traveller occupancy for the specified room type.
-          example: 1
-        maximumOccupancy:
-          type: integer
-          format: int32
-          description: Maximum traveller occupancy allowed for the specified room type.
-          example: 4
-        maximumAdult:
-          type: integer
-          format: int32
-          description: Maximum adults allowed for the specified room type.
-          example: 4
-        maximumChild:
-          type: integer
-          format: int32
-          description: Maximum children allowed for the specified room type.
-          example: 3
-        maximumInfant:
-          type: integer
-          format: int32
-          description: Maximum infants allowed for the specified room type.
-          example: 3
-        freeKids:
-          type: boolean
-          description: The flag identifying if free kid place is included.
-          example: true
-    Extras:
-      type: object
-      required:
-      - coachTransfer
-      - carHire
-      - tcf
-      properties:
-        coachTransfer:
-          type: boolean
-          description: Whether the coach transfer is included by default or not
-          example: true
-        carHire:
-          type: boolean
-          description: Whether the car hire is included by default or not
-          example: true
-        tcf:
-          type: boolean
-          description: Whether the tui care fund is included by default or not
-          example: true
-    SearchRequestDeparture:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Airport IATA code
-          pattern: '[A-Z]{3}'
-          example: BRU
-        type:
-          type: string
-          pattern: (AIRPORT)
-          description: type from where we go, currently it is only AIRPORT
-          example: AIRPORT
-    AncillaryDetails:
-      type: object
-      properties:
-        pieceAllowance:
-          $ref: '#/components/schemas/PieceAllowance'
-        weightAllowance:
-          $ref: '#/components/schemas/WeightAllowance'
-        dimensionAllowance:
-          $ref: '#/components/schemas/DimensionAllowance'
-    WeightAllowance:
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: integer
-          format: int32
-          description: Minimum weight allowed for baggage
-          example: 2
-        unit:
-          type: string
-          description: Unit in baggage weight defined.
-          example: KGN
-    BrandV1:
-      type: string
-      enum:
-      - TUI_BE
-      - TUI_NL
-      - VIP_BE
-      - TUI_UK
-      - TUI_IE
-      - TUI_SE
-      - TUI_DK
-      - TUI_FI
-      - TUI_NO
-      - TUI_MA
-      - TUI_CH
-      - TUI_DE
-      - TUI_PL
-      - TUI_AT
-    SourceMarket:
-      type: string
-      description: This is the single brand indicator parameter.
-      example: NL
-      enum:
-      - NL
-      - BE
-      - FR
-      - MA
-      - UK
-      - IE
-      - DE
-      - PL
-      - CH
-      - AT
-      - SE
-      - 'NO'
-      - DK
-      - FI
-    SegmentAncillary:
-      type: object
-      required:
-      - ancillaries
-      - travellers
-      properties:
-        ancillaries:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ancillary'
-        traveller:
-          $ref: '#/components/schemas/TravellerRef'
-    TravellerRef:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: passenger id
-          example: 1
-          x-field-extra-annotation: '@NotBlank'
-    Environment:
-      type: string
-      description: Environment which is used to get request / response from backend inventory
-      enum:
-      - hybdv1
-      - hybdv2
-      - hybdv3
-      - hybdv4
-      - hybdv5
-      - hybdv6
-      - hybdv7
-      - hybdv8
-      - hybdv9
-      - hybdv10
-      - st3
-      - st5
-      - pprd
-      - prdsup
-      - dev
-      - sit
-      - prod
     TransferUnit:
       required:
       - segmentId
@@ -568,72 +306,6 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/PriceDetails'
-    FlightLegV1:
-      required:
-      - id
-      - arrivalPoint
-      - departurePoint
-      - departureDate
-      type: object
-      properties:
-        id:
-          type: string
-          description: Product unit id or transport id for that leg
-          example: 26929514-237c-11ed-861d-0242ac120002
-        departurePoint:
-          type: string
-          description: Departure point IATA code
-          example: LHR
-        departureDate:
-          type: string
-          format: date
-          description: Local departure date
-          example: 2024-03-28
-        departureTime:
-          type: string
-          format: time
-          description: Local departure time
-          example: '10:30:00'
-        arrivalPoint:
-          type: string
-          description: Arrival point IATA code
-          example: LHR
-        arrivalDate:
-          type: string
-          format: date
-          description: Local arrival date
-          example: 2024-03-28
-        arrivalTime:
-          type: string
-          format: time
-          description: Local arrival time
-          example: '11:30:00'
-    BoardType:
-      type: string
-      enum:
-      - GT06-AO
-      - GT06-BR
-      - GT06-HB
-      - GT06-FB
-      - GT06-AI
-      - GT06-HB_ST06-PL
-      - GT06-FB_ST06-PL
-      - A24
-      - AB
-      - AI
-      - AI+
-      - BB
-      - CB
-      - FB
-      - FB+
-      - HB
-      - HB+
-      - IT
-      - PI
-      - RO
-      - SC
-      - SC+
-      - SSC
     PriceOffersResponse:
       required:
       - productId
@@ -696,6 +368,49 @@ components:
           deprecated: true
           description: id for the particular package for this unit - required only for NR | generation details https://confluence.tuigroup.com/pages/viewpage.action?spaceKey=ENGDO&title=Package+id+generation+logic
           example: 953925X810289616778016000001677801600000EZY238316784064000001678406400000EZY2384U00634421302486/3/426/7
+    MetaInformationUSL:
+      required:
+      - brand
+      - medium
+      - channel
+      - market
+      - currency
+      - referrer
+      type: object
+      properties:
+        agentId:
+          type: string
+          description: Retail inhouse/3rd party agent id
+          example: T|H6265
+        medium:
+          $ref: '#/components/schemas/MediumUSL'
+        market:
+          $ref: '#/components/schemas/SourceMarket'
+        brand:
+          $ref: '#/components/schemas/BrandV1'
+        channel:
+          $ref: '#/components/schemas/ChannelUSL'
+        currency:
+          $ref: '#/components/schemas/CurrencyUSL'
+        referrer:
+          type: string
+          description: The referrer or website who is calling this API
+    StayRequestV1:
+      type: object
+      required:
+      - accommodation
+      properties:
+        accommodation:
+          type: object
+          required:
+          - code
+          properties:
+            code:
+              type: string
+              description: accommodation code i.e. Epic id for NR or DOD code for WR
+              example: 009933(NR) / A0380320(WR)
+        boardType:
+          $ref: '#/components/schemas/BoardType'
     TaxFeeDetails:
       type: object
       required:
@@ -717,6 +432,473 @@ components:
             $ref: '#/components/schemas/TravellerRef'
         value:
           $ref: '#/components/schemas/MoneyV1'
+    BrandV1:
+      type: string
+      enum:
+      - TUI_BE
+      - TUI_NL
+      - VIP_BE
+      - TUI_UK
+      - TUI_IE
+      - TUI_SE
+      - TUI_DK
+      - TUI_FI
+      - TUI_NO
+      - TUI_MA
+      - TUI_CH
+      - TUI_DE
+      - TUI_PL
+      - TUI_AT
+    SearchRequestDateRange:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: string
+          example: '2026-11-01'
+          description: start date from
+        to:
+          type: string
+          example: '2026-11-11'
+          description: start date to(till)
+    DimensionAllowance:
+      type: object
+      required:
+      - height
+      - width
+      - length
+      - unit
+      properties:
+        height:
+          type: integer
+          format: int32
+          description: Maximum height allowed for the baggage.
+          example: 2
+        width:
+          type: integer
+          format: int32
+          description: Maximum width allowed for the baggage.
+          example: 2
+        length:
+          type: integer
+          format: int32
+          description: Maximum length allowed for the baggage.
+          example: 2
+        unit:
+          type: string
+          description: Unit defined for dimension
+          example: cm
+    UnitAllocationType:
+      type: string
+      enum:
+      - ROOM
+      - VILLA
+    CurrencyUSL:
+      type: string
+      example: USD
+      minLength: 3
+      maxLength: 3
+    RoomSourcing:
+      type: object
+      required:
+      - isExternal
+      properties:
+        isExternal:
+          type: boolean
+          example: true
+          description: Identify whether accommodation is external or not
+        unit:
+          type: string
+          description: uuid of the unit
+          example: 90040fae-5d4d-4ebb-a7d7-0bf6c3fe9b13
+        board:
+          type: string
+          description: board id of the unit
+          example: HB:HB:BB
+        system:
+          type: string
+          description: system which is providing dynamic units
+          example: DAS
+        supplier:
+          type: string
+          description: Supplier information in case of desti accommodation
+          example: HB:HB
+        supplierDetails:
+          $ref: '#/components/schemas/SupplierDetails'
+    AncillaryDetails:
+      type: object
+      properties:
+        pieceAllowance:
+          $ref: '#/components/schemas/PieceAllowance'
+        weightAllowance:
+          $ref: '#/components/schemas/WeightAllowance'
+        dimensionAllowance:
+          $ref: '#/components/schemas/DimensionAllowance'
+    PackageOfferStay:
+      required:
+      - accommodation
+      - duration
+      - roomBoardRates
+      type: object
+      properties:
+        accommodation:
+          type: object
+          required:
+          - code
+          properties:
+            code:
+              type: string
+              description: accommodation code i.e. Epic id for NR or DOD code for WR
+              example: '953874'
+            promotionCode:
+              type: string
+              description: Promotion code defined by @com for NR
+              example: BTHV
+            sourceCode:
+              type: string
+              description: Accommodation source code defined by @com for NR
+              example: GRRH0035
+        duration:
+          $ref: '#/components/schemas/StayDurationV1'
+        roomBoardRates:
+          type: array
+          minItems: 1
+          description: Number of rooms associated to the offer
+          items:
+            $ref: '#/components/schemas/RoomBoardRate'
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+        system:
+          type: string
+        title:
+          type: string
+        details:
+          type: string
+    PackageOfferFlightV1:
+      type: object
+      required:
+      - type
+      - segments
+      properties:
+        type:
+          $ref: '#/components/schemas/DirectionType'
+        segments:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FlightSegmentV1'
+        duration:
+          type: integer
+          description: Flight duration in minutes
+          example: 123
+    RoomBoardRate:
+      required:
+      - room
+      - sourcedUnitId
+      - boardType
+      - travellers
+      - prices
+      - availability
+      type: object
+      properties:
+        room:
+          $ref: '#/components/schemas/RoomV1'
+        sourcedUnitId:
+          type: string
+          description: atcomId for NR / sourceUnitId for WR
+          example: 26929514-237c-11ed-861d-0242ac120002 or 1149172371
+        boardType:
+          $ref: '#/components/schemas/BoardType'
+        travellers:
+          type: array
+          description: Travellers list for this room
+          items:
+            $ref: '#/components/schemas/TravellerRef'
+        prices:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/PriceInfo'
+        payAtSupplierPrices:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/PriceDetails'
+        availability:
+          type: integer
+          description: number of available rooms
+          example: 20
+        sourcingInfo:
+          $ref: '#/components/schemas/RoomSourcing'
+    Environment:
+      type: string
+      description: Environment which is used to get request / response from backend inventory
+      enum:
+      - hybdv1
+      - hybdv2
+      - hybdv3
+      - hybdv4
+      - hybdv5
+      - hybdv6
+      - hybdv7
+      - hybdv8
+      - hybdv9
+      - hybdv10
+      - st3
+      - st5
+      - pprd
+      - prdsup
+      - dev
+      - sit
+      - prod
+    PriceCalendarRequest:
+      required:
+      - metaInformation
+      - stay
+      - numberOfNights
+      - dateRange
+      - travellers
+      - commercialProductType
+      type: object
+      x-field-extra-annotation: '@Introspected'
+      properties:
+        metaInformation:
+          description: Meta info needed for the alt room board request
+          $ref: '#/components/schemas/MetaInformationUSL'
+        stay:
+          $ref: '#/components/schemas/StayRequestV1'
+        alternateDurations:
+          type: array
+          x-field-extra-annotation: '@Valid'
+          description: 'Alternative number of nights to find offers for. These should be in order of preference: first we should attempt the first duration, and we only consider duration index i+1 if we cannot find any offers for duration index i. Note that this list WILL include the `preferredNumberOfNights`!'
+          example:
+          - 8
+          - 6
+          - 7
+          - 9
+          - 5
+          - 10
+          - 11
+          maxItems: 8
+          minItems: 1
+          items:
+            x-field-extra-annotation: '@Valid'
+            minimum: 1
+            type: number
+            format: integer
+            example: 7
+            description: Number of nights the customer would stay at the hotel.
+        numberOfNights:
+          minimum: 1
+          type: number
+          format: integer
+          description: Selected number of nights
+        from:
+          type: array
+          x-field-extra-annotation: '@Valid'
+          items:
+            $ref: '#/components/schemas/SearchRequestDeparture'
+        dateRange:
+          $ref: '#/components/schemas/SearchRequestDateRange'
+        unitAllocations:
+          type: array
+          x-field-extra-annotation: '@Valid'
+          items:
+            $ref: '#/components/schemas/SearchRequestUnitAllocation'
+        travellers:
+          type: array
+          x-field-extra-annotation:
+          - '@Valid'
+          - '@field:Size(min = 1, message = "travellers is a mandatory field in the segments, must contain at least one item")'
+          items:
+            $ref: '#/components/schemas/TravellerV1'
+        commercialProductType:
+          $ref: '#/components/schemas/CommercialProductType'
+    SourceMarket:
+      type: string
+      description: This is the single brand indicator parameter.
+      example: NL
+      enum:
+      - NL
+      - BE
+      - FR
+      - MA
+      - UK
+      - IE
+      - DE
+      - PL
+      - CH
+      - AT
+      - SE
+      - 'NO'
+      - DK
+      - FI
+    RoomV1:
+      type: object
+      description: Specifies the type of room and its occupancy
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: NR room type code as defined by sourcing or WR productUnitId (uuid)
+          example: TW01 or 26929514-237c-11ed-861d-0242ac120002
+        minimumOccupancy:
+          type: integer
+          format: int32
+          description: Minimum traveller occupancy for the specified room type.
+          example: 1
+        maximumOccupancy:
+          type: integer
+          format: int32
+          description: Maximum traveller occupancy allowed for the specified room type.
+          example: 4
+        maximumAdult:
+          type: integer
+          format: int32
+          description: Maximum adults allowed for the specified room type.
+          example: 4
+        maximumChild:
+          type: integer
+          format: int32
+          description: Maximum children allowed for the specified room type.
+          example: 3
+        maximumInfant:
+          type: integer
+          format: int32
+          description: Maximum infants allowed for the specified room type.
+          example: 3
+        freeKids:
+          type: boolean
+          description: The flag identifying if free kid place is included.
+          example: true
+    Ancillary:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Contains the List Of all the ancillaries( Baggage OR Service Bundles).
+          enum:
+          - BAGGAGE
+          - SERVICE_BUNDLE
+        details:
+          $ref: '#/components/schemas/AncillaryDetails'
+    TravellerRef:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: passenger id
+          example: 1
+          x-field-extra-annotation: '@NotBlank'
+    WeightAllowance:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: integer
+          format: int32
+          description: Minimum weight allowed for baggage
+          example: 2
+        unit:
+          type: string
+          description: Unit in baggage weight defined.
+          example: KGN
+    MoneyV1:
+      type: object
+      required:
+      - amount
+      - currency
+      properties:
+        amount:
+          type: number
+          format: double
+          example: 250.0
+        currency:
+          $ref: '#/components/schemas/CurrencyUSL'
+    SourcingCategory:
+      type: string
+      description: flight sourcing either contracted or dynamic
+      example: CONTRACTED
+      enum:
+      - CONTRACTED
+      - DYNAMIC
+    TransferV1:
+      required:
+      - type
+      - segments
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/DirectionType'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferUnit'
+    CommercialProductType:
+      type: string
+      enum:
+      - SUN_AND_BEACH
+      - LAKES_AND_MOUNTAINS
+      - CITY
+    TravellerV1:
+      type: object
+      required:
+      - id
+      - age
+      - type
+      properties:
+        id:
+          type: string
+          description: passenger id
+          x-field-extra-annotation: '@NotBlank'
+        age:
+          type: number
+          format: integer
+          description: passenger age
+          example: 6
+          minimum: 0
+        type:
+          type: string
+          enum:
+          - ADULT
+          - CHILD
+          - INFANT
+    ChannelUSL:
+      type: string
+      enum:
+      - B2B
+      - B2C
+      - B2B2C
+    Extras:
+      type: object
+      required:
+      - coachTransfer
+      - carHire
+      - tcf
+      properties:
+        coachTransfer:
+          type: boolean
+          description: Whether the coach transfer is included by default or not
+          example: true
+        carHire:
+          type: boolean
+          description: Whether the car hire is included by default or not
+          example: true
+        tcf:
+          type: boolean
+          description: Whether the tui care fund is included by default or not
+          example: true
     FlightSegmentV1:
       required:
       - segmentId
@@ -847,250 +1029,68 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SegmentAncillary'
-    PriceCalendarResponse:
-      type: object
+    FlightLegV1:
       required:
-      - offers
-      properties:
-        offers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PriceOffersResponse'
-    MetaInformationUSL:
-      required:
-      - brand
-      - medium
-      - channel
-      - market
-      - currency
-      - referrer
+      - id
+      - arrivalPoint
+      - departurePoint
+      - departureDate
       type: object
       properties:
-        agentId:
+        id:
           type: string
-          description: Retail inhouse/3rd party agent id
-          example: T|H6265
-        medium:
-          $ref: '#/components/schemas/MediumUSL'
-        market:
-          $ref: '#/components/schemas/SourceMarket'
-        brand:
-          $ref: '#/components/schemas/BrandV1'
-        channel:
-          $ref: '#/components/schemas/ChannelUSL'
-        currency:
-          $ref: '#/components/schemas/CurrencyUSL'
-        referrer:
+          description: Product unit id or transport id for that leg
+          example: 26929514-237c-11ed-861d-0242ac120002
+        departurePoint:
           type: string
-          description: The referrer or website who is calling this API
-    PriceCalendarRequest:
-      required:
-      - metaInformation
-      - stay
-      - numberOfNights
-      - dateRange
-      - travellers
-      - commercialProductType
-      type: object
-      x-field-extra-annotation: '@Introspected'
-      properties:
-        metaInformation:
-          description: Meta info needed for the alt room board request
-          $ref: '#/components/schemas/MetaInformationUSL'
-        stay:
-          $ref: '#/components/schemas/StayRequestV1'
-        alternateDurations:
-          type: array
-          x-field-extra-annotation: '@Valid'
-          description: 'Alternative number of nights to find offers for. These should be in order of preference: first we should attempt the first duration, and we only consider duration index i+1 if we cannot find any offers for duration index i. Note that this list WILL include the `preferredNumberOfNights`!'
-          example:
-          - 8
-          - 6
-          - 7
-          - 9
-          - 5
-          - 10
-          - 11
-          maxItems: 8
-          minItems: 1
-          items:
-            x-field-extra-annotation: '@Valid'
-            minimum: 1
-            type: number
-            format: integer
-            example: 7
-            description: Number of nights the customer would stay at the hotel.
-        numberOfNights:
-          minimum: 1
-          type: number
-          format: integer
-          description: Selected number of nights
-        from:
-          type: array
-          x-field-extra-annotation: '@Valid'
-          items:
-            $ref: '#/components/schemas/SearchRequestDeparture'
-        dateRange:
-          $ref: '#/components/schemas/SearchRequestDateRange'
-        unitAllocations:
-          type: array
-          x-field-extra-annotation: '@Valid'
-          items:
-            $ref: '#/components/schemas/SearchRequestUnitAllocation'
-        travellers:
-          type: array
-          x-field-extra-annotation:
-          - '@Valid'
-          - '@field:Size(min = 1, message = "travellers is a mandatory field in the segments, must contain at least one item")'
-          items:
-            $ref: '#/components/schemas/TravellerV1'
-        commercialProductType:
-          $ref: '#/components/schemas/CommercialProductType'
-    MoneyV1:
-      type: object
-      required:
-      - amount
-      - currency
-      properties:
-        amount:
-          type: number
-          format: double
-          example: 250.0
-        currency:
-          $ref: '#/components/schemas/CurrencyUSL'
-    SearchRequestDateRange:
-      required:
-      - from
-      - to
-      type: object
-      properties:
-        from:
-          type: string
-          example: '2026-11-01'
-          description: start date from
-        to:
-          type: string
-          example: '2026-11-11'
-          description: start date to(till)
-    CommercialProductType:
-      type: string
-      enum:
-      - SUN_AND_BEACH
-      - LAKES_AND_MOUNTAINS
-      - CITY
-    PackageOfferFlightV1:
-      type: object
-      required:
-      - type
-      - segments
-      properties:
-        type:
-          $ref: '#/components/schemas/DirectionType'
-        segments:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/FlightSegmentV1'
-        duration:
-          type: integer
-          description: Flight duration in minutes
-          example: 123
-    PriceInfo:
-      type: object
-      required:
-      - value
-      - level
-      - category
-      - travellers
-      properties:
-        category:
-          type: string
-          example: NET
-          enum:
-          - NET
-          - DISCOUNT
-          - LOCAL_COST
-        level:
-          type: string
-          example: PER_PAX
-          enum:
-          - PER_PAX
-          - PER_ITEM
-        value:
-          $ref: '#/components/schemas/MoneyV1'
-        travellers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TravellerRef'
-        exchangeRate:
-          type: number
-          format: double
-          description: Exchange rate on the particular date
-          example: 250.0
-        exchangeDate:
+          description: Departure point IATA code
+          example: LHR
+        departureDate:
           type: string
           format: date
-          description: Exchange date
-          example: '2025-08-06'
-    TransferV1:
+          description: Local departure date
+          example: 2024-03-28
+        departureTime:
+          type: string
+          format: time
+          description: Local departure time
+          example: '10:30:00'
+        arrivalPoint:
+          type: string
+          description: Arrival point IATA code
+          example: LHR
+        arrivalDate:
+          type: string
+          format: date
+          description: Local arrival date
+          example: 2024-03-28
+        arrivalTime:
+          type: string
+          format: time
+          description: Local arrival time
+          example: '11:30:00'
+    MediumUSL:
+      type: string
+      enum:
+      - TUI_STORE
+      - MOBILE_AGENT
+      - THIRD_PARTY_AGENT
+      - CSC
+      - CUSTOMER_UI
+      - OTA
+      - TUI_PARTNER
+      - TUI_STAFF
+      - TUI_BUSINESS
+      - SHARER
+      - GDS
+      - TUI_APP
+    PieceAllowance:
+      type: object
       required:
-      - type
-      - segments
-      type: object
+      - totalQty
       properties:
-        type:
-          $ref: '#/components/schemas/DirectionType'
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferUnit'
-    SupplierDetails:
-      type: object
-      properties:
-        roomId:
-          type: string
-          example: 796e41b3-fb33-43a0-a1be-fc3b20b3376c
-        roomVersion:
-          type: string
-          example: und
-        roomType:
-          type: string
-          example: f6babf7a-679d-4061-93ae-827bd14f5a11
-        boardId:
-          type: string
-          example: a8739bb3-c124-4185-841c-03d824a8409b
-        boardVersion:
-          type: string
-          example: und
-        boardExtraInfo:
-          type: string
-          example: HB:HB:RO
-    SearchRequestUnitAllocation:
-      required:
-      - number
-      - paxAge
-      - paxID
-      - unitType
-      type: object
-      minItems: 1
-      properties:
-        paxID:
-          minimum: 1
-          type: number
-          format: integer
-          description: id of the pax
-          example: 1
-        paxAge:
-          minimum: 0
-          type: number
-          format: integer
-          description: age of the pax
-          example: 18
-        number:
-          minimum: 1
-          type: number
-          format: integer
-          description: in which room pax goes, room number
-          example: 1
-        unitType:
-          $ref: '#/components/schemas/UnitAllocationType'
+        totalQty:
+          type: integer
+          format: int32
+          description: No of piece of baggage allowance allowed
+          example: 2

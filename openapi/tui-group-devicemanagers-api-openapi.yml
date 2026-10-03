@@ -49,6 +49,44 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
     MessageStatus:
       type: integer
       description: '0 = General
@@ -64,6 +102,22 @@ components:
       - 0
       - 1
       - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     ExternalDevice:
       type: object
       additionalProperties: false
@@ -104,6 +158,46 @@ components:
           description: 'The language of this device.
 
             Use constant file DeviceLanguage to populate this field.'
+    ExternalDeviceGeneralType:
+      type: integer
+      description: '0 = Unknown
+
+        1 = Printer
+
+        2 = Scanner
+
+        3 = BoardingGateReader
+
+        4 = SelfBoardingGate'
+      x-enumNames:
+      - Unknown
+      - Printer
+      - Scanner
+      - BoardingGateReader
+      - SelfBoardingGate
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     DeviceManagerInfo:
       type: object
       additionalProperties: false
@@ -173,29 +267,6 @@ components:
           type:
           - string
           - 'null'
-    ExternalDeviceGeneralType:
-      type: integer
-      description: '0 = Unknown
-
-        1 = Printer
-
-        2 = Scanner
-
-        3 = BoardingGateReader
-
-        4 = SelfBoardingGate'
-      x-enumNames:
-      - Unknown
-      - Printer
-      - Scanner
-      - BoardingGateReader
-      - SelfBoardingGate
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
     Message:
       type: object
       additionalProperties: false
@@ -238,77 +309,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DeviceProperty:
-      type: object
-      additionalProperties: false
-      required:
-      - key
-      - type
-      - value
-      properties:
-        key:
-          type: string
-          minLength: 1
-        type:
-          $ref: '#/components/schemas/DevicePropertyType'
-        value:
-          type: string
-          minLength: 1
-    DevicePropertyType:
-      type: integer
-      description: 'Defines the different types of properties that can be associated with an external device.
-
-
-        0 = Unknown
-
-        1 = System
-
-        2 = User
-
-        3 = Permanent'
-      x-enumNames:
-      - Unknown
-      - System
-      - User
-      - Permanent
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
   securitySchemes:
     JWT:
       type: http

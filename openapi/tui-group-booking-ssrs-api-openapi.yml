@@ -1265,51 +1265,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    SsrType:
-      type: integer
-      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
-      x-enumNames:
-      - Standard
-      - Infant
-      - Meal
-      - BaggageAllowance
-      - TravelLineMeal
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     SsrAvailabilityRequestv2:
       type: object
       description: "Represents an SSR availability request.\n            "
@@ -1340,174 +1295,39 @@ components:
         ssrAvailabilityMode:
           description: "Indicates which types of SSRs in a passenger's service bundle are to be returned.\n            "
           $ref: '#/components/schemas/SsrAvailabilityMode'
-    SsrByLeg:
-      type: object
-      description: "Model information for a special service request (SSR) tied to a specific leg.\n            "
-      additionalProperties: false
-      properties:
-        legKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier of the leg of a segment.\n            "
-        legDetails:
-          description: "Leg market information.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        ssrs:
-          type:
-          - array
-          - 'null'
-          description: "The associated SSRs.\n            "
-          items:
-            $ref: '#/components/schemas/SsrDetail'
-    ResellSsrRequestv2:
-      type: object
-      description: "The Resell SSR request v2.\n            "
-      additionalProperties: false
-      required:
-      - journeyKey
-      properties:
-        journeyKey:
-          type: string
-          description: "Journey on which to resell the previously cancelled SSRs\n            "
-          minLength: 1
-        resellSsrs:
-          type: boolean
-          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
-        resellUnitSsrs:
-          description: "Indicates whether to resell the unit SSRs, i.e. auto-assign a new Unit that supports the same SSRs.\n            "
-          $ref: '#/components/schemas/ResellUnitSsrFilter'
-        waiveSeatFee:
-          type: boolean
-          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
-    SingleSsrByKeyRequestv2:
-      type: object
-      description: "The single ssr by key request model, v2.\n            "
-      additionalProperties: false
-      properties:
-        count:
-          type:
-          - integer
-          - 'null'
-          description: "The number of items to include. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "Notes associated with this Ssr.\n            "
-        forceWaveOnSell:
-          type:
-          - boolean
-          - 'null'
-          description: "Force wave on sell. Default value is false.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "Set the Currency Code if different than the booking currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        feePricingMode:
-          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
-          $ref: '#/components/schemas/FeePricingMode'
-        ssrSellMode:
-          description: "Indicates whether the SSR is meant to be sold in the passenger's service bundle.\n            "
-          $ref: '#/components/schemas/SsrSellMode'
-    MessageStatus:
+    SsrSellMode:
       type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      description: "The ssr sell mode enumeration.\n            \n\n0 = NonBundle\n1 = Bundle\n2 = BundleSsrSwap"
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - NonBundle
+      - Bundle
+      - BundleSsrSwap
       enum:
       - 0
       - 1
       - 2
-    SsrByKeyRequest:
+    IJsonResponseOfPassengerSsr:
       type: object
-      description: "SSR detail for a specific passenger number.\n            "
-      additionalProperties: false
-      required:
-      - ssrKey
-      properties:
-        ssrKey:
-          type: string
-          description: "The Ssr key.\n            "
-          minLength: 1
-        count:
-          type:
-          - integer
-          - 'null'
-          description: "The number of items to include. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "Notes associated with this Ssr.\n            "
-    SsrBySegment:
-      type: object
-      description: "Model information for a special service request (SSR) tied to a specific segment.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        segmentKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier of the segment of a journey.\n            "
-        segmentDetails:
-          description: "Segment market information.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        ssrs:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PassengerSsr'
+        errors:
           type:
           - array
           - 'null'
-          description: "The associated SSRs.\n            "
+          description: "The collection of errors being thrown.\n            "
           items:
-            $ref: '#/components/schemas/SsrDetail'
-    SeatRestriction:
-      type: integer
-      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
-      x-enumNames:
-      - Undefined
-      - AlwaysAllowed
-      - DefaultAllowed
-      - DefaultRestricted
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    SsrAvailability:
-      type: object
-      description: "Model containing all Ssr information.\n            "
-      additionalProperties: false
-      properties:
-        segmentSsrs:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
           - array
           - 'null'
-          description: "Segment SSRs.\n            "
+          description: "The collection of informational messages.\n            "
           items:
-            $ref: '#/components/schemas/SsrBySegment'
-        legSsrs:
-          type:
-          - array
-          - 'null'
-          description: "Leg SSRs.\n            "
-          items:
-            $ref: '#/components/schemas/SsrByLeg'
-        journeySsrs:
-          type:
-          - array
-          - 'null'
-          description: "Journey Ssrs.\n            "
-          items:
-            $ref: '#/components/schemas/SsrByJourney'
+            $ref: '#/components/schemas/Message'
     SsrsByType:
       type: object
       description: "Ssrs by type model allows multiple Ssr requests for a specific type.\n            "
@@ -1528,15 +1348,70 @@ components:
           description: "SSR request items.\n            "
           items:
             $ref: '#/components/schemas/SsrRequest'
-    FeePricingMode:
+    IJsonResponseOfIListOfPassengerSsr:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerSsr'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrDurationType:
       type: integer
-      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      description: "Ssr duration type.\n            \n\n0 = Segment\n1 = Journey\n2 = Leg"
       x-enumNames:
-      - MonetaryOnly
-      - PointsOnly
+      - Segment
+      - Journey
+      - Leg
       enum:
       - 0
       - 1
+      - 2
+    SsrAvailabilityMode:
+      type: integer
+      description: "SSR availability modes for use in the SSR availability request.\n            \n\n0 = NonBundledSsrs\n1 = BundledSsrs\n2 = FilteredBundleSsrs"
+      x-enumNames:
+      - NonBundledSsrs
+      - BundledSsrs
+      - FilteredBundleSsrs
+      enum:
+      - 0
+      - 1
+      - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     SsrDetail:
       type: object
       description: "Provides more information about the special service request (SSR).\n            "
@@ -1591,32 +1466,121 @@ components:
         seatRestriction:
           description: "Indicates the seat restriction for the SSR.\n            "
           $ref: '#/components/schemas/SeatRestriction'
-    IJsonResponseOfIListOfPassengerSsr:
+    SsrByLeg:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Model information for a special service request (SSR) tied to a specific leg.\n            "
       additionalProperties: false
       properties:
-        data:
+        legKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the leg of a segment.\n            "
+        legDetails:
+          description: "Leg market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
           type:
           - array
           - 'null'
-          description: "The payload data.\n            "
+          description: "The associated SSRs.\n            "
           items:
-            $ref: '#/components/schemas/PassengerSsr'
-        errors:
+            $ref: '#/components/schemas/SsrDetail'
+    SsrAvailability:
+      type: object
+      description: "Model containing all Ssr information.\n            "
+      additionalProperties: false
+      properties:
+        segmentSsrs:
           type:
           - array
           - 'null'
-          description: "The collection of errors being thrown.\n            "
+          description: "Segment SSRs.\n            "
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+            $ref: '#/components/schemas/SsrBySegment'
+        legSsrs:
           type:
           - array
           - 'null'
-          description: "The collection of informational messages.\n            "
+          description: "Leg SSRs.\n            "
           items:
-            $ref: '#/components/schemas/Message'
+            $ref: '#/components/schemas/SsrByLeg'
+        journeySsrs:
+          type:
+          - array
+          - 'null'
+          description: "Journey Ssrs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByJourney'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
+    PassengerSsrKey:
+      type: object
+      description: "The model for the data needed to identify a passenger ssr key.\n            "
+      additionalProperties: false
+      properties:
+        ssrDuration:
+          description: "The length of the Ssr duration.\n            "
+          $ref: '#/components/schemas/SsrDurationType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique passenger key.\n            "
+        ssrNumber:
+          type:
+          - integer
+          - 'null'
+          description: "The passenger SSR number.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        market:
+          description: "The market for either the leg or segment depending on the Ssr type.\n            "
+          $ref: '#/components/schemas/MarketInformation'
     PassengerSsr:
       type: object
       description: "The model for a passengers Ssr details.\n            "
@@ -1687,148 +1651,29 @@ components:
           description: "The passenger SSR detail.\n            "
           maxLength: 20
           minLength: 0
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    SsrSellMode:
+    SeatRestriction:
       type: integer
-      description: "The ssr sell mode enumeration.\n            \n\n0 = NonBundle\n1 = Bundle\n2 = BundleSsrSwap"
+      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
       x-enumNames:
-      - NonBundle
-      - Bundle
-      - BundleSsrSwap
+      - Undefined
+      - AlwaysAllowed
+      - DefaultAllowed
+      - DefaultRestricted
       enum:
       - 0
       - 1
       - 2
-    ResellUnitSsrFilter:
-      type: integer
-      description: "Enumeration representing the filters when reselling seat-dependent SSRS.\n            \n\n0 = DoNotResell\n1 = ResellAndAutoAssignSeats\n2 = ResellAndDoNotAutoAssignSeats"
-      x-enumNames:
-      - DoNotResell
-      - ResellAndAutoAssignSeats
-      - ResellAndDoNotAutoAssignSeats
-      enum:
-      - 0
-      - 1
-      - 2
-    ResellSsrRequest:
+      - 3
+    SsrByKeyRequest:
       type: object
-      description: "The resell Ssr request.\n            "
-      deprecated: true
-      x-deprecatedMessage: 4.6 - ResellSsrRequestv2 instead.
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-          description: "Journey to resell the previously cancelled SSRs on.\n            "
-        resellSsrs:
-          type: boolean
-          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
-        resellUnitSsrs:
-          type: boolean
-          description: "Indicates whether to resell the unit SSRs, i.e autoassign a new Unit that supports\nthe same SSRs.\n            "
-        waiveSeatFee:
-          type: boolean
-          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
-    SsrDurationType:
-      type: integer
-      description: "Ssr duration type.\n            \n\n0 = Segment\n1 = Journey\n2 = Leg"
-      x-enumNames:
-      - Segment
-      - Journey
-      - Leg
-      enum:
-      - 0
-      - 1
-      - 2
-    SsrAvailabilityMode:
-      type: integer
-      description: "SSR availability modes for use in the SSR availability request.\n            \n\n0 = NonBundledSsrs\n1 = BundledSsrs\n2 = FilteredBundleSsrs"
-      x-enumNames:
-      - NonBundledSsrs
-      - BundledSsrs
-      - FilteredBundleSsrs
-      enum:
-      - 0
-      - 1
-      - 2
-    SsrByJourney:
-      type: object
-      description: "Model information for a special service request (SSR) tied to a specific journey.\n            "
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier of the journey.\n            "
-        journeyDetails:
-          description: "Journey market information.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        ssrs:
-          type:
-          - array
-          - 'null'
-          description: "The associated SSRs.\n            "
-          items:
-            $ref: '#/components/schemas/SsrDetail'
-    PassengerSsrKey:
-      type: object
-      description: "The model for the data needed to identify a passenger ssr key.\n            "
-      additionalProperties: false
-      properties:
-        ssrDuration:
-          description: "The length of the Ssr duration.\n            "
-          $ref: '#/components/schemas/SsrDurationType'
-        ssrCode:
-          type:
-          - string
-          - 'null'
-          description: "The passenger SSR code.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique passenger key.\n            "
-        ssrNumber:
-          type:
-          - integer
-          - 'null'
-          description: "The passenger SSR number.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        market:
-          description: "The market for either the leg or segment depending on the Ssr type.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-    SsrRequest:
-      type: object
-      description: "SSR request for a single Ssr.\n            "
+      description: "SSR detail for a specific passenger number.\n            "
       additionalProperties: false
       required:
-      - ssrCode
-      - passengerKey
+      - ssrKey
       properties:
-        ssrCode:
+        ssrKey:
           type: string
-          description: "The Ssr code.\n            "
+          description: "The Ssr key.\n            "
           minLength: 1
         count:
           type:
@@ -1842,149 +1687,6 @@ components:
           - string
           - 'null'
           description: "Notes associated with this Ssr.\n            "
-        passengerKey:
-          type: string
-          description: "The passenger key.\n            "
-          minLength: 1
-        inBundle:
-          type: boolean
-          description: "Indicates if the SSR is part of a bundle.\n            "
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfSsrAvailability:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/SsrAvailability'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfPassengerSsr:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PassengerSsr'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BundleResellRequest:
-      type: object
-      description: "The bundle resell request.\n            "
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-          description: "Journey to resell the previously cancelled SSR bundles on.\n            "
-        passengerKeys:
-          type:
-          - array
-          - 'null'
-          description: "A list of passengers to resell the SSR bundle for.\n            "
-          items:
-            type: string
-    SsrByKeysRequestv2:
-      type: object
-      description: "Request to add a leg, segment, or journey Ssr.\n            "
-      additionalProperties: false
-      required:
-      - keys
-      properties:
-        keys:
-          type: array
-          description: "Keys for the request.\n            "
-          items:
-            $ref: '#/components/schemas/SsrByKeyRequest'
-        forceWaveOnSell:
-          type:
-          - boolean
-          - 'null'
-          description: "Force wave on sell. Default value is false.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "Set the Currency Code if different than the booking currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        feePricingMode:
-          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
-          $ref: '#/components/schemas/FeePricingMode'
-    SsrsRequest:
-      type: object
-      description: "Request to add multiple leg, segment, or journey Ssr's.\n            "
-      additionalProperties: false
-      required:
-      - requests
-      properties:
-        requests:
-          type: array
-          description: "Ssr requests by type of request (Journey, Leg, Segment).\n            "
-          items:
-            $ref: '#/components/schemas/SsrsByType'
-        forceWaveOnSell:
-          type:
-          - boolean
-          - 'null'
-          description: "Force wave on sell. Default value is false.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "Set the currency code if different than the booking currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        feePricingMode:
-          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
-          $ref: '#/components/schemas/FeePricingMode'
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -2033,49 +1735,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    PassengerSsrAvailability:
-      type: object
-      description: "Model containing the details about the availability and price of the Ssr for a specific passenger.\n            "
-      additionalProperties: false
-      properties:
-        ssrKey:
-          type:
-          - string
-          - 'null'
-          description: "The Ssr key that identifies the ssr, passenger and trip information.\nNote this key does not equal the SSR key on the booking. The availability key contains the ssr number that is\nhelpful in some creation requests as well as a less accurate departure date.\n            "
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger key.\n            "
-        price:
-          type: number
-          description: "Gets the SSR price.\n            "
-          format: decimal
-    TransportationIdentifier:
-      type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
     MarketInformation:
       type: object
       description: "Model information about the market arrival and destination details.\n            "
@@ -2104,6 +1763,185 @@ components:
         identifier:
           description: "Gets or sets the leg arrival station.\n            "
           $ref: '#/components/schemas/TransportationIdentifier'
+    ResellSsrRequestv2:
+      type: object
+      description: "The Resell SSR request v2.\n            "
+      additionalProperties: false
+      required:
+      - journeyKey
+      properties:
+        journeyKey:
+          type: string
+          description: "Journey on which to resell the previously cancelled SSRs\n            "
+          minLength: 1
+        resellSsrs:
+          type: boolean
+          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
+        resellUnitSsrs:
+          description: "Indicates whether to resell the unit SSRs, i.e. auto-assign a new Unit that supports the same SSRs.\n            "
+          $ref: '#/components/schemas/ResellUnitSsrFilter'
+        waiveSeatFee:
+          type: boolean
+          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
+    SsrRequest:
+      type: object
+      description: "SSR request for a single Ssr.\n            "
+      additionalProperties: false
+      required:
+      - ssrCode
+      - passengerKey
+      properties:
+        ssrCode:
+          type: string
+          description: "The Ssr code.\n            "
+          minLength: 1
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+        passengerKey:
+          type: string
+          description: "The passenger key.\n            "
+          minLength: 1
+        inBundle:
+          type: boolean
+          description: "Indicates if the SSR is part of a bundle.\n            "
+    ResellUnitSsrFilter:
+      type: integer
+      description: "Enumeration representing the filters when reselling seat-dependent SSRS.\n            \n\n0 = DoNotResell\n1 = ResellAndAutoAssignSeats\n2 = ResellAndDoNotAutoAssignSeats"
+      x-enumNames:
+      - DoNotResell
+      - ResellAndAutoAssignSeats
+      - ResellAndDoNotAutoAssignSeats
+      enum:
+      - 0
+      - 1
+      - 2
+    ResellSsrRequest:
+      type: object
+      description: "The resell Ssr request.\n            "
+      deprecated: true
+      x-deprecatedMessage: 4.6 - ResellSsrRequestv2 instead.
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "Journey to resell the previously cancelled SSRs on.\n            "
+        resellSsrs:
+          type: boolean
+          description: "Indicates whether to resell \"standard\" (non seat-restricted) SSRs.\n            "
+        resellUnitSsrs:
+          type: boolean
+          description: "Indicates whether to resell the unit SSRs, i.e autoassign a new Unit that supports\nthe same SSRs.\n            "
+        waiveSeatFee:
+          type: boolean
+          description: "Indicates whether to waive a seat fee for the new seat assigned in order to resell unit SSRs.\n            "
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    PassengerSsrAvailability:
+      type: object
+      description: "Model containing the details about the availability and price of the Ssr for a specific passenger.\n            "
+      additionalProperties: false
+      properties:
+        ssrKey:
+          type:
+          - string
+          - 'null'
+          description: "The Ssr key that identifies the ssr, passenger and trip information.\nNote this key does not equal the SSR key on the booking. The availability key contains the ssr number that is\nhelpful in some creation requests as well as a less accurate departure date.\n            "
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key.\n            "
+        price:
+          type: number
+          description: "Gets the SSR price.\n            "
+          format: decimal
+    SsrsRequest:
+      type: object
+      description: "Request to add multiple leg, segment, or journey Ssr's.\n            "
+      additionalProperties: false
+      required:
+      - requests
+      properties:
+        requests:
+          type: array
+          description: "Ssr requests by type of request (Journey, Leg, Segment).\n            "
+          items:
+            $ref: '#/components/schemas/SsrsByType'
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the currency code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+    SsrType:
+      type: integer
+      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
+      x-enumNames:
+      - Standard
+      - Infant
+      - Meal
+      - BaggageAllowance
+      - TravelLineMeal
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     SsrAvailabilityRequestv3:
       type: object
       description: "Represents a Special Service Request (SSR) availability request, version 3.\n            "
@@ -2136,6 +1974,168 @@ components:
         ssrAvailabilityMode:
           description: "Indicates if the availability is for bundled or non-bundled SSRs.\n            "
           $ref: '#/components/schemas/SsrAvailabilityMode'
+    IJsonResponseOfSsrAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SsrAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrBySegment:
+      type: object
+      description: "Model information for a special service request (SSR) tied to a specific segment.\n            "
+      additionalProperties: false
+      properties:
+        segmentKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the segment of a journey.\n            "
+        segmentDetails:
+          description: "Segment market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The associated SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrDetail'
+    SsrByJourney:
+      type: object
+      description: "Model information for a special service request (SSR) tied to a specific journey.\n            "
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier of the journey.\n            "
+        journeyDetails:
+          description: "Journey market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The associated SSRs.\n            "
+          items:
+            $ref: '#/components/schemas/SsrDetail'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrByKeysRequestv2:
+      type: object
+      description: "Request to add a leg, segment, or journey Ssr.\n            "
+      additionalProperties: false
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: "Keys for the request.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByKeyRequest'
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the Currency Code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+    BundleResellRequest:
+      type: object
+      description: "The bundle resell request.\n            "
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "Journey to resell the previously cancelled SSR bundles on.\n            "
+        passengerKeys:
+          type:
+          - array
+          - 'null'
+          description: "A list of passengers to resell the SSR bundle for.\n            "
+          items:
+            type: string
+    SingleSsrByKeyRequestv2:
+      type: object
+      description: "The single ssr by key request model, v2.\n            "
+      additionalProperties: false
+      properties:
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the Currency Code if different than the booking currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+        ssrSellMode:
+          description: "Indicates whether the SSR is meant to be sold in the passenger's service bundle.\n            "
+          $ref: '#/components/schemas/SsrSellMode'
   securitySchemes:
     JWT:
       type: http

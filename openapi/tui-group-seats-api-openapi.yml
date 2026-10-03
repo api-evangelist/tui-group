@@ -131,6 +131,67 @@ components:
       - 0
       - 1
       - 2
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BlockSeatsRequest:
+      type: object
+      description: "Block seats request.\n            "
+      additionalProperties: false
+      required:
+      - unitKeys
+      properties:
+        unitKeys:
+          type: array
+          description: "The unit keys to block seats on.\n            "
+          items:
+            type: string
+        blockType:
+          description: "The seat block type.\n             "
+          $ref: '#/components/schemas/SeatBlockType'
+    SeatBlockType:
+      type: integer
+      description: "Enumeration representing all the different seat block types.\n            \n\n0 = Blocked\n1 = Broken"
+      x-enumNames:
+      - Blocked
+      - Broken
+      enum:
+      - 0
+      - 1
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -179,21 +240,6 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    BlockSeatsRequest:
-      type: object
-      description: "Block seats request.\n            "
-      additionalProperties: false
-      required:
-      - unitKeys
-      properties:
-        unitKeys:
-          type: array
-          description: "The unit keys to block seats on.\n            "
-          items:
-            type: string
-        blockType:
-          description: "The seat block type.\n             "
-          $ref: '#/components/schemas/SeatBlockType'
     Message:
       type: object
       description: "Defines a unique informational message.\n            "
@@ -224,52 +270,6 @@ components:
           description: "Dynamic detailed information about the message.\n            "
           additionalProperties:
             type: string
-    SeatBlockType:
-      type: integer
-      description: "Enumeration representing all the different seat block types.\n            \n\n0 = Blocked\n1 = Broken"
-      x-enumNames:
-      - Blocked
-      - Broken
-      enum:
-      - 0
-      - 1
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
   securitySchemes:
     JWT:
       type: http

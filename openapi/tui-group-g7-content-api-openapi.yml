@@ -50,42 +50,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ContentResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Accommodation code
-          example: A0376761
-        accommodationType:
-          type: string
-          description: Accommodation type
-          example: HOTEL
-        featureCodesAndValues:
-          $ref: '#/components/schemas/AccomFeatures'
-        galleryImages:
-          $ref: '#/components/schemas/GalleryMediaData'
-        roomsData:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoomData'
-        boardBasis:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoardBasisData'
-        geoHierarchy:
-          type: object
-          properties:
-            geoHierarchy:
-              $ref: '#/components/schemas/ContentGeoHierarchy'
-        facilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityData'
-        review:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReviewData'
     AccomFeatures:
       properties:
         introduction:
@@ -153,6 +117,52 @@ components:
           items: {}
           example:
           - seaview
+    BoardBasisFeatures:
+      type: object
+      properties:
+        lunch_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        dinner_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        drinks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        snacks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        breakfast_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+    GalleryMediaData:
+      type: array
+      items:
+        type: object
+        properties:
+          mainSrc:
+            type: string
+            example: https://tui-sit-images.imgix.net/869a453196a5cbbae3fe908d7968e53b.jpg?&w=1080&h=608&fm=jpg&fl=progressive
+          mime:
+            type: string
+            example: image/jpeg
+          size:
+            type: string
+            example: large
+          description:
+            type: string
+          caption:
+            type: string
     ContentGeoHierarchy:
       type: array
       items:
@@ -207,6 +217,104 @@ components:
                       subCategories:
                         type: array
                         items: {}
+    ReviewData:
+      type: object
+      properties:
+        source:
+          type: string
+          example: TUI
+        averageRating:
+          type: number
+          example: 3.5
+        tRating:
+          type: number
+          example: 5
+        reviewsCount:
+          type: number
+          example: 200
+        ratingBar:
+          type: string
+        ratingReviewsUrl:
+          type: string
+    ContentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Accommodation code
+          example: A0376761
+        accommodationType:
+          type: string
+          description: Accommodation type
+          example: HOTEL
+        featureCodesAndValues:
+          $ref: '#/components/schemas/AccomFeatures'
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        roomsData:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomData'
+        boardBasis:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardBasisData'
+        geoHierarchy:
+          type: object
+          properties:
+            geoHierarchy:
+              $ref: '#/components/schemas/ContentGeoHierarchy'
+        facilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityData'
+        review:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewData'
+    FacilityData:
+      type: object
+      properties:
+        code:
+          type: string
+          example: FACILITIES_A0376761_TUI_NL
+        title:
+          type: string
+          example: Faciliteiten
+        description:
+          type: array
+          items:
+            type: string
+          example:
+          - fitnessruimte, tafeltennis
+        suppliments:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: FACILITIES_ON_PAYMENT_A0376761_TUI_NL
+              title:
+                type: string
+                example: Faciliteiten
+              description:
+                type: array
+                items:
+                  type: string
+                  example:
+                  - massage
+                  - spa
+    BoardBasisData:
+      properties:
+        boardbasisCode:
+          type: string
+          example: GT06-FB
+        name:
+          type: string
+          example: Volpension
+        featureCodesAndValues:
+          $ref: '#/components/schemas/BoardBasisFeatures'
     RoomData:
       type: object
       properties:
@@ -274,114 +382,6 @@ components:
               type: array
               items:
                 type: string
-    BoardBasisData:
-      properties:
-        boardbasisCode:
-          type: string
-          example: GT06-FB
-        name:
-          type: string
-          example: Volpension
-        featureCodesAndValues:
-          $ref: '#/components/schemas/BoardBasisFeatures'
-    BoardBasisFeatures:
-      type: object
-      properties:
-        lunch_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        dinner_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        drinks_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        snacks_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        breakfast_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-    ReviewData:
-      type: object
-      properties:
-        source:
-          type: string
-          example: TUI
-        averageRating:
-          type: number
-          example: 3.5
-        tRating:
-          type: number
-          example: 5
-        reviewsCount:
-          type: number
-          example: 200
-        ratingBar:
-          type: string
-        ratingReviewsUrl:
-          type: string
-    FacilityData:
-      type: object
-      properties:
-        code:
-          type: string
-          example: FACILITIES_A0376761_TUI_NL
-        title:
-          type: string
-          example: Faciliteiten
-        description:
-          type: array
-          items:
-            type: string
-          example:
-          - fitnessruimte, tafeltennis
-        suppliments:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-                example: FACILITIES_ON_PAYMENT_A0376761_TUI_NL
-              title:
-                type: string
-                example: Faciliteiten
-              description:
-                type: array
-                items:
-                  type: string
-                  example:
-                  - massage
-                  - spa
-    GalleryMediaData:
-      type: array
-      items:
-        type: object
-        properties:
-          mainSrc:
-            type: string
-            example: https://tui-sit-images.imgix.net/869a453196a5cbbae3fe908d7968e53b.jpg?&w=1080&h=608&fm=jpg&fl=progressive
-          mime:
-            type: string
-            example: image/jpeg
-          size:
-            type: string
-            example: large
-          description:
-            type: string
-          caption:
-            type: string
 x-header: 'This API returns the content for particular hotel for TUI''s packages specifically for OTA''s according to the G7 standard.
 
   '
