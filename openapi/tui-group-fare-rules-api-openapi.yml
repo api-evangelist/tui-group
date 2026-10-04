@@ -207,6 +207,84 @@ paths:
                     data: null
 components:
   schemas:
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     ContentDataType:
       type: integer
       description: "Defines the content data type enumeration.\n            \n\n0 = Default\n1 = Text\n2 = RichTextFormat\n3 = ImageJpg\n4 = ImageGif\n5 = ImageBmp\n6 = ImagePng\n7 = WordDoc\n8 = Html\n9 = Pdf\n10 = Uri\n11 = WordDocx\n-1 = Unmapped"
@@ -261,6 +339,28 @@ components:
           type: integer
           description: "The number of passengers in this group with the specified passenger type\nand discount code.\n            "
           format: int32
+    IJsonResponseOfCategory50Responsev2:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Category50Responsev2'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     MessageStatus:
       type: integer
       description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
@@ -272,6 +372,109 @@ components:
       - 0
       - 1
       - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    FareRule:
+      type: object
+      description: "Defines a fare rule and its data.\n            "
+      additionalProperties: false
+      properties:
+        fareSellKey:
+          type:
+          - string
+          - 'null'
+          description: "The fare sell key that is in reference to the fare rule.\n            "
+        content:
+          type:
+          - string
+          - 'null'
+          description: "The fare rule content.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    Category50Responsev2:
+      type: object
+      description: "Represents a cat 50 response.\n            "
+      additionalProperties: false
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title of the category 50 fare rule information.\n            "
+        text:
+          type:
+          - string
+          - 'null'
+          description: "The formatted text for the category 50 fare rule information..\n            "
+        dataType:
+          description: "The content data type of the text.\n            "
+          $ref: '#/components/schemas/ContentDataType'
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "The culture code.\n            "
+          maxLength: 17
+          minLength: 0
+    IJsonResponseOfIListOfFareRule:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/FareRule'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     Category50Requestv2:
       type: object
       description: "Represents a v2 cat 50 request.\n            "
@@ -301,209 +504,6 @@ components:
           - boolean
           - 'null'
           description: "Flag, if true, convert response to html. Defaults to true.\n            "
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfCategory50Responsev2:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Category50Responsev2'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Category50Responsev2:
-      type: object
-      description: "Represents a cat 50 response.\n            "
-      additionalProperties: false
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title of the category 50 fare rule information.\n            "
-        text:
-          type:
-          - string
-          - 'null'
-          description: "The formatted text for the category 50 fare rule information..\n            "
-        dataType:
-          description: "The content data type of the text.\n            "
-          $ref: '#/components/schemas/ContentDataType'
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "The culture code.\n            "
-          maxLength: 17
-          minLength: 0
-    FareRule:
-      type: object
-      description: "Defines a fare rule and its data.\n            "
-      additionalProperties: false
-      properties:
-        fareSellKey:
-          type:
-          - string
-          - 'null'
-          description: "The fare sell key that is in reference to the fare rule.\n            "
-        content:
-          type:
-          - string
-          - 'null'
-          description: "The fare rule content.\n            "
-    IJsonResponseOfIListOfFareRule:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/FareRule'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
   securitySchemes:
     JWT:
       type: http

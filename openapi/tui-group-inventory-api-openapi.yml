@@ -737,47 +737,11 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    IJsonResponseOfIListOfInventoryRouteClass:
+    InventoryRouteClassEditRequest:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Represents the edit request for an individual inventory\nroute class.\n            "
       additionalProperties: false
       properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/InventoryRouteClass'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    InventoryLegClass:
-      type: object
-      description: "The inventory leg class model.\n            "
-      additionalProperties: false
-      properties:
-        type:
-          description: "The class of service type.\n            "
-          $ref: '#/components/schemas/ClassOfServiceType'
-        rank:
-          type:
-          - integer
-          - 'null'
-          description: "The class of service rank.\n            "
-          maximum: 32767.0
-          minimum: 1.0
         authorizedUnits:
           type:
           - integer
@@ -785,36 +749,187 @@ components:
           description: "The class of service authorized unit count.\n            "
           maximum: 32767.0
           minimum: 0.0
-        allotted:
-          type:
-          - integer
-          - 'null'
-          description: "The class of service allotted count.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        latestAdvancedReservation:
-          type:
-          - integer
-          - 'null'
-          description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        classKey:
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
           type:
           - string
           - 'null'
-          description: "The unique identifier for the leg class.\n            "
-        classOfService:
+          description: "The original raw message set (non-localized).\n            "
+        code:
           type:
           - string
           - 'null'
-          description: "The class of service.\n            "
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    DeltaMapperOfInventoryNestEditRequest:
+      type: object
+      description: "Map delta changes of a specific type T to another object.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        sendAvsMessages:
+          type: boolean
+          description: "Specifies if an AVS messages should be sent for changes.\n            "
+    InventoryLegNest:
+      type: object
+      description: "Represents the inventory leg nest model.\n            "
+      additionalProperties: false
+      properties:
+        nestKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for the nest within a leg.\n            "
+        cabinOfService:
+          type:
+          - string
+          - 'null'
+          description: "The cabin of service.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        type:
+          description: "The nest type.\n            "
+          $ref: '#/components/schemas/NestType'
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The nest's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classes:
+          type:
+          - array
+          - 'null'
+          description: "The collection of leg classes within the nest.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryLegClass'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    InventoryLegEditv2Request:
+      type: object
+      description: "Represents the inventory leg edit v2 request.\n            "
+      additionalProperties: false
+      properties:
+        lid:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's lid.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        adjustedCapacity:
+          type:
+          - integer
+          - 'null'
+          description: "The leg's adjusted capacity.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        sendAvsMessages:
+          type: boolean
+          description: "Specifies if an AVS messages should be sent for changes.\n            "
         status:
-          description: "The class status.\n            "
-          $ref: '#/components/schemas/ClassStatus'
-        seatsSold:
-          description: "The number of seats sold for the class of service\nof this leg.\n            "
-          $ref: '#/components/schemas/SeatsSoldBase'
+          description: "The leg status.\n            "
+          $ref: '#/components/schemas/LegStatusRequestType'
+        nests:
+          type:
+          - object
+          - 'null'
+          description: "The list of nests to update, by leg nest key.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/InventoryLegEditv2NestDetails'
     InventoryLegEditv2NestDetails:
       type: object
       description: "Represents an individual nest in the v2 leg edit request.\n            "
@@ -841,34 +956,152 @@ components:
           description: "The list of classes to update, by leg class key.\n            "
           additionalProperties:
             $ref: '#/components/schemas/ClassEditDetails'
-    InventoryRouteClassEditRequest:
+    IJsonResponseOfInventoryLegv2:
       type: object
-      description: "Represents the edit request for an individual inventory\nroute class.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        authorizedUnits:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/InventoryLegv2'
+        errors:
           type:
-          - integer
+          - array
           - 'null'
-          description: "The class of service authorized unit count.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-    Exception:
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    InventoryLegSSRLidsPatchRequest:
       type: object
+      description: "Represents the inventory leg and its ssr lids.\n            "
       additionalProperties: false
+      required:
+      - legKey
+      - ssrLids
       properties:
-        Message:
+        legKey:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+          description: "The unique leg key.\n            "
+          maxLength: 10000
+          minLength: 0
+        ssrLids:
+          type: array
+          description: "The collection of ssr lids.\n            "
+          items:
+            $ref: '#/components/schemas/InventoryLegSSRLid'
+    CodeShareIndicator:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
+      x-enumNames:
+      - NonCodeShare
+      - CodeShareCommercialDuplicate
+      - SharedDesignatorOrWetLease
+      - CodeShareHostOperatingCarrier
+      - CodeShareCommercialDuplicateWithOverrideText
+      - SharedDesignatorOrWetLeaseWithOverrideText
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    LegMoveControls:
+      type: object
+      description: "The leg move control model information.\n            "
+      additionalProperties: false
+      properties:
+        moveOutDays:
+          type: integer
+          description: "The maximum number of days this leg can be moved out.\n            "
+        moveBackDays:
+          type: integer
+          description: "The maximum number of days this leg can be moved back.\n            "
+        flyAhead:
+          description: "The fly-ahead related information.\n            "
+          $ref: '#/components/schemas/FlyAheadControls'
+    LegStatus:
+      type: integer
+      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      x-enumNames:
+      - Normal
+      - Closed
+      - Canceled
+      - Suspended
+      - ClosedPending
+      - BlockAllActivities
+      - Mishap
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 5
+      - 6
+      - 7
+    IJsonResponseOfInventoryLegNest:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/InventoryLegNest'
+        errors:
           type:
-          - string
+          - array
           - 'null'
-        StackTrace:
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    FlyAheadControls:
+      type: object
+      description: "The leg fly-ahead control model information.\n            "
+      additionalProperties: false
+      properties:
+        offerStatus:
+          description: "The fly-ahead offer status for the leg.\n            "
+          $ref: '#/components/schemas/FlyAheadOfferStatus'
+        isCandidate:
+          type: boolean
+          description: "True if the leg is available for use in fly-ahead candidates; false otherwise.\n            "
+        departBeforeMinutes:
+          type: integer
+          description: "The number of minutes before departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        departAfterMinutes:
+          type: integer
+          description: "The number of minutes after departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        arrivalAfterMinutes:
+          type: integer
+          description: "The number of minutes after arrival of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
+          maximum: 30240.0
+          minimum: 0.0
+        soldThresholdPercent:
+          type: integer
+          description: "The maximum resulting sold threshold percentage for the candidate\njourney if this leg is present in that candidate journey.  Min = 0,\nMax = 255, Default = 100.\n            "
+          maximum: 255.0
+          minimum: 0.0
+        mustBeSameJourneyType:
+          type: boolean
+          description: "Controls whether the candidate journey must be of the same journey type.\n            "
     InventoryLegv2:
       type: object
       description: "Defines the inventory leg v2.\n            "
@@ -927,76 +1160,52 @@ components:
           description: "The leg cross references.\n            "
           items:
             $ref: '#/components/schemas/LegCrossReference'
-    InventoryLegEditv2Request:
+    TransportationDesignator:
       type: object
-      description: "Represents the inventory leg edit v2 request.\n            "
+      description: "Model information about the traveling arrival and destination details.\n            "
       additionalProperties: false
       properties:
-        lid:
-          type:
-          - integer
-          - 'null'
-          description: "The leg's lid.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        adjustedCapacity:
-          type:
-          - integer
-          - 'null'
-          description: "The leg's adjusted capacity.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        sendAvsMessages:
-          type: boolean
-          description: "Specifies if an AVS messages should be sent for changes.\n            "
-        status:
-          description: "The leg status.\n            "
-          $ref: '#/components/schemas/LegStatusRequestType'
-        nests:
-          type:
-          - object
-          - 'null'
-          description: "The list of nests to update, by leg nest key.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/InventoryLegEditv2NestDetails'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
+        destination:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    FlyAheadOfferStatus:
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        arrival:
+          type: string
+          description: "The arrival date and time local to the arrival station.\n            "
+          format: date-time
+        departure:
+          type: string
+          description: "The departure date and time local to the departure station.\n            "
+          format: date-time
+    LegStatusRequestType:
       type: integer
-      description: "The fly ahead offer status enumeration.\n            \n\n0 = None\n1 = Involuntary\n2 = Voluntary\n3 = DisabledIfFirstLeg"
+      description: "The leg status request enumeration.\n            \n\n0 = Normal\n1 = Suspended\n2 = BlockAllActivities"
       x-enumNames:
-      - None
-      - Involuntary
-      - Voluntary
-      - DisabledIfFirstLeg
+      - Normal
+      - Suspended
+      - BlockAllActivities
+      enum:
+      - 0
+      - 1
+      - 2
+    NestType:
+      type: integer
+      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
+      x-enumNames:
+      - Default
+      - Net
+      - Serial
+      - OneBooking
       enum:
       - 0
       - 1
@@ -1038,45 +1247,6 @@ components:
           description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
           maximum: 32767.0
           minimum: 0.0
-    IJsonResponseOfInventoryLegv2:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/InventoryLegv2'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    SeatsSoldBase:
-      type: object
-      description: "Represents the seats sold base model.\n            "
-      additionalProperties: false
-      properties:
-        total:
-          type: integer
-          description: "The number of seats sold.\n            "
-        throughTotal:
-          type: integer
-          description: "The number of seats sold as part of a through flight.\n            "
-        nonStopTotal:
-          type: integer
-          description: "The number of seats sold as part of a non-stop flight.\n            "
-        connectTotal:
-          type: integer
-          description: "The number of seats sold as part of a connecting flight.\n            "
     InventoryLegInformation:
       type: object
       description: "Represents the inventory leg information model.\n            "
@@ -1134,124 +1304,62 @@ components:
         codeShareIndicator:
           description: "The code share indicator.\n            "
           $ref: '#/components/schemas/CodeShareIndicator'
-    MarketInformation:
+    LegSsr:
       type: object
-      description: "Model information about the market arrival and destination details.\n            "
+      description: "A model representing a leg ssr summary.\n            "
+      additionalProperties: false
+      properties:
+        available:
+          type: integer
+          description: "The number of Ssrs available.\n            "
+        ssrNestCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR nest code.\n            "
+          maxLength: 4
+          minLength: 0
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
+        sold:
+          type: integer
+          description: "The number of SSRs sold in the SSR nest.\n            "
+        unitSold:
+          type: integer
+          description: "The units of space sold for the SSR.\n            "
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
       additionalProperties: false
       required:
-      - destination
-      - origin
-      - departureDate
       - identifier
+      - carrierCode
       properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
         identifier:
-          description: "Gets or sets the leg arrival station.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
           type:
           - string
           - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    FlyAheadControls:
-      type: object
-      description: "The leg fly-ahead control model information.\n            "
-      additionalProperties: false
-      properties:
-        offerStatus:
-          description: "The fly-ahead offer status for the leg.\n            "
-          $ref: '#/components/schemas/FlyAheadOfferStatus'
-        isCandidate:
-          type: boolean
-          description: "True if the leg is available for use in fly-ahead candidates; false otherwise.\n            "
-        departBeforeMinutes:
-          type: integer
-          description: "The number of minutes before departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
-          maximum: 30240.0
-          minimum: 0.0
-        departAfterMinutes:
-          type: integer
-          description: "The number of minutes after departure of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
-          maximum: 30240.0
-          minimum: 0.0
-        arrivalAfterMinutes:
-          type: integer
-          description: "The number of minutes after arrival of the current journey that a\ncandidate journey is allowed to depart if that candidate journey\ncontains this leg.\n            "
-          maximum: 30240.0
-          minimum: 0.0
-        soldThresholdPercent:
-          type: integer
-          description: "The maximum resulting sold threshold percentage for the candidate\njourney if this leg is present in that candidate journey.  Min = 0,\nMax = 255, Default = 100.\n            "
-          maximum: 255.0
-          minimum: 0.0
-        mustBeSameJourneyType:
-          type: boolean
-          description: "Controls whether the candidate journey must be of the same journey type.\n            "
-    IJsonResponseOfInventoryLegNest:
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    IJsonResponseOfInventoryLegClass:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/InventoryLegNest'
+          $ref: '#/components/schemas/InventoryLegClass'
         errors:
           type:
           - array
@@ -1266,128 +1374,39 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    InventoryRouteClass:
+    SeatsSoldBase:
       type: object
-      description: "Represents classes at the route level.\n            "
+      description: "Represents the seats sold base model.\n            "
       additionalProperties: false
       properties:
-        authorizedUnits:
-          type:
-          - integer
-          - 'null'
-          description: "The class of service authorized unit count.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        classOfService:
-          type:
-          - string
-          - 'null'
-          description: "The class of service for the journey.\n            "
-          maxLength: 8
-          minLength: 0
-        manageAuthorizedUnits:
-          type: boolean
-          description: "Indicator for if the AU can be managed at\nthe journey level.\n            "
-    LegStatus:
-      type: integer
-      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
-      x-enumNames:
-      - Normal
-      - Closed
-      - Canceled
-      - Suspended
-      - ClosedPending
-      - BlockAllActivities
-      - Mishap
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 5
-      - 6
-      - 7
-    InventoryLegNest:
-      type: object
-      description: "Represents the inventory leg nest model.\n            "
-      additionalProperties: false
-      properties:
-        nestKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier for the nest within a leg.\n            "
-        cabinOfService:
-          type:
-          - string
-          - 'null'
-          description: "The cabin of service.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        type:
-          description: "The nest type.\n            "
-          $ref: '#/components/schemas/NestType'
-        lid:
-          type:
-          - integer
-          - 'null'
-          description: "The nest's lid.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        adjustedCapacity:
-          type:
-          - integer
-          - 'null'
-          description: "The nest's adjusted capacity.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        classes:
-          type:
-          - array
-          - 'null'
-          description: "The collection of leg classes within the nest.\n            "
-          items:
-            $ref: '#/components/schemas/InventoryLegClass'
-    LegMoveControls:
-      type: object
-      description: "The leg move control model information.\n            "
-      additionalProperties: false
-      properties:
-        moveOutDays:
+        total:
           type: integer
-          description: "The maximum number of days this leg can be moved out.\n            "
-        moveBackDays:
+          description: "The number of seats sold.\n            "
+        throughTotal:
           type: integer
-          description: "The maximum number of days this leg can be moved back.\n            "
-        flyAhead:
-          description: "The fly-ahead related information.\n            "
-          $ref: '#/components/schemas/FlyAheadControls'
-    TransportationDesignator:
+          description: "The number of seats sold as part of a through flight.\n            "
+        nonStopTotal:
+          type: integer
+          description: "The number of seats sold as part of a non-stop flight.\n            "
+        connectTotal:
+          type: integer
+          description: "The number of seats sold as part of a connecting flight.\n            "
+    Exception:
       type: object
-      description: "Model information about the traveling arrival and destination details.\n            "
       additionalProperties: false
       properties:
-        destination:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
+        StackTrace:
           type:
           - string
           - 'null'
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        arrival:
-          type: string
-          description: "The arrival date and time local to the arrival station.\n            "
-          format: date-time
-        departure:
-          type: string
-          description: "The departure date and time local to the departure station.\n            "
-          format: date-time
     DeltaMapperOfInventoryClassEditRequest:
       type: object
       description: "Map delta changes of a specific type T to another object.\n            "
@@ -1427,68 +1446,70 @@ components:
         sendAvsMessages:
           type: boolean
           description: "Specifies if an AVS messages should be sent for changes.\n            "
-    TransportationIdentifier:
+    InventoryLegClass:
       type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    OperatingInformation:
-      type: object
-      description: "Represents the operating information model.\n            "
+      description: "The inventory leg class model.\n            "
       additionalProperties: false
       properties:
-        comment:
+        type:
+          description: "The class of service type.\n            "
+          $ref: '#/components/schemas/ClassOfServiceType'
+        rank:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service rank.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        allotted:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service allotted count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        latestAdvancedReservation:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service's latest advanced purchase reservation.\nA value of zero indicates that there is no restriction.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classKey:
           type:
           - string
           - 'null'
-          description: "The operated by comment field.\n            "
-        identifier:
+          description: "The unique identifier for the leg class.\n            "
+        classOfService:
           type:
           - string
           - 'null'
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type:
-          - string
-          - 'null'
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    IJsonResponseOfInventoryLegClass:
+          description: "The class of service.\n            "
+        status:
+          description: "The class status.\n            "
+          $ref: '#/components/schemas/ClassStatus'
+        seatsSold:
+          description: "The number of seats sold for the class of service\nof this leg.\n            "
+          $ref: '#/components/schemas/SeatsSoldBase'
+    IJsonResponseOfIListOfInventoryRouteClass:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
+          type:
+          - array
+          - 'null'
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/InventoryLegClass'
+          items:
+            $ref: '#/components/schemas/InventoryRouteClass'
         errors:
           type:
           - array
@@ -1503,6 +1524,52 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    InventoryLegSSRLid:
+      type: object
+      description: "Represents an SSR lid update request.\n            "
+      additionalProperties: false
+      required:
+      - ssrNestCode
+      - lid
+      properties:
+        ssrNestCode:
+          type: string
+          description: "The code of the SSR nest. For the configured details of this code, please use GET\n`api/nsk/v1/resources/SsrNests/{ssrNestCode}`.\n            "
+          maxLength: 4
+          minLength: 1
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
     LegCrossReference:
       type: object
       description: "Represents the inventory leg cross reference data.\n            "
@@ -1521,169 +1588,6 @@ components:
         marketInformation:
           description: "Information about the market arrival and destination details.\n            "
           $ref: '#/components/schemas/MarketInformation'
-    NestType:
-      type: integer
-      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
-      x-enumNames:
-      - Default
-      - Net
-      - Serial
-      - OneBooking
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    DeltaMapperOfInventoryNestEditRequest:
-      type: object
-      description: "Map delta changes of a specific type T to another object.\n            "
-      additionalProperties: false
-      properties:
-        lid:
-          type:
-          - integer
-          - 'null'
-          description: "The nest's lid.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        adjustedCapacity:
-          type:
-          - integer
-          - 'null'
-          description: "The nest's adjusted capacity.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        sendAvsMessages:
-          type: boolean
-          description: "Specifies if an AVS messages should be sent for changes.\n            "
-    InventoryLegSSRLid:
-      type: object
-      description: "Represents an SSR lid update request.\n            "
-      additionalProperties: false
-      required:
-      - ssrNestCode
-      - lid
-      properties:
-        ssrNestCode:
-          type: string
-          description: "The code of the SSR nest. For the configured details of this code, please use GET\n`api/nsk/v1/resources/SsrNests/{ssrNestCode}`.\n            "
-          maxLength: 4
-          minLength: 1
-        lid:
-          type: integer
-          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    LegSsr:
-      type: object
-      description: "A model representing a leg ssr summary.\n            "
-      additionalProperties: false
-      properties:
-        available:
-          type: integer
-          description: "The number of Ssrs available.\n            "
-        ssrNestCode:
-          type:
-          - string
-          - 'null'
-          description: "The SSR nest code.\n            "
-          maxLength: 4
-          minLength: 0
-        lid:
-          type: integer
-          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
-        sold:
-          type: integer
-          description: "The number of SSRs sold in the SSR nest.\n            "
-        unitSold:
-          type: integer
-          description: "The units of space sold for the SSR.\n            "
-    IJsonResponseOfDictionaryOfStringAndListOfInventoryLegSSRLid:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - object
-          - 'null'
-          description: "The payload data.\n            "
-          additionalProperties:
-            type: array
-            items:
-              $ref: '#/components/schemas/InventoryLegSSRLid'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    LegStatusRequestType:
-      type: integer
-      description: "The leg status request enumeration.\n            \n\n0 = Normal\n1 = Suspended\n2 = BlockAllActivities"
-      x-enumNames:
-      - Normal
-      - Suspended
-      - BlockAllActivities
-      enum:
-      - 0
-      - 1
-      - 2
-    ClassOfServiceType:
-      type: integer
-      description: "The class of service type enumeration.\n            \n\n0 = Default\n1 = Normal\n2 = Discrete\n3 = NonNested\n4 = NegoAllotment\n5 = ProrataAllotment\n6 = OperatingBlockspace\n7 = MarketingBlockspace"
-      x-enumNames:
-      - Default
-      - Normal
-      - Discrete
-      - NonNested
-      - NegoAllotment
-      - ProrataAllotment
-      - OperatingBlockspace
-      - MarketingBlockspace
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    CodeShareIndicator:
-      type: integer
-      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
-      x-enumNames:
-      - NonCodeShare
-      - CodeShareCommercialDuplicate
-      - SharedDesignatorOrWetLease
-      - CodeShareHostOperatingCarrier
-      - CodeShareCommercialDuplicateWithOverrideText
-      - SharedDesignatorOrWetLeaseWithOverrideText
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -1720,24 +1624,120 @@ components:
       - 3
       - 4
       - 5
-    InventoryLegSSRLidsPatchRequest:
+    IJsonResponseOfDictionaryOfStringAndListOfInventoryLegSSRLid:
       type: object
-      description: "Represents the inventory leg and its ssr lids.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
-      required:
-      - legKey
-      - ssrLids
       properties:
-        legKey:
-          type: string
-          description: "The unique leg key.\n            "
-          maxLength: 10000
-          minLength: 0
-        ssrLids:
-          type: array
-          description: "The collection of ssr lids.\n            "
+        data:
+          type:
+          - object
+          - 'null'
+          description: "The payload data.\n            "
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/InventoryLegSSRLid'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
           items:
-            $ref: '#/components/schemas/InventoryLegSSRLid'
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    InventoryRouteClass:
+      type: object
+      description: "Represents classes at the route level.\n            "
+      additionalProperties: false
+      properties:
+        authorizedUnits:
+          type:
+          - integer
+          - 'null'
+          description: "The class of service authorized unit count.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service for the journey.\n            "
+          maxLength: 8
+          minLength: 0
+        manageAuthorizedUnits:
+          type: boolean
+          description: "Indicator for if the AU can be managed at\nthe journey level.\n            "
+    ClassOfServiceType:
+      type: integer
+      description: "The class of service type enumeration.\n            \n\n0 = Default\n1 = Normal\n2 = Discrete\n3 = NonNested\n4 = NegoAllotment\n5 = ProrataAllotment\n6 = OperatingBlockspace\n7 = MarketingBlockspace"
+      x-enumNames:
+      - Default
+      - Normal
+      - Discrete
+      - NonNested
+      - NegoAllotment
+      - ProrataAllotment
+      - OperatingBlockspace
+      - MarketingBlockspace
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    OperatingInformation:
+      type: object
+      description: "Represents the operating information model.\n            "
+      additionalProperties: false
+      properties:
+        comment:
+          type:
+          - string
+          - 'null'
+          description: "The operated by comment field.\n            "
+        identifier:
+          type:
+          - string
+          - 'null'
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    FlyAheadOfferStatus:
+      type: integer
+      description: "The fly ahead offer status enumeration.\n            \n\n0 = None\n1 = Involuntary\n2 = Voluntary\n3 = DisabledIfFirstLeg"
+      x-enumNames:
+      - None
+      - Involuntary
+      - Voluntary
+      - DisabledIfFirstLeg
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
   securitySchemes:
     JWT:
       type: http

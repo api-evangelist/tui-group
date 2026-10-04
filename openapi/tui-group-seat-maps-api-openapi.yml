@@ -103,6 +103,132 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    UnitType:
+      type: integer
+      description: "Defines the type of unit.\n            \n\n0 = None\n1 = NormalSeat\n2 = LargeSeat\n3 = Couchette\n4 = Compartment\n5 = Table\n6 = Wall\n7 = Window\n8 = Door\n9 = Stairs\n10 = Wing\n12 = Other\n13 = Bulkhead\n14 = BedOneOfThree\n15 = BedTwoOfThree\n16 = BedThreeOfThree\n17 = BedOneOfTwo\n18 = BedTwoOfTwo\n19 = Bed\n20 = Exit\n21 = LabelRuler\n22 = GenericUnitResizableArea\n23 = Lavatory\n24 = LavatoryWithHandicappedFacilities\n25 = Luggage\n26 = MovableCompartmentDivider\n27 = Bar\n28 = Closet\n29 = Galley\n30 = MovieScreen\n31 = Storage"
+      x-enumNames:
+      - None
+      - NormalSeat
+      - LargeSeat
+      - Couchette
+      - Compartment
+      - Table
+      - Wall
+      - Window
+      - Door
+      - Stairs
+      - Wing
+      - Other
+      - Bulkhead
+      - BedOneOfThree
+      - BedTwoOfThree
+      - BedThreeOfThree
+      - BedOneOfTwo
+      - BedTwoOfTwo
+      - Bed
+      - Exit
+      - LabelRuler
+      - GenericUnitResizableArea
+      - Lavatory
+      - LavatoryWithHandicappedFacilities
+      - Luggage
+      - MovableCompartmentDivider
+      - Bar
+      - Closet
+      - Galley
+      - MovieScreen
+      - Storage
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+      - 26
+      - 27
+      - 28
+      - 29
+      - 30
+      - 31
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     UnitInformation:
       type: object
       description: "Defines a unit within an equipment -> decks -> compartment.\n            "
@@ -221,135 +347,41 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    SeatMapStatelessAvailability:
-      type: object
-      description: "Defines the equipment availability.\n            "
-      additionalProperties: false
-      properties:
-        seatMap:
-          description: "The seat map.\n            "
-          $ref: '#/components/schemas/SeatMap'
-        ssrLookup:
-          type:
-          - object
-          - 'null'
-          description: "The list of SSR's available.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/Ssr'
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    SeatAvailability:
+    SeatRestriction:
       type: integer
-      description: "Defines the type of hold placed on the seat (unit).\n            \n\n0 = Unknown\n1 = Reserved\n2 = Blocked\n3 = HeldForAnotherSession\n4 = HeldForThisSession\n5 = Open\n6 = Missing\n7 = CheckedIn\n8 = FleetBlocked\n9 = Restricted\n10 = Broken\n11 = ReservedForPnr\n12 = SoftBlocked\n13 = Unavailable"
+      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
       x-enumNames:
-      - Unknown
-      - Reserved
-      - Blocked
-      - HeldForAnotherSession
-      - HeldForThisSession
-      - Open
-      - Missing
-      - CheckedIn
-      - FleetBlocked
-      - Restricted
-      - Broken
-      - ReservedForPnr
-      - SoftBlocked
-      - Unavailable
+      - Undefined
+      - AlwaysAllowed
+      - DefaultAllowed
+      - DefaultRestricted
       enum:
       - 0
       - 1
       - 2
       - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-    CompartmentInformation:
+    IJsonResponseOfSeatMapStatelessAvailability:
       type: object
-      description: "Defines a compartment within an equipment -> deck.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        availableUnits:
-          type: integer
-          description: "The number of available units in the compartment.\n            "
-          format: int32
-        designator:
-          type:
-          - string
-          - 'null'
-          description: "The unique designator for the compartment.\n            "
-        length:
-          type: integer
-          description: "The length of the compartment.\n            "
-          format: int32
-        width:
-          type: integer
-          description: "The width of the compartment.\n            "
-          format: int32
-        sequence:
-          type: integer
-          description: "The compartment's sequence number in the equipments deck.\n            "
-        orientation:
-          type: integer
-          description: "The facing orientation this compartment is in.\n            "
-        units:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SeatMapStatelessAvailability'
+        errors:
           type:
           - array
           - 'null'
-          description: "The list of units contained in the compartment.\n            "
+          description: "The collection of errors being thrown.\n            "
           items:
-            $ref: '#/components/schemas/UnitInformation'
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
     SeatMapProperty:
       type: object
       description: "Defines a property of a equipment unit.\n            "
@@ -365,19 +397,6 @@ components:
           - string
           - 'null'
           description: "The dynamic equipment property value.\n            "
-    SeatRestriction:
-      type: integer
-      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
-      x-enumNames:
-      - Undefined
-      - AlwaysAllowed
-      - DefaultAllowed
-      - DefaultRestricted
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
     SeatMap:
       type: object
       description: "Defines a single equipment type and all it's units.\n            "
@@ -432,70 +451,6 @@ components:
           - string
           - 'null'
           description: "The reference identifying what seatmap the leg is in associated to.\n            "
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    DeckInformation:
-      type: object
-      description: "Defines a deck within an equipment.\n            "
-      additionalProperties: false
-      properties:
-        number:
-          type: integer
-          description: "The deck number.\n            "
-          format: int32
-        compartments:
-          type:
-          - object
-          - 'null'
-          description: "The collection of compartments within the deck.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/CompartmentInformation'
     Ssr:
       type: object
       description: "The sell service request (SSR) model.\n            "
@@ -572,41 +527,106 @@ components:
           - string
           - 'null'
           description: "The rule set name.\n            "
-    UnitType:
+    CompartmentInformation:
+      type: object
+      description: "Defines a compartment within an equipment -> deck.\n            "
+      additionalProperties: false
+      properties:
+        availableUnits:
+          type: integer
+          description: "The number of available units in the compartment.\n            "
+          format: int32
+        designator:
+          type:
+          - string
+          - 'null'
+          description: "The unique designator for the compartment.\n            "
+        length:
+          type: integer
+          description: "The length of the compartment.\n            "
+          format: int32
+        width:
+          type: integer
+          description: "The width of the compartment.\n            "
+          format: int32
+        sequence:
+          type: integer
+          description: "The compartment's sequence number in the equipments deck.\n            "
+        orientation:
+          type: integer
+          description: "The facing orientation this compartment is in.\n            "
+        units:
+          type:
+          - array
+          - 'null'
+          description: "The list of units contained in the compartment.\n            "
+          items:
+            $ref: '#/components/schemas/UnitInformation'
+    SeatMapStatelessAvailability:
+      type: object
+      description: "Defines the equipment availability.\n            "
+      additionalProperties: false
+      properties:
+        seatMap:
+          description: "The seat map.\n            "
+          $ref: '#/components/schemas/SeatMap'
+        ssrLookup:
+          type:
+          - object
+          - 'null'
+          description: "The list of SSR's available.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/Ssr'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    DeckInformation:
+      type: object
+      description: "Defines a deck within an equipment.\n            "
+      additionalProperties: false
+      properties:
+        number:
+          type: integer
+          description: "The deck number.\n            "
+          format: int32
+        compartments:
+          type:
+          - object
+          - 'null'
+          description: "The collection of compartments within the deck.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/CompartmentInformation'
+    SeatAvailability:
       type: integer
-      description: "Defines the type of unit.\n            \n\n0 = None\n1 = NormalSeat\n2 = LargeSeat\n3 = Couchette\n4 = Compartment\n5 = Table\n6 = Wall\n7 = Window\n8 = Door\n9 = Stairs\n10 = Wing\n12 = Other\n13 = Bulkhead\n14 = BedOneOfThree\n15 = BedTwoOfThree\n16 = BedThreeOfThree\n17 = BedOneOfTwo\n18 = BedTwoOfTwo\n19 = Bed\n20 = Exit\n21 = LabelRuler\n22 = GenericUnitResizableArea\n23 = Lavatory\n24 = LavatoryWithHandicappedFacilities\n25 = Luggage\n26 = MovableCompartmentDivider\n27 = Bar\n28 = Closet\n29 = Galley\n30 = MovieScreen\n31 = Storage"
+      description: "Defines the type of hold placed on the seat (unit).\n            \n\n0 = Unknown\n1 = Reserved\n2 = Blocked\n3 = HeldForAnotherSession\n4 = HeldForThisSession\n5 = Open\n6 = Missing\n7 = CheckedIn\n8 = FleetBlocked\n9 = Restricted\n10 = Broken\n11 = ReservedForPnr\n12 = SoftBlocked\n13 = Unavailable"
       x-enumNames:
-      - None
-      - NormalSeat
-      - LargeSeat
-      - Couchette
-      - Compartment
-      - Table
-      - Wall
-      - Window
-      - Door
-      - Stairs
-      - Wing
-      - Other
-      - Bulkhead
-      - BedOneOfThree
-      - BedTwoOfThree
-      - BedThreeOfThree
-      - BedOneOfTwo
-      - BedTwoOfTwo
-      - Bed
-      - Exit
-      - LabelRuler
-      - GenericUnitResizableArea
-      - Lavatory
-      - LavatoryWithHandicappedFacilities
-      - Luggage
-      - MovableCompartmentDivider
-      - Bar
-      - Closet
-      - Galley
-      - MovieScreen
-      - Storage
+      - Unknown
+      - Reserved
+      - Blocked
+      - HeldForAnotherSession
+      - HeldForThisSession
+      - Open
+      - Missing
+      - CheckedIn
+      - FleetBlocked
+      - Restricted
+      - Broken
+      - ReservedForPnr
+      - SoftBlocked
+      - Unavailable
       enum:
       - 0
       - 1
@@ -619,95 +639,39 @@ components:
       - 8
       - 9
       - 10
+      - 11
       - 12
       - 13
-      - 14
-      - 15
-      - 16
-      - 17
-      - 18
-      - 19
-      - 20
-      - 21
-      - 22
-      - 23
-      - 24
-      - 25
-      - 26
-      - 27
-      - 28
-      - 29
-      - 30
-      - 31
-    SsrType:
-      type: integer
-      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
-      x-enumNames:
-      - Standard
-      - Infant
-      - Meal
-      - BaggageAllowance
-      - TravelLineMeal
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfSeatMapStatelessAvailability:
+    Message:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/SeatMapStatelessAvailability'
-        errors:
+        code:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+          description: "The unique message code.\n            "
+        type:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+          description: "The message type.\n            "
+        value:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - array
+          - object
           - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     EquipmentCategory:
       type: integer
       description: "Represents the category of the equipment used for reservation operations.\n            \n\n0 = None\n1 = JetAircraft\n2 = PistonAircraft\n3 = TurbopropAircraft\n4 = Helicopter\n5 = Surface\n6 = Train\n7 = Bus\n8 = AllCategories"
@@ -731,6 +695,42 @@ components:
       - 6
       - 7
       - 8
+    SsrType:
+      type: integer
+      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
+      x-enumNames:
+      - Standard
+      - Infant
+      - Meal
+      - BaggageAllowance
+      - TravelLineMeal
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

@@ -105,6 +105,89 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - string
+          - 'null'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     MessageStatus:
       type: integer
       description: '0 = General
@@ -120,14 +203,39 @@ components:
       - 0
       - 1
       - 2
-    IJsonResponseOfString:
+    ParseScanRequestV2:
       type: object
       additionalProperties: false
       properties:
-        data:
+        track1:
           type:
           - string
           - 'null'
+        track2:
+          type:
+          - string
+          - 'null'
+        track3:
+          type:
+          - string
+          - 'null'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which parsing rules will be used.  If not specified,
+
+            the default location code from the JWT will be used.'
+        documentTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
         errors:
           type:
           - array
@@ -170,114 +278,6 @@ components:
           type:
           - string
           - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    ParseScanRequestV2:
-      type: object
-      additionalProperties: false
-      properties:
-        track1:
-          type:
-          - string
-          - 'null'
-        track2:
-          type:
-          - string
-          - 'null'
-        track3:
-          type:
-          - string
-          - 'null'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which parsing rules will be used.  If not specified,
-
-            the default location code from the JWT will be used.'
-        documentTypeCode:
-          type:
-          - string
-          - 'null'
-          description: "This is only used when the scanned data is from a travel documment.  If left blank\nwhen parsing a travel document's scanned data, the MRZ parser will try to guess \nwhich document type code to use."
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
   securitySchemes:
     JWT:
       type: http

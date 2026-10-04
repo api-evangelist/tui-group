@@ -188,6 +188,132 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    UnitType:
+      type: integer
+      description: "Defines the type of unit.\n            \n\n0 = None\n1 = NormalSeat\n2 = LargeSeat\n3 = Couchette\n4 = Compartment\n5 = Table\n6 = Wall\n7 = Window\n8 = Door\n9 = Stairs\n10 = Wing\n12 = Other\n13 = Bulkhead\n14 = BedOneOfThree\n15 = BedTwoOfThree\n16 = BedThreeOfThree\n17 = BedOneOfTwo\n18 = BedTwoOfTwo\n19 = Bed\n20 = Exit\n21 = LabelRuler\n22 = GenericUnitResizableArea\n23 = Lavatory\n24 = LavatoryWithHandicappedFacilities\n25 = Luggage\n26 = MovableCompartmentDivider\n27 = Bar\n28 = Closet\n29 = Galley\n30 = MovieScreen\n31 = Storage"
+      x-enumNames:
+      - None
+      - NormalSeat
+      - LargeSeat
+      - Couchette
+      - Compartment
+      - Table
+      - Wall
+      - Window
+      - Door
+      - Stairs
+      - Wing
+      - Other
+      - Bulkhead
+      - BedOneOfThree
+      - BedTwoOfThree
+      - BedThreeOfThree
+      - BedOneOfTwo
+      - BedTwoOfTwo
+      - Bed
+      - Exit
+      - LabelRuler
+      - GenericUnitResizableArea
+      - Lavatory
+      - LavatoryWithHandicappedFacilities
+      - Luggage
+      - MovableCompartmentDivider
+      - Bar
+      - Closet
+      - Galley
+      - MovieScreen
+      - Storage
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+      - 26
+      - 27
+      - 28
+      - 29
+      - 30
+      - 31
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     UnitInformation:
       type: object
       description: "Defines a unit within an equipment -> decks -> compartment.\n            "
@@ -280,44 +406,75 @@ components:
           description: "The seat availability per passenger.\n            "
           additionalProperties:
             $ref: '#/components/schemas/SeatAvailability'
-    SeatMapAvailability:
-      type: object
-      description: "Defines the equipment availability.\n            "
-      additionalProperties: false
-      properties:
-        seatMap:
-          description: "The seat map.\n            "
-          $ref: '#/components/schemas/SeatMap'
-        fees:
-          type:
-          - object
-          - 'null'
-          description: "The collection passenger seat group fees to go along with the collection of seat maps.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/PassengerSeatGroupInfo'
-        ssrLookup:
-          type:
-          - object
-          - 'null'
-          description: "The list of SSR's available.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/Ssr'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
+    ChargeType:
+      type: integer
+      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
+      x-enumNames:
+      - FarePrice
+      - Discount
+      - IncludedTravelFee
+      - IncludedTax
+      - TravelFee
+      - Tax
+      - ServiceCharge
+      - PromotionDiscount
+      - ConnectionAdjustmentAmount
+      - AddOnsPrice
+      - FarePoints
+      - DiscountPoints
+      - IncludedAddOnsFee
+      - AddOnsFee
+      - AddOnsMarkup
+      - FareSurcharge
+      - AddOnsCancelFee
+      - Calculated
+      - Note
+      - Points
+      - DynamicFareAdjustment
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 16
+      - 17
+      - 18
+      - 19
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+    SeatRestriction:
+      type: integer
+      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
+      x-enumNames:
+      - Undefined
+      - AlwaysAllowed
+      - DefaultAllowed
+      - DefaultRestricted
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
     ServiceCharge:
       type: object
       description: "Model that represents the fare service charge information.\n            "
@@ -370,113 +527,6 @@ components:
           description: "The service charge ticket code.\n            "
           maxLength: 3
           minLength: 0
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    SeatAvailability:
-      type: integer
-      description: "Defines the type of hold placed on the seat (unit).\n            \n\n0 = Unknown\n1 = Reserved\n2 = Blocked\n3 = HeldForAnotherSession\n4 = HeldForThisSession\n5 = Open\n6 = Missing\n7 = CheckedIn\n8 = FleetBlocked\n9 = Restricted\n10 = Broken\n11 = ReservedForPnr\n12 = SoftBlocked\n13 = Unavailable"
-      x-enumNames:
-      - Unknown
-      - Reserved
-      - Blocked
-      - HeldForAnotherSession
-      - HeldForThisSession
-      - Open
-      - Missing
-      - CheckedIn
-      - FleetBlocked
-      - Restricted
-      - Broken
-      - ReservedForPnr
-      - SoftBlocked
-      - Unavailable
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-    FeePricingMode:
-      type: integer
-      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
-      x-enumNames:
-      - MonetaryOnly
-      - PointsOnly
-      enum:
-      - 0
-      - 1
-    CompartmentInformation:
-      type: object
-      description: "Defines a compartment within an equipment -> deck.\n            "
-      additionalProperties: false
-      properties:
-        availableUnits:
-          type: integer
-          description: "The number of available units in the compartment.\n            "
-          format: int32
-        designator:
-          type:
-          - string
-          - 'null'
-          description: "The unique designator for the compartment.\n            "
-        length:
-          type: integer
-          description: "The length of the compartment.\n            "
-          format: int32
-        width:
-          type: integer
-          description: "The width of the compartment.\n            "
-          format: int32
-        sequence:
-          type: integer
-          description: "The compartment's sequence number in the equipments deck.\n            "
-        orientation:
-          type: integer
-          description: "The facing orientation this compartment is in.\n            "
-        units:
-          type:
-          - array
-          - 'null'
-          description: "The list of units contained in the compartment.\n            "
-          items:
-            $ref: '#/components/schemas/UnitInformation'
     SeatMapProperty:
       type: object
       description: "Defines a property of a equipment unit.\n            "
@@ -492,19 +542,83 @@ components:
           - string
           - 'null'
           description: "The dynamic equipment property value.\n            "
-    SeatRestriction:
+    PassengerSeatGroupInfo:
+      type: object
+      description: "Defines the equipment seat group details for a specific passenger.\n            "
+      additionalProperties: false
+      properties:
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The associated passenger key.\n            "
+        groups:
+          type:
+          - object
+          - 'null'
+          description: "The collection of seat group fees.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/SeatGroupInfo'
+    CollectType:
       type: integer
-      description: "The seat restriction enumeration.\n            \n\n0 = Undefined\n1 = AlwaysAllowed\n2 = DefaultAllowed\n3 = DefaultRestricted"
+      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
       x-enumNames:
-      - Undefined
-      - AlwaysAllowed
-      - DefaultAllowed
-      - DefaultRestricted
+      - SellerChargeable
+      - ExternalChargeable
+      - SellerNonChargeable
+      - ExternalNonChargeable
+      - ExternalChargeableImmediate
       enum:
       - 0
       - 1
       - 2
       - 3
+      - 4
+    FeeType:
+      type: integer
+      description: "Enumeration representing all the different fee types.\n            \n\n0 = All\n1 = Tax\n2 = TravelFee\n3 = ServiceFee\n4 = PaymentFee\n5 = PenaltyFee\n6 = SsrFee\n7 = NonFlightServiceFee\n8 = UpgradeFee\n9 = SeatFee\n10 = BaseFare\n11 = SpoilageFee\n12 = NameChangeFee\n13 = ConvenienceFee\n14 = BaggageFee\n15 = FareSurcharge\n16 = PromotionDiscount\n17 = ServiceBundle\n18 = ExtraBagFee\n19 = ATPCOBagFee"
+      x-enumNames:
+      - All
+      - Tax
+      - TravelFee
+      - ServiceFee
+      - PaymentFee
+      - PenaltyFee
+      - SsrFee
+      - NonFlightServiceFee
+      - UpgradeFee
+      - SeatFee
+      - BaseFare
+      - SpoilageFee
+      - NameChangeFee
+      - ConvenienceFee
+      - BaggageFee
+      - FareSurcharge
+      - PromotionDiscount
+      - ServiceBundle
+      - ExtraBagFee
+      - ATPCOBagFee
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+      - 17
+      - 18
+      - 19
     SeatMap:
       type: object
       description: "Defines a single equipment type and all it's units.\n            "
@@ -559,111 +673,6 @@ components:
           - string
           - 'null'
           description: "The reference identifying what seatmap the leg is in associated to.\n            "
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfIListOfSeatMapAvailability:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/SeatMapAvailability'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    DeckInformation:
-      type: object
-      description: "Defines a deck within an equipment.\n            "
-      additionalProperties: false
-      properties:
-        number:
-          type: integer
-          description: "The deck number.\n            "
-          format: int32
-        compartments:
-          type:
-          - object
-          - 'null'
-          description: "The collection of compartments within the deck.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/CompartmentInformation'
-    SeatGroupInfo:
-      type: object
-      description: "Information about a equipment seat group.\n            "
-      additionalProperties: false
-      properties:
-        group:
-          type: integer
-          description: "The seat group number.\n            "
-        fees:
-          type:
-          - array
-          - 'null'
-          description: "The list of seat group fees.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerFee'
     Ssr:
       type: object
       description: "The sell service request (SSR) model.\n            "
@@ -740,267 +749,57 @@ components:
           - string
           - 'null'
           description: "The rule set name.\n            "
-    FeeType:
-      type: integer
-      description: "Enumeration representing all the different fee types.\n            \n\n0 = All\n1 = Tax\n2 = TravelFee\n3 = ServiceFee\n4 = PaymentFee\n5 = PenaltyFee\n6 = SsrFee\n7 = NonFlightServiceFee\n8 = UpgradeFee\n9 = SeatFee\n10 = BaseFare\n11 = SpoilageFee\n12 = NameChangeFee\n13 = ConvenienceFee\n14 = BaggageFee\n15 = FareSurcharge\n16 = PromotionDiscount\n17 = ServiceBundle\n18 = ExtraBagFee\n19 = ATPCOBagFee"
-      x-enumNames:
-      - All
-      - Tax
-      - TravelFee
-      - ServiceFee
-      - PaymentFee
-      - PenaltyFee
-      - SsrFee
-      - NonFlightServiceFee
-      - UpgradeFee
-      - SeatFee
-      - BaseFare
-      - SpoilageFee
-      - NameChangeFee
-      - ConvenienceFee
-      - BaggageFee
-      - FareSurcharge
-      - PromotionDiscount
-      - ServiceBundle
-      - ExtraBagFee
-      - ATPCOBagFee
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-      - 14
-      - 15
-      - 16
-      - 17
-      - 18
-      - 19
-    UnitType:
-      type: integer
-      description: "Defines the type of unit.\n            \n\n0 = None\n1 = NormalSeat\n2 = LargeSeat\n3 = Couchette\n4 = Compartment\n5 = Table\n6 = Wall\n7 = Window\n8 = Door\n9 = Stairs\n10 = Wing\n12 = Other\n13 = Bulkhead\n14 = BedOneOfThree\n15 = BedTwoOfThree\n16 = BedThreeOfThree\n17 = BedOneOfTwo\n18 = BedTwoOfTwo\n19 = Bed\n20 = Exit\n21 = LabelRuler\n22 = GenericUnitResizableArea\n23 = Lavatory\n24 = LavatoryWithHandicappedFacilities\n25 = Luggage\n26 = MovableCompartmentDivider\n27 = Bar\n28 = Closet\n29 = Galley\n30 = MovieScreen\n31 = Storage"
-      x-enumNames:
-      - None
-      - NormalSeat
-      - LargeSeat
-      - Couchette
-      - Compartment
-      - Table
-      - Wall
-      - Window
-      - Door
-      - Stairs
-      - Wing
-      - Other
-      - Bulkhead
-      - BedOneOfThree
-      - BedTwoOfThree
-      - BedThreeOfThree
-      - BedOneOfTwo
-      - BedTwoOfTwo
-      - Bed
-      - Exit
-      - LabelRuler
-      - GenericUnitResizableArea
-      - Lavatory
-      - LavatoryWithHandicappedFacilities
-      - Luggage
-      - MovableCompartmentDivider
-      - Bar
-      - Closet
-      - Galley
-      - MovieScreen
-      - Storage
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 12
-      - 13
-      - 14
-      - 15
-      - 16
-      - 17
-      - 18
-      - 19
-      - 20
-      - 21
-      - 22
-      - 23
-      - 24
-      - 25
-      - 26
-      - 27
-      - 28
-      - 29
-      - 30
-      - 31
-    CollectType:
-      type: integer
-      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
-      x-enumNames:
-      - SellerChargeable
-      - ExternalChargeable
-      - SellerNonChargeable
-      - ExternalNonChargeable
-      - ExternalChargeableImmediate
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    SsrType:
-      type: integer
-      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
-      x-enumNames:
-      - Standard
-      - Infant
-      - Meal
-      - BaggageAllowance
-      - TravelLineMeal
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PassengerSeatGroupInfo:
+    CompartmentInformation:
       type: object
-      description: "Defines the equipment seat group details for a specific passenger.\n            "
+      description: "Defines a compartment within an equipment -> deck.\n            "
       additionalProperties: false
       properties:
-        passengerKey:
+        availableUnits:
+          type: integer
+          description: "The number of available units in the compartment.\n            "
+          format: int32
+        designator:
           type:
           - string
           - 'null'
-          description: "The associated passenger key.\n            "
-        groups:
+          description: "The unique designator for the compartment.\n            "
+        length:
+          type: integer
+          description: "The length of the compartment.\n            "
+          format: int32
+        width:
+          type: integer
+          description: "The width of the compartment.\n            "
+          format: int32
+        sequence:
+          type: integer
+          description: "The compartment's sequence number in the equipments deck.\n            "
+        orientation:
+          type: integer
+          description: "The facing orientation this compartment is in.\n            "
+        units:
           type:
-          - object
+          - array
           - 'null'
-          description: "The collection of seat group fees.\n            "
-          additionalProperties:
-            $ref: '#/components/schemas/SeatGroupInfo'
-    ChargeType:
-      type: integer
-      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
-      x-enumNames:
-      - FarePrice
-      - Discount
-      - IncludedTravelFee
-      - IncludedTax
-      - TravelFee
-      - Tax
-      - ServiceCharge
-      - PromotionDiscount
-      - ConnectionAdjustmentAmount
-      - AddOnsPrice
-      - FarePoints
-      - DiscountPoints
-      - IncludedAddOnsFee
-      - AddOnsFee
-      - AddOnsMarkup
-      - FareSurcharge
-      - AddOnsCancelFee
-      - Calculated
-      - Note
-      - Points
-      - DynamicFareAdjustment
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 16
-      - 17
-      - 18
-      - 19
-      - 21
-      - 22
-      - 23
-      - 24
-      - 25
-    IJsonResponse:
+          description: "The list of units contained in the compartment.\n            "
+          items:
+            $ref: '#/components/schemas/UnitInformation'
+    Exception:
       type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+        StackTrace:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    EquipmentCategory:
-      type: integer
-      description: "Represents the category of the equipment used for reservation operations.\n            \n\n0 = None\n1 = JetAircraft\n2 = PistonAircraft\n3 = TurbopropAircraft\n4 = Helicopter\n5 = Surface\n6 = Train\n7 = Bus\n8 = AllCategories"
-      x-enumNames:
-      - None
-      - JetAircraft
-      - PistonAircraft
-      - TurbopropAircraft
-      - Helicopter
-      - Surface
-      - Train
-      - Bus
-      - AllCategories
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
     PassengerFee:
       type: object
       description: "Model representing passenger fee information.\n            "
@@ -1081,6 +880,207 @@ components:
         paymentNumber:
           type: integer
           description: "The fee payment number.\n            "
+    SeatGroupInfo:
+      type: object
+      description: "Information about a equipment seat group.\n            "
+      additionalProperties: false
+      properties:
+        group:
+          type: integer
+          description: "The seat group number.\n            "
+        fees:
+          type:
+          - array
+          - 'null'
+          description: "The list of seat group fees.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerFee'
+    DeckInformation:
+      type: object
+      description: "Defines a deck within an equipment.\n            "
+      additionalProperties: false
+      properties:
+        number:
+          type: integer
+          description: "The deck number.\n            "
+          format: int32
+        compartments:
+          type:
+          - object
+          - 'null'
+          description: "The collection of compartments within the deck.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/CompartmentInformation'
+    SeatAvailability:
+      type: integer
+      description: "Defines the type of hold placed on the seat (unit).\n            \n\n0 = Unknown\n1 = Reserved\n2 = Blocked\n3 = HeldForAnotherSession\n4 = HeldForThisSession\n5 = Open\n6 = Missing\n7 = CheckedIn\n8 = FleetBlocked\n9 = Restricted\n10 = Broken\n11 = ReservedForPnr\n12 = SoftBlocked\n13 = Unavailable"
+      x-enumNames:
+      - Unknown
+      - Reserved
+      - Blocked
+      - HeldForAnotherSession
+      - HeldForThisSession
+      - Open
+      - Missing
+      - CheckedIn
+      - FleetBlocked
+      - Restricted
+      - Broken
+      - ReservedForPnr
+      - SoftBlocked
+      - Unavailable
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    EquipmentCategory:
+      type: integer
+      description: "Represents the category of the equipment used for reservation operations.\n            \n\n0 = None\n1 = JetAircraft\n2 = PistonAircraft\n3 = TurbopropAircraft\n4 = Helicopter\n5 = Surface\n6 = Train\n7 = Bus\n8 = AllCategories"
+      x-enumNames:
+      - None
+      - JetAircraft
+      - PistonAircraft
+      - TurbopropAircraft
+      - Helicopter
+      - Surface
+      - Train
+      - Bus
+      - AllCategories
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SsrType:
+      type: integer
+      description: "SsrType enumeration.\n            \n\n0 = Standard\n1 = Infant\n2 = Meal\n3 = BaggageAllowance\n4 = TravelLineMeal"
+      x-enumNames:
+      - Standard
+      - Infant
+      - Meal
+      - BaggageAllowance
+      - TravelLineMeal
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    IJsonResponseOfIListOfSeatMapAvailability:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/SeatMapAvailability'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SeatMapAvailability:
+      type: object
+      description: "Defines the equipment availability.\n            "
+      additionalProperties: false
+      properties:
+        seatMap:
+          description: "The seat map.\n            "
+          $ref: '#/components/schemas/SeatMap'
+        fees:
+          type:
+          - object
+          - 'null'
+          description: "The collection passenger seat group fees to go along with the collection of seat maps.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/PassengerSeatGroupInfo'
+        ssrLookup:
+          type:
+          - object
+          - 'null'
+          description: "The list of SSR's available.\n            "
+          additionalProperties:
+            $ref: '#/components/schemas/Ssr'
   securitySchemes:
     JWT:
       type: http

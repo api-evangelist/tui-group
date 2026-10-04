@@ -364,274 +364,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    DisruptionInventoryControlType:
-      type: integer
-      description: 'Defines the different ways inventory can be requested during a disruption move.
-
-
-        0 = ClaimSpace
-
-        1 = OversellSpace
-
-        2 = StandBy'
-      x-enumNames:
-      - ClaimSpace
-      - OversellSpace
-      - StandBy
-      enum:
-      - 0
-      - 1
-      - 2
-    DisruptionMoveType:
-      type: integer
-      description: 'Defines the different types of disruption moves.
-
-
-        0 = Irop
-
-        1 = Diversion'
-      x-enumNames:
-      - Irop
-      - Diversion
-      enum:
-      - 0
-      - 1
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    DisruptionToSegment:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        availabilitySourceCode:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        legs:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToLeg'
-    DisruptionMoveRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - fromJourneyKey
-      - toJourneyKey
-      - toJourneyIsNotForGeneralUse
-      - moveType
-      - recordLocators
-      - inventoryControlType
-      properties:
-        fromJourneyKey:
-          type: string
-          minLength: 1
-        toJourneyKey:
-          type: string
-          minLength: 1
-        toJourneyIsNotForGeneralUse:
-          type: boolean
-        moveType:
-          description: Specifies whether this disruption move is an IROP or a diversion.
-          $ref: '#/components/schemas/DisruptionMoveType'
-        diversionBoardingSequenceOffSet:
-          type: integer
-          description: 'In a diversion move (i.e. when MoveType == 1) the boarding sequence values of the
-
-            from-journey segments are copied to the to-journey segments and then incremented
-
-            by the specified DiversionBoardingSequenceOffSet.  In an IROP move (i.e. when
-
-            MoveType == 0), DiversionBoardingSequenceOffSet is not used.'
-          maximum: 9999.0
-          minimum: 0.0
-        recordLocators:
-          type: array
-          items:
-            type: string
-        inventoryControlType:
-          description: "Use DisruptionInventoryControlType.ClaimSpace\n-\tWhen changing HL to HK and overselling is not intended\n-\tRetaining HK pax and overselling is not intended\n\nUse DisruptionInventoryControlType.OversellSpace\n-\tOnly when passenger is going to claim space on the to flight\n-\tIf passenger is for wait list, no need to oversell\n\nUse DisruptionInventoryControlType.StandBy\n-\tWhen changing status from HK to HL\n-\tRetaining HL pax"
-          $ref: '#/components/schemas/DisruptionInventoryControlType'
-        standByPriorityCode:
-          type:
-          - string
-          - 'null'
-        isChangeOfStatus:
-          type: boolean
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    DisruptionCombinedJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-        containsAdHocConnection:
-          type: boolean
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionCombinedSegment'
-    SegmentKeyInfo:
-      type: object
-      additionalProperties: false
-      required:
-      - segmentKey
-      - legKeys
-      properties:
-        segmentKey:
-          type: string
-          minLength: 1
-        legKeys:
-          type: array
-          items:
-            type: string
-    DisruptionMoveResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        successfulRecordLocators:
-          type:
-          - array
-          - 'null'
-          description: List of record locators for the bookings whose passengers were successfully moved.
-          items:
-            type: string
-        failedRecordLocators:
-          type:
-          - array
-          - 'null'
-          description: 'List of record locators for the bookings whose passengers were NOT moved, including the
-
-            associated error that prevented the move.  Note: There is one error per failed record
-
-            locator.'
-          items:
-            $ref: '#/components/schemas/DisruptionMoveError'
-    DisruptionMoveError:
-      type: object
-      additionalProperties: false
-      properties:
-        recordLocator:
-          type:
-          - string
-          - 'null'
-        errorCode:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-    Name:
-      type: object
-      additionalProperties: false
-      properties:
-        first:
-          type:
-          - string
-          - 'null'
-        middle:
-          type:
-          - string
-          - 'null'
-        last:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        suffix:
-          type:
-          - string
-          - 'null'
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -671,6 +403,106 @@ components:
           type:
           - string
           - 'null'
+    IJsonResponseOfDisruptionMoveResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DisruptionMoveResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionInventoryControlType:
+      type: integer
+      description: 'Defines the different ways inventory can be requested during a disruption move.
+
+
+        0 = ClaimSpace
+
+        1 = OversellSpace
+
+        2 = StandBy'
+      x-enumNames:
+      - ClaimSpace
+      - OversellSpace
+      - StandBy
+      enum:
+      - 0
+      - 1
+      - 2
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    DisruptionPassenger:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          $ref: '#/components/schemas/SegmentStatus'
+        seat:
+          type:
+          - string
+          - 'null'
+        fareClass:
+          type:
+          - string
+          - 'null'
+        passengerCount:
+          type: integer
+          description: The Number of passengers in the booking.
+        priorityCode:
+          type:
+          - string
+          - 'null'
+        guestRecognitionValue:
+          type: integer
+          format: int32
+        name:
+          $ref: '#/components/schemas/Name'
+        passengerNumber:
+          type: integer
+          description: The Passenger's number based on their order in the booking.
+        recordLocator:
+          type:
+          - string
+          - 'null'
+    DisruptionMoveError:
+      type: object
+      additionalProperties: false
+      properties:
+        recordLocator:
+          type:
+          - string
+          - 'null'
+        errorCode:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
     DisruptionToLegNest:
       type: object
       additionalProperties: false
@@ -685,128 +517,6 @@ components:
           type: string
           description: The value of the cabin travel class for this nest.
           maxLength: 1
-    DisruptionFromLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        operatedByText:
-          type:
-          - string
-          - 'null'
-        departureTimeVariant:
-          type: integer
-          description: The leg departure local time variant in minutes.
-        arrivalTimeVariant:
-          type: integer
-          description: The leg arrival local time variant in minutes.
-        legKey:
-          type:
-          - string
-          - 'null'
-        manifestLegKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/LegStatus'
-        isIrop:
-          type: boolean
-    DisruptionFinalDestinationSegment:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        availabilitySourceCode:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        legs:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/LegInfo'
     LegStatus:
       type: integer
       description: '0 = Blocked
@@ -870,313 +580,6 @@ components:
       - 12
       - 13
       - 14
-    DisruptionToJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToSegment'
-    ToLegStatus:
-      type: integer
-      description: 'Subset of LegStatus enum for use in searches that filter to only return results
-
-        with LegStatus of OnTime or OnTimeClosedPending.
-
-
-        8 = OnTime
-
-        10 = OnTimeClosedPending'
-      x-enumNames:
-      - OnTime
-      - OnTimeClosedPending
-      enum:
-      - 8
-      - 10
-    IJsonResponseOfListOfDisruptionToJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToJourney'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfListOfDisruptionFromLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFromLeg'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponseOfListOfDisruptionFinalDestinationJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFinalDestinationJourney'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DisruptionCombinedSegment:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        segmentType:
-          $ref: '#/components/schemas/SegmentType'
-        availabilitySourceCode:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        legKeys:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    DisruptionToLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-        operatingFlightNumber:
-          type:
-          - string
-          - 'null'
-        operatingOpSuffix:
-          type:
-          - string
-          - 'null'
-        operatedByText:
-          type:
-          - string
-          - 'null'
-        departureTimeVariant:
-          type: integer
-          description: The leg departure local time variant in minutes.
-        arrivalTimeVariant:
-          type: integer
-          description: The leg arrival local time variant in minutes.
-        legKey:
-          type:
-          - string
-          - 'null'
-        manifestLegKey:
-          type:
-          - string
-          - 'null'
-        carrierCode:
-          type:
-          - string
-          - 'null'
-        flightNumber:
-          type:
-          - string
-          - 'null'
-        opSuffix:
-          type:
-          - string
-          - 'null'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        arrivalTime:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/ToLegStatus'
-        nests:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionToLegNest'
-    DisruptionPassenger:
-      type: object
-      additionalProperties: false
-      properties:
-        status:
-          $ref: '#/components/schemas/SegmentStatus'
-        seat:
-          type:
-          - string
-          - 'null'
-        fareClass:
-          type:
-          - string
-          - 'null'
-        passengerCount:
-          type: integer
-          description: The Number of passengers in the booking.
-        priorityCode:
-          type:
-          - string
-          - 'null'
-        guestRecognitionValue:
-          type: integer
-          format: int32
-        name:
-          $ref: '#/components/schemas/Name'
-        passengerNumber:
-          type: integer
-          description: The Passenger's number based on their order in the booking.
-        recordLocator:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DisruptionFinalDestinationJourney:
-      type: object
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-        passengers:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionPassenger'
-        segments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DisruptionFinalDestinationSegment'
     SegmentStatus:
       type: integer
       description: 'The list of IATA standard booking action codes.
@@ -1283,78 +686,44 @@ components:
       - 21
       - 22
       - 23
-    FlightType:
-      type: integer
-      description: '0 = All
-
-        1 = NonStop
-
-        2 = Through
-
-        3 = Direct
-
-        4 = Connect'
-      x-enumNames:
-      - All
-      - NonStop
-      - Through
-      - Direct
-      - Connect
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    SegmentType:
-      type: integer
-      description: '0 = Normal
-
-        1 = CodeShareOperating
-
-        2 = CodeShareMarketing
-
-        3 = InterlineOutbound
-
-        4 = InterlineInbound
-
-        5 = Passive
-
-        6 = NdcInterline'
-      x-enumNames:
-      - Normal
-      - CodeShareOperating
-      - CodeShareMarketing
-      - InterlineOutbound
-      - InterlineInbound
-      - Passive
-      - NdcInterline
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    IJsonResponseOfDisruptionMoveResponse:
+    SegmentKeyInfo:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKey
+      - legKeys
+      properties:
+        segmentKey:
+          type: string
+          minLength: 1
+        legKeys:
+          type: array
+          items:
+            type: string
+    Name:
       type: object
       additionalProperties: false
       properties:
-        data:
-          $ref: '#/components/schemas/DisruptionMoveResponse'
-        errors:
+        first:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+        middle:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
+        last:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        suffix:
+          type:
+          - string
+          - 'null'
     LegInfo:
       type: object
       additionalProperties: false
@@ -1393,6 +762,387 @@ components:
           type:
           - string
           - 'null'
+    SegmentType:
+      type: integer
+      description: '0 = Normal
+
+        1 = CodeShareOperating
+
+        2 = CodeShareMarketing
+
+        3 = InterlineOutbound
+
+        4 = InterlineInbound
+
+        5 = Passive
+
+        6 = NdcInterline'
+      x-enumNames:
+      - Normal
+      - CodeShareOperating
+      - CodeShareMarketing
+      - InterlineOutbound
+      - InterlineInbound
+      - Passive
+      - NdcInterline
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    IJsonResponseOfListOfDisruptionFinalDestinationJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionFinalDestinationJourney'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfListOfDisruptionToJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToJourney'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionToJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToSegment'
+    DisruptionToLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        operatedByText:
+          type:
+          - string
+          - 'null'
+        departureTimeVariant:
+          type: integer
+          description: The leg departure local time variant in minutes.
+        arrivalTimeVariant:
+          type: integer
+          description: The leg arrival local time variant in minutes.
+        legKey:
+          type:
+          - string
+          - 'null'
+        manifestLegKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/ToLegStatus'
+        nests:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToLegNest'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    DisruptionMoveResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        successfulRecordLocators:
+          type:
+          - array
+          - 'null'
+          description: List of record locators for the bookings whose passengers were successfully moved.
+          items:
+            type: string
+        failedRecordLocators:
+          type:
+          - array
+          - 'null'
+          description: 'List of record locators for the bookings whose passengers were NOT moved, including the
+
+            associated error that prevented the move.  Note: There is one error per failed record
+
+            locator.'
+          items:
+            $ref: '#/components/schemas/DisruptionMoveError'
+    DisruptionMoveType:
+      type: integer
+      description: 'Defines the different types of disruption moves.
+
+
+        0 = Irop
+
+        1 = Diversion'
+      x-enumNames:
+      - Irop
+      - Diversion
+      enum:
+      - 0
+      - 1
+    DisruptionMoveRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - fromJourneyKey
+      - toJourneyKey
+      - toJourneyIsNotForGeneralUse
+      - moveType
+      - recordLocators
+      - inventoryControlType
+      properties:
+        fromJourneyKey:
+          type: string
+          minLength: 1
+        toJourneyKey:
+          type: string
+          minLength: 1
+        toJourneyIsNotForGeneralUse:
+          type: boolean
+        moveType:
+          description: Specifies whether this disruption move is an IROP or a diversion.
+          $ref: '#/components/schemas/DisruptionMoveType'
+        diversionBoardingSequenceOffSet:
+          type: integer
+          description: 'In a diversion move (i.e. when MoveType == 1) the boarding sequence values of the
+
+            from-journey segments are copied to the to-journey segments and then incremented
+
+            by the specified DiversionBoardingSequenceOffSet.  In an IROP move (i.e. when
+
+            MoveType == 0), DiversionBoardingSequenceOffSet is not used.'
+          maximum: 9999.0
+          minimum: 0.0
+        recordLocators:
+          type: array
+          items:
+            type: string
+        inventoryControlType:
+          description: "Use DisruptionInventoryControlType.ClaimSpace\n-\tWhen changing HL to HK and overselling is not intended\n-\tRetaining HK pax and overselling is not intended\n\nUse DisruptionInventoryControlType.OversellSpace\n-\tOnly when passenger is going to claim space on the to flight\n-\tIf passenger is for wait list, no need to oversell\n\nUse DisruptionInventoryControlType.StandBy\n-\tWhen changing status from HK to HL\n-\tRetaining HL pax"
+          $ref: '#/components/schemas/DisruptionInventoryControlType'
+        standByPriorityCode:
+          type:
+          - string
+          - 'null'
+        isChangeOfStatus:
+          type: boolean
+    IJsonResponseOfListOfDisruptionFromLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionFromLeg'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionFromLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        operatedByText:
+          type:
+          - string
+          - 'null'
+        departureTimeVariant:
+          type: integer
+          description: The leg departure local time variant in minutes.
+        arrivalTimeVariant:
+          type: integer
+          description: The leg arrival local time variant in minutes.
+        legKey:
+          type:
+          - string
+          - 'null'
+        manifestLegKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/LegStatus'
+        isIrop:
+          type: boolean
+    DisruptionCombinedJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+        containsAdHocConnection:
+          type: boolean
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionCombinedSegment'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
     IJsonResponseOfDisruptionCombinedJourney:
       type: object
       additionalProperties: false
@@ -1411,6 +1161,256 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
+    FlightType:
+      type: integer
+      description: '0 = All
+
+        1 = NonStop
+
+        2 = Through
+
+        3 = Direct
+
+        4 = Connect'
+      x-enumNames:
+      - All
+      - NonStop
+      - Through
+      - Direct
+      - Connect
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    DisruptionCombinedSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        availabilitySourceCode:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        legKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    DisruptionFinalDestinationSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        availabilitySourceCode:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        legs:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/LegInfo'
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DisruptionToSegment:
+      type: object
+      additionalProperties: false
+      properties:
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+        operatingFlightNumber:
+          type:
+          - string
+          - 'null'
+        operatingOpSuffix:
+          type:
+          - string
+          - 'null'
+        segmentType:
+          $ref: '#/components/schemas/SegmentType'
+        availabilitySourceCode:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        carrierCode:
+          type:
+          - string
+          - 'null'
+        flightNumber:
+          type:
+          - string
+          - 'null'
+        opSuffix:
+          type:
+          - string
+          - 'null'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        legs:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionToLeg'
+    ToLegStatus:
+      type: integer
+      description: 'Subset of LegStatus enum for use in searches that filter to only return results
+
+        with LegStatus of OnTime or OnTimeClosedPending.
+
+
+        8 = OnTime
+
+        10 = OnTimeClosedPending'
+      x-enumNames:
+      - OnTime
+      - OnTimeClosedPending
+      enum:
+      - 8
+      - 10
+    DisruptionFinalDestinationJourney:
+      type: object
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+        passengers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionPassenger'
+        segments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DisruptionFinalDestinationSegment'
   securitySchemes:
     JWT:
       type: http

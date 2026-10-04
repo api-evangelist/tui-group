@@ -61,97 +61,53 @@ paths:
           description: Internal server error
 components:
   schemas:
-    Durations:
-      required:
-      - count
-      - durations
-      - name
+    FilterResponse:
       type: object
       properties:
         name:
-          type: string
-        count:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+    RoomAllocation:
+      required:
+      - adults
+      - infants
+      - kids
+      - kidsAge
+      type: object
+      properties:
+        adults:
           type: integer
+          description: Number of adults in this room
           format: int32
-        durations:
+          example: 2
+        kids:
+          type: integer
+          description: Number of children in this room
+          format: int32
+          example: 1
+        infants:
+          type: integer
+          description: Number of infants in this room
+          format: int32
+          example: 0
+        kidsAge:
           type: array
+          description: Ages of children in this room
+          example:
+          - 5
           items:
             type: integer
             format: int32
-    MultiSelect:
-      required:
-      - code
-      - items
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        code:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MultiSelectItem'
-    MultiSelectItem:
-      required:
-      - code
-      type: object
-      properties:
-        code:
-          type: string
-        count:
-          type:
-          - string
-          - 'null'
-        min:
-          type:
-          - string
-          - 'null'
-        max:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-    AvailabilityWrapper:
-      required:
-      - availabilityGroups
-      - filters
-      - roomDescriptions
-      type: object
-      properties:
-        filters:
-          $ref: '#/components/schemas/Filters'
-        roomDescriptions:
-          type: array
-          items:
-            type: string
-        availabilityGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailabilityGroup'
-    Month:
-      type: object
-      properties:
-        month:
-          type:
-          - string
-          - 'null'
-        seasonType:
-          type:
-          - string
-          - 'null'
-        seasonYear:
-          type:
-          - string
-          - 'null'
-        available:
-          type:
-          - string
-          - 'null'
+      description: Per-room occupancy for customer-selected multi-room
     AvailabilityResponse:
       required:
       - accommodationId
@@ -359,79 +315,6 @@ components:
           type:
           - number
           - 'null'
-    SingleSelect:
-      required:
-      - code
-      - items
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        code:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SingleSelectItem'
-    FilterResponse:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-    Dates:
-      required:
-      - count
-      - dates
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-        count:
-          type: integer
-          format: int32
-        dates:
-          type: array
-          items:
-            $ref: '#/components/schemas/Date'
-    YesNo:
-      type: string
-      enum:
-      - Y
-      - N
-    LocalTaxResponse:
-      required:
-      - exchangeRate
-      - localCurrency
-      - perPersonInLocalCurrency
-      - perPersonInSourceMarketCurrency
-      - totalInLocalCurrency
-      - totalInSourceMarketCurrency
-      type: object
-      properties:
-        totalInSourceMarketCurrency:
-          type: number
-        totalInLocalCurrency:
-          type: number
-        perPersonInSourceMarketCurrency:
-          type: number
-        perPersonInLocalCurrency:
-          type: number
-        localCurrency:
-          type: string
-        exchangeRate:
-          type: number
     Dc:
       required:
       - date
@@ -442,43 +325,38 @@ components:
           $ref: '#/components/schemas/YesNo'
         date:
           type: string
-    AvailabilityGroup:
-      required:
-      - accommodationId
-      - boardFilter
-      - offers
-      - priceFilter
-      - totalOffers
+    MonthsList:
       type: object
       properties:
-        accommodationId:
-          type: string
-        totalOffers:
-          type: integer
-          format: int32
-        offers:
-          type: array
+        months:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/AvailabilityResponse'
-        priceFilter:
-          type: array
-          items:
-            type: number
-            format: double
-        boardFilter:
-          type: array
-          items:
-            type: string
-    Date:
+            $ref: '#/components/schemas/Month'
+    MultiSelectItem:
       required:
-      - available
-      - date
+      - code
       type: object
       properties:
-        available:
-          type: boolean
-        date:
+        code:
           type: string
+        count:
+          type:
+          - string
+          - 'null'
+        min:
+          type:
+          - string
+          - 'null'
+        max:
+          type:
+          - string
+          - 'null'
+        name:
+          type:
+          - string
+          - 'null'
     Anite:
       type: object
       properties:
@@ -551,15 +429,75 @@ components:
         nonCharter:
           allOf:
           - $ref: '#/components/schemas/YesNo'
-    MonthsList:
+    LocalTaxResponse:
+      required:
+      - exchangeRate
+      - localCurrency
+      - perPersonInLocalCurrency
+      - perPersonInSourceMarketCurrency
+      - totalInLocalCurrency
+      - totalInSourceMarketCurrency
       type: object
       properties:
-        months:
-          type:
-          - array
-          - 'null'
+        totalInSourceMarketCurrency:
+          type: number
+        totalInLocalCurrency:
+          type: number
+        perPersonInSourceMarketCurrency:
+          type: number
+        perPersonInLocalCurrency:
+          type: number
+        localCurrency:
+          type: string
+        exchangeRate:
+          type: number
+    AvailabilityGroup:
+      required:
+      - accommodationId
+      - boardFilter
+      - offers
+      - priceFilter
+      - totalOffers
+      type: object
+      properties:
+        accommodationId:
+          type: string
+        totalOffers:
+          type: integer
+          format: int32
+        offers:
+          type: array
           items:
-            $ref: '#/components/schemas/Month'
+            $ref: '#/components/schemas/AvailabilityResponse'
+        priceFilter:
+          type: array
+          items:
+            type: number
+            format: double
+        boardFilter:
+          type: array
+          items:
+            type: string
+    YesNo:
+      type: string
+      enum:
+      - Y
+      - N
+    SingleSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleSelectItem'
     OfferRequest:
       required:
       - accommodationIds
@@ -736,6 +674,50 @@ components:
           items:
             $ref: '#/components/schemas/RoomAllocation'
       description: Request object for retrieving holiday offers
+    Date:
+      required:
+      - available
+      - date
+      type: object
+      properties:
+        available:
+          type: boolean
+        date:
+          type: string
+    Month:
+      type: object
+      properties:
+        month:
+          type:
+          - string
+          - 'null'
+        seasonType:
+          type:
+          - string
+          - 'null'
+        seasonYear:
+          type:
+          - string
+          - 'null'
+        available:
+          type:
+          - string
+          - 'null'
+    MultiSelect:
+      required:
+      - code
+      - items
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultiSelectItem'
     Filters:
       required:
       - multiSelect
@@ -765,38 +747,56 @@ components:
         monthsList:
           allOf:
           - $ref: '#/components/schemas/MonthsList'
-    RoomAllocation:
+    Durations:
       required:
-      - adults
-      - infants
-      - kids
-      - kidsAge
+      - count
+      - durations
+      - name
       type: object
       properties:
-        adults:
+        name:
+          type: string
+        count:
           type: integer
-          description: Number of adults in this room
           format: int32
-          example: 2
-        kids:
-          type: integer
-          description: Number of children in this room
-          format: int32
-          example: 1
-        infants:
-          type: integer
-          description: Number of infants in this room
-          format: int32
-          example: 0
-        kidsAge:
+        durations:
           type: array
-          description: Ages of children in this room
-          example:
-          - 5
           items:
             type: integer
             format: int32
-      description: Per-room occupancy for customer-selected multi-room
+    AvailabilityWrapper:
+      required:
+      - availabilityGroups
+      - filters
+      - roomDescriptions
+      type: object
+      properties:
+        filters:
+          $ref: '#/components/schemas/Filters'
+        roomDescriptions:
+          type: array
+          items:
+            type: string
+        availabilityGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityGroup'
+    Dates:
+      required:
+      - count
+      - dates
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        dates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Date'
     SingleSelectItem:
       required:
       - code

@@ -1247,27 +1247,268 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    SsrDurationType:
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    LiftStatus:
       type: integer
-      description: "Ssr duration type.\n            \n\n0 = Segment\n1 = Journey\n2 = Leg"
+      description: "Lift status enumeration.\n            \n\n0 = Default\n1 = CheckedIn\n2 = Boarded\n3 = NoShow"
       x-enumNames:
-      - Segment
-      - Journey
-      - Leg
+      - Default
+      - CheckedIn
+      - Boarded
+      - NoShow
       enum:
       - 0
       - 1
       - 2
-    PassengerBagRequest:
+      - 3
+    ModifySegmentStatus:
+      type: integer
+      description: "The status in which the segment can be changed to.\n            \n\n0 = UnknownStatus\n1 = NoActionTaken\n2 = UnableToConfirmSegment\n3 = HeldConfirmed\n4 = HeldCancelled\n5 = ConfirmedTimeChange"
+      x-enumNames:
+      - UnknownStatus
+      - NoActionTaken
+      - UnableToConfirmSegment
+      - HeldConfirmed
+      - HeldCancelled
+      - ConfirmedTimeChange
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    JourneyMove:
+      type: object
+      description: "Summarized move data at the journey level.\n            "
+      additionalProperties: false
+      properties:
+        maxMoveBackDays:
+          type: integer
+          description: "The maximum number of days this flight can be moved backwards.\n            "
+          format: int32
+        maxMoveOutDays:
+          type: integer
+          description: "The maximum number of days this flight can be moved forward.\n            "
+          format: int32
+    ChargeType:
+      type: integer
+      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
+      x-enumNames:
+      - FarePrice
+      - Discount
+      - IncludedTravelFee
+      - IncludedTax
+      - TravelFee
+      - Tax
+      - ServiceCharge
+      - PromotionDiscount
+      - ConnectionAdjustmentAmount
+      - AddOnsPrice
+      - FarePoints
+      - DiscountPoints
+      - IncludedAddOnsFee
+      - AddOnsFee
+      - AddOnsMarkup
+      - FareSurcharge
+      - AddOnsCancelFee
+      - Calculated
+      - Note
+      - Points
+      - DynamicFareAdjustment
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 16
+      - 17
+      - 18
+      - 19
+      - 21
+      - 22
+      - 23
+      - 24
+      - 25
+    CodeShareIndicator:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
+      x-enumNames:
+      - NonCodeShare
+      - CodeShareCommercialDuplicate
+      - SharedDesignatorOrWetLease
+      - CodeShareHostOperatingCarrier
+      - CodeShareCommercialDuplicateWithOverrideText
+      - SharedDesignatorOrWetLeaseWithOverrideText
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    DepartureEvent:
+      type: object
+      description: "Represents the flight operation times for the departure event, which\nincludes an estimated and scheduled time event.\n            "
+      additionalProperties: false
+      properties:
+        scheduled:
+          type:
+          - string
+          - 'null'
+          description: "Represents the scheduled departure time.\n            "
+          format: date-time
+        estimated:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated departure time.\n            "
+          format: date-time
+    PointOfSale:
+      type: object
+      description: "Model related to the point of sale.  This is for read-only operations.\n            "
+      additionalProperties: false
+      properties:
+        agentCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale agent code.\n            "
+        domainCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale domain code.\n            "
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale location code.\n            "
+        organizationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale organization code.\n            "
+    FeePricingMode:
+      type: integer
+      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
+      x-enumNames:
+      - MonetaryOnly
+      - PointsOnly
+      enum:
+      - 0
+      - 1
+    PassengerBagCheckInRequest:
+      type: object
+      description: "A model for a request to check-in the passenger bags.\n            "
+      additionalProperties: false
+      properties:
+        weight:
+          type:
+          - integer
+          - 'null'
+          description: "The baggage weight.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        weightType:
+          description: "Type of weight for the baggage weight.\n            "
+          $ref: '#/components/schemas/WeightType'
+        baggageTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "The baggage type code for the check-in request.\nThis can only be updated if the baggage weight is changed at the same time, and if\nthe baggage type code is active.\n            "
+    SegmentStatus:
+      type: integer
+      description: "The segment status.\n            \n\n0 = UnknownStatus\n1 = UnableToConfirmSegment\n2 = UnableToSellSegment\n3 = HeldPending\n4 = WaitListConfirmed\n5 = HeldUnconfirmed\n6 = HeldConfirmed\n7 = HeldCancelled\n8 = Confirming\n9 = ConfirmingWaitList\n10 = ConfirmedTimeChange"
+      x-enumNames:
+      - UnknownStatus
+      - UnableToConfirmSegment
+      - UnableToSellSegment
+      - HeldPending
+      - WaitListConfirmed
+      - HeldUnconfirmed
+      - HeldConfirmed
+      - HeldCancelled
+      - Confirming
+      - ConfirmingWaitList
+      - ConfirmedTimeChange
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+    PassengerManualBagRequest:
       type: object
       description: "A model for a request to update the passenger bags.\n            "
       additionalProperties: false
+      required:
+      - weightType
+      - taggedToCarrierCode
+      - manualBagList
       properties:
-        bagCount:
-          type: integer
-          description: "The bag count for this request.\n            "
-          maximum: 32767.0
-          minimum: 1.0
         iataIdentifier:
           type:
           - string
@@ -1281,61 +1522,167 @@ components:
         weightType:
           description: "Type of weight for the baggage weight.\n            "
           $ref: '#/components/schemas/WeightType'
-        weight:
-          type:
-          - integer
-          - 'null'
-          description: "The baggage weight.\n            "
-          maximum: 32767.0
-          minimum: 0.0
+        taggedToCarrierCode:
+          type: string
+          description: "The bag tagged to carrier code including OA codes.\n            "
+          maxLength: 3
+          minLength: 2
+        compartmentId:
+          type: integer
+          description: "Compartment ID the bag is assigned.\n            "
+        manualBagList:
+          type: array
+          description: "List of manually tagged bags to be added.\n            "
+          items:
+            $ref: '#/components/schemas/ManualBag'
         taggedToStation:
           type:
           - string
           - 'null'
-          description: "The station to which the baggage will be tagged, if not the final destination.\n            "
+          description: "The station to which the baggage will be tagged, if not the final destination.\nNote: Must have the \"Allow Bag Tag Destination Mismatch\" role setting enabled to override baggage destination.\n            "
           maxLength: 3
+          minLength: 3
+    Name:
+      type: object
+      description: "Defines a common name.\n            "
+      additionalProperties: false
+      properties:
+        first:
+          type:
+          - string
+          - 'null'
+          description: "The given first name.\n            "
+          maxLength: 32
           minLength: 0
-    Exception:
+        middle:
+          type:
+          - string
+          - 'null'
+          description: "The given middle name.\n            "
+          maxLength: 32
+          minLength: 0
+        last:
+          type:
+          - string
+          - 'null'
+          description: "The given last name.\n            "
+          maxLength: 32
+          minLength: 0
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title.\n            "
+          maxLength: 6
+          minLength: 0
+        suffix:
+          type:
+          - string
+          - 'null'
+          description: "The suffix.\n            "
+          maxLength: 6
+          minLength: 0
+    PassengerSegmentBag:
       type: object
+      description: "Model information about the baggage a passenger has on a segment.\n            "
       additionalProperties: false
+      required:
+      - passengerKey
+      - arrivalStation
+      - departureStation
       properties:
-        Message:
+        baggageKey:
+          type:
+          - string
+          - 'null'
+          description: "Unique key for the baggage.\n            "
+        passengerKey:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+          description: "The passenger key associated to this bag.\n            "
+          minLength: 1
+        arrivalStation:
+          type: string
+          description: "The bag segment arrival station.\n            "
+          maxLength: 3
+          minLength: 3
+        status:
+          description: "The bag status.\n            "
+          $ref: '#/components/schemas/BaggageStatus'
+        departureStation:
+          type: string
+          description: "The bag segment departure station.\n            "
+          maxLength: 3
+          minLength: 3
+        osTag:
           type:
           - string
           - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    CancelJourneyRequest:
+          description: "The bag OS tag.\n            "
+          maxLength: 32
+          minLength: 0
+    PassengerSeat:
       type: object
-      description: "Defines the options available when canceling a journey.\n            "
+      description: "Model for a passenger seat for a segment.\n            "
       additionalProperties: false
       properties:
-        waivePenaltyFee:
+        compartmentDesignator:
           type:
-          - boolean
+          - string
           - 'null'
-          description: "Flag indicating to waive penalty fees if role permitting.\n            "
-        waiveSpoilageFee:
+          description: "The passenger seat compartment designator.\n            "
+          maxLength: 2
+          minLength: 0
+        penalty:
+          type: integer
+          description: "The passenger seat penalty.\n            "
+          format: int32
+          maximum: 2147483647.0
+          minimum: 0.0
+        unitDesignator:
           type:
-          - boolean
+          - string
           - 'null'
-          description: "Flag indicating to waive spoilage fees if role permitting.\n            "
-        preventReprice:
+          description: "The passenger seat unit designator.\n            "
+        seatInformation:
+          description: "The passenger seat seat information.\n            "
+          $ref: '#/components/schemas/SeatInfo'
+        arrivalStation:
           type:
-          - boolean
+          - string
           - 'null'
-          description: "Flag indicating to prevent reprice if role permitting.\n            "
-        forceRefareForItineraryIntegrity:
+          description: "The leg arrival station.\n            "
+          maxLength: 3
+          minLength: 3
+        departureStation:
           type:
-          - boolean
+          - string
           - 'null'
-          description: "Flag indicating to invoke price with force refare itinerary set to true (default value is set to true).\n            "
+          description: "The leg departure station.\n            "
+          maxLength: 3
+          minLength: 3
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key associated with the seat.\n            "
+        unitKey:
+          type:
+          - string
+          - 'null'
+          description: "The seat's unique unit key.\n            "
+        crossReferenceSeatingPreference:
+          type:
+          - string
+          - 'null'
+          description: "The seating preference for non-hosted flight seating assignments.\nCould be either one of the following values:\nnull = seating preference is not applicable (usual value for hosted flights)\nN = no requested seating preference\nA = aisle\nW = window\nF = front seating location\nR = rear seating location\nAF = front seating location, on aisle\nAR = rear seating location, on aisle\nWF = front seating location, on window\nWR = rear seating location, on window\n            "
+        isPending:
+          type: boolean
+          description: "Determines whether or not the seat is pending request.\n            "
+        seatmapReference:
+          type:
+          - string
+          - 'null'
+          description: "The reference identifying what seat map the passenger seat is associated to.\n            "
     Segment:
       type: object
       description: "Segment model for an already booked flight.\n            "
@@ -1438,6 +1785,105 @@ components:
           description: "Passengers on this segment by passenger key.\n            "
           additionalProperties:
             $ref: '#/components/schemas/PassengerSegment'
+    OperationsInformation:
+      type: object
+      description: "Model describing the operations information.\n            "
+      additionalProperties: false
+      properties:
+        arrivalGate:
+          description: "The arrival gate information.\n            "
+          $ref: '#/components/schemas/GateInformation'
+        departureGate:
+          description: "The departure gate information.\n            "
+          $ref: '#/components/schemas/GateInformation'
+        actualOffBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual off block time.\n            "
+          format: date-time
+        actualOnBlockTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual on block time.\n            "
+          format: date-time
+        actualTouchDownTime:
+          type:
+          - string
+          - 'null'
+          description: "The actual touch down time.\n            "
+          format: date-time
+        airborneTime:
+          type:
+          - string
+          - 'null'
+          description: "The airborne time.\n            "
+          format: date-time
+        arrivalNote:
+          type:
+          - string
+          - 'null'
+          description: "The arrival note.\n            "
+          maxLength: 128
+          minLength: 0
+        arrivalStatus:
+          description: "The arrival status.\n            "
+          $ref: '#/components/schemas/ArrivalStatus'
+        baggageClaim:
+          type:
+          - string
+          - 'null'
+          description: "The baggage claim.\n            "
+          maxLength: 10
+          minLength: 0
+        departureNote:
+          type:
+          - string
+          - 'null'
+          description: "The departure note.\n            "
+          maxLength: 128
+          minLength: 0
+        departureStatus:
+          description: "The departure status.\n            "
+          $ref: '#/components/schemas/DepartureStatus'
+        departureTimes:
+          description: "The departure time information.\n            "
+          $ref: '#/components/schemas/DepartureEvent'
+        standardArrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The standard time of arrival (STA).\n            "
+          format: date-time
+        tailNumber:
+          type:
+          - string
+          - 'null'
+          description: "The tail number.\n            "
+          maxLength: 10
+          minLength: 0
+        estimatedArrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The estimated time of arrival (ETA).\n            "
+          format: date-time
+    TravelDocumentRequirements:
+      type: object
+      description: "Defines the type of sale values.\n            "
+      additionalProperties: false
+      properties:
+        atLeastOneDocumentRequired:
+          type: boolean
+          description: "True if at least one travel document code in the travel document type codes list\nis required.\n            "
+        travelDocumentTypeCodes:
+          type:
+          - array
+          - 'null'
+          description: "The combined list of acceptable travel document type codes.\n            "
+          items:
+            type: string
     SeatPreferenceStatus:
       type: integer
       description: "Defines the seat preference status.\n            \n\n0 = Unknown\n1 = Met\n2 = NotMet"
@@ -1445,152 +1891,6 @@ components:
       - Unknown
       - Met
       - NotMet
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfPassengerBag:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/PassengerBag'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PassengerBag:
-      type: object
-      description: "Model information about the passenger's baggage.\n            "
-      additionalProperties: false
-      properties:
-        identifier:
-          type:
-          - string
-          - 'null'
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 1
-        nonStandard:
-          type: boolean
-          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
-        osTag:
-          type:
-          - string
-          - 'null'
-          description: "The OSTag in Bag object.\n            "
-          maxLength: 32
-          minLength: 0
-        taggedToStation:
-          type:
-          - string
-          - 'null'
-          description: "The tagged to station in the bag object.  This is the last station where\nthe bag is going to.  For example, on a trip from SLC to JFK, JFK would\nbe the tagged to station value.\n            "
-          maxLength: 3
-          minLength: 3
-        weight:
-          type: integer
-          description: "The Weight in Bag object.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        weightType:
-          description: "The WeightType in Bag object.\n            "
-          $ref: '#/components/schemas/WeightType'
-        baggageKey:
-          type:
-          - string
-          - 'null'
-          description: "Unique key for the baggage.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The type of baggage.\n            "
-          maxLength: 6
-          minLength: 0
-        osTagDate:
-          type:
-          - string
-          - 'null'
-          description: "The bag OS tag date.\n            "
-          format: date-time
-        stationCode:
-          type:
-          - string
-          - 'null'
-          description: "The bag station code.\n            "
-          maxLength: 3
-          minLength: 3
-        taggedToCarrierCode:
-          type:
-          - string
-          - 'null'
-          description: "The bag tagged to carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-    FeePricingMode:
-      type: integer
-      description: "The fee pricing mode enumeration.\n            \n\n0 = MonetaryOnly\n1 = PointsOnly"
-      x-enumNames:
-      - MonetaryOnly
-      - PointsOnly
-      enum:
-      - 0
-      - 1
-    TravelClassSeatPreference:
-      type: integer
-      description: "Represents a travel class seating preference.\n            \n\n0 = None\n1 = Business\n2 = Economy\n3 = FirstClass"
-      x-enumNames:
-      - None
-      - Business
-      - Economy
-      - FirstClass
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    IJsonResponseOfJourney:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/Journey'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    FareApplicationType:
-      type: integer
-      description: "This enumeration defines the fare application type of a fare.\n            \n\n0 = Route\n1 = Sector\n2 = Governing"
-      x-enumNames:
-      - Route
-      - Sector
-      - Governing
       enum:
       - 0
       - 1
@@ -1618,226 +1918,6 @@ components:
           - string
           - 'null'
           description: "The passenger key associated with the score.\n            "
-    BundleSellRequest:
-      type: object
-      description: "The bundle sell request.\n            "
-      additionalProperties: false
-      required:
-      - bundleCode
-      properties:
-        bundleCode:
-          type: string
-          description: "The bundle code to sell.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerKeys:
-          type:
-          - array
-          - 'null'
-          description: "A list of passengers to sell the bundle for.\n            "
-          items:
-            type: string
-        upgradeRequest:
-          description: "The optional ssr upgrade request.  If left blank,\nthe default bundle ssr(s) will be sold (if available).\n            "
-          $ref: '#/components/schemas/SsrByKeysRequestv2'
-    SsrByKeyRequest:
-      type: object
-      description: "SSR detail for a specific passenger number.\n            "
-      additionalProperties: false
-      required:
-      - ssrKey
-      properties:
-        ssrKey:
-          type: string
-          description: "The Ssr key.\n            "
-          minLength: 1
-        count:
-          type:
-          - integer
-          - 'null'
-          description: "The number of items to include. Defaults to 1.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        note:
-          type:
-          - string
-          - 'null'
-          description: "Notes associated with this Ssr.\n            "
-    ChannelType:
-      type: integer
-      description: "Defines the available channel types doing invoking the communication with the server.\n            \n\n0 = Default\n1 = Direct\n2 = Web\n3 = Gds\n4 = Api\n5 = DigitalApi\n6 = DigitalWeb\n7 = Ndc"
-      x-enumNames:
-      - Default
-      - Direct
-      - Web
-      - Gds
-      - Api
-      - DigitalApi
-      - DigitalWeb
-      - Ndc
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    IJsonResponseOfBoolean:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type: boolean
-          description: "The payload data.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Ticket:
-      type: object
-      description: "Model for a ticket applied to a passenger.\n            "
-      additionalProperties: false
-      properties:
-        ticketNumber:
-          type:
-          - string
-          - 'null'
-          description: "The ticket number.\n            "
-          maxLength: 14
-          minLength: 0
-        infantTicketNumber:
-          type:
-          - string
-          - 'null'
-          description: "The infant ticket number.\n            "
-          maxLength: 14
-          minLength: 0
-        ticketIndicator:
-          description: "The ticket indicator.\n            "
-          $ref: '#/components/schemas/TicketIndicatorCode'
-        ticketStatus:
-          description: "The ticket status.\n            "
-          $ref: '#/components/schemas/TicketStatusCode'
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger key the ticket is associated with.\n            "
-    OverbookIndicatorTypes:
-      type: integer
-      description: "Specifies the type of code share agreement.\n            \n\n0 = NormalSell\n1 = Oversold\n2 = ClassOrCabinOversold"
-      x-enumNames:
-      - NormalSell
-      - Oversold
-      - ClassOrCabinOversold
-      enum:
-      - 0
-      - 1
-      - 2
-    LegStatus:
-      type: integer
-      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
-      x-enumNames:
-      - Normal
-      - Closed
-      - Canceled
-      - Suspended
-      - ClosedPending
-      - BlockAllActivities
-      - Mishap
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 5
-      - 6
-      - 7
-    CollectType:
-      type: integer
-      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
-      x-enumNames:
-      - SellerChargeable
-      - ExternalChargeable
-      - SellerNonChargeable
-      - ExternalNonChargeable
-      - ExternalChargeableImmediate
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    GssStayType:
-      type: integer
-      description: "The type of stay type.\n            \n\n0 = None\n1 = Vacation\n2 = Business\n3 = Duty"
-      x-enumNames:
-      - None
-      - Vacation
-      - Business
-      - Duty
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    FareDesignator:
-      type: object
-      description: "Model describing the fare designator information.\n            "
-      additionalProperties: false
-      properties:
-        fareTypeCodes:
-          type:
-          - array
-          - 'null'
-          description: "The fares carrier code.\n            "
-          items:
-            type: string
-    FlightType:
-      type: integer
-      description: "Flight types enumeration.\n            \n\n0 = None\n1 = NonStop\n2 = Through\n3 = Direct\n4 = Connect\n5 = All"
-      x-enumNames:
-      - None
-      - NonStop
-      - Through
-      - Direct
-      - Connect
-      - All
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    ClassStatus:
-      type: integer
-      description: "Indicates whether a leg class may be used or not.\n            \n\n1 = Active\n2 = InActive\n3 = AvsOpen\n4 = AvsOnRequest\n5 = AvsClosed"
-      x-enumNames:
-      - Active
-      - InActive
-      - AvsOpen
-      - AvsOnRequest
-      - AvsClosed
-      enum:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
     PassengerFare:
       type: object
       description: "Model that represents the passenger fare details.\n            "
@@ -1876,6 +1956,356 @@ components:
           - string
           - 'null'
           description: "A fare basis alias which is a more descriptive and custom value than the fare basis itself. \nThis value is created in FareManager Plus based on specific fare rule categories and ATPCO documentation.\n            "
+    MarketInformation:
+      type: object
+      description: "Model information about the market arrival and destination details.\n            "
+      additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
+      properties:
+        destination:
+          type: string
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
+          format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    ManualBag:
+      type: object
+      description: "A base class for baggage models.\n            "
+      additionalProperties: false
+      required:
+      - osTag
+      - taggedToStation
+      - taggedToFlightNumber
+      - weight
+      properties:
+        osTag:
+          type: string
+          description: "The manual bag tag (OSTag) of the bag being added.\n            "
+          maxLength: 32
+          minLength: 0
+        nonStandard:
+          type: boolean
+          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
+        taggedToStation:
+          type: string
+          description: "The tagged to station in the bag object.  This is the last station where\nthe bag is going to.  For example, on a trip from SLC to JFK, JFK would\nbe the tagged to station value.\n            "
+          maxLength: 3
+          minLength: 3
+        taggedToFlightNumber:
+          type: string
+          description: "A value representing the last segment's flight number leading to the bags final destination.\n            "
+          minLength: 1
+        weight:
+          type: integer
+          description: "The Weight in Bag object.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        baggageType:
+          type:
+          - string
+          - 'null'
+          description: "The baggage type field for the bag.\n            "
+    SeatPreference:
+      type: object
+      description: "Represents a single seat preference.\n            "
+      additionalProperties: false
+      required:
+      - seatMapCode
+      - value
+      properties:
+        seatMapCode:
+          type: string
+          description: "The seat map code (ex. 'SMOKING').\n            "
+          maxLength: 8
+          minLength: 0
+        value:
+          type: string
+          description: "The seat map value (ex. 'TRUE').\n            "
+          maxLength: 8
+          minLength: 0
+        status:
+          description: "Defines if the seat preference is met, not met or unknown.\n            "
+          $ref: '#/components/schemas/SeatPreferenceStatus'
+    PassengerTravelDocument:
+      type: object
+      description: "Model representing a passenger travel document.\n            "
+      additionalProperties: false
+      required:
+      - documentTypeCode
+      properties:
+        documentTypeCode:
+          type: string
+          description: "The unique travel document type code.\n            "
+          maxLength: 4
+          minLength: 0
+        issuedByCode:
+          type:
+          - string
+          - 'null'
+          description: "The issuer code for the travel document (country code).\n            "
+          maxLength: 3
+          minLength: 0
+        birthCountry:
+          type:
+          - string
+          - 'null'
+          description: "The BirthCountry property.\n            "
+        name:
+          description: "The Name property.\n            "
+          $ref: '#/components/schemas/Name'
+        nationality:
+          type:
+          - string
+          - 'null'
+          description: "The Nationality property.\n            "
+          maxLength: 2
+          minLength: 0
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          description: "The date when this travel document expires.\n            "
+          format: date-time
+        number:
+          type:
+          - string
+          - 'null'
+          description: "The travel document number.\n            "
+          maxLength: 35
+          minLength: 0
+        issuedDate:
+          type:
+          - string
+          - 'null'
+          description: "The date this travel document was issued.\n            "
+          format: date-time
+        gender:
+          description: "The travel document holder's gender.\n            "
+          $ref: '#/components/schemas/Gender'
+        dateOfBirth:
+          type:
+          - string
+          - 'null'
+          description: "The person's date of birth.\n            "
+          format: date-time
+        declaredGender:
+          type:
+          - string
+          - 'null'
+          description: "The travel document holder's declared gender.\nThis will override the gender field on passenger or person POST, PUT, and PATCH requests.\nNote: Any value other than \"F\" will cause gender to be updated to Male by default to support compatibility with\nother systems.\nAdditionally you cannot change the declared gender and gender fields at the same time as declared gender\nwill override any gender field value regardless of the value passed in.\n            "
+          maxLength: 2
+          minLength: 0
+        placeOfBirth:
+          type:
+          - string
+          - 'null'
+          description: "Represents the place of birth. Only used on the following document type groups: TravelVisa (9), RedressNumber (20),\nand KnownTravelerId (21).\nOnly allows alpha characters, please do not use spaces, numbers, or special characters.\nNote: If unsure which travel document types fall into these groups please use `/api/nsk/v1/resources/DocumentTypes`\nor `/api/nsk/v1/resources/DocumentTypes/{documentTypeCode}`\n            "
+          maxLength: 35
+          minLength: 0
+          pattern: ^[A-Za-z\s]*$
+        placeOfIssue:
+          type:
+          - string
+          - 'null'
+          description: "Represents the place of issue. Only used on the following document type groups: TravelVisa (9), RedressNumber (20),\nand KnownTravelerId (21).\nOnly allows alpha characters, please do not use spaces, hyphens, or special characters.\nNote: If unsure which travel document types fall into these groups please use `/api/nsk/v1/resources/DocumentTypes`\nor `/api/nsk/v1/resources/DocumentTypes/{documentTypeCode}`\n            "
+          maxLength: 35
+          minLength: 0
+          pattern: ^[A-Za-z\s]*$
+        passengerTravelDocumentKey:
+          type:
+          - string
+          - 'null'
+          description: "A key that  uniquely identifies a travel document in the context of a specific passenger.\n            "
+    SimpleSeatPreference:
+      type: integer
+      description: "Represents a simple seating preference.\n            \n\n0 = None\n1 = Window\n2 = Aisle\n3 = Other"
+      x-enumNames:
+      - None
+      - Window
+      - Aisle
+      - Other
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    TicketStatusCode:
+      type: integer
+      description: "This enumeration defines the ticket availability status.\n            \n\n0 = Unknown\n1 = TicketAvailableForUse\n2 = TicketUnavailableForUse\n3 = TicketReissueRequiredForPassenger\n4 = TicketReissueRequiredForInfant\n5 = TicketReissueRequiredForBoth\n6 = TicketReValidationRequired"
+      x-enumNames:
+      - Unknown
+      - TicketAvailableForUse
+      - TicketUnavailableForUse
+      - TicketReissueRequiredForPassenger
+      - TicketReissueRequiredForInfant
+      - TicketReissueRequiredForBoth
+      - TicketReValidationRequired
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    ServiceCharge:
+      type: object
+      description: "Model that represents the fare service charge information.\n            "
+      additionalProperties: false
+      properties:
+        amount:
+          type: number
+          description: "The service charge amount.\n            "
+          format: decimal
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The service charge code.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "The service charge detail.\n            "
+          maxLength: 10
+          minLength: 0
+        type:
+          description: "The service charge type.\n            "
+          $ref: '#/components/schemas/ChargeType'
+        collectType:
+          description: "The service charge collect type.\n            "
+          $ref: '#/components/schemas/CollectType'
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge foreign currency code.\n            "
+          maxLength: 3
+          minLength: 0
+        foreignAmount:
+          type: number
+          description: "The service charge foreign amount.\n            "
+          format: decimal
+        ticketCode:
+          type:
+          - string
+          - 'null'
+          description: "The service charge ticket code.\n            "
+          maxLength: 3
+          minLength: 0
+    IJsonResponseOfBoolean:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type: boolean
+          description: "The payload data.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    GateInformation:
+      type: object
+      description: "Represents the gate information for the trip status model.  Consists\nof actual gate information and estimated/scheduled gate information.\n            "
+      additionalProperties: false
+      properties:
+        estimatedGate:
+          type:
+          - string
+          - 'null'
+          description: "Represents the estimated or scheduled gate of the trip mode.\n            "
+          maxLength: 4
+          minLength: 0
+        actualGate:
+          type:
+          - string
+          - 'null'
+          description: "Represents the actual gate of the trip mode.\n            "
+          maxLength: 4
+          minLength: 0
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+    CancelJourneyRequest:
+      type: object
+      description: "Defines the options available when canceling a journey.\n            "
+      additionalProperties: false
+      properties:
+        waivePenaltyFee:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to waive penalty fees if role permitting.\n            "
+        waiveSpoilageFee:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to waive spoilage fees if role permitting.\n            "
+        preventReprice:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to prevent reprice if role permitting.\n            "
+        forceRefareForItineraryIntegrity:
+          type:
+          - boolean
+          - 'null'
+          description: "Flag indicating to invoke price with force refare itinerary set to true (default value is set to true).\n            "
     FareStatus:
       type: integer
       description: "This enumeration defines the fare status of a passenger fare.\n            \n\n0 = Default\n1 = SameDayStandBy\n2 = FareOverrideConfirming\n3 = FareOverrideConfirmed\n4 = PublishedFareOverrideConfirming\n5 = PublishedFareOverrideConfirmed"
@@ -1893,24 +2323,594 @@ components:
       - 3
       - 4
       - 5
-    SeatPreferences:
+    PassengerBagRequest:
       type: object
-      description: "Represents the seating preferences base model.\n            "
+      description: "A model for a request to update the passenger bags.\n            "
       additionalProperties: false
       properties:
-        seat:
-          description: "The simple seating preference.\n            "
-          $ref: '#/components/schemas/SimpleSeatPreference'
-        travelClass:
-          description: "The preferred travel class of service.\n            "
-          $ref: '#/components/schemas/TravelClassSeatPreference'
-        advancedPreferences:
+        bagCount:
+          type: integer
+          description: "The bag count for this request.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        iataIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The IATA identifier for this request.\n            "
+          maxLength: 3
+          minLength: 0
+        limitedReleaseTag:
+          type: boolean
+          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
+        weightType:
+          description: "Type of weight for the baggage weight.\n            "
+          $ref: '#/components/schemas/WeightType'
+        weight:
+          type:
+          - integer
+          - 'null'
+          description: "The baggage weight.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        taggedToStation:
+          type:
+          - string
+          - 'null'
+          description: "The station to which the baggage will be tagged, if not the final destination.\n            "
+          maxLength: 3
+          minLength: 0
+    PassengerBoardingPassDetail:
+      type: object
+      description: "Defines information used to populate the printed boarding pass and 2D bar codes.\n            "
+      additionalProperties: false
+      properties:
+        gateInformation:
+          type:
+          - string
+          - 'null'
+          description: "The gate information from the boarding pass.\n            "
+        priorityInformation:
+          type:
+          - string
+          - 'null'
+          description: "The priority information from the boarding pass.\n            "
+        cabinClass:
+          type:
+          - string
+          - 'null'
+          description: "The cabin class as seen from the boarding pass.\n            "
+        compartmentLevel:
+          type:
+          - string
+          - 'null'
+          description: "The compartment level as seen from the boarding pass.\n            "
+        boardingZone:
+          type:
+          - string
+          - 'null'
+          description: "The assigned boarding zone from the boarding pass.\n            "
+        seatAssignment:
+          type:
+          - string
+          - 'null'
+          description: "The seat assignment as seen from the boarding pass.\n            "
+        sequenceNumber:
+          type:
+          - string
+          - 'null'
+          description: "The boarding sequence number as seen from the boarding pass.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    Fare:
+      type: object
+      description: "Model describing a fare.\n            "
+      additionalProperties: false
+      properties:
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: "The fares carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        fareApplicationType:
+          description: "The type of the fare application.\n            "
+          $ref: '#/components/schemas/FareApplicationType'
+        fareBasisCode:
+          type:
+          - string
+          - 'null'
+          description: "The fare basis code.\n            "
+          maxLength: 8
+          minLength: 0
+        inboundOutBound:
+          description: "The inbound and outbound.\n            "
+          $ref: '#/components/schemas/InboundOutbound'
+        isAllotmentMarketFare:
+          type: boolean
+          description: "Gets or sets a value indicating whether this fare is an allotment marker.\n            "
+        ruleNumber:
+          type:
+          - string
+          - 'null'
+          description: "The rule number.\n            "
+          maxLength: 4
+          minLength: 0
+        ruleTariff:
+          type:
+          - string
+          - 'null'
+          description: "The rule tariff.\n            "
+          maxLength: 4
+          minLength: 0
+        pricingDate:
+          type: string
+          description: "The pricing date.\n            "
+          format: date-time
+        fareDesignator:
+          description: "The fare designator.\n            "
+          $ref: '#/components/schemas/FareDesignator'
+        isGoverning:
+          type: boolean
+          description: "Flag that indicates if the fare is the governing fare.\n            "
+        fareKey:
+          type:
+          - string
+          - 'null'
+          description: "Unique key for this type of fare.\n            "
+        classType:
+          type:
+          - string
+          - 'null'
+          description: "The fares type of the class.\n            "
+        fareClassOfService:
+          type:
+          - string
+          - 'null'
+          description: "The fare class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        fareSequence:
+          type: integer
+          description: "The fare sequence.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        fareStatus:
+          description: "The fare status.\n            "
+          $ref: '#/components/schemas/FareStatus'
+        originalClassOfService:
+          type:
+          - string
+          - 'null'
+          description: "The original class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        productClass:
+          type:
+          - string
+          - 'null'
+          description: "The product class.\n            "
+          maxLength: 2
+          minLength: 0
+        travelClassCode:
+          type:
+          - string
+          - 'null'
+          description: "The travel class code.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        crossReferenceClassOfService:
+          type:
+          - string
+          - 'null'
+          description: "The cross reference class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        passengerFares:
           type:
           - array
           - 'null'
-          description: "The advanced seating preferences.\n            "
+          description: "The collection of passenger fares.\n            "
           items:
-            $ref: '#/components/schemas/SeatPreference'
+            $ref: '#/components/schemas/PassengerFare'
+        fareLink:
+          type: integer
+          description: "The fare link.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+    FareDesignator:
+      type: object
+      description: "Model describing the fare designator information.\n            "
+      additionalProperties: false
+      properties:
+        fareTypeCodes:
+          type:
+          - array
+          - 'null'
+          description: "The fares carrier code.\n            "
+          items:
+            type: string
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    SsrByKeyRequest:
+      type: object
+      description: "SSR detail for a specific passenger number.\n            "
+      additionalProperties: false
+      required:
+      - ssrKey
+      properties:
+        ssrKey:
+          type: string
+          description: "The Ssr key.\n            "
+          minLength: 1
+        count:
+          type:
+          - integer
+          - 'null'
+          description: "The number of items to include. Defaults to 1.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        note:
+          type:
+          - string
+          - 'null'
+          description: "Notes associated with this Ssr.\n            "
+    InboundOutbound:
+      type: integer
+      description: "This enumeration specifies direction of flight application.\n            \n\n0 = None\n1 = Inbound\n2 = Outbound\n3 = Both\n4 = RoundFrom\n5 = RoundTo"
+      x-enumNames:
+      - None
+      - Inbound
+      - Outbound
+      - Both
+      - RoundFrom
+      - RoundTo
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    LegClass:
+      type: object
+      description: "The leg class model information.\n            "
+      additionalProperties: false
+      required:
+      - classOfService
+      properties:
+        classAllotted:
+          type: integer
+          description: "The leg class allotted.\n            "
+        classAuthorizedUnits:
+          type: integer
+          description: "The leg class Authorized Units (AUs).\n            "
+        classOfService:
+          type: string
+          description: "The leg class, class of service.\n            "
+          maxLength: 8
+          minLength: 0
+        classRank:
+          type: integer
+          description: "The leg class rank.\n            "
+        classSold:
+          type: integer
+          description: "The class sold.\n            "
+        cnxSold:
+          type: integer
+          description: "The CNX sold.\n            "
+        latestAdvancedReservation:
+          type: integer
+          description: "The latest advanced reservation.\n            "
+        status:
+          description: "The status.\n            "
+          $ref: '#/components/schemas/ClassStatus'
+        thruSold:
+          type: integer
+          description: "The thru sold.\n            "
+        classNest:
+          type: integer
+          description: "The leg class nest.\n            "
+        classType:
+          type:
+          - string
+          - 'null'
+          description: "The type of class.\n            "
+    SsrDurationType:
+      type: integer
+      description: "Ssr duration type.\n            \n\n0 = Segment\n1 = Journey\n2 = Leg"
+      x-enumNames:
+      - Segment
+      - Journey
+      - Leg
+      enum:
+      - 0
+      - 1
+      - 2
+    OverbookIndicatorTypes:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NormalSell\n1 = Oversold\n2 = ClassOrCabinOversold"
+      x-enumNames:
+      - NormalSell
+      - Oversold
+      - ClassOrCabinOversold
+      enum:
+      - 0
+      - 1
+      - 2
+    TravelClassSeatPreference:
+      type: integer
+      description: "Represents a travel class seating preference.\n            \n\n0 = None\n1 = Business\n2 = Economy\n3 = FirstClass"
+      x-enumNames:
+      - None
+      - Business
+      - Economy
+      - FirstClass
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    BundleSellRequest:
+      type: object
+      description: "The bundle sell request.\n            "
+      additionalProperties: false
+      required:
+      - bundleCode
+      properties:
+        bundleCode:
+          type: string
+          description: "The bundle code to sell.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerKeys:
+          type:
+          - array
+          - 'null'
+          description: "A list of passengers to sell the bundle for.\n            "
+          items:
+            type: string
+        upgradeRequest:
+          description: "The optional ssr upgrade request.  If left blank,\nthe default bundle ssr(s) will be sold (if available).\n            "
+          $ref: '#/components/schemas/SsrByKeysRequestv2'
+    IJsonResponseOfIListOfPassengerBag:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/PassengerBag'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    GssStayType:
+      type: integer
+      description: "The type of stay type.\n            \n\n0 = None\n1 = Vacation\n2 = Business\n3 = Duty"
+      x-enumNames:
+      - None
+      - Vacation
+      - Business
+      - Duty
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    LegStatus:
+      type: integer
+      description: "Leg status enumeration.\n            \n\n0 = Normal\n1 = Closed\n2 = Canceled\n3 = Suspended\n5 = ClosedPending\n6 = BlockAllActivities\n7 = Mishap"
+      x-enumNames:
+      - Normal
+      - Closed
+      - Canceled
+      - Suspended
+      - ClosedPending
+      - BlockAllActivities
+      - Mishap
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 5
+      - 6
+      - 7
+    PassengerSsr:
+      type: object
+      description: "The model for a passengers Ssr details.\n            "
+      additionalProperties: false
+      properties:
+        note:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR note.\n            "
+          maxLength: 128
+          minLength: 0
+        count:
+          type: integer
+          description: "The passenger SSR unit value.\n            "
+          maximum: 32767.0
+          minimum: 1.0
+        inBundle:
+          type: boolean
+          description: "Indicates if the SSR is part of a bundle.\n            "
+        ssrDuration:
+          description: "The length of the Ssr duration.\n            "
+          $ref: '#/components/schemas/SsrDurationType'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR code.\n            "
+          maxLength: 4
+          minLength: 0
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique passenger key.\n            "
+        ssrNumber:
+          type:
+          - integer
+          - 'null'
+          description: "The passenger SSR number.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        market:
+          description: "The market for either the leg or segment depending on the Ssr type.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        isConfirmed:
+          type: boolean
+          description: "A status flag to indicate if the ssr has been confirmed or not.\n            "
+        isConfirmingUnheld:
+          type: boolean
+          description: "A status flag to indicate if the ssr is in a confirming unheld state.\n            "
+        ssrKey:
+          type:
+          - string
+          - 'null'
+          description: "The key that uniquely identifies the Ssr, passenger, and leg or segment.\n            "
+        feeCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR fee code.\n            "
+          maxLength: 6
+          minLength: 0
+        ssrDetail:
+          type:
+          - string
+          - 'null'
+          description: "The passenger SSR detail.\n            "
+          maxLength: 20
+          minLength: 0
+    IJsonResponseOfPassengerBag:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/PassengerBag'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BaggageStatus:
+      type: integer
+      description: "Baggage Status enumeration.\n            \n\n0 = Default\n1 = Checked\n2 = Removed\n3 = Added\n4 = AddedPrinted"
+      x-enumNames:
+      - Default
+      - Checked
+      - Removed
+      - Added
+      - AddedPrinted
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+    NestType:
+      type: integer
+      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
+      x-enumNames:
+      - Default
+      - Net
+      - Serial
+      - OneBooking
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    Gender:
+      type: integer
+      description: "Defines the different binary gender types.\n            \n\n0 = XX\n1 = Male\n2 = Female"
+      x-enumNames:
+      - XX
+      - Male
+      - Female
+      enum:
+      - 0
+      - 1
+      - 2
     LegInformation:
       type: object
       description: "Model describing the detailed leg information.\n            "
@@ -2052,958 +3052,24 @@ components:
         subjectToGovtApproval:
           type: boolean
           description: "A value indicating whether the leg is subject to government approval.\n            "
-    Fare:
+    SeatPreferences:
       type: object
-      description: "Model describing a fare.\n            "
+      description: "Represents the seating preferences base model.\n            "
       additionalProperties: false
       properties:
-        carrierCode:
-          type:
-          - string
-          - 'null'
-          description: "The fares carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        classOfService:
-          type:
-          - string
-          - 'null'
-          description: "The class of service.\n            "
-          maxLength: 8
-          minLength: 0
-        fareApplicationType:
-          description: "The type of the fare application.\n            "
-          $ref: '#/components/schemas/FareApplicationType'
-        fareBasisCode:
-          type:
-          - string
-          - 'null'
-          description: "The fare basis code.\n            "
-          maxLength: 8
-          minLength: 0
-        inboundOutBound:
-          description: "The inbound and outbound.\n            "
-          $ref: '#/components/schemas/InboundOutbound'
-        isAllotmentMarketFare:
-          type: boolean
-          description: "Gets or sets a value indicating whether this fare is an allotment marker.\n            "
-        ruleNumber:
-          type:
-          - string
-          - 'null'
-          description: "The rule number.\n            "
-          maxLength: 4
-          minLength: 0
-        ruleTariff:
-          type:
-          - string
-          - 'null'
-          description: "The rule tariff.\n            "
-          maxLength: 4
-          minLength: 0
-        pricingDate:
-          type: string
-          description: "The pricing date.\n            "
-          format: date-time
-        fareDesignator:
-          description: "The fare designator.\n            "
-          $ref: '#/components/schemas/FareDesignator'
-        isGoverning:
-          type: boolean
-          description: "Flag that indicates if the fare is the governing fare.\n            "
-        fareKey:
-          type:
-          - string
-          - 'null'
-          description: "Unique key for this type of fare.\n            "
-        classType:
-          type:
-          - string
-          - 'null'
-          description: "The fares type of the class.\n            "
-        fareClassOfService:
-          type:
-          - string
-          - 'null'
-          description: "The fare class of service.\n            "
-          maxLength: 8
-          minLength: 0
-        fareSequence:
-          type: integer
-          description: "The fare sequence.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        fareStatus:
-          description: "The fare status.\n            "
-          $ref: '#/components/schemas/FareStatus'
-        originalClassOfService:
-          type:
-          - string
-          - 'null'
-          description: "The original class of service.\n            "
-          maxLength: 8
-          minLength: 0
-        productClass:
-          type:
-          - string
-          - 'null'
-          description: "The product class.\n            "
-          maxLength: 2
-          minLength: 0
-        travelClassCode:
-          type:
-          - string
-          - 'null'
-          description: "The travel class code.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        crossReferenceClassOfService:
-          type:
-          - string
-          - 'null'
-          description: "The cross reference class of service.\n            "
-          maxLength: 8
-          minLength: 0
-        passengerFares:
+        seat:
+          description: "The simple seating preference.\n            "
+          $ref: '#/components/schemas/SimpleSeatPreference'
+        travelClass:
+          description: "The preferred travel class of service.\n            "
+          $ref: '#/components/schemas/TravelClassSeatPreference'
+        advancedPreferences:
           type:
           - array
           - 'null'
-          description: "The collection of passenger fares.\n            "
+          description: "The advanced seating preferences.\n            "
           items:
-            $ref: '#/components/schemas/PassengerFare'
-        fareLink:
-          type: integer
-          description: "The fare link.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-    DepartureEvent:
-      type: object
-      description: "Represents the flight operation times for the departure event, which\nincludes an estimated and scheduled time event.\n            "
-      additionalProperties: false
-      properties:
-        scheduled:
-          type:
-          - string
-          - 'null'
-          description: "Represents the scheduled departure time.\n            "
-          format: date-time
-        estimated:
-          type:
-          - string
-          - 'null'
-          description: "Represents the estimated departure time.\n            "
-          format: date-time
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Journey:
-      type: object
-      description: "Data about the journey which represents the collection of segments and their legs on the journey.\n            "
-      additionalProperties: false
-      properties:
-        journeyKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier for this journey sell information.\n            "
-        notForGeneralUser:
-          type: boolean
-          description: "A value indicating whether the journey is for a general user.\n            "
-        flightType:
-          description: "Returns a flight type enumeration. (NonStop, Thru, etc.)\n            "
-          $ref: '#/components/schemas/FlightType'
-        stops:
-          type: integer
-          description: "The total number of stops this flight takes.\n            "
-          format: int32
-        designator:
-          description: "This is a summary of all the segments. It will contain the details\nof the transportation from the first and last segment.\n            "
-          $ref: '#/components/schemas/TransportationDesignator'
-        move:
-          description: "The information regarding the journey move restrictions.\n            "
-          $ref: '#/components/schemas/JourneyMove'
-        segments:
-          type:
-          - array
-          - 'null'
-          description: "The collection of segments.\n            "
-          items:
-            $ref: '#/components/schemas/Segment'
-    LiftStatus:
-      type: integer
-      description: "Lift status enumeration.\n            \n\n0 = Default\n1 = CheckedIn\n2 = Boarded\n3 = NoShow"
-      x-enumNames:
-      - Default
-      - CheckedIn
-      - Boarded
-      - NoShow
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    NestType:
-      type: integer
-      description: "Nest type enumeration.\n            \n\n0 = Default\n1 = Net\n2 = Serial\n3 = OneBooking"
-      x-enumNames:
-      - Default
-      - Net
-      - Serial
-      - OneBooking
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    PassengerManualBagRequest:
-      type: object
-      description: "A model for a request to update the passenger bags.\n            "
-      additionalProperties: false
-      required:
-      - weightType
-      - taggedToCarrierCode
-      - manualBagList
-      properties:
-        iataIdentifier:
-          type:
-          - string
-          - 'null'
-          description: "The IATA identifier for this request.\n            "
-          maxLength: 3
-          minLength: 0
-        limitedReleaseTag:
-          type: boolean
-          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
-        weightType:
-          description: "Type of weight for the baggage weight.\n            "
-          $ref: '#/components/schemas/WeightType'
-        taggedToCarrierCode:
-          type: string
-          description: "The bag tagged to carrier code including OA codes.\n            "
-          maxLength: 3
-          minLength: 2
-        compartmentId:
-          type: integer
-          description: "Compartment ID the bag is assigned.\n            "
-        manualBagList:
-          type: array
-          description: "List of manually tagged bags to be added.\n            "
-          items:
-            $ref: '#/components/schemas/ManualBag'
-        taggedToStation:
-          type:
-          - string
-          - 'null'
-          description: "The station to which the baggage will be tagged, if not the final destination.\nNote: Must have the \"Allow Bag Tag Destination Mismatch\" role setting enabled to override baggage destination.\n            "
-          maxLength: 3
-          minLength: 3
-    LegClass:
-      type: object
-      description: "The leg class model information.\n            "
-      additionalProperties: false
-      required:
-      - classOfService
-      properties:
-        classAllotted:
-          type: integer
-          description: "The leg class allotted.\n            "
-        classAuthorizedUnits:
-          type: integer
-          description: "The leg class Authorized Units (AUs).\n            "
-        classOfService:
-          type: string
-          description: "The leg class, class of service.\n            "
-          maxLength: 8
-          minLength: 0
-        classRank:
-          type: integer
-          description: "The leg class rank.\n            "
-        classSold:
-          type: integer
-          description: "The class sold.\n            "
-        cnxSold:
-          type: integer
-          description: "The CNX sold.\n            "
-        latestAdvancedReservation:
-          type: integer
-          description: "The latest advanced reservation.\n            "
-        status:
-          description: "The status.\n            "
-          $ref: '#/components/schemas/ClassStatus'
-        thruSold:
-          type: integer
-          description: "The thru sold.\n            "
-        classNest:
-          type: integer
-          description: "The leg class nest.\n            "
-        classType:
-          type:
-          - string
-          - 'null'
-          description: "The type of class.\n            "
-    ChargeType:
-      type: integer
-      description: "The type of a service charge.\n            \n\n0 = FarePrice\n1 = Discount\n2 = IncludedTravelFee\n3 = IncludedTax\n4 = TravelFee\n5 = Tax\n6 = ServiceCharge\n7 = PromotionDiscount\n8 = ConnectionAdjustmentAmount\n9 = AddOnsPrice\n10 = FarePoints\n11 = DiscountPoints\n16 = IncludedAddOnsFee\n17 = AddOnsFee\n18 = AddOnsMarkup\n19 = FareSurcharge\n21 = AddOnsCancelFee\n22 = Calculated\n23 = Note\n24 = Points\n25 = DynamicFareAdjustment"
-      x-enumNames:
-      - FarePrice
-      - Discount
-      - IncludedTravelFee
-      - IncludedTax
-      - TravelFee
-      - Tax
-      - ServiceCharge
-      - PromotionDiscount
-      - ConnectionAdjustmentAmount
-      - AddOnsPrice
-      - FarePoints
-      - DiscountPoints
-      - IncludedAddOnsFee
-      - AddOnsFee
-      - AddOnsMarkup
-      - FareSurcharge
-      - AddOnsCancelFee
-      - Calculated
-      - Note
-      - Points
-      - DynamicFareAdjustment
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 16
-      - 17
-      - 18
-      - 19
-      - 21
-      - 22
-      - 23
-      - 24
-      - 25
-    CodeShareIndicator:
-      type: integer
-      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
-      x-enumNames:
-      - NonCodeShare
-      - CodeShareCommercialDuplicate
-      - SharedDesignatorOrWetLease
-      - CodeShareHostOperatingCarrier
-      - CodeShareCommercialDuplicateWithOverrideText
-      - SharedDesignatorOrWetLeaseWithOverrideText
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    ModifySegmentStatus:
-      type: integer
-      description: "The status in which the segment can be changed to.\n            \n\n0 = UnknownStatus\n1 = NoActionTaken\n2 = UnableToConfirmSegment\n3 = HeldConfirmed\n4 = HeldCancelled\n5 = ConfirmedTimeChange"
-      x-enumNames:
-      - UnknownStatus
-      - NoActionTaken
-      - UnableToConfirmSegment
-      - HeldConfirmed
-      - HeldCancelled
-      - ConfirmedTimeChange
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    IJsonResponseOfTravelDocumentRequirements:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/TravelDocumentRequirements'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    SegmentStatus:
-      type: integer
-      description: "The segment status.\n            \n\n0 = UnknownStatus\n1 = UnableToConfirmSegment\n2 = UnableToSellSegment\n3 = HeldPending\n4 = WaitListConfirmed\n5 = HeldUnconfirmed\n6 = HeldConfirmed\n7 = HeldCancelled\n8 = Confirming\n9 = ConfirmingWaitList\n10 = ConfirmedTimeChange"
-      x-enumNames:
-      - UnknownStatus
-      - UnableToConfirmSegment
-      - UnableToSellSegment
-      - HeldPending
-      - WaitListConfirmed
-      - HeldUnconfirmed
-      - HeldConfirmed
-      - HeldCancelled
-      - Confirming
-      - ConfirmingWaitList
-      - ConfirmedTimeChange
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-    SimpleSeatPreference:
-      type: integer
-      description: "Represents a simple seating preference.\n            \n\n0 = None\n1 = Window\n2 = Aisle\n3 = Other"
-      x-enumNames:
-      - None
-      - Window
-      - Aisle
-      - Other
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    TravelDocumentRequirements:
-      type: object
-      description: "Defines the type of sale values.\n            "
-      additionalProperties: false
-      properties:
-        atLeastOneDocumentRequired:
-          type: boolean
-          description: "True if at least one travel document code in the travel document type codes list\nis required.\n            "
-        travelDocumentTypeCodes:
-          type:
-          - array
-          - 'null'
-          description: "The combined list of acceptable travel document type codes.\n            "
-          items:
-            type: string
-    DepartureStatus:
-      type: integer
-      description: "Departure status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Boarding\n3 = SeeAgent\n4 = Delayed\n5 = Departed"
-      x-enumNames:
-      - Default
-      - Cancelled
-      - Boarding
-      - SeeAgent
-      - Delayed
-      - Departed
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    TicketIndicatorCode:
-      type: integer
-      description: "This enumeration defines the ticket requirements\n            \n\n0 = Unknown\n1 = TicketRequired\n2 = AutomatedTicketLiftRequired\n3 = ManualTicketLiftRequired\n4 = AutomatedTicketNoLiftRequired\n5 = ManualTicketNoLiftRequired\n6 = HostETicketNoLiftRequired\n7 = ElectronicTicketNoLiftRequired"
-      x-enumNames:
-      - Unknown
-      - TicketRequired
-      - AutomatedTicketLiftRequired
-      - ManualTicketLiftRequired
-      - AutomatedTicketNoLiftRequired
-      - ManualTicketNoLiftRequired
-      - HostETicketNoLiftRequired
-      - ElectronicTicketNoLiftRequired
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-    ManualBag:
-      type: object
-      description: "A base class for baggage models.\n            "
-      additionalProperties: false
-      required:
-      - osTag
-      - taggedToStation
-      - taggedToFlightNumber
-      - weight
-      properties:
-        osTag:
-          type: string
-          description: "The manual bag tag (OSTag) of the bag being added.\n            "
-          maxLength: 32
-          minLength: 0
-        nonStandard:
-          type: boolean
-          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
-        taggedToStation:
-          type: string
-          description: "The tagged to station in the bag object.  This is the last station where\nthe bag is going to.  For example, on a trip from SLC to JFK, JFK would\nbe the tagged to station value.\n            "
-          maxLength: 3
-          minLength: 3
-        taggedToFlightNumber:
-          type: string
-          description: "A value representing the last segment's flight number leading to the bags final destination.\n            "
-          minLength: 1
-        weight:
-          type: integer
-          description: "The Weight in Bag object.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        baggageType:
-          type:
-          - string
-          - 'null'
-          description: "The baggage type field for the bag.\n            "
-    PassengerSeat:
-      type: object
-      description: "Model for a passenger seat for a segment.\n            "
-      additionalProperties: false
-      properties:
-        compartmentDesignator:
-          type:
-          - string
-          - 'null'
-          description: "The passenger seat compartment designator.\n            "
-          maxLength: 2
-          minLength: 0
-        penalty:
-          type: integer
-          description: "The passenger seat penalty.\n            "
-          format: int32
-          maximum: 2147483647.0
-          minimum: 0.0
-        unitDesignator:
-          type:
-          - string
-          - 'null'
-          description: "The passenger seat unit designator.\n            "
-        seatInformation:
-          description: "The passenger seat seat information.\n            "
-          $ref: '#/components/schemas/SeatInfo'
-        arrivalStation:
-          type:
-          - string
-          - 'null'
-          description: "The leg arrival station.\n            "
-          maxLength: 3
-          minLength: 3
-        departureStation:
-          type:
-          - string
-          - 'null'
-          description: "The leg departure station.\n            "
-          maxLength: 3
-          minLength: 3
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger key associated with the seat.\n            "
-        unitKey:
-          type:
-          - string
-          - 'null'
-          description: "The seat's unique unit key.\n            "
-        crossReferenceSeatingPreference:
-          type:
-          - string
-          - 'null'
-          description: "The seating preference for non-hosted flight seating assignments.\nCould be either one of the following values:\nnull = seating preference is not applicable (usual value for hosted flights)\nN = no requested seating preference\nA = aisle\nW = window\nF = front seating location\nR = rear seating location\nAF = front seating location, on aisle\nAR = rear seating location, on aisle\nWF = front seating location, on window\nWR = rear seating location, on window\n            "
-        isPending:
-          type: boolean
-          description: "Determines whether or not the seat is pending request.\n            "
-        seatmapReference:
-          type:
-          - string
-          - 'null'
-          description: "The reference identifying what seat map the passenger seat is associated to.\n            "
-    BaggageStatus:
-      type: integer
-      description: "Baggage Status enumeration.\n            \n\n0 = Default\n1 = Checked\n2 = Removed\n3 = Added\n4 = AddedPrinted"
-      x-enumNames:
-      - Default
-      - Checked
-      - Removed
-      - Added
-      - AddedPrinted
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-    Name:
-      type: object
-      description: "Defines a common name.\n            "
-      additionalProperties: false
-      properties:
-        first:
-          type:
-          - string
-          - 'null'
-          description: "The given first name.\n            "
-          maxLength: 32
-          minLength: 0
-        middle:
-          type:
-          - string
-          - 'null'
-          description: "The given middle name.\n            "
-          maxLength: 32
-          minLength: 0
-        last:
-          type:
-          - string
-          - 'null'
-          description: "The given last name.\n            "
-          maxLength: 32
-          minLength: 0
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title.\n            "
-          maxLength: 6
-          minLength: 0
-        suffix:
-          type:
-          - string
-          - 'null'
-          description: "The suffix.\n            "
-          maxLength: 6
-          minLength: 0
-    PointOfSale:
-      type: object
-      description: "Model related to the point of sale.  This is for read-only operations.\n            "
-      additionalProperties: false
-      properties:
-        agentCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale agent code.\n            "
-        domainCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale domain code.\n            "
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale location code.\n            "
-        organizationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale organization code.\n            "
-    TicketStatusCode:
-      type: integer
-      description: "This enumeration defines the ticket availability status.\n            \n\n0 = Unknown\n1 = TicketAvailableForUse\n2 = TicketUnavailableForUse\n3 = TicketReissueRequiredForPassenger\n4 = TicketReissueRequiredForInfant\n5 = TicketReissueRequiredForBoth\n6 = TicketReValidationRequired"
-      x-enumNames:
-      - Unknown
-      - TicketAvailableForUse
-      - TicketUnavailableForUse
-      - TicketReissueRequiredForPassenger
-      - TicketReissueRequiredForInfant
-      - TicketReissueRequiredForBoth
-      - TicketReValidationRequired
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    PassengerTravelDocument:
-      type: object
-      description: "Model representing a passenger travel document.\n            "
-      additionalProperties: false
-      required:
-      - documentTypeCode
-      properties:
-        documentTypeCode:
-          type: string
-          description: "The unique travel document type code.\n            "
-          maxLength: 4
-          minLength: 0
-        issuedByCode:
-          type:
-          - string
-          - 'null'
-          description: "The issuer code for the travel document (country code).\n            "
-          maxLength: 3
-          minLength: 0
-        birthCountry:
-          type:
-          - string
-          - 'null'
-          description: "The BirthCountry property.\n            "
-        name:
-          description: "The Name property.\n            "
-          $ref: '#/components/schemas/Name'
-        nationality:
-          type:
-          - string
-          - 'null'
-          description: "The Nationality property.\n            "
-          maxLength: 2
-          minLength: 0
-        expirationDate:
-          type:
-          - string
-          - 'null'
-          description: "The date when this travel document expires.\n            "
-          format: date-time
-        number:
-          type:
-          - string
-          - 'null'
-          description: "The travel document number.\n            "
-          maxLength: 35
-          minLength: 0
-        issuedDate:
-          type:
-          - string
-          - 'null'
-          description: "The date this travel document was issued.\n            "
-          format: date-time
-        gender:
-          description: "The travel document holder's gender.\n            "
-          $ref: '#/components/schemas/Gender'
-        dateOfBirth:
-          type:
-          - string
-          - 'null'
-          description: "The person's date of birth.\n            "
-          format: date-time
-        declaredGender:
-          type:
-          - string
-          - 'null'
-          description: "The travel document holder's declared gender.\nThis will override the gender field on passenger or person POST, PUT, and PATCH requests.\nNote: Any value other than \"F\" will cause gender to be updated to Male by default to support compatibility with\nother systems.\nAdditionally you cannot change the declared gender and gender fields at the same time as declared gender\nwill override any gender field value regardless of the value passed in.\n            "
-          maxLength: 2
-          minLength: 0
-        placeOfBirth:
-          type:
-          - string
-          - 'null'
-          description: "Represents the place of birth. Only used on the following document type groups: TravelVisa (9), RedressNumber (20),\nand KnownTravelerId (21).\nOnly allows alpha characters, please do not use spaces, numbers, or special characters.\nNote: If unsure which travel document types fall into these groups please use `/api/nsk/v1/resources/DocumentTypes`\nor `/api/nsk/v1/resources/DocumentTypes/{documentTypeCode}`\n            "
-          maxLength: 35
-          minLength: 0
-          pattern: ^[A-Za-z\s]*$
-        placeOfIssue:
-          type:
-          - string
-          - 'null'
-          description: "Represents the place of issue. Only used on the following document type groups: TravelVisa (9), RedressNumber (20),\nand KnownTravelerId (21).\nOnly allows alpha characters, please do not use spaces, hyphens, or special characters.\nNote: If unsure which travel document types fall into these groups please use `/api/nsk/v1/resources/DocumentTypes`\nor `/api/nsk/v1/resources/DocumentTypes/{documentTypeCode}`\n            "
-          maxLength: 35
-          minLength: 0
-          pattern: ^[A-Za-z\s]*$
-        passengerTravelDocumentKey:
-          type:
-          - string
-          - 'null'
-          description: "A key that  uniquely identifies a travel document in the context of a specific passenger.\n            "
-    ChangeReasonCodes:
-      type: integer
-      description: "Specifies the reason code on why the change on the journey or segment is performed.\n            \n\n0 = NoChange\n1 = Irop\n2 = ScheduleChange\n3 = Move\n4 = VoluntaryFlyAhead\n5 = InvoluntaryFlyAhead\n6 = SelfServiceRebooking"
-      x-enumNames:
-      - NoChange
-      - Irop
-      - ScheduleChange
-      - Move
-      - VoluntaryFlyAhead
-      - InvoluntaryFlyAhead
-      - SelfServiceRebooking
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    OperationsInformation:
-      type: object
-      description: "Model describing the operations information.\n            "
-      additionalProperties: false
-      properties:
-        arrivalGate:
-          description: "The arrival gate information.\n            "
-          $ref: '#/components/schemas/GateInformation'
-        departureGate:
-          description: "The departure gate information.\n            "
-          $ref: '#/components/schemas/GateInformation'
-        actualOffBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "The actual off block time.\n            "
-          format: date-time
-        actualOnBlockTime:
-          type:
-          - string
-          - 'null'
-          description: "The actual on block time.\n            "
-          format: date-time
-        actualTouchDownTime:
-          type:
-          - string
-          - 'null'
-          description: "The actual touch down time.\n            "
-          format: date-time
-        airborneTime:
-          type:
-          - string
-          - 'null'
-          description: "The airborne time.\n            "
-          format: date-time
-        arrivalNote:
-          type:
-          - string
-          - 'null'
-          description: "The arrival note.\n            "
-          maxLength: 128
-          minLength: 0
-        arrivalStatus:
-          description: "The arrival status.\n            "
-          $ref: '#/components/schemas/ArrivalStatus'
-        baggageClaim:
-          type:
-          - string
-          - 'null'
-          description: "The baggage claim.\n            "
-          maxLength: 10
-          minLength: 0
-        departureNote:
-          type:
-          - string
-          - 'null'
-          description: "The departure note.\n            "
-          maxLength: 128
-          minLength: 0
-        departureStatus:
-          description: "The departure status.\n            "
-          $ref: '#/components/schemas/DepartureStatus'
-        departureTimes:
-          description: "The departure time information.\n            "
-          $ref: '#/components/schemas/DepartureEvent'
-        standardArrivalTime:
-          type:
-          - string
-          - 'null'
-          description: "The standard time of arrival (STA).\n            "
-          format: date-time
-        tailNumber:
-          type:
-          - string
-          - 'null'
-          description: "The tail number.\n            "
-          maxLength: 10
-          minLength: 0
-        estimatedArrivalTime:
-          type:
-          - string
-          - 'null'
-          description: "The estimated time of arrival (ETA).\n            "
-          format: date-time
-    PassengerBagUpdateRequest:
-      type: object
-      description: "A model for a request to update the passenger bags.\n            "
-      additionalProperties: false
-      properties:
-        weight:
-          type:
-          - integer
-          - 'null'
-          description: "The baggage weight.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        weightType:
-          description: "Type of weight for the baggage weight.\n            "
-          $ref: '#/components/schemas/WeightType'
-        baggageTypeCode:
-          type:
-          - string
-          - 'null'
-          description: "The baggage type code for the check-in request.\nThis can only be updated if the baggage weight is changed at the same time, and if\nthe baggage type code is active.\n            "
+            $ref: '#/components/schemas/SeatPreference'
     SegmentTypes:
       type: integer
       description: "Indicates the type of a segment.\n            \n\n0 = Normal\n1 = CodeShareOperating\n2 = CodeShareMarketing\n3 = InterlineOutbound\n4 = InterlineInbound\n5 = Passive"
@@ -3021,95 +3087,147 @@ components:
       - 3
       - 4
       - 5
-    TransportationDesignator:
+    Leg:
       type: object
-      description: "Model information about the traveling arrival and destination details.\n            "
+      description: "Model data describing the leg which is a single travel leg from point a to b.\n            "
       additionalProperties: false
       properties:
-        destination:
+        legKey:
           type:
           - string
           - 'null'
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
+          description: "The unique identifier for this leg sell information.\n            "
+        designator:
+          description: "Transportation information.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        operationsInfo:
+          description: "The operations information.\n            "
+          $ref: '#/components/schemas/OperationsInformation'
+        legInfo:
+          description: "The leg information.\n            "
+          $ref: '#/components/schemas/LegInformation'
+        nests:
+          type:
+          - array
+          - 'null'
+          description: "The collection of leg nests.\n            "
+          items:
+            $ref: '#/components/schemas/LegNest'
+        ssrs:
+          type:
+          - array
+          - 'null'
+          description: "The Ssrs summary information.\n            "
+          items:
+            $ref: '#/components/schemas/LegSsr'
+        seatmapReference:
           type:
           - string
           - 'null'
-          description: "Gets or sets the leg departure station.\n            "
+          description: "The reference identifying what seatmap the leg is in associated to.\n            "
+        flightReference:
+          type:
+          - string
+          - 'null'
+          description: "The flight reference which signifies a link to a segment and or leg.\n            "
+          maxLength: 22
+          minLength: 0
+    SsrByKeysRequestv2:
+      type: object
+      description: "Request to add a leg, segment, or journey Ssr.\n            "
+      additionalProperties: false
+      required:
+      - keys
+      properties:
+        keys:
+          type: array
+          description: "Keys for the request.\n            "
+          items:
+            $ref: '#/components/schemas/SsrByKeyRequest'
+        forceWaveOnSell:
+          type:
+          - boolean
+          - 'null'
+          description: "Force wave on sell. Default value is false.\n            "
+        currencyCode:
+          type:
+          - string
+          - 'null'
+          description: "Set the Currency Code if different than the booking currency code.\n            "
           maxLength: 3
           minLength: 0
-        arrival:
-          type: string
-          description: "The arrival date and time local to the arrival station.\n            "
-          format: date-time
-        departure:
-          type: string
-          description: "The departure date and time local to the departure station.\n            "
-          format: date-time
-    SeatInfo:
+        feePricingMode:
+          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
+          $ref: '#/components/schemas/FeePricingMode'
+    PassengerBag:
       type: object
-      description: "The model for the seat information such as deck, seat properties, etc.\n            "
+      description: "Model information about the passenger's baggage.\n            "
       additionalProperties: false
       properties:
-        deck:
-          type: integer
-          description: "Gets or sets the deck.\n            "
-        seatSet:
-          type: integer
-          description: "Gets or sets the seat set.\n            "
-        propertyList:
+        identifier:
           type:
-          - object
+          - string
           - 'null'
-          description: "The property list by type code and value.\n            "
-          additionalProperties:
-            type: string
-    PassengerBagCheckInRequest:
-      type: object
-      description: "A model for a request to check-in the passenger bags.\n            "
-      additionalProperties: false
-      properties:
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 1
+        nonStandard:
+          type: boolean
+          description: "Flag for marking a bag as a non-standard piece of luggage.\n            "
+        osTag:
+          type:
+          - string
+          - 'null'
+          description: "The OSTag in Bag object.\n            "
+          maxLength: 32
+          minLength: 0
+        taggedToStation:
+          type:
+          - string
+          - 'null'
+          description: "The tagged to station in the bag object.  This is the last station where\nthe bag is going to.  For example, on a trip from SLC to JFK, JFK would\nbe the tagged to station value.\n            "
+          maxLength: 3
+          minLength: 3
         weight:
-          type:
-          - integer
-          - 'null'
-          description: "The baggage weight.\n            "
+          type: integer
+          description: "The Weight in Bag object.\n            "
           maximum: 32767.0
           minimum: 0.0
         weightType:
-          description: "Type of weight for the baggage weight.\n            "
+          description: "The WeightType in Bag object.\n            "
           $ref: '#/components/schemas/WeightType'
-        baggageTypeCode:
+        baggageKey:
           type:
           - string
           - 'null'
-          description: "The baggage type code for the check-in request.\nThis can only be updated if the baggage weight is changed at the same time, and if\nthe baggage type code is active.\n            "
-    LegSsr:
-      type: object
-      description: "A model representing a leg ssr summary.\n            "
-      additionalProperties: false
-      properties:
-        available:
-          type: integer
-          description: "The number of Ssrs available.\n            "
-        ssrNestCode:
+          description: "Unique key for the baggage.\n            "
+        type:
           type:
           - string
           - 'null'
-          description: "The SSR nest code.\n            "
-          maxLength: 4
+          description: "The type of baggage.\n            "
+          maxLength: 6
           minLength: 0
-        lid:
-          type: integer
-          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
-        sold:
-          type: integer
-          description: "The number of SSRs sold in the SSR nest.\n            "
-        unitSold:
-          type: integer
-          description: "The units of space sold for the SSR.\n            "
+        osTagDate:
+          type:
+          - string
+          - 'null'
+          description: "The bag OS tag date.\n            "
+          format: date-time
+        stationCode:
+          type:
+          - string
+          - 'null'
+          description: "The bag station code.\n            "
+          maxLength: 3
+          minLength: 3
+        taggedToCarrierCode:
+          type:
+          - string
+          - 'null'
+          description: "The bag tagged to carrier code.\n            "
+          maxLength: 3
+          minLength: 2
     PassengerSegment:
       type: object
       description: "Model data for the passenger on the booking for the specific segment.\n            "
@@ -3253,54 +3371,6 @@ components:
         infantStayType:
           description: "The stay type for an infant.\n            "
           $ref: '#/components/schemas/GssStayType'
-    SsrByKeysRequestv2:
-      type: object
-      description: "Request to add a leg, segment, or journey Ssr.\n            "
-      additionalProperties: false
-      required:
-      - keys
-      properties:
-        keys:
-          type: array
-          description: "Keys for the request.\n            "
-          items:
-            $ref: '#/components/schemas/SsrByKeyRequest'
-        forceWaveOnSell:
-          type:
-          - boolean
-          - 'null'
-          description: "Force wave on sell. Default value is false.\n            "
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "Set the Currency Code if different than the booking currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        feePricingMode:
-          description: "Indicates whether the SSR is meant to be sold in points or in currency.\n            "
-          $ref: '#/components/schemas/FeePricingMode'
-    SeatPreference:
-      type: object
-      description: "Represents a single seat preference.\n            "
-      additionalProperties: false
-      required:
-      - seatMapCode
-      - value
-      properties:
-        seatMapCode:
-          type: string
-          description: "The seat map code (ex. 'SMOKING').\n            "
-          maxLength: 8
-          minLength: 0
-        value:
-          type: string
-          description: "The seat map value (ex. 'TRUE').\n            "
-          maxLength: 8
-          minLength: 0
-        status:
-          description: "Defines if the seat preference is met, not met or unknown.\n            "
-          $ref: '#/components/schemas/SeatPreferenceStatus'
     PassengerInfantCreateRequest:
       type: object
       description: "Model representing infant data that can be set.\n            "
@@ -3346,191 +3416,23 @@ components:
           description: "Travel Documents.\n            "
           items:
             $ref: '#/components/schemas/PassengerTravelDocument'
-    Leg:
-      type: object
-      description: "Model data describing the leg which is a single travel leg from point a to b.\n            "
-      additionalProperties: false
-      properties:
-        legKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique identifier for this leg sell information.\n            "
-        designator:
-          description: "Transportation information.\n            "
-          $ref: '#/components/schemas/TransportationDesignator'
-        operationsInfo:
-          description: "The operations information.\n            "
-          $ref: '#/components/schemas/OperationsInformation'
-        legInfo:
-          description: "The leg information.\n            "
-          $ref: '#/components/schemas/LegInformation'
-        nests:
-          type:
-          - array
-          - 'null'
-          description: "The collection of leg nests.\n            "
-          items:
-            $ref: '#/components/schemas/LegNest'
-        ssrs:
-          type:
-          - array
-          - 'null'
-          description: "The Ssrs summary information.\n            "
-          items:
-            $ref: '#/components/schemas/LegSsr'
-        seatmapReference:
-          type:
-          - string
-          - 'null'
-          description: "The reference identifying what seatmap the leg is in associated to.\n            "
-        flightReference:
-          type:
-          - string
-          - 'null'
-          description: "The flight reference which signifies a link to a segment and or leg.\n            "
-          maxLength: 22
-          minLength: 0
-    GateInformation:
-      type: object
-      description: "Represents the gate information for the trip status model.  Consists\nof actual gate information and estimated/scheduled gate information.\n            "
-      additionalProperties: false
-      properties:
-        estimatedGate:
-          type:
-          - string
-          - 'null'
-          description: "Represents the estimated or scheduled gate of the trip mode.\n            "
-          maxLength: 4
-          minLength: 0
-        actualGate:
-          type:
-          - string
-          - 'null'
-          description: "Represents the actual gate of the trip mode.\n            "
-          maxLength: 4
-          minLength: 0
-    ServiceCharge:
-      type: object
-      description: "Model that represents the fare service charge information.\n            "
-      additionalProperties: false
-      properties:
-        amount:
-          type: number
-          description: "The service charge amount.\n            "
-          format: decimal
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The service charge code.\n            "
-        detail:
-          type:
-          - string
-          - 'null'
-          description: "The service charge detail.\n            "
-          maxLength: 10
-          minLength: 0
-        type:
-          description: "The service charge type.\n            "
-          $ref: '#/components/schemas/ChargeType'
-        collectType:
-          description: "The service charge collect type.\n            "
-          $ref: '#/components/schemas/CollectType'
-        currencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignCurrencyCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge foreign currency code.\n            "
-          maxLength: 3
-          minLength: 0
-        foreignAmount:
-          type: number
-          description: "The service charge foreign amount.\n            "
-          format: decimal
-        ticketCode:
-          type:
-          - string
-          - 'null'
-          description: "The service charge ticket code.\n            "
-          maxLength: 3
-          minLength: 0
-    JourneyMove:
-      type: object
-      description: "Summarized move data at the journey level.\n            "
-      additionalProperties: false
-      properties:
-        maxMoveBackDays:
-          type: integer
-          description: "The maximum number of days this flight can be moved backwards.\n            "
-          format: int32
-        maxMoveOutDays:
-          type: integer
-          description: "The maximum number of days this flight can be moved forward.\n            "
-          format: int32
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    IJsonResponseOfIListOfPassengerBag:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/PassengerBag'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+    FlightType:
+      type: integer
+      description: "Flight types enumeration.\n            \n\n0 = None\n1 = NonStop\n2 = Through\n3 = Direct\n4 = Connect\n5 = All"
+      x-enumNames:
+      - None
+      - NonStop
+      - Through
+      - Direct
+      - Connect
+      - All
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
     IJsonResponseOfIListOfJourney:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -3557,172 +3459,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    PassengerSsr:
-      type: object
-      description: "The model for a passengers Ssr details.\n            "
-      additionalProperties: false
-      properties:
-        note:
-          type:
-          - string
-          - 'null'
-          description: "The passenger SSR note.\n            "
-          maxLength: 128
-          minLength: 0
-        count:
-          type: integer
-          description: "The passenger SSR unit value.\n            "
-          maximum: 32767.0
-          minimum: 1.0
-        inBundle:
-          type: boolean
-          description: "Indicates if the SSR is part of a bundle.\n            "
-        ssrDuration:
-          description: "The length of the Ssr duration.\n            "
-          $ref: '#/components/schemas/SsrDurationType'
-        ssrCode:
-          type:
-          - string
-          - 'null'
-          description: "The passenger SSR code.\n            "
-          maxLength: 4
-          minLength: 0
-        passengerKey:
-          type:
-          - string
-          - 'null'
-          description: "The unique passenger key.\n            "
-        ssrNumber:
-          type:
-          - integer
-          - 'null'
-          description: "The passenger SSR number.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        market:
-          description: "The market for either the leg or segment depending on the Ssr type.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        isConfirmed:
-          type: boolean
-          description: "A status flag to indicate if the ssr has been confirmed or not.\n            "
-        isConfirmingUnheld:
-          type: boolean
-          description: "A status flag to indicate if the ssr is in a confirming unheld state.\n            "
-        ssrKey:
-          type:
-          - string
-          - 'null'
-          description: "The key that uniquely identifies the Ssr, passenger, and leg or segment.\n            "
-        feeCode:
-          type:
-          - string
-          - 'null'
-          description: "The SSR fee code.\n            "
-          maxLength: 6
-          minLength: 0
-        ssrDetail:
-          type:
-          - string
-          - 'null'
-          description: "The passenger SSR detail.\n            "
-          maxLength: 20
-          minLength: 0
-    InboundOutbound:
-      type: integer
-      description: "This enumeration specifies direction of flight application.\n            \n\n0 = None\n1 = Inbound\n2 = Outbound\n3 = Both\n4 = RoundFrom\n5 = RoundTo"
-      x-enumNames:
-      - None
-      - Inbound
-      - Outbound
-      - Both
-      - RoundFrom
-      - RoundTo
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    Gender:
-      type: integer
-      description: "Defines the different binary gender types.\n            \n\n0 = XX\n1 = Male\n2 = Female"
-      x-enumNames:
-      - XX
-      - Male
-      - Female
-      enum:
-      - 0
-      - 1
-      - 2
-    MarketInformation:
-      type: object
-      description: "Model information about the market arrival and destination details.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      - identifier
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-        identifier:
-          description: "Gets or sets the leg arrival station.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-    PassengerBoardingPassDetail:
-      type: object
-      description: "Defines information used to populate the printed boarding pass and 2D bar codes.\n            "
-      additionalProperties: false
-      properties:
-        gateInformation:
-          type:
-          - string
-          - 'null'
-          description: "The gate information from the boarding pass.\n            "
-        priorityInformation:
-          type:
-          - string
-          - 'null'
-          description: "The priority information from the boarding pass.\n            "
-        cabinClass:
-          type:
-          - string
-          - 'null'
-          description: "The cabin class as seen from the boarding pass.\n            "
-        compartmentLevel:
-          type:
-          - string
-          - 'null'
-          description: "The compartment level as seen from the boarding pass.\n            "
-        boardingZone:
-          type:
-          - string
-          - 'null'
-          description: "The assigned boarding zone from the boarding pass.\n            "
-        seatAssignment:
-          type:
-          - string
-          - 'null'
-          description: "The seat assignment as seen from the boarding pass.\n            "
-        sequenceNumber:
-          type:
-          - string
-          - 'null'
-          description: "The boarding sequence number as seen from the boarding pass.\n            "
     PassengerBagGroupRequest:
       type: object
       description: "Request to move passengers to a different baggage group.\n            "
@@ -3733,30 +3469,40 @@ components:
           - integer
           - 'null'
           description: "The baggage group number.\n            "
-    TransportationIdentifier:
-      type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
+    ChangeReasonCodes:
+      type: integer
+      description: "Specifies the reason code on why the change on the journey or segment is performed.\n            \n\n0 = NoChange\n1 = Irop\n2 = ScheduleChange\n3 = Move\n4 = VoluntaryFlyAhead\n5 = InvoluntaryFlyAhead\n6 = SelfServiceRebooking"
+      x-enumNames:
+      - NoChange
+      - Irop
+      - ScheduleChange
+      - Move
+      - VoluntaryFlyAhead
+      - InvoluntaryFlyAhead
+      - SelfServiceRebooking
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    ArrivalStatus:
+      type: integer
+      description: "Arrival status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Arrived\n3 = SeeAgent\n4 = Delayed"
+      x-enumNames:
+      - Default
+      - Cancelled
+      - Arrived
+      - SeeAgent
+      - Delayed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
     LegNest:
       type: object
       description: "A model representing a leg nest.\n            "
@@ -3787,70 +3533,280 @@ components:
           description: "Gets or sets the nest leg classes.\n            "
           items:
             $ref: '#/components/schemas/LegClass'
-    ArrivalStatus:
+    MessageStatus:
       type: integer
-      description: "Arrival status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Arrived\n3 = SeeAgent\n4 = Delayed"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - Default
-      - Cancelled
-      - Arrived
-      - SeeAgent
-      - Delayed
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    FareApplicationType:
+      type: integer
+      description: "This enumeration defines the fare application type of a fare.\n            \n\n0 = Route\n1 = Sector\n2 = Governing"
+      x-enumNames:
+      - Route
+      - Sector
+      - Governing
+      enum:
+      - 0
+      - 1
+      - 2
+    Ticket:
+      type: object
+      description: "Model for a ticket applied to a passenger.\n            "
+      additionalProperties: false
+      properties:
+        ticketNumber:
+          type:
+          - string
+          - 'null'
+          description: "The ticket number.\n            "
+          maxLength: 14
+          minLength: 0
+        infantTicketNumber:
+          type:
+          - string
+          - 'null'
+          description: "The infant ticket number.\n            "
+          maxLength: 14
+          minLength: 0
+        ticketIndicator:
+          description: "The ticket indicator.\n            "
+          $ref: '#/components/schemas/TicketIndicatorCode'
+        ticketStatus:
+          description: "The ticket status.\n            "
+          $ref: '#/components/schemas/TicketStatusCode'
+        passengerKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger key the ticket is associated with.\n            "
+    IJsonResponseOfJourney:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/Journey'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfTravelDocumentRequirements:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/TravelDocumentRequirements'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    PassengerBagUpdateRequest:
+      type: object
+      description: "A model for a request to update the passenger bags.\n            "
+      additionalProperties: false
+      properties:
+        weight:
+          type:
+          - integer
+          - 'null'
+          description: "The baggage weight.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        weightType:
+          description: "Type of weight for the baggage weight.\n            "
+          $ref: '#/components/schemas/WeightType'
+        baggageTypeCode:
+          type:
+          - string
+          - 'null'
+          description: "The baggage type code for the check-in request.\nThis can only be updated if the baggage weight is changed at the same time, and if\nthe baggage type code is active.\n            "
+    TransportationDesignator:
+      type: object
+      description: "Model information about the traveling arrival and destination details.\n            "
+      additionalProperties: false
+      properties:
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type:
+          - string
+          - 'null'
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        arrival:
+          type: string
+          description: "The arrival date and time local to the arrival station.\n            "
+          format: date-time
+        departure:
+          type: string
+          description: "The departure date and time local to the departure station.\n            "
+          format: date-time
+    CollectType:
+      type: integer
+      description: "Used to identify the collect type of a service charge.\n            \n\n0 = SellerChargeable\n1 = ExternalChargeable\n2 = SellerNonChargeable\n3 = ExternalNonChargeable\n4 = ExternalChargeableImmediate"
+      x-enumNames:
+      - SellerChargeable
+      - ExternalChargeable
+      - SellerNonChargeable
+      - ExternalNonChargeable
+      - ExternalChargeableImmediate
       enum:
       - 0
       - 1
       - 2
       - 3
       - 4
-    PassengerSegmentBag:
-      type: object
-      description: "Model information about the baggage a passenger has on a segment.\n            "
-      additionalProperties: false
-      required:
-      - passengerKey
-      - arrivalStation
-      - departureStation
-      properties:
-        baggageKey:
-          type:
-          - string
-          - 'null'
-          description: "Unique key for the baggage.\n            "
-        passengerKey:
-          type: string
-          description: "The passenger key associated to this bag.\n            "
-          minLength: 1
-        arrivalStation:
-          type: string
-          description: "The bag segment arrival station.\n            "
-          maxLength: 3
-          minLength: 3
-        status:
-          description: "The bag status.\n            "
-          $ref: '#/components/schemas/BaggageStatus'
-        departureStation:
-          type: string
-          description: "The bag segment departure station.\n            "
-          maxLength: 3
-          minLength: 3
-        osTag:
-          type:
-          - string
-          - 'null'
-          description: "The bag OS tag.\n            "
-          maxLength: 32
-          minLength: 0
-    WeightType:
+    ChannelType:
       type: integer
-      description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
+      description: "Defines the available channel types doing invoking the communication with the server.\n            \n\n0 = Default\n1 = Direct\n2 = Web\n3 = Gds\n4 = Api\n5 = DigitalApi\n6 = DigitalWeb\n7 = Ndc"
       x-enumNames:
       - Default
-      - Pounds
-      - Kilograms
+      - Direct
+      - Web
+      - Gds
+      - Api
+      - DigitalApi
+      - DigitalWeb
+      - Ndc
       enum:
       - 0
       - 1
       - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    TicketIndicatorCode:
+      type: integer
+      description: "This enumeration defines the ticket requirements\n            \n\n0 = Unknown\n1 = TicketRequired\n2 = AutomatedTicketLiftRequired\n3 = ManualTicketLiftRequired\n4 = AutomatedTicketNoLiftRequired\n5 = ManualTicketNoLiftRequired\n6 = HostETicketNoLiftRequired\n7 = ElectronicTicketNoLiftRequired"
+      x-enumNames:
+      - Unknown
+      - TicketRequired
+      - AutomatedTicketLiftRequired
+      - ManualTicketLiftRequired
+      - AutomatedTicketNoLiftRequired
+      - ManualTicketNoLiftRequired
+      - HostETicketNoLiftRequired
+      - ElectronicTicketNoLiftRequired
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    LegSsr:
+      type: object
+      description: "A model representing a leg ssr summary.\n            "
+      additionalProperties: false
+      properties:
+        available:
+          type: integer
+          description: "The number of Ssrs available.\n            "
+        ssrNestCode:
+          type:
+          - string
+          - 'null'
+          description: "The SSR nest code.\n            "
+          maxLength: 4
+          minLength: 0
+        lid:
+          type: integer
+          description: "The maximum number of SSRs authorized to be sold on a nest.\n            "
+        sold:
+          type: integer
+          description: "The number of SSRs sold in the SSR nest.\n            "
+        unitSold:
+          type: integer
+          description: "The units of space sold for the SSR.\n            "
+    DepartureStatus:
+      type: integer
+      description: "Departure status.\n            \n\n0 = Default\n1 = Cancelled\n2 = Boarding\n3 = SeeAgent\n4 = Delayed\n5 = Departed"
+      x-enumNames:
+      - Default
+      - Cancelled
+      - Boarding
+      - SeeAgent
+      - Delayed
+      - Departed
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    Journey:
+      type: object
+      description: "Data about the journey which represents the collection of segments and their legs on the journey.\n            "
+      additionalProperties: false
+      properties:
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: "The unique identifier for this journey sell information.\n            "
+        notForGeneralUser:
+          type: boolean
+          description: "A value indicating whether the journey is for a general user.\n            "
+        flightType:
+          description: "Returns a flight type enumeration. (NonStop, Thru, etc.)\n            "
+          $ref: '#/components/schemas/FlightType'
+        stops:
+          type: integer
+          description: "The total number of stops this flight takes.\n            "
+          format: int32
+        designator:
+          description: "This is a summary of all the segments. It will contain the details\nof the transportation from the first and last segment.\n            "
+          $ref: '#/components/schemas/TransportationDesignator'
+        move:
+          description: "The information regarding the journey move restrictions.\n            "
+          $ref: '#/components/schemas/JourneyMove'
+        segments:
+          type:
+          - array
+          - 'null'
+          description: "The collection of segments.\n            "
+          items:
+            $ref: '#/components/schemas/Segment'
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -3872,6 +3828,50 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    SeatInfo:
+      type: object
+      description: "The model for the seat information such as deck, seat properties, etc.\n            "
+      additionalProperties: false
+      properties:
+        deck:
+          type: integer
+          description: "Gets or sets the deck.\n            "
+        seatSet:
+          type: integer
+          description: "Gets or sets the seat set.\n            "
+        propertyList:
+          type:
+          - object
+          - 'null'
+          description: "The property list by type code and value.\n            "
+          additionalProperties:
+            type: string
+    WeightType:
+      type: integer
+      description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
+      x-enumNames:
+      - Default
+      - Pounds
+      - Kilograms
+      enum:
+      - 0
+      - 1
+      - 2
+    ClassStatus:
+      type: integer
+      description: "Indicates whether a leg class may be used or not.\n            \n\n1 = Active\n2 = InActive\n3 = AvsOpen\n4 = AvsOnRequest\n5 = AvsClosed"
+      x-enumNames:
+      - Active
+      - InActive
+      - AvsOpen
+      - AvsOnRequest
+      - AvsClosed
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
   securitySchemes:
     JWT:
       type: http

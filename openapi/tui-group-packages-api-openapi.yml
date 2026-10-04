@@ -136,6 +136,98 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ApiAccommodation:
+      properties:
+        id:
+          type: string
+        configurationId:
+          type: string
+        name:
+          type: string
+        href:
+          type: string
+        imagesHref:
+          type: string
+        allInclusive:
+          type: boolean
+        destinationName:
+          type: string
+        climateCompensated:
+          type: boolean
+      required:
+      - id
+      - name
+      - href
+      - imagesHref
+      - allInclusive
+      type: object
+      additionalProperties: false
+    ApiPackages:
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+        totalNumberOfItems:
+          type: number
+          format: double
+        version:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ApiPackage'
+          type: array
+      required:
+      - next
+      - totalNumberOfItems
+      - version
+      - items
+      type: object
+      additionalProperties: false
+    ApiFlightLeg:
+      properties:
+        typeOfFlightName:
+          type: string
+        typeOfFlightCode:
+          type: string
+        airlineName:
+          type: string
+        airlineCode:
+          type: string
+        flightCode:
+          type: string
+        flightNumber:
+          type: string
+        arrivalTime:
+          type: string
+        arrivalDate:
+          type: string
+        arrivalName:
+          type: string
+        arrivalCode:
+          type: string
+        departureTime:
+          type: string
+        departureDate:
+          type: string
+        departureName:
+          type: string
+        departureCode:
+          type: string
+        legNumber:
+          type: number
+          format: double
+      required:
+      - airlineCode
+      - flightCode
+      - arrivalTime
+      - arrivalDate
+      - arrivalCode
+      - departureTime
+      - departureDate
+      - departureCode
+      - legNumber
+      type: object
     ApiPrice:
       properties:
         priceOriginal:
@@ -191,98 +283,6 @@ components:
       - roomTypeCode
       - roomTypeName
       - boardIncluded
-      type: object
-      additionalProperties: false
-    ApiAccommodation:
-      properties:
-        id:
-          type: string
-        configurationId:
-          type: string
-        name:
-          type: string
-        href:
-          type: string
-        imagesHref:
-          type: string
-        allInclusive:
-          type: boolean
-        destinationName:
-          type: string
-        climateCompensated:
-          type: boolean
-      required:
-      - id
-      - name
-      - href
-      - imagesHref
-      - allInclusive
-      type: object
-      additionalProperties: false
-    ApiFlightLeg:
-      properties:
-        typeOfFlightName:
-          type: string
-        typeOfFlightCode:
-          type: string
-        airlineName:
-          type: string
-        airlineCode:
-          type: string
-        flightCode:
-          type: string
-        flightNumber:
-          type: string
-        arrivalTime:
-          type: string
-        arrivalDate:
-          type: string
-        arrivalName:
-          type: string
-        arrivalCode:
-          type: string
-        departureTime:
-          type: string
-        departureDate:
-          type: string
-        departureName:
-          type: string
-        departureCode:
-          type: string
-        legNumber:
-          type: number
-          format: double
-      required:
-      - airlineCode
-      - flightCode
-      - arrivalTime
-      - arrivalDate
-      - arrivalCode
-      - departureTime
-      - departureDate
-      - departureCode
-      - legNumber
-      type: object
-    ApiPackages:
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-        totalNumberOfItems:
-          type: number
-          format: double
-        version:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/ApiPackage'
-          type: array
-      required:
-      - next
-      - totalNumberOfItems
-      - version
-      - items
       type: object
       additionalProperties: false
     ApiPackage:

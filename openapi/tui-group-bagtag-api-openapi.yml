@@ -40,110 +40,36 @@ paths:
                 $ref: '#/components/schemas/IJsonResponseOfIListOfBagTagPrinter'
 components:
   schemas:
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    Exception:
+    Message:
       type: object
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+        code:
           type:
           - string
           - 'null'
-        StackTrace:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-    IJsonResponseOfIListOfBagTagPrinter:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BagTagPrinter'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BagTagPrinter:
-      type: object
-      description: "The bag tag printer model.\n            "
-      additionalProperties: false
-      properties:
-        name:
+          description: "The message type.\n            "
+        value:
           type:
           - string
           - 'null'
-          description: "The bag tag printer name.\n            "
-        location:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - string
+          - object
           - 'null'
-          description: "The bag tag printer location.\n            "
-        address:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer address.\n            "
-        port:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer port.\n            "
-        description:
-          type:
-          - string
-          - 'null'
-          description: "The bag tag printer description.\n            "
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -192,36 +118,110 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    BagTagPrinter:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "The bag tag printer model.\n            "
       additionalProperties: false
       properties:
-        code:
+        name:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+          description: "The bag tag printer name.\n            "
+        location:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
+          description: "The bag tag printer location.\n            "
+        address:
           type:
           - string
           - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
+          description: "The bag tag printer address.\n            "
+        port:
           type:
-          - object
+          - string
           - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+          description: "The bag tag printer port.\n            "
+        description:
+          type:
+          - string
+          - 'null'
+          description: "The bag tag printer description.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfIListOfBagTagPrinter:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BagTagPrinter'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

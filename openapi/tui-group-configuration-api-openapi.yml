@@ -44,94 +44,36 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    PassengerConfiguration:
+    Message:
       type: object
-      description: "Defines the passenger-related configuration options.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        infantSsrCode:
+        code:
           type:
           - string
           - 'null'
-          description: "The SSR code to be used for passenger infant (infant-on-lap) operations.\nThis SSR can only be sold via the /passengers/{passengerKey}/infant or via /trip and /trip/sell endpoints.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    ApiConfiguration:
-      type: object
-      description: "Defines the configuration (from the `appsettings` file) that the Digital API uses.\n            "
-      additionalProperties: false
-      properties:
-        passengerOptions:
-          description: "Passenger-related configuration options.\n            "
-          $ref: '#/components/schemas/PassengerConfiguration'
-    IJsonResponseOfApiConfiguration:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/ApiConfiguration'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-        StackTrace:
+          description: "The message type.\n            "
+        value:
           type:
           - string
           - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - array
+          - object
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -180,36 +122,94 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    IJsonResponseOfApiConfiguration:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        code:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/ApiConfiguration'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    ApiConfiguration:
+      type: object
+      description: "Defines the configuration (from the `appsettings` file) that the Digital API uses.\n            "
+      additionalProperties: false
+      properties:
+        passengerOptions:
+          description: "Passenger-related configuration options.\n            "
+          $ref: '#/components/schemas/PassengerConfiguration'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+        StackTrace:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
+    PassengerConfiguration:
+      type: object
+      description: "Defines the passenger-related configuration options.\n            "
+      additionalProperties: false
+      properties:
+        infantSsrCode:
           type:
           - string
           - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+          description: "The SSR code to be used for passenger infant (infant-on-lap) operations.\nThis SSR can only be sold via the /passengers/{passengerKey}/infant or via /trip and /trip/sell endpoints.\n            "
   securitySchemes:
     JWT:
       type: http

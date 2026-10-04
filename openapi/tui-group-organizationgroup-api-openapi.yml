@@ -53,136 +53,36 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    OrganizationRecordMinimum:
+    Message:
       type: object
-      description: "The data for a simple organization record.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
-      required:
-      - organizationCode
       properties:
-        organizationCode:
-          type: string
-          description: "The organization group code.\n            "
-          maxLength: 10
-          minLength: 1
-        name:
+        code:
           type:
           - string
           - 'null'
-          description: "The organization company name.\n            "
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    OrganizationGroupDetails:
-      type: object
-      description: "The data for an organization group including details.\n            "
-      additionalProperties: false
-      required:
-      - organizationGroupCode
-      properties:
-        organizationGroupCode:
-          type: string
-          description: "The organization group code.\n            "
-          maxLength: 3
-          minLength: 1
-        name:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-          description: "The organization group name.\n            "
-        organizations:
-          type:
-          - array
-          - 'null'
-          description: "The organizations included in the group.\n            "
-          items:
-            $ref: '#/components/schemas/OrganizationRecordMinimum'
-    IJsonResponseOfOrganizationGroupDetails:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/OrganizationGroupDetails'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    OrganizationGroupCreateRequest:
-      type: object
-      description: "The organization group create request.\n            "
-      additionalProperties: false
-      required:
-      - organizationGroupCode
-      properties:
-        organizationGroupCode:
-          type: string
-          description: "The organization group code.\n            "
-          minLength: 1
-        organizationGroupName:
+          description: "The message type.\n            "
+        value:
           type:
           - string
           - 'null'
-          description: "The organization group name.\n            "
-        organization:
-          description: "The organization included in the group.\n            "
-          $ref: '#/components/schemas/OrganizationRecordMinimum'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - string
+          - object
           - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     ErrorResponse:
       type: object
       description: "Defines a unique error response.\n            "
@@ -231,36 +131,136 @@ components:
           - string
           - 'null'
           description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
+    OrganizationGroupCreateRequest:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "The organization group create request.\n            "
+      additionalProperties: false
+      required:
+      - organizationGroupCode
+      properties:
+        organizationGroupCode:
+          type: string
+          description: "The organization group code.\n            "
+          minLength: 1
+        organizationGroupName:
+          type:
+          - string
+          - 'null'
+          description: "The organization group name.\n            "
+        organization:
+          description: "The organization included in the group.\n            "
+          $ref: '#/components/schemas/OrganizationRecordMinimum'
+    OrganizationRecordMinimum:
+      type: object
+      description: "The data for a simple organization record.\n            "
+      additionalProperties: false
+      required:
+      - organizationCode
+      properties:
+        organizationCode:
+          type: string
+          description: "The organization group code.\n            "
+          maxLength: 10
+          minLength: 1
+        name:
+          type:
+          - string
+          - 'null'
+          description: "The organization company name.\n            "
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
-        code:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    OrganizationGroupDetails:
+      type: object
+      description: "The data for an organization group including details.\n            "
+      additionalProperties: false
+      required:
+      - organizationGroupCode
+      properties:
+        organizationGroupCode:
+          type: string
+          description: "The organization group code.\n            "
+          maxLength: 3
+          minLength: 1
+        name:
           type:
           - string
           - 'null'
-          description: "The unique message code.\n            "
-        type:
+          description: "The organization group name.\n            "
+        organizations:
+          type:
+          - array
+          - 'null'
+          description: "The organizations included in the group.\n            "
+          items:
+            $ref: '#/components/schemas/OrganizationRecordMinimum'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
           type:
           - string
           - 'null'
-          description: "The message type.\n            "
-        value:
+        StackTrace:
           type:
           - string
           - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
+    IJsonResponseOfOrganizationGroupDetails:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/OrganizationGroupDetails'
+        errors:
           type:
-          - object
+          - array
           - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

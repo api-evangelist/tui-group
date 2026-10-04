@@ -456,66 +456,101 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    ItinerarySentHistoryResponse:
+    ErrorResponse:
       type: object
-      description: "Defines an itinerary sent history response.\n            "
+      description: "Defines a unique error response.\n            "
       additionalProperties: false
       properties:
-        pageKey:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
           type:
           - string
           - 'null'
-          description: "The key of the last item in the history list.\n            "
-        histories:
+          description: "The original raw message set (non-localized).\n            "
+        code:
           type:
-          - array
+          - string
           - 'null'
-          description: "The itinerary sent history list.\n            "
-          items:
-            $ref: '#/components/schemas/ItinerarySentHistory'
-    ItinerarySentHistory:
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
+    MarketInformation:
       type: object
-      description: "Defines an itinerary sent history log entry.\n            "
+      description: "Model information about the market arrival and destination details.\n            "
       additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
+      - identifier
       properties:
-        pointOfSale:
-          description: "The point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        sourcePointOfSale:
-          description: "The source point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        receivedBy:
-          type:
-          - string
-          - 'null'
-          description: "The received by name.\n            "
-          maxLength: 64
-          minLength: 0
-        receivedByReference:
-          type:
-          - string
-          - 'null'
-          description: "The received by reference number.\n            "
-          maxLength: 20
-          minLength: 0
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The the history entry was created.\n            "
-          format: date-time
-        contact:
-          type:
-          - string
-          - 'null'
-          description: "The booking contact triggering the sending of the itinerary.\n            "
-        distributionOption:
-          description: "The distribution method in sending the itinerary.\n            "
-          $ref: '#/components/schemas/DistributionOption'
-        sent:
+        destination:
           type: string
-          description: "The timestamp on when the itinerary was sent.\n            "
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
+          minLength: 0
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
+          minLength: 0
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
           format: date-time
+          minLength: 1
+        identifier:
+          description: "Gets or sets the leg arrival station.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+    ChangeReasonCodes:
+      type: integer
+      description: "Specifies the reason code on why the change on the journey or segment is performed.\n            \n\n0 = NoChange\n1 = Irop\n2 = ScheduleChange\n3 = Move\n4 = VoluntaryFlyAhead\n5 = InvoluntaryFlyAhead\n6 = SelfServiceRebooking"
+      x-enumNames:
+      - NoChange
+      - Irop
+      - ScheduleChange
+      - Move
+      - VoluntaryFlyAhead
+      - InvoluntaryFlyAhead
+      - SelfServiceRebooking
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     BookingHistoryEvent:
       type: integer
       description: "Represents the different events that trigger an\nentry into the schedule history.\n            \n\n0 = Unknown\n1 = ConvertedHistory\n2 = FlightTimeChange\n3 = FlightDesignatorChange\n4 = AssignedSeat\n5 = RemoveSeat\n6 = AddedFlight\n7 = DeletedFlight\n8 = DeletedPassenger\n9 = NameChange\n10 = GroupNameChange\n11 = CancelledTicketing\n12 = ScheduleChange\n13 = AddedPayment\n14 = ServiceFee\n15 = QueuedPnr\n16 = UnqueuedPnr\n17 = DeletedComment\n18 = Divided\n19 = CheckedIn\n20 = CheckedOut\n21 = FareOverride\n22 = AddedBaggage\n23 = ChangedBaggageWeight\n24 = CheckedBaggage\n25 = RemovedBaggage\n26 = BoardedPassenger\n27 = UnboardedPassenger\n28 = ManualAuthorization\n29 = ManualDecline\n30 = UndoCancel\n31 = ItinerarySent\n32 = ContactChange\n33 = SsrAdded\n34 = FlightMoved\n35 = VerifiedDocument\n36 = RemovedVerifiedDocument\n37 = Promotion\n38 = BookingComment\n39 = CancelledSchedule\n40 = CancelServiceFee\n41 = OverrideServiceFee\n42 = AddedRecordLocator\n43 = DeletedRecordLocator\n44 = UpgradeClassOfService\n45 = DowngradeClassOfService\n46 = StandbyPriorityChange\n47 = AssignedTicketNumber\n48 = DeletedTicketNumber\n49 = ConfirmSegmentStatusCodeChange\n50 = CodeshareFlightChanged\n51 = PdsCancel\n52 = PdsPending\n53 = PdsConfirm\n54 = PdsFinalized\n55 = PdsDeclined\n56 = PdsException\n57 = PdsCancelRefused\n58 = PdsCancelUnsuccessful\n59 = Apps\n60 = InhibitedOverride\n61 = PrintedBagTag\n62 = SelfPrintedBagTag\n63 = PrintedBoardingPass\n64 = AddCustomerId\n65 = DeleteCustomerId\n66 = HoldCreated\n67 = HoldRemoved\n68 = HoldChanged\n69 = OverrideCoupon\n70 = PdsSynchronized\n71 = PdsItemremoved\n72 = Reprice\n73 = ChannelOverride\n74 = EmdCreated\n75 = EmdRemoved\n76 = EmdChanged\n77 = ServiceBundle\n78 = PublishedFareOverride\n79 = FareClassRealignment\n80 = AddedDocument\n81 = ChangedDocument\n82 = DeletedPaymentProperties"
@@ -687,27 +722,6 @@ components:
       - 80
       - 81
       - 82
-    DistributionOption:
-      type: integer
-      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
-      x-enumNames:
-      - None
-      - Mail
-      - Email
-      - Fax
-      - MailFax
-      - Airport
-      - Hold
-      - Print
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
     DayOfWeek:
       type: integer
       description: "Defines the day of the week with none as an option.\n            \n\n0 = None\n1 = Monday\n2 = Tuesday\n3 = Wednesday\n4 = Thursday\n5 = Friday\n6 = Saturday\n7 = Sunday"
@@ -729,202 +743,42 @@ components:
       - 5
       - 6
       - 7
-    SegmentChangeHistoryResponse:
+    MarketDesignator:
       type: object
-      description: "Defines a segment change history response.\n            "
+      description: "Model information about the date market which identifies a market and the departure date.\n            "
       additionalProperties: false
+      required:
+      - destination
+      - origin
+      - departureDate
       properties:
-        pageKey:
-          type:
-          - string
-          - 'null'
-          description: "The key of the last item in the history list.\n            "
-        histories:
-          type:
-          - array
-          - 'null'
-          description: "The segment change history list.\n            "
-          items:
-            $ref: '#/components/schemas/SegmentChangeHistory'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
+        destination:
           type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    FlightMoveHistoryResponse:
-      type: object
-      description: "Defines a flight move history response.\n            "
-      additionalProperties: false
-      properties:
-        pageKey:
-          type:
-          - string
-          - 'null'
-          description: "The key of the last item in the history list.\n            "
-        histories:
-          type:
-          - array
-          - 'null'
-          description: "The flight move history list.\n            "
-          items:
-            $ref: '#/components/schemas/FlightMoveHistory'
-    SeatAssignmentEvent:
-      type: integer
-      description: "Represents the different events that trigger an\nentry into the seat assignment history.\n            \n\n4 = AssignedSeat\n5 = RemoveSeat"
-      x-enumNames:
-      - AssignedSeat
-      - RemoveSeat
-      enum:
-      - 4
-      - 5
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    HoldDateChangeEvent:
-      type: integer
-      description: "Represents the different events that trigger an\nentry into the hold date change history.\n            \n\n66 = Created\n67 = Removed\n68 = Changed"
-      x-enumNames:
-      - Created
-      - Removed
-      - Changed
-      enum:
-      - 66
-      - 67
-      - 68
-    SegmentChangeEvent:
-      type: integer
-      description: "Represents the different events that trigger an entry into the segment change history.\n            \n\n6 = AddedFlight\n7 = DeletedFlight"
-      x-enumNames:
-      - AddedFlight
-      - DeletedFlight
-      enum:
-      - 6
-      - 7
-    BookingMessageHistoryType:
-      type: integer
-      description: "Represents the booking message history types.\n            \n\n0 = TeletypeMessage\n1 = ETicket\n2 = GovernmentSecurity\n3 = PnrGovernment\n4 = BaggageMessage\n5 = Iatci\n6 = EMD"
-      x-enumNames:
-      - TeletypeMessage
-      - ETicket
-      - GovernmentSecurity
-      - PnrGovernment
-      - BaggageMessage
-      - Iatci
-      - EMD
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    HistoryResponse:
-      type: object
-      description: "Defines a booking history response.\n            "
-      additionalProperties: false
-      properties:
-        pageKey:
-          type:
-          - string
-          - 'null'
-          description: "The key of the last item in the history list.\n            "
-        histories:
-          type:
-          - array
-          - 'null'
-          description: "The booking history list.\n            "
-          items:
-            $ref: '#/components/schemas/BookingHistory'
-    HoldDateChangeHistory:
-      type: object
-      description: "Defines a hold date change history log entry.\n            "
-      additionalProperties: false
-      properties:
-        pointOfSale:
-          description: "The point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        sourcePointOfSale:
-          description: "The source point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        receivedBy:
-          type:
-          - string
-          - 'null'
-          description: "The received by name.\n            "
-          maxLength: 64
+          description: "Gets or sets the leg arrival station.\n            "
+          maxLength: 3
           minLength: 0
-        receivedByReference:
-          type:
-          - string
-          - 'null'
-          description: "The received by reference number.\n            "
-          maxLength: 20
+        origin:
+          type: string
+          description: "Gets or sets the leg departure station.\n            "
+          maxLength: 3
           minLength: 0
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The the history entry was created.\n            "
+        departureDate:
+          type: string
+          description: "The departure date.\n            "
           format: date-time
-        previousHoldTime:
-          type:
-          - string
-          - 'null'
-          description: "The previous hold time for the booking.\n            "
-          format: date-time
-        holdTime:
-          type:
-          - string
-          - 'null'
-          description: "The current hold time for the booking.\n            "
-          format: date-time
-    IJsonResponseOfSeatAssignmentHistoryResponse:
+          minLength: 1
+    IJsonResponseOfIListOfBookingMessageHistory:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
+          type:
+          - array
+          - 'null'
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/SeatAssignmentHistoryResponse'
+          items:
+            $ref: '#/components/schemas/BookingMessageHistory'
         errors:
           type:
           - array
@@ -939,23 +793,43 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    BookingMessageHistory:
+    IJsonResponseOfIListOfBagTagPrintHistory:
       type: object
-      description: "Defines a booking message history log entry.\n            "
+      description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
-        type:
-          description: "The message history type.\n            "
-          $ref: '#/components/schemas/BookingMessageHistoryType'
-        message:
+        data:
           type:
-          - string
+          - array
           - 'null'
-          description: "The message.\n            "
-        createdDate:
-          type: string
-          description: "The created date.\n            "
-          format: date-time
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BagTagPrintHistory'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     BagTagPrintHistoryRequest:
       type: object
       description: "Contains information needed to add bag tag print history for a specific passenger.\n            "
@@ -986,322 +860,6 @@ components:
           description: "List of bags to add to bag tag print history.\n            "
           items:
             $ref: '#/components/schemas/BagTagInformation'
-    IJsonResponseOfIListOfBagTagPrintHistory:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BagTagPrintHistory'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    SegmentChangeHistory:
-      type: object
-      description: "Defines a segment change history log entry.\n            "
-      additionalProperties: false
-      properties:
-        pointOfSale:
-          description: "The point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        sourcePointOfSale:
-          description: "The source point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        receivedBy:
-          type:
-          - string
-          - 'null'
-          description: "The received by name.\n            "
-          maxLength: 64
-          minLength: 0
-        receivedByReference:
-          type:
-          - string
-          - 'null'
-          description: "The received by reference number.\n            "
-          maxLength: 20
-          minLength: 0
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The the history entry was created.\n            "
-          format: date-time
-        daysOfWeek:
-          type:
-          - array
-          - 'null'
-          description: "The days of the week of the operation.\n            "
-          items:
-            $ref: '#/components/schemas/DayOfWeek'
-        segmentNumber:
-          type:
-          - integer
-          - 'null'
-          description: "The segment number.\n            "
-        classOfService:
-          type:
-          - string
-          - 'null'
-          description: "The class of service.\n            "
-        market:
-          description: "The market information.\n            "
-          $ref: '#/components/schemas/MarketInformation'
-        stopCount:
-          type: integer
-          description: "The number of stops in the reservation.\n            "
-        connectionIndicator:
-          type:
-          - string
-          - 'null'
-          description: "The connection indicator.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        passengerCount:
-          type: integer
-          description: "The number of passengers on the booking.\n            "
-        scheduledArrivalTime:
-          type:
-          - string
-          - 'null'
-          description: "The scheduled time of arrival local to the arrival station.\n            "
-          format: date-time
-        scheduledDepartureTime:
-          type:
-          - string
-          - 'null'
-          description: "The scheduled time of departure local to the arrival station.\n            "
-          format: date-time
-        fareBasis:
-          type:
-          - string
-          - 'null'
-          description: "An alphanumeric identifier assigned to a fare.\n            "
-        fareAmount:
-          type:
-          - number
-          - 'null'
-          description: "The cash value of the fare.\n            "
-          format: decimal
-    MarketInformation:
-      type: object
-      description: "Model information about the market arrival and destination details.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      - identifier
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-        identifier:
-          description: "Gets or sets the leg arrival station.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    IJsonResponseOfHistoryResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/HistoryResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    PointOfSale:
-      type: object
-      description: "Model related to the point of sale.  This is for read-only operations.\n            "
-      additionalProperties: false
-      properties:
-        agentCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale agent code.\n            "
-        domainCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale domain code.\n            "
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale location code.\n            "
-        organizationCode:
-          type:
-          - string
-          - 'null'
-          description: "The point of sale organization code.\n            "
-    Name:
-      type: object
-      description: "Defines a common name.\n            "
-      additionalProperties: false
-      properties:
-        first:
-          type:
-          - string
-          - 'null'
-          description: "The given first name.\n            "
-          maxLength: 32
-          minLength: 0
-        middle:
-          type:
-          - string
-          - 'null'
-          description: "The given middle name.\n            "
-          maxLength: 32
-          minLength: 0
-        last:
-          type:
-          - string
-          - 'null'
-          description: "The given last name.\n            "
-          maxLength: 32
-          minLength: 0
-        title:
-          type:
-          - string
-          - 'null'
-          description: "The title.\n            "
-          maxLength: 6
-          minLength: 0
-        suffix:
-          type:
-          - string
-          - 'null'
-          description: "The suffix.\n            "
-          maxLength: 6
-          minLength: 0
-    IJsonResponseOfItinerarySentHistoryResponse:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/ItinerarySentHistoryResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    ChangeReasonCodes:
-      type: integer
-      description: "Specifies the reason code on why the change on the journey or segment is performed.\n            \n\n0 = NoChange\n1 = Irop\n2 = ScheduleChange\n3 = Move\n4 = VoluntaryFlyAhead\n5 = InvoluntaryFlyAhead\n6 = SelfServiceRebooking"
-      x-enumNames:
-      - NoChange
-      - Irop
-      - ScheduleChange
-      - Move
-      - VoluntaryFlyAhead
-      - InvoluntaryFlyAhead
-      - SelfServiceRebooking
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
     BookingHistory:
       type: object
       description: "Defines a booking history log entry.\n            "
@@ -1405,9 +963,39 @@ components:
           - boolean
           - 'null'
           description: "Whether the bag tag is self printed.\n            "
-    HoldDateChangeHistoryResponse:
+    DistributionOption:
+      type: integer
+      description: "This enumeration specifies the distribution methods for sending notifications.\n            \n\n0 = None\n1 = Mail\n2 = Email\n3 = Fax\n4 = MailFax\n5 = Airport\n6 = Hold\n7 = Print"
+      x-enumNames:
+      - None
+      - Mail
+      - Email
+      - Fax
+      - MailFax
+      - Airport
+      - Hold
+      - Print
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+    SeatAssignmentEvent:
+      type: integer
+      description: "Represents the different events that trigger an\nentry into the seat assignment history.\n            \n\n4 = AssignedSeat\n5 = RemoveSeat"
+      x-enumNames:
+      - AssignedSeat
+      - RemoveSeat
+      enum:
+      - 4
+      - 5
+    ItinerarySentHistoryResponse:
       type: object
-      description: "Defines a hold date change history response.\n            "
+      description: "Defines an itinerary sent history response.\n            "
       additionalProperties: false
       properties:
         pageKey:
@@ -1419,9 +1007,34 @@ components:
           type:
           - array
           - 'null'
-          description: "The hold date change history list.\n            "
+          description: "The itinerary sent history list.\n            "
           items:
-            $ref: '#/components/schemas/HoldDateChangeHistory'
+            $ref: '#/components/schemas/ItinerarySentHistory'
+    PointOfSale:
+      type: object
+      description: "Model related to the point of sale.  This is for read-only operations.\n            "
+      additionalProperties: false
+      properties:
+        agentCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale agent code.\n            "
+        domainCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale domain code.\n            "
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale location code.\n            "
+        organizationCode:
+          type:
+          - string
+          - 'null'
+          description: "The point of sale organization code.\n            "
     SeatAssignmentHistoryResponse:
       type: object
       description: "Defines a seat assignment history response.\n            "
@@ -1439,6 +1052,222 @@ components:
           description: "The seat assignment history list.\n            "
           items:
             $ref: '#/components/schemas/SeatAssignmentHistory'
+    IJsonResponseOfIListOfBookingNotificationHistory:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/BookingNotificationHistory'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SubscriptionEventType:
+      type: integer
+      description: "Represents the different subscription events.\n            \n\n0 = Unknown\n1 = Departure\n2 = DepartureDelay\n3 = Arrival\n4 = ArrivalDelay\n5 = ScheduleChange\n6 = CheckIn\n7 = Gate\n8 = IropMove\n9 = InventoryCancel"
+      x-enumNames:
+      - Unknown
+      - Departure
+      - DepartureDelay
+      - Arrival
+      - ArrivalDelay
+      - ScheduleChange
+      - CheckIn
+      - Gate
+      - IropMove
+      - InventoryCancel
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+    BookingNotificationHistory:
+      type: object
+      description: "Defines a booking notification history.\n            "
+      additionalProperties: false
+      properties:
+        bookingNotificationHistoryKey:
+          type:
+          - string
+          - 'null'
+          description: "The booking notification history key.\n            "
+        createdDate:
+          type: string
+          description: "Date and time the history was logged.\n            "
+          format: date-time
+        eventTypeCode:
+          description: "Event type code of the notification.\n            "
+          $ref: '#/components/schemas/SubscriptionEventType'
+        deliveryMethodCode:
+          type:
+          - string
+          - 'null'
+          description: "Delivery method code of the notification.\n            "
+        destination:
+          type:
+          - string
+          - 'null'
+          description: "Destination address of the notification.\n            "
+        cultureCode:
+          type:
+          - string
+          - 'null'
+          description: "Culture code of the notification.\n            "
+        detail:
+          type:
+          - string
+          - 'null'
+          description: "Details of the booking notification history.\n            "
+        minutesToEvent:
+          type: integer
+          description: "Reminder time for the notification.\n            "
+          format: int32
+    Name:
+      type: object
+      description: "Defines a common name.\n            "
+      additionalProperties: false
+      properties:
+        first:
+          type:
+          - string
+          - 'null'
+          description: "The given first name.\n            "
+          maxLength: 32
+          minLength: 0
+        middle:
+          type:
+          - string
+          - 'null'
+          description: "The given middle name.\n            "
+          maxLength: 32
+          minLength: 0
+        last:
+          type:
+          - string
+          - 'null'
+          description: "The given last name.\n            "
+          maxLength: 32
+          minLength: 0
+        title:
+          type:
+          - string
+          - 'null'
+          description: "The title.\n            "
+          maxLength: 6
+          minLength: 0
+        suffix:
+          type:
+          - string
+          - 'null'
+          description: "The suffix.\n            "
+          maxLength: 6
+          minLength: 0
+    FlightMoveHistoryResponse:
+      type: object
+      description: "Defines a flight move history response.\n            "
+      additionalProperties: false
+      properties:
+        pageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key of the last item in the history list.\n            "
+        histories:
+          type:
+          - array
+          - 'null'
+          description: "The flight move history list.\n            "
+          items:
+            $ref: '#/components/schemas/FlightMoveHistory'
+    SegmentChangeEvent:
+      type: integer
+      description: "Represents the different events that trigger an entry into the segment change history.\n            \n\n6 = AddedFlight\n7 = DeletedFlight"
+      x-enumNames:
+      - AddedFlight
+      - DeletedFlight
+      enum:
+      - 6
+      - 7
+    IJsonResponseOfHoldDateChangeHistoryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/HoldDateChangeHistoryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    BookingMessageHistory:
+      type: object
+      description: "Defines a booking message history log entry.\n            "
+      additionalProperties: false
+      properties:
+        type:
+          description: "The message history type.\n            "
+          $ref: '#/components/schemas/BookingMessageHistoryType'
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The message.\n            "
+        createdDate:
+          type: string
+          description: "The created date.\n            "
+          format: date-time
+    BookingMessageHistoryType:
+      type: integer
+      description: "Represents the booking message history types.\n            \n\n0 = TeletypeMessage\n1 = ETicket\n2 = GovernmentSecurity\n3 = PnrGovernment\n4 = BaggageMessage\n5 = Iatci\n6 = EMD"
+      x-enumNames:
+      - TeletypeMessage
+      - ETicket
+      - GovernmentSecurity
+      - PnrGovernment
+      - BaggageMessage
+      - Iatci
+      - EMD
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
     TransportationIdentifier:
       type: object
       description: "Represents the transportation identifier model data.\n            "
@@ -1463,6 +1292,419 @@ components:
           - 'null'
           description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
           maxLength: 1
+    HoldDateChangeHistory:
+      type: object
+      description: "Defines a hold date change history log entry.\n            "
+      additionalProperties: false
+      properties:
+        pointOfSale:
+          description: "The point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        sourcePointOfSale:
+          description: "The source point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        receivedBy:
+          type:
+          - string
+          - 'null'
+          description: "The received by name.\n            "
+          maxLength: 64
+          minLength: 0
+        receivedByReference:
+          type:
+          - string
+          - 'null'
+          description: "The received by reference number.\n            "
+          maxLength: 20
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The the history entry was created.\n            "
+          format: date-time
+        previousHoldTime:
+          type:
+          - string
+          - 'null'
+          description: "The previous hold time for the booking.\n            "
+          format: date-time
+        holdTime:
+          type:
+          - string
+          - 'null'
+          description: "The current hold time for the booking.\n            "
+          format: date-time
+    FlightMoveHistory:
+      type: object
+      description: "Defines a flight move history log entry.\n            "
+      additionalProperties: false
+      properties:
+        pointOfSale:
+          description: "The point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        sourcePointOfSale:
+          description: "The source point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        receivedBy:
+          type:
+          - string
+          - 'null'
+          description: "The received by name.\n            "
+          maxLength: 64
+          minLength: 0
+        receivedByReference:
+          type:
+          - string
+          - 'null'
+          description: "The received by reference number.\n            "
+          maxLength: 20
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The the history entry was created.\n            "
+          format: date-time
+        previousMarket:
+          description: "The previous market designator for the journey the passenger\nwas moved from.\n            "
+          $ref: '#/components/schemas/MarketDesignator'
+        newMarket:
+          description: "The new market designator for the journey the passenger\nwas moved to.\n            "
+          $ref: '#/components/schemas/MarketDesignator'
+        previousIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The previous transportation identifier for the journey the passenger\nwas moved from.\n            "
+        newIdentifier:
+          type:
+          - string
+          - 'null'
+          description: "The new transportation identifier for the journey the passenger\nwas moved to.\n            "
+        changeReason:
+          description: "The reason for the move operation.\n            "
+          $ref: '#/components/schemas/ChangeReasonCodes'
+    IJsonResponseOfSeatAssignmentHistoryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SeatAssignmentHistoryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    HistoryResponse:
+      type: object
+      description: "Defines a booking history response.\n            "
+      additionalProperties: false
+      properties:
+        pageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key of the last item in the history list.\n            "
+        histories:
+          type:
+          - array
+          - 'null'
+          description: "The booking history list.\n            "
+          items:
+            $ref: '#/components/schemas/BookingHistory'
+    BagTagInformation:
+      type: object
+      description: "Defines bag tag information.\n            "
+      additionalProperties: false
+      properties:
+        osTag:
+          type:
+          - string
+          - 'null'
+          description: "The os tag.\n            "
+          maxLength: 32
+          minLength: 0
+        taggedToStation:
+          type:
+          - string
+          - 'null'
+          description: "The tagged to station on the baggage object.\n            "
+          maxLength: 3
+          minLength: 3
+        weight:
+          type: integer
+          description: "The weight of the baggage.\n            "
+          maximum: 32767.0
+          minimum: 0.0
+        weightType:
+          description: "The weight type of the baggage.\n            "
+          $ref: '#/components/schemas/WeightType'
+        originStation:
+          type:
+          - string
+          - 'null'
+          description: "The origin station of the baggage.\n            "
+          maxLength: 3
+          minLength: 3
+    IJsonResponseOfFlightMoveHistoryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/FlightMoveHistoryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    SegmentChangeHistory:
+      type: object
+      description: "Defines a segment change history log entry.\n            "
+      additionalProperties: false
+      properties:
+        pointOfSale:
+          description: "The point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        sourcePointOfSale:
+          description: "The source point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        receivedBy:
+          type:
+          - string
+          - 'null'
+          description: "The received by name.\n            "
+          maxLength: 64
+          minLength: 0
+        receivedByReference:
+          type:
+          - string
+          - 'null'
+          description: "The received by reference number.\n            "
+          maxLength: 20
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The the history entry was created.\n            "
+          format: date-time
+        daysOfWeek:
+          type:
+          - array
+          - 'null'
+          description: "The days of the week of the operation.\n            "
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+        segmentNumber:
+          type:
+          - integer
+          - 'null'
+          description: "The segment number.\n            "
+        classOfService:
+          type:
+          - string
+          - 'null'
+          description: "The class of service.\n            "
+        market:
+          description: "The market information.\n            "
+          $ref: '#/components/schemas/MarketInformation'
+        stopCount:
+          type: integer
+          description: "The number of stops in the reservation.\n            "
+        connectionIndicator:
+          type:
+          - string
+          - 'null'
+          description: "The connection indicator.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        passengerCount:
+          type: integer
+          description: "The number of passengers on the booking.\n            "
+        scheduledArrivalTime:
+          type:
+          - string
+          - 'null'
+          description: "The scheduled time of arrival local to the arrival station.\n            "
+          format: date-time
+        scheduledDepartureTime:
+          type:
+          - string
+          - 'null'
+          description: "The scheduled time of departure local to the arrival station.\n            "
+          format: date-time
+        fareBasis:
+          type:
+          - string
+          - 'null'
+          description: "An alphanumeric identifier assigned to a fare.\n            "
+        fareAmount:
+          type:
+          - number
+          - 'null'
+          description: "The cash value of the fare.\n            "
+          format: decimal
+    SegmentChangeHistoryResponse:
+      type: object
+      description: "Defines a segment change history response.\n            "
+      additionalProperties: false
+      properties:
+        pageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key of the last item in the history list.\n            "
+        histories:
+          type:
+          - array
+          - 'null'
+          description: "The segment change history list.\n            "
+          items:
+            $ref: '#/components/schemas/SegmentChangeHistory'
+    ItinerarySentHistory:
+      type: object
+      description: "Defines an itinerary sent history log entry.\n            "
+      additionalProperties: false
+      properties:
+        pointOfSale:
+          description: "The point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        sourcePointOfSale:
+          description: "The source point of sale.\n            "
+          $ref: '#/components/schemas/PointOfSale'
+        receivedBy:
+          type:
+          - string
+          - 'null'
+          description: "The received by name.\n            "
+          maxLength: 64
+          minLength: 0
+        receivedByReference:
+          type:
+          - string
+          - 'null'
+          description: "The received by reference number.\n            "
+          maxLength: 20
+          minLength: 0
+        createdDate:
+          type:
+          - string
+          - 'null'
+          description: "The the history entry was created.\n            "
+          format: date-time
+        contact:
+          type:
+          - string
+          - 'null'
+          description: "The booking contact triggering the sending of the itinerary.\n            "
+        distributionOption:
+          description: "The distribution method in sending the itinerary.\n            "
+          $ref: '#/components/schemas/DistributionOption'
+        sent:
+          type: string
+          description: "The timestamp on when the itinerary was sent.\n            "
+          format: date-time
+    Message:
+      type: object
+      description: "Defines a unique informational message.\n            "
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique message code.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    IJsonResponseOfSegmentChangeHistoryResponse:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data.\n            "
+          $ref: '#/components/schemas/SegmentChangeHistoryResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    HoldDateChangeEvent:
+      type: integer
+      description: "Represents the different events that trigger an\nentry into the hold date change history.\n            \n\n66 = Created\n67 = Removed\n68 = Changed"
+      x-enumNames:
+      - Created
+      - Removed
+      - Changed
+      enum:
+      - 66
+      - 67
+      - 68
     HistoryCategory:
       type: integer
       description: "Represents the various history report types.\n            \n\n0 = Unknown\n1 = Baggage\n2 = BagTagPrint\n3 = BoardingPassPrint\n4 = CheckIn\n5 = ClassOfServiceChange\n6 = Comment\n7 = ConfirmedSegment\n8 = ContactChange\n9 = Converted\n10 = CouponOverride\n11 = DividePnr\n12 = FareOverride\n13 = Fee\n14 = FlightMove\n15 = GroupNameChange\n16 = Hold\n17 = ItinerarySent\n18 = ManualPayment\n19 = MoveBackPnr\n20 = NameChange\n21 = NameRemove\n22 = Payment\n23 = Pds\n24 = Promotion\n25 = QueuePlaceRemove\n26 = RecordLocator\n27 = ScheduleCancelllation\n28 = ScheduleCodeShareChange\n29 = ScheduleFlightDesignatorChange\n30 = ScheduleTimeChange\n31 = SeatAssignment\n32 = SegmentChange\n33 = Reprice\n34 = SsrChange\n35 = StandByChange\n36 = TicketNumber\n37 = VerifiedTravelDocument\n38 = Apps\n39 = InhibitedOverride\n40 = CustomIdChange\n41 = HoldDateChange\n42 = AddedTravelDocument\n43 = ChangedTravelDocument\n44 = ChangedPayment"
@@ -1558,39 +1800,13 @@ components:
       - 42
       - 43
       - 44
-    SubscriptionEventType:
-      type: integer
-      description: "Represents the different subscription events.\n            \n\n0 = Unknown\n1 = Departure\n2 = DepartureDelay\n3 = Arrival\n4 = ArrivalDelay\n5 = ScheduleChange\n6 = CheckIn\n7 = Gate\n8 = IropMove\n9 = InventoryCancel"
-      x-enumNames:
-      - Unknown
-      - Departure
-      - DepartureDelay
-      - Arrival
-      - ArrivalDelay
-      - ScheduleChange
-      - CheckIn
-      - Gate
-      - IropMove
-      - InventoryCancel
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-    IJsonResponseOfSegmentChangeHistoryResponse:
+    IJsonResponse:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines the JSON response contract for a not content type response.\n            "
       additionalProperties: false
       properties:
         data:
-          description: "The payload data.\n            "
-          $ref: '#/components/schemas/SegmentChangeHistoryResponse'
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
         errors:
           type:
           - array
@@ -1605,6 +1821,34 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
+    WeightType:
+      type: integer
+      description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
+      x-enumNames:
+      - Default
+      - Pounds
+      - Kilograms
+      enum:
+      - 0
+      - 1
+      - 2
+    HoldDateChangeHistoryResponse:
+      type: object
+      description: "Defines a hold date change history response.\n            "
+      additionalProperties: false
+      properties:
+        pageKey:
+          type:
+          - string
+          - 'null'
+          description: "The key of the last item in the history list.\n            "
+        histories:
+          type:
+          - array
+          - 'null'
+          description: "The hold date change history list.\n            "
+          items:
+            $ref: '#/components/schemas/HoldDateChangeHistory'
     SeatAssignmentHistory:
       type: object
       description: "Defines a seat assignment history log entry.\n            "
@@ -1657,25 +1901,14 @@ components:
         name:
           description: "The passenger name.\n            "
           $ref: '#/components/schemas/Name'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfHoldDateChangeHistoryResponse:
+    IJsonResponseOfItinerarySentHistoryResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/HoldDateChangeHistoryResponse'
+          $ref: '#/components/schemas/ItinerarySentHistoryResponse'
         errors:
           type:
           - array
@@ -1690,206 +1923,14 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    MarketDesignator:
-      type: object
-      description: "Model information about the date market which identifies a market and the departure date.\n            "
-      additionalProperties: false
-      required:
-      - destination
-      - origin
-      - departureDate
-      properties:
-        destination:
-          type: string
-          description: "Gets or sets the leg arrival station.\n            "
-          maxLength: 3
-          minLength: 0
-        origin:
-          type: string
-          description: "Gets or sets the leg departure station.\n            "
-          maxLength: 3
-          minLength: 0
-        departureDate:
-          type: string
-          description: "The departure date.\n            "
-          format: date-time
-          minLength: 1
-    IJsonResponseOfIListOfBookingNotificationHistory:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BookingNotificationHistory'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    FlightMoveHistory:
-      type: object
-      description: "Defines a flight move history log entry.\n            "
-      additionalProperties: false
-      properties:
-        pointOfSale:
-          description: "The point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        sourcePointOfSale:
-          description: "The source point of sale.\n            "
-          $ref: '#/components/schemas/PointOfSale'
-        receivedBy:
-          type:
-          - string
-          - 'null'
-          description: "The received by name.\n            "
-          maxLength: 64
-          minLength: 0
-        receivedByReference:
-          type:
-          - string
-          - 'null'
-          description: "The received by reference number.\n            "
-          maxLength: 20
-          minLength: 0
-        createdDate:
-          type:
-          - string
-          - 'null'
-          description: "The the history entry was created.\n            "
-          format: date-time
-        previousMarket:
-          description: "The previous market designator for the journey the passenger\nwas moved from.\n            "
-          $ref: '#/components/schemas/MarketDesignator'
-        newMarket:
-          description: "The new market designator for the journey the passenger\nwas moved to.\n            "
-          $ref: '#/components/schemas/MarketDesignator'
-        previousIdentifier:
-          type:
-          - string
-          - 'null'
-          description: "The previous transportation identifier for the journey the passenger\nwas moved from.\n            "
-        newIdentifier:
-          type:
-          - string
-          - 'null'
-          description: "The new transportation identifier for the journey the passenger\nwas moved to.\n            "
-        changeReason:
-          description: "The reason for the move operation.\n            "
-          $ref: '#/components/schemas/ChangeReasonCodes'
-    IJsonResponseOfIListOfBookingMessageHistory:
-      type: object
-      description: "Defines the JSON response contract.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/BookingMessageHistory'
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    WeightType:
-      type: integer
-      description: "Weight Type enumeration.\n            \n\n0 = Default\n1 = Pounds\n2 = Kilograms"
-      x-enumNames:
-      - Default
-      - Pounds
-      - Kilograms
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
-          type:
-          - array
-          - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    BagTagInformation:
-      type: object
-      description: "Defines bag tag information.\n            "
-      additionalProperties: false
-      properties:
-        osTag:
-          type:
-          - string
-          - 'null'
-          description: "The os tag.\n            "
-          maxLength: 32
-          minLength: 0
-        taggedToStation:
-          type:
-          - string
-          - 'null'
-          description: "The tagged to station on the baggage object.\n            "
-          maxLength: 3
-          minLength: 3
-        weight:
-          type: integer
-          description: "The weight of the baggage.\n            "
-          maximum: 32767.0
-          minimum: 0.0
-        weightType:
-          description: "The weight type of the baggage.\n            "
-          $ref: '#/components/schemas/WeightType'
-        originStation:
-          type:
-          - string
-          - 'null'
-          description: "The origin station of the baggage.\n            "
-          maxLength: 3
-          minLength: 3
-    IJsonResponseOfFlightMoveHistoryResponse:
+    IJsonResponseOfHistoryResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
       additionalProperties: false
       properties:
         data:
           description: "The payload data.\n            "
-          $ref: '#/components/schemas/FlightMoveHistoryResponse'
+          $ref: '#/components/schemas/HistoryResponse'
         errors:
           type:
           - array
@@ -1904,47 +1945,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    BookingNotificationHistory:
-      type: object
-      description: "Defines a booking notification history.\n            "
-      additionalProperties: false
-      properties:
-        bookingNotificationHistoryKey:
-          type:
-          - string
-          - 'null'
-          description: "The booking notification history key.\n            "
-        createdDate:
-          type: string
-          description: "Date and time the history was logged.\n            "
-          format: date-time
-        eventTypeCode:
-          description: "Event type code of the notification.\n            "
-          $ref: '#/components/schemas/SubscriptionEventType'
-        deliveryMethodCode:
-          type:
-          - string
-          - 'null'
-          description: "Delivery method code of the notification.\n            "
-        destination:
-          type:
-          - string
-          - 'null'
-          description: "Destination address of the notification.\n            "
-        cultureCode:
-          type:
-          - string
-          - 'null'
-          description: "Culture code of the notification.\n            "
-        detail:
-          type:
-          - string
-          - 'null'
-          description: "Details of the booking notification history.\n            "
-        minutesToEvent:
-          type: integer
-          description: "Reminder time for the notification.\n            "
-          format: int32
   securitySchemes:
     JWT:
       type: http

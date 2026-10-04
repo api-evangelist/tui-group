@@ -64,48 +64,26 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Currency:
+    YesNoValue:
       type: string
       enum:
-      - EUR
+      - ja
+      - nee
       xml:
         attribute: true
-    BoardType:
+    Board:
+      type: object
+      properties:
+        BoardType:
+          $ref: '#/components/schemas/BoardType'
+        Description:
+          type: string
+      required:
+      - BoardType
+      - Description
+    UnitType:
       type: string
-      enum:
-      - lg
-      - lo
-      - hp
-      - vp
-      - ab
-      - bb
-      - cb
-      - br
-      - vb
-      - ai
-      - dv
-      - ph
-      - pv
-      - pa
-      - ua
-      - ld
-      - LG
-      - LO
-      - HP
-      - VP
-      - AB
-      - BB
-      - CB
-      - BR
-      - VB
-      - AI
-      - DV
-      - PH
-      - PV
-      - PA
-      - UA
-      - LD
-      example: LO
+      pattern: (\d+pk)|(\d+PK)|(\d+ka)|(\d+KA)|(\d+kb)|(\d+KB)|(\d+kw)|(\d+KW)|(\d+kv)|(\d+KV)|(\d+ph)|(\d+PH)|(\d+pt)|(\d+PT)|(\d+pc)|(\d+PC)|(\d+ks)|(\d+KS)|(\d+pl)|(\d+PL)|(\d+ps)|(\d+PS)|(\d+pz)|(\d+PZ)|(\d+gk)|(\d+GK)|(\d+tc)|(\d+TC)|(div)|(DIV)|(stn)|(STN)
     AccommodationType:
       type: string
       enum:
@@ -170,94 +148,13 @@ components:
       - VIL
       - WNG
       example: HOT
-    VersionID:
-      type: string
-      enum:
-      - 1.5.1
-      xml:
-        attribute: true
-    SupplyPriceAvailability:
+    CommissionGroup:
       type: object
       properties:
-        DepartureDate:
-          type: string
-          format: YYYY-MM-DD
-        Duration:
-          $ref: '#/components/schemas/Duration'
-        TripDuration:
-          $ref: '#/components/schemas/Duration'
-        TransportAvailability:
-          type: object
-          properties:
-            Route:
-              type: object
-              properties:
-                RouteID:
-                  type: string
-                  xml:
-                    attribute: true
-                PriceNote:
-                  type: integer
-              required:
-              - RouteID
-        UnitGroup:
-          type: object
-          properties:
-            Unit:
-              type: array
-              items:
-                $ref: '#/components/schemas/Unit'
-          required:
-          - Unit
-        TransferAvailability:
-          type: object
-          properties:
-            Transfer:
-              type: array
-              items:
-                $ref: '#/components/schemas/Transfer'
-      required:
-      - DepartureDate
-      - Duration
-    Board:
-      type: object
-      properties:
-        BoardType:
-          $ref: '#/components/schemas/BoardType'
-        Description:
-          type: string
-      required:
-      - BoardType
-      - Description
-    Duration:
-      type: object
-      title: Duration
-      properties:
-        Duration:
-          $ref: '#/components/schemas/DurationType'
-    PaxType:
-      type: string
-      enum:
-      - Adult
-      - Child
-      - Infant
-      xml:
-        attribute: true
-    MutationType:
-      type: string
-      enum:
-      - New
-      - Mutation
-      - Deletion
-      - Reset
-      example: Reset
-    DepartureArrivalInfo:
-      type: object
-      properties:
-        Point:
-          $ref: '#/components/schemas/Point'
-      required:
-      - Point
+        Commission:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commission'
     Occupation:
       type: object
       properties:
@@ -278,64 +175,6 @@ components:
       required:
       - MinOccupancy
       - MaxOccupancy
-    Language:
-      type: string
-      enum:
-      - NL
-      xml:
-        attribute: true
-    BoardPrice:
-      type: object
-      properties:
-        BoardType:
-          $ref: '#/components/schemas/BoardType'
-        Price:
-          type: array
-          items:
-            $ref: '#/components/schemas/Price'
-      required:
-      - BoardType
-      - Price
-    Commission:
-      type: object
-      properties:
-        CommissionCategory:
-          type: string
-        TravelPeriod:
-          $ref: '#/components/schemas/StartAndEndDate'
-        BookPeriod:
-          $ref: '#/components/schemas/StartAndEndDate'
-      required:
-      - CommissionCategory
-      - TravelPeriod
-    PriceType:
-      type: string
-      enum:
-      - 'OFF'
-      - SPO
-      example: 'OFF'
-      xml:
-        attribute: true
-    PricePer:
-      type: string
-      enum:
-      - pn
-      - pw
-      - pa
-      - kn
-      - kw
-      - ka
-      - tp
-      - PN
-      - PW
-      - PA
-      - KN
-      - KW
-      - KA
-      - TP
-      example: PA
-      xml:
-        attribute: true
     Point:
       type: object
       properties:
@@ -362,27 +201,27 @@ components:
       - Control
       - VersionID
       - SupplyResponse
-    OccupancyRules:
+    VersionID:
+      type: string
+      enum:
+      - 1.5.1
+      xml:
+        attribute: true
+    Route:
       type: object
       properties:
-        MinOccupancy:
+        RouteID:
+          type: string
+          xml:
+            attribute: true
+        SupplyTransportTo:
+          $ref: '#/components/schemas/SupplyTransportToFrom'
+        SupplyTransportFrom:
+          $ref: '#/components/schemas/SupplyTransportToFrom'
+        PriceNote:
           type: integer
-        MaxOccupancy:
-          type: integer
-        AgeCondition:
-          type: array
-          maxItems: 2
-          items:
-            $ref: '#/components/schemas/AgeType'
-        OccupancyIncluded:
-          allOf:
-          - $ref: '#/components/schemas/YesNoValue'
-        PaxType:
-          $ref: '#/components/schemas/PaxType'
       required:
-      - MinOccupancy
-      - MaxOccupancy
-      - AgeCondition
+      - RouteID
     SupplyPriceAvailabilityInfo:
       type: object
       properties:
@@ -392,22 +231,31 @@ components:
             $ref: '#/components/schemas/SupplyPriceAvailability'
       required:
       - SupplyPriceAvailability
-    TransportType:
-      type: string
-      enum:
-      - vl
-      - bu
-      - tr
-      - fe
-      - bo
-      - ev
-      - VL
-      - BU
-      - TR
-      - FE
-      - BO
-      - EV
-      example: VL
+    ProductInfo:
+      type: object
+      properties:
+        Description:
+          type: string
+        PublicationPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+        Category:
+          type: integer
+        Reference:
+          $ref: '#/components/schemas/Reference'
+        ImageLocation:
+          type: array
+          items:
+            type: string
+        TextLocation:
+          type: string
+        FacilityGroup:
+          $ref: '#/components/schemas/FacilityGroup'
+        CommissionGroup:
+          $ref: '#/components/schemas/CommissionGroup'
+      required:
+      - Description
+      - PublicationPeriod
+      - Category
     SupplyPackage:
       type: object
       properties:
@@ -435,6 +283,69 @@ components:
       - Brand
       - PackageID
       - ProductInfo
+    SupplyTransferToFrom:
+      type: object
+      properties:
+        TransferCategory:
+          type: string
+        Description:
+          type: string
+      required:
+      - TransferCategory
+      - Description
+    PriceType:
+      type: string
+      enum:
+      - 'OFF'
+      - SPO
+      example: 'OFF'
+      xml:
+        attribute: true
+    StartAndEndDate:
+      type: object
+      properties:
+        StartDate:
+          type: string
+          format: YYYY-MM-DD
+        EndDate:
+          type: string
+          format: YYYY-MM-DD
+      required:
+      - StartDate
+      - EndDate
+    SupplyResponse:
+      type: object
+      properties:
+        SupplyPackage:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyPackage'
+    Unit:
+      type: object
+      properties:
+        UnitID:
+          type: string
+        Status:
+          type: string
+        BoardPrice:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardPrice'
+      required:
+      - UnitID
+      - Status
+      - BoardPrice
+    AgeType:
+      type: string
+      enum:
+      - Max
+      - Min
+      - MAX
+      - MIN
+      - max
+      - min
+      xml:
+        attribute: true
     SupplyUnitInfo:
       type: object
       properties:
@@ -460,106 +371,133 @@ components:
       - Occupation
       - BoardInfo
       - UnitContentID
-    ProductInfo:
+    SupplyTransportToFrom:
       type: object
       properties:
-        Description:
-          type: string
-        PublicationPeriod:
-          $ref: '#/components/schemas/StartAndEndDate'
-        Category:
-          type: integer
-        Reference:
-          $ref: '#/components/schemas/Reference'
-        ImageLocation:
-          type: array
-          items:
-            type: string
-        TextLocation:
-          type: string
-        FacilityGroup:
-          $ref: '#/components/schemas/FacilityGroup'
-        CommissionGroup:
-          $ref: '#/components/schemas/CommissionGroup'
+        TransportType:
+          $ref: '#/components/schemas/TransportType'
+        DepartureInfo:
+          $ref: '#/components/schemas/DepartureArrivalInfo'
+        ArrivalInfo:
+          $ref: '#/components/schemas/DepartureArrivalInfo'
       required:
-      - Description
-      - PublicationPeriod
-      - Category
-    CommissionGroup:
-      type: object
-      properties:
-        Commission:
-          type: array
-          items:
-            $ref: '#/components/schemas/Commission'
-    StartAndEndDate:
-      type: object
-      properties:
-        StartDate:
-          type: string
-          format: YYYY-MM-DD
-        EndDate:
-          type: string
-          format: YYYY-MM-DD
-      required:
-      - StartDate
-      - EndDate
-    Transfer:
-      type: object
-      properties:
-        TransferID:
-          type: string
-          xml:
-            attribute: true
-        Included:
-          $ref: '#/components/schemas/YesNoValue'
-      required:
-      - TransferID
-    SupplyTransfer:
-      type: object
-      properties:
-        TransferID:
-          type: string
-          xml:
-            attribute: true
-        SupplyTransferTo:
-          $ref: '#/components/schemas/SupplyTransferToFrom'
-        SupplyTransferFrom:
-          $ref: '#/components/schemas/SupplyTransferToFrom'
-      required:
-      - TransferID
-    FacilityGroup:
-      type: object
-      properties:
-        Facility:
-          type: array
-          items:
-            type: integer
-    Price:
-      type: object
-      properties:
-        Currency:
-          $ref: '#/components/schemas/Currency'
-        Occupation:
-          type: integer
-          xml:
-            attribute: true
-        PricePer:
-          $ref: '#/components/schemas/PricePer'
-        PriceType:
-          $ref: '#/components/schemas/PriceType'
-      required:
-      - Currency
-      - Occupation
-      - PricePer
-      - PriceType
-    YesNoValue:
+      - TransportType
+      - DepartureInfo
+      - ArrivalInfo
+    TransportType:
       type: string
       enum:
-      - ja
-      - nee
+      - vl
+      - bu
+      - tr
+      - fe
+      - bo
+      - ev
+      - VL
+      - BU
+      - TR
+      - FE
+      - BO
+      - EV
+      example: VL
+    Commission:
+      type: object
+      properties:
+        CommissionCategory:
+          type: string
+        TravelPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+        BookPeriod:
+          $ref: '#/components/schemas/StartAndEndDate'
+      required:
+      - CommissionCategory
+      - TravelPeriod
+    Reference:
+      type: object
+      properties:
+        ReferenceID:
+          type: integer
+        Description:
+          type: string
+    SupplyTransferInfo:
+      type: object
+      properties:
+        SupplyTransfer:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplyTransfer'
+      required:
+      - SupplyTransfer
+    MutationType:
+      type: string
+      enum:
+      - New
+      - Mutation
+      - Deletion
+      - Reset
+      example: Reset
+    PricePer:
+      type: string
+      enum:
+      - pn
+      - pw
+      - pa
+      - kn
+      - kw
+      - ka
+      - tp
+      - PN
+      - PW
+      - PA
+      - KN
+      - KW
+      - KA
+      - TP
+      example: PA
       xml:
         attribute: true
+    Language:
+      type: string
+      enum:
+      - NL
+      xml:
+        attribute: true
+    BoardType:
+      type: string
+      enum:
+      - lg
+      - lo
+      - hp
+      - vp
+      - ab
+      - bb
+      - cb
+      - br
+      - vb
+      - ai
+      - dv
+      - ph
+      - pv
+      - pa
+      - ua
+      - ld
+      - LG
+      - LO
+      - HP
+      - VP
+      - AB
+      - BB
+      - CB
+      - BR
+      - VB
+      - AI
+      - DV
+      - PH
+      - PV
+      - PA
+      - UA
+      - LD
+      example: LO
     Control:
       type: object
       properties:
@@ -604,57 +542,6 @@ components:
       - ReceiverID
       - RequestID
       - ResponseID
-    DurationType:
-      type: string
-      enum:
-      - dagen
-      - nachten
-      xml:
-        attribute: true
-    UnitType:
-      type: string
-      pattern: (\d+pk)|(\d+PK)|(\d+ka)|(\d+KA)|(\d+kb)|(\d+KB)|(\d+kw)|(\d+KW)|(\d+kv)|(\d+KV)|(\d+ph)|(\d+PH)|(\d+pt)|(\d+PT)|(\d+pc)|(\d+PC)|(\d+ks)|(\d+KS)|(\d+pl)|(\d+PL)|(\d+ps)|(\d+PS)|(\d+pz)|(\d+PZ)|(\d+gk)|(\d+GK)|(\d+tc)|(\d+TC)|(div)|(DIV)|(stn)|(STN)
-    PointType:
-      type: string
-      enum:
-      - IATAcode
-      - Postcode
-      - Internal
-      - ANVRLandStreek
-      xml:
-        attribute: true
-    SupplyResponse:
-      type: object
-      properties:
-        SupplyPackage:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupplyPackage'
-    SupplyTransferToFrom:
-      type: object
-      properties:
-        TransferCategory:
-          type: string
-        Description:
-          type: string
-      required:
-      - TransferCategory
-      - Description
-    Unit:
-      type: object
-      properties:
-        UnitID:
-          type: string
-        Status:
-          type: string
-        BoardPrice:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoardPrice'
-      required:
-      - UnitID
-      - Status
-      - BoardPrice
     SupplyAccoInfo:
       type: object
       properties:
@@ -685,15 +572,112 @@ components:
       - AccommodationType
       - Name
       - SupplyUnitInfo
-    SupplyTransferInfo:
+    Duration:
+      type: object
+      title: Duration
+      properties:
+        Duration:
+          $ref: '#/components/schemas/DurationType'
+    FacilityGroup:
       type: object
       properties:
-        SupplyTransfer:
+        Facility:
           type: array
           items:
-            $ref: '#/components/schemas/SupplyTransfer'
+            type: integer
+    OccupancyRules:
+      type: object
+      properties:
+        MinOccupancy:
+          type: integer
+        MaxOccupancy:
+          type: integer
+        AgeCondition:
+          type: array
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/AgeType'
+        OccupancyIncluded:
+          allOf:
+          - $ref: '#/components/schemas/YesNoValue'
+        PaxType:
+          $ref: '#/components/schemas/PaxType'
       required:
-      - SupplyTransfer
+      - MinOccupancy
+      - MaxOccupancy
+      - AgeCondition
+    SupplyPriceAvailability:
+      type: object
+      properties:
+        DepartureDate:
+          type: string
+          format: YYYY-MM-DD
+        Duration:
+          $ref: '#/components/schemas/Duration'
+        TripDuration:
+          $ref: '#/components/schemas/Duration'
+        TransportAvailability:
+          type: object
+          properties:
+            Route:
+              type: object
+              properties:
+                RouteID:
+                  type: string
+                  xml:
+                    attribute: true
+                PriceNote:
+                  type: integer
+              required:
+              - RouteID
+        UnitGroup:
+          type: object
+          properties:
+            Unit:
+              type: array
+              items:
+                $ref: '#/components/schemas/Unit'
+          required:
+          - Unit
+        TransferAvailability:
+          type: object
+          properties:
+            Transfer:
+              type: array
+              items:
+                $ref: '#/components/schemas/Transfer'
+      required:
+      - DepartureDate
+      - Duration
+    SupplyTransfer:
+      type: object
+      properties:
+        TransferID:
+          type: string
+          xml:
+            attribute: true
+        SupplyTransferTo:
+          $ref: '#/components/schemas/SupplyTransferToFrom'
+        SupplyTransferFrom:
+          $ref: '#/components/schemas/SupplyTransferToFrom'
+      required:
+      - TransferID
+    SupplyTransportInfo:
+      type: object
+      properties:
+        Route:
+          type: array
+          items:
+            $ref: '#/components/schemas/Route'
+      required:
+      - Route
+    DepartureArrivalInfo:
+      type: object
+      properties:
+        Point:
+          $ref: '#/components/schemas/Point'
+      required:
+      - Point
     OccupancyRestrictions:
       type: object
       properties:
@@ -704,59 +688,75 @@ components:
       required:
       - Adult
       - Child
-    Route:
+    BoardPrice:
       type: object
       properties:
-        RouteID:
+        BoardType:
+          $ref: '#/components/schemas/BoardType'
+        Price:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+      required:
+      - BoardType
+      - Price
+    Currency:
+      type: string
+      enum:
+      - EUR
+      xml:
+        attribute: true
+    Transfer:
+      type: object
+      properties:
+        TransferID:
           type: string
           xml:
             attribute: true
-        SupplyTransportTo:
-          $ref: '#/components/schemas/SupplyTransportToFrom'
-        SupplyTransportFrom:
-          $ref: '#/components/schemas/SupplyTransportToFrom'
-        PriceNote:
-          type: integer
+        Included:
+          $ref: '#/components/schemas/YesNoValue'
       required:
-      - RouteID
-    SupplyTransportToFrom:
-      type: object
-      properties:
-        TransportType:
-          $ref: '#/components/schemas/TransportType'
-        DepartureInfo:
-          $ref: '#/components/schemas/DepartureArrivalInfo'
-        ArrivalInfo:
-          $ref: '#/components/schemas/DepartureArrivalInfo'
-      required:
-      - TransportType
-      - DepartureInfo
-      - ArrivalInfo
-    SupplyTransportInfo:
-      type: object
-      properties:
-        Route:
-          type: array
-          items:
-            $ref: '#/components/schemas/Route'
-      required:
-      - Route
-    Reference:
-      type: object
-      properties:
-        ReferenceID:
-          type: integer
-        Description:
-          type: string
-    AgeType:
+      - TransferID
+    PointType:
       type: string
       enum:
-      - Max
-      - Min
-      - MAX
-      - MIN
-      - max
-      - min
+      - IATAcode
+      - Postcode
+      - Internal
+      - ANVRLandStreek
+      xml:
+        attribute: true
+    PaxType:
+      type: string
+      enum:
+      - Adult
+      - Child
+      - Infant
+      xml:
+        attribute: true
+    Price:
+      type: object
+      properties:
+        Currency:
+          $ref: '#/components/schemas/Currency'
+        Occupation:
+          type: integer
+          xml:
+            attribute: true
+        PricePer:
+          $ref: '#/components/schemas/PricePer'
+        PriceType:
+          $ref: '#/components/schemas/PriceType'
+      required:
+      - Currency
+      - Occupation
+      - PricePer
+      - PriceType
+    DurationType:
+      type: string
+      enum:
+      - dagen
+      - nachten
       xml:
         attribute: true
   examples:

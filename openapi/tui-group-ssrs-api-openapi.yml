@@ -66,76 +66,30 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfListOfString:
+    Message:
       type: object
       additionalProperties: false
       properties:
-        data:
+        code:
           type:
-          - array
+          - string
           - 'null'
-          items:
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
             type: string
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     ErrorResponse:
       type: object
       additionalProperties: false
@@ -175,6 +129,76 @@ components:
           type:
           - string
           - 'null'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
     PairedSsrCommentsRequest:
       type: object
       additionalProperties: false
@@ -209,30 +233,6 @@ components:
           - string
           - 'null'
           description: Reason code for paired SSR
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
   securitySchemes:
     JWT:
       type: http

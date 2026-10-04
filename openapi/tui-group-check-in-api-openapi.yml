@@ -349,64 +349,168 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    CheckinPassengerResponse:
+    ErrorResponse:
       type: object
       additionalProperties: false
       properties:
-        passengerAlternateKey:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
           type:
           - string
           - 'null'
-        successfulSegments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/SegmentWithWarnings'
-        failedSegments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/SegmentWithErrors'
-    DocumentTypeRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        documentTypeCode:
+        code:
           type:
           - string
           - 'null'
-        documentType:
-          type:
-          - string
-          - 'null'
-        isActive:
-          type: boolean
-        documentTypeName:
-          type:
-          - string
-          - 'null'
-        requiredFields:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/GovernmentDocumentFieldType'
-        isPrimary:
-          type: boolean
-    CheckinSecurityInfo:
-      type: object
-      additionalProperties: false
-      properties:
         message:
           type:
           - string
           - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    SegmentWithWarnings:
+      type: object
+      additionalProperties: false
+      properties:
+        segmentKey:
+          type:
+          - string
+          - 'null'
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        securityInfo:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinSecurityInfo'
+        iatciMessages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinIatciMessage'
+    CheckinOverrideRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        governmentProgramType:
+          $ref: '#/components/schemas/GovernmentProgramType'
+        driverName:
+          type:
+          - string
+          - 'null'
+        isDepartureClearance:
+          type: boolean
+        additionalData:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinOverrideAdditionalData'
         isInfant:
           type: boolean
-        isError:
+    ValidOverrideResponseCode:
+      type: object
+      additionalProperties: false
+      properties:
+        authStatusCode:
+          type:
+          - string
+          - 'null'
+        authStatusDescription:
+          type:
+          - string
+          - 'null'
+    CheckinOverrideAdditionalDataType:
+      type: integer
+      description: '0 = Comment
+
+        1 = PassengerId'
+      x-enumNames:
+      - Comment
+      - PassengerId
+      enum:
+      - 0
+      - 1
+    EmdCouponRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinGeneralRequirementType'
+        isFulfilled:
           type: boolean
+        couponSourceSystemCode:
+          type:
+          - string
+          - 'null'
+          description: 'Code for the system that sent the EMD information. For example, this can be the booking
+
+            source (GDS or marketing carrier) or an operating carrier that updated the booking.
+
+            This can also be blank, for example, if added from Skyspeed.
+
+            Examples: 1A - Amadeus, 1S - Sabre, etc...'
+        ssrCode:
+          type:
+          - string
+          - 'null'
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    CheckinSecurityRequirementsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        isFulfilled:
+          type: boolean
+        passengerRequirements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PassengerSecurityRequirements'
     CheckinGeneralRequirementType:
       type: integer
       description: '0 = Unknown
@@ -574,18 +678,334 @@ components:
       - 38
       - 39
       - 40
-    ValidOverrideResponseCode:
+    CheckinStep:
+      type: integer
+      description: '0 = None
+
+        1 = Security
+
+        2 = Seats
+
+        3 = Bags
+
+        4 = Services
+
+        5 = Payments
+
+        6 = Finalize'
+      x-enumNames:
+      - None
+      - Security
+      - Seats
+      - Bags
+      - Services
+      - Payments
+      - Finalize
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+    CheckinOverrideAdditionalData:
       type: object
       additionalProperties: false
       properties:
-        authStatusCode:
+        type:
+          $ref: '#/components/schemas/CheckinOverrideAdditionalDataType'
+        data:
           type:
           - string
           - 'null'
-        authStatusDescription:
+    CheckinGeneralRequirementsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        isFulfilled:
+          type: boolean
+        passengerRequirements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PassengerCheckinRequirements'
+        bookingRestrictions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinGeneralRequirementType'
+    CheckinStepCustomRequirements:
+      type: object
+      additionalProperties: false
+      properties:
+        step:
+          $ref: '#/components/schemas/CheckinStep'
+        actionRequired:
+          type: boolean
+        visitRequired:
+          type: boolean
+    TicketRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinGeneralRequirementType'
+        isFulfilled:
+          type: boolean
+        ticketNumber:
           type:
           - string
           - 'null'
+        isInfant:
+          type: boolean
+    UndoCheckinRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - segmentKeys
+      - passengers
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          description: An ordered list of the segments from which to uncheck the passengers.
+          items:
+            type: string
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UndoCheckinRequestPassenger'
+        fromStationCode:
+          type:
+          - string
+          - 'null'
+          description: 'Specifies the starting point from which to uncheck the passengers.  If left blank,
+
+            the passengers will be unchecked from every leg in the specified segments.'
+    IatciMessageType:
+      type: integer
+      description: '0 = PassengerLevelWarning
+
+        1 = FlightLevelWarning
+
+        2 = Error
+
+        3 = Success'
+      x-enumNames:
+      - PassengerLevelWarning
+      - FlightLevelWarning
+      - Error
+      - Success
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    CheckinRequestPassenger:
+      type: object
+      additionalProperties: false
+      required:
+      - passengerAlternateKey
+      properties:
+        passengerAlternateKey:
+          type: string
+          minLength: 1
+        verifiedTravelDocumentKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        inTransitAtOrigin:
+          $ref: '#/components/schemas/NullableFlag'
+        inTransitAtDestination:
+          $ref: '#/components/schemas/NullableFlag'
+        infantInTransitAtOrigin:
+          $ref: '#/components/schemas/NullableFlag'
+        infantInTransitAtDestination:
+          $ref: '#/components/schemas/NullableFlag'
+        overrides:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinOverrideRequest'
+    UndoCheckinRequestPassenger:
+      type: object
+      additionalProperties: false
+      required:
+      - passengerAlternateKey
+      properties:
+        passengerAlternateKey:
+          type: string
+          minLength: 1
+        verifiedTravelDocumentKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    CheckinOverrideResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        overrideDetails:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinOverrideDetails'
+        governmentProgramType:
+          $ref: '#/components/schemas/GovernmentProgramType'
+        driverName:
+          type:
+          - string
+          - 'null'
+        programDescription:
+          type:
+          - string
+          - 'null'
+        isDepartureClearance:
+          type: boolean
+        message:
+          type:
+          - string
+          - 'null'
+        additionalData:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CheckinOverrideAdditionalDataType'
+        isInfant:
+          type: boolean
+        serverIsInOutageMode:
+          type: boolean
+        clearanceStatus:
+          type:
+          - string
+          - 'null'
+        originatingCountryCode:
+          type:
+          - string
+          - 'null'
+    CheckinOverrideDetails:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+    GeneralRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinGeneralRequirementType'
+        isFulfilled:
+          type: boolean
+    Error:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+          description: The Error Code.
+        message:
+          type:
+          - string
+          - 'null'
+          description: The Error Message.
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: The Raw Error Message.
+    AddressSecurityRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinSecurityRequirementType'
+        isFulfilled:
+          type: boolean
+        programDescription:
+          type:
+          - string
+          - 'null'
+        errorText:
+          type:
+          - string
+          - 'null'
+        governmentProgramType:
+          type:
+          - string
+          - 'null'
+        driverName:
+          type:
+          - string
+          - 'null'
+        securityValidation:
+          $ref: '#/components/schemas/SecurityValidation'
+        isInfantRequirement:
+          type: boolean
+        canHandle:
+          type: boolean
+        destinationAddressStation:
+          type:
+          - string
+          - 'null'
+        destinationAddressFields:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    CheckinIatciMessage:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          $ref: '#/components/schemas/IatciMessageType'
+        reason:
+          type:
+          - string
+          - 'null'
+        segmentKey:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfCheckinSecurityRequirementsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/CheckinSecurityRequirementsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     GovernmentDocumentFieldType:
       type: integer
       description: '0 = FirstName
@@ -645,547 +1065,6 @@ components:
       - 11
       - 12
       - 13
-    CheckinOverrideRequest:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        governmentProgramType:
-          $ref: '#/components/schemas/GovernmentProgramType'
-        driverName:
-          type:
-          - string
-          - 'null'
-        isDepartureClearance:
-          type: boolean
-        additionalData:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinOverrideAdditionalData'
-        isInfant:
-          type: boolean
-    CheckinSecurityRequirementsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        isFulfilled:
-          type: boolean
-        passengerRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PassengerSecurityRequirements'
-    IJsonResponseOfCheckinGeneralRequirementsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/CheckinGeneralRequirementsResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-    CheckinOverrideDetails:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-    InvalidPricingRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinGeneralRequirementType'
-        isFulfilled:
-          type: boolean
-        errorMessage:
-          type:
-          - string
-          - 'null'
-    DocumentSecurityRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinSecurityRequirementType'
-        isFulfilled:
-          type: boolean
-        programDescription:
-          type:
-          - string
-          - 'null'
-        errorText:
-          type:
-          - string
-          - 'null'
-        governmentProgramType:
-          type:
-          - string
-          - 'null'
-        driverName:
-          type:
-          - string
-          - 'null'
-        securityValidation:
-          $ref: '#/components/schemas/SecurityValidation'
-        isInfantRequirement:
-          type: boolean
-        canHandle:
-          type: boolean
-        maxVerifiedDocuments:
-          type: integer
-          format: int32
-        minDocumentsRequired:
-          type: integer
-          format: int32
-        documentTypeRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DocumentTypeRequirement'
-        requiresVerification:
-          type: boolean
-        requiresPrimaryDocument:
-          type: boolean
-        addedDocumentTypeCodes:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    TicketRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinGeneralRequirementType'
-        isFulfilled:
-          type: boolean
-        ticketNumber:
-          type:
-          - string
-          - 'null'
-        isInfant:
-          type: boolean
-    EmdCouponRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinGeneralRequirementType'
-        isFulfilled:
-          type: boolean
-        couponSourceSystemCode:
-          type:
-          - string
-          - 'null'
-          description: 'Code for the system that sent the EMD information. For example, this can be the booking
-
-            source (GDS or marketing carrier) or an operating carrier that updated the booking.
-
-            This can also be blank, for example, if added from Skyspeed.
-
-            Examples: 1A - Amadeus, 1S - Sabre, etc...'
-        ssrCode:
-          type:
-          - string
-          - 'null'
-    Error:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: The Error Code.
-        message:
-          type:
-          - string
-          - 'null'
-          description: The Error Message.
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: The Raw Error Message.
-    CheckinResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        passengers:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinPassengerResponse'
-    AddressSecurityRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinSecurityRequirementType'
-        isFulfilled:
-          type: boolean
-        programDescription:
-          type:
-          - string
-          - 'null'
-        errorText:
-          type:
-          - string
-          - 'null'
-        governmentProgramType:
-          type:
-          - string
-          - 'null'
-        driverName:
-          type:
-          - string
-          - 'null'
-        securityValidation:
-          $ref: '#/components/schemas/SecurityValidation'
-        isInfantRequirement:
-          type: boolean
-        canHandle:
-          type: boolean
-        destinationAddressStation:
-          type:
-          - string
-          - 'null'
-        destinationAddressFields:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    CheckinIatciMessage:
-      type: object
-      additionalProperties: false
-      properties:
-        type:
-          $ref: '#/components/schemas/IatciMessageType'
-        reason:
-          type:
-          - string
-          - 'null'
-        segmentKey:
-          type:
-          - string
-          - 'null'
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    GeneralRequirement:
-      type: object
-      additionalProperties: false
-      properties:
-        requirementType:
-          $ref: '#/components/schemas/CheckinGeneralRequirementType'
-        isFulfilled:
-          type: boolean
-    CheckinStepCustomRequirements:
-      type: object
-      additionalProperties: false
-      properties:
-        step:
-          $ref: '#/components/schemas/CheckinStep'
-        actionRequired:
-          type: boolean
-        visitRequired:
-          type: boolean
-    IJsonResponseOfCheckinResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/CheckinResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    GovernmentAdditionalDataType:
-      type: integer
-      description: '0 = CountryOfResidence
-
-        1 = InTransitAtOrigin
-
-        2 = InTransitAtDestination
-
-        3 = DateOfBirth
-
-        4 = Gender
-
-        5 = FirstName
-
-        6 = LastName
-
-        7 = StayType
-
-        8 = Nationality'
-      x-enumNames:
-      - CountryOfResidence
-      - InTransitAtOrigin
-      - InTransitAtDestination
-      - DateOfBirth
-      - Gender
-      - FirstName
-      - LastName
-      - StayType
-      - Nationality
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-    SegmentWithWarnings:
-      type: object
-      additionalProperties: false
-      properties:
-        segmentKey:
-          type:
-          - string
-          - 'null'
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        securityInfo:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinSecurityInfo'
-        iatciMessages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinIatciMessage'
-    CheckinOverrideAdditionalDataType:
-      type: integer
-      description: '0 = Comment
-
-        1 = PassengerId'
-      x-enumNames:
-      - Comment
-      - PassengerId
-      enum:
-      - 0
-      - 1
-    CheckinGeneralRequirementsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - segmentKeys
-      - passengerAlternateKeys
-      properties:
-        segmentKeys:
-          type: array
-          items:
-            type: string
-        passengerAlternateKeys:
-          type: array
-          items:
-            type: string
-    UndoCheckinRequestPassenger:
-      type: object
-      additionalProperties: false
-      required:
-      - passengerAlternateKey
-      properties:
-        passengerAlternateKey:
-          type: string
-          minLength: 1
-        verifiedTravelDocumentKeys:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-    CheckinSecurityRequirementType:
-      type: integer
-      description: '0 = Unknown
-
-        1 = ClearanceOverrideRequired
-
-        2 = GovernmentSecurityNotVerified
-
-        3 = GovermentSecurityCheckInNotAllowed
-
-        4 = GovernmentSecurityDestinationAddressRequired
-
-        5 = GovernmentSecurityCannotCheckInSelectee
-
-        6 = GovernmentSecurityRequired
-
-        7 = GovernmentSecuritySelecteeCheckInNotAllowed
-
-        8 = GovernmentSecurityVerifyId
-
-        9 = AppsOverrideRequired
-
-        10 = AppsManualBoardingDirectiveRequired
-
-        11 = DocCheckComplete'
-      x-enumNames:
-      - Unknown
-      - ClearanceOverrideRequired
-      - GovernmentSecurityNotVerified
-      - GovermentSecurityCheckInNotAllowed
-      - GovernmentSecurityDestinationAddressRequired
-      - GovernmentSecurityCannotCheckInSelectee
-      - GovernmentSecurityRequired
-      - GovernmentSecuritySelecteeCheckInNotAllowed
-      - GovernmentSecurityVerifyId
-      - AppsOverrideRequired
-      - AppsManualBoardingDirectiveRequired
-      - DocCheckComplete
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-    IatciMessageType:
-      type: integer
-      description: '0 = PassengerLevelWarning
-
-        1 = FlightLevelWarning
-
-        2 = Error
-
-        3 = Success'
-      x-enumNames:
-      - PassengerLevelWarning
-      - FlightLevelWarning
-      - Error
-      - Success
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
     GovernmentProgramType:
       type: integer
       description: '0 = None
@@ -1241,21 +1120,136 @@ components:
       - 10
       - 11
       - 12
-    SecurityValidation:
+    InvalidPricingRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinGeneralRequirementType'
+        isFulfilled:
+          type: boolean
+        errorMessage:
+          type:
+          - string
+          - 'null'
+    CheckinSecurityRequirementType:
       type: integer
-      description: '0 = Required
+      description: '0 = Unknown
 
-        1 = Optional
+        1 = ClearanceOverrideRequired
 
-        2 = Suggested'
+        2 = GovernmentSecurityNotVerified
+
+        3 = GovermentSecurityCheckInNotAllowed
+
+        4 = GovernmentSecurityDestinationAddressRequired
+
+        5 = GovernmentSecurityCannotCheckInSelectee
+
+        6 = GovernmentSecurityRequired
+
+        7 = GovernmentSecuritySelecteeCheckInNotAllowed
+
+        8 = GovernmentSecurityVerifyId
+
+        9 = AppsOverrideRequired
+
+        10 = AppsManualBoardingDirectiveRequired
+
+        11 = DocCheckComplete'
       x-enumNames:
-      - Required
-      - Optional
-      - Suggested
+      - Unknown
+      - ClearanceOverrideRequired
+      - GovernmentSecurityNotVerified
+      - GovermentSecurityCheckInNotAllowed
+      - GovernmentSecurityDestinationAddressRequired
+      - GovernmentSecurityCannotCheckInSelectee
+      - GovernmentSecurityRequired
+      - GovernmentSecuritySelecteeCheckInNotAllowed
+      - GovernmentSecurityVerifyId
+      - AppsOverrideRequired
+      - AppsManualBoardingDirectiveRequired
+      - DocCheckComplete
       enum:
       - 0
       - 1
       - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    CheckinSecurityInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        message:
+          type:
+          - string
+          - 'null'
+        isInfant:
+          type: boolean
+        isError:
+          type: boolean
+    CheckinSecurityRequirementsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengers
+      properties:
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckinRequestPassenger'
+    CheckinRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - segmentKeys
+      - passengers
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckinRequestPassenger'
+        requireSeats:
+          type: boolean
+        skipSecurityChecks:
+          type: boolean
+          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
     PassengerCheckinRequirements:
       type: object
       additionalProperties: false
@@ -1290,100 +1284,70 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/TicketRequirement'
-    CheckinSecurityRequirementsRequest:
+    CheckinResponse:
       type: object
       additionalProperties: false
-      required:
-      - segmentKeys
-      - passengers
       properties:
-        segmentKeys:
-          type: array
-          items:
-            type: string
         passengers:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/CheckinRequestPassenger'
-    CheckinStep:
-      type: integer
-      description: '0 = None
-
-        1 = Security
-
-        2 = Seats
-
-        3 = Bags
-
-        4 = Services
-
-        5 = Payments
-
-        6 = Finalize'
-      x-enumNames:
-      - None
-      - Security
-      - Seats
-      - Bags
-      - Services
-      - Payments
-      - Finalize
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-    NullableFlag:
-      type: integer
-      description: '0 = Unknown
-
-        1 = True
-
-        2 = False'
-      x-enumNames:
-      - Unknown
-      - 'True'
-      - 'False'
-      enum:
-      - 0
-      - 1
-      - 2
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponseOfCheckinSecurityRequirementsResponse:
+            $ref: '#/components/schemas/CheckinPassengerResponse'
+    Message:
       type: object
       additionalProperties: false
       properties:
-        data:
-          $ref: '#/components/schemas/CheckinSecurityRequirementsResponse'
-        errors:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    PassengerSecurityRequirements:
+      type: object
+      additionalProperties: false
+      properties:
+        isFulfilled:
+          type: boolean
+        passengerKey:
+          type:
+          - string
+          - 'null'
+        isSelectee:
+          type: boolean
+        additionalDataRequirements:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+            $ref: '#/components/schemas/AdditionalDataSecurityRequirement'
+        addressRequirements:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/Message'
+            $ref: '#/components/schemas/AddressSecurityRequirement'
+        documentRequirements:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DocumentSecurityRequirement'
     SegmentWithErrors:
       type: object
       additionalProperties: false
@@ -1422,63 +1386,45 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/CheckinOverrideResponse'
-    PassengerSecurityRequirements:
-      type: object
-      additionalProperties: false
-      properties:
-        isFulfilled:
-          type: boolean
-        passengerKey:
-          type:
-          - string
-          - 'null'
-        isSelectee:
-          type: boolean
-        additionalDataRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AdditionalDataSecurityRequirement'
-        addressRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AddressSecurityRequirement'
-        documentRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DocumentSecurityRequirement'
-    CheckinOverrideAdditionalData:
-      type: object
-      additionalProperties: false
-      properties:
-        type:
-          $ref: '#/components/schemas/CheckinOverrideAdditionalDataType'
-        data:
-          type:
-          - string
-          - 'null'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
+    GovernmentAdditionalDataType:
+      type: integer
+      description: '0 = CountryOfResidence
+
+        1 = InTransitAtOrigin
+
+        2 = InTransitAtDestination
+
+        3 = DateOfBirth
+
+        4 = Gender
+
+        5 = FirstName
+
+        6 = LastName
+
+        7 = StayType
+
+        8 = Nationality'
+      x-enumNames:
+      - CountryOfResidence
+      - InTransitAtOrigin
+      - InTransitAtDestination
+      - DateOfBirth
+      - Gender
+      - FirstName
+      - LastName
+      - StayType
+      - Nationality
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
     AdditionalDataSecurityRequirement:
       type: object
       additionalProperties: false
@@ -1525,77 +1471,154 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/ValidOverrideResponseCode'
-    UndoCheckinRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - recordLocator
-      - segmentKeys
-      - passengers
-      properties:
-        recordLocator:
-          type: string
-          minLength: 1
-        segmentKeys:
-          type: array
-          description: An ordered list of the segments from which to uncheck the passengers.
-          items:
-            type: string
-        passengers:
-          type: array
-          items:
-            $ref: '#/components/schemas/UndoCheckinRequestPassenger'
-        fromStationCode:
-          type:
-          - string
-          - 'null'
-          description: 'Specifies the starting point from which to uncheck the passengers.  If left blank,
-
-            the passengers will be unchecked from every leg in the specified segments.'
-    CheckinOverrideResponse:
+    IJsonResponse:
       type: object
       additionalProperties: false
       properties:
-        overrideDetails:
+        data: {}
+        errors:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/CheckinOverrideDetails'
-        governmentProgramType:
-          $ref: '#/components/schemas/GovernmentProgramType'
-        driverName:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
           type:
-          - string
+          - array
           - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    NullableFlag:
+      type: integer
+      description: '0 = Unknown
+
+        1 = True
+
+        2 = False'
+      x-enumNames:
+      - Unknown
+      - 'True'
+      - 'False'
+      enum:
+      - 0
+      - 1
+      - 2
+    DocumentSecurityRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        requirementType:
+          $ref: '#/components/schemas/CheckinSecurityRequirementType'
+        isFulfilled:
+          type: boolean
         programDescription:
           type:
           - string
           - 'null'
-        isDepartureClearance:
-          type: boolean
-        message:
+        errorText:
           type:
           - string
           - 'null'
-        additionalData:
+        governmentProgramType:
+          type:
+          - string
+          - 'null'
+        driverName:
+          type:
+          - string
+          - 'null'
+        securityValidation:
+          $ref: '#/components/schemas/SecurityValidation'
+        isInfantRequirement:
+          type: boolean
+        canHandle:
+          type: boolean
+        maxVerifiedDocuments:
+          type: integer
+          format: int32
+        minDocumentsRequired:
+          type: integer
+          format: int32
+        documentTypeRequirements:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/CheckinOverrideAdditionalDataType'
-        isInfant:
+            $ref: '#/components/schemas/DocumentTypeRequirement'
+        requiresVerification:
           type: boolean
-        serverIsInOutageMode:
+        requiresPrimaryDocument:
           type: boolean
-        clearanceStatus:
+        addedDocumentTypeCodes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    CheckinPassengerResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        passengerAlternateKey:
           type:
           - string
           - 'null'
-        originatingCountryCode:
+        successfulSegments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SegmentWithWarnings'
+        failedSegments:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SegmentWithErrors'
+    IJsonResponseOfCheckinGeneralRequirementsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/CheckinGeneralRequirementsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    DocumentTypeRequirement:
+      type: object
+      additionalProperties: false
+      properties:
+        documentTypeCode:
           type:
           - string
           - 'null'
+        documentType:
+          type:
+          - string
+          - 'null'
+        isActive:
+          type: boolean
+        documentTypeName:
+          type:
+          - string
+          - 'null'
+        requiredFields:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/GovernmentDocumentFieldType'
+        isPrimary:
+          type: boolean
     IJsonResponseOfListOfCheckinStepCustomRequirements:
       type: object
       additionalProperties: false
@@ -1618,77 +1641,54 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Message'
-    CheckinRequest:
+    IJsonResponseOfCheckinResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/CheckinResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    CheckinGeneralRequirementsRequest:
       type: object
       additionalProperties: false
       required:
-      - recordLocator
       - segmentKeys
-      - passengers
+      - passengerAlternateKeys
       properties:
-        recordLocator:
-          type: string
-          minLength: 1
         segmentKeys:
           type: array
           items:
             type: string
-        passengers:
+        passengerAlternateKeys:
           type: array
           items:
-            $ref: '#/components/schemas/CheckinRequestPassenger'
-        requireSeats:
-          type: boolean
-        skipSecurityChecks:
-          type: boolean
-          description: "The flag indicating whether checkin requirement validation will be skipped.\n            "
-    CheckinRequestPassenger:
-      type: object
-      additionalProperties: false
-      required:
-      - passengerAlternateKey
-      properties:
-        passengerAlternateKey:
-          type: string
-          minLength: 1
-        verifiedTravelDocumentKeys:
-          type:
-          - array
-          - 'null'
-          items:
             type: string
-        inTransitAtOrigin:
-          $ref: '#/components/schemas/NullableFlag'
-        inTransitAtDestination:
-          $ref: '#/components/schemas/NullableFlag'
-        infantInTransitAtOrigin:
-          $ref: '#/components/schemas/NullableFlag'
-        infantInTransitAtDestination:
-          $ref: '#/components/schemas/NullableFlag'
-        overrides:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinOverrideRequest'
-    CheckinGeneralRequirementsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        isFulfilled:
-          type: boolean
-        passengerRequirements:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PassengerCheckinRequirements'
-        bookingRestrictions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CheckinGeneralRequirementType'
+    SecurityValidation:
+      type: integer
+      description: '0 = Required
+
+        1 = Optional
+
+        2 = Suggested'
+      x-enumNames:
+      - Required
+      - Optional
+      - Suggested
+      enum:
+      - 0
+      - 1
+      - 2
   securitySchemes:
     JWT:
       type: http

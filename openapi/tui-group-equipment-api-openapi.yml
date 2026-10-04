@@ -113,39 +113,84 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    AssignTailNumbersResponse:
+    Message:
       type: object
-      description: "Defines the response from assigning a tail number(s).\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        needEquipmentSwap:
-          type: boolean
-          description: "Whether an equipment swap needs to be performed or not.\n            "
-        equipmentType:
+        code:
           type:
           - string
           - 'null'
-          description: "The equipment type to swap the leg to.\n            "
-          maxLength: 3
-          minLength: 0
-        equipmentTypeSuffix:
+          description: "The unique message code.\n            "
+        type:
           type:
           - string
           - 'null'
-          description: "The equipment type suffix to swap the leg to.\n            "
-          maxLength: 3
-          minLength: 0
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
+          description: "The message type.\n            "
+        value:
+          type:
+          - string
+          - 'null'
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      description: "Defines a unique error response.\n            "
+      additionalProperties: false
+      properties:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+          description: "The original raw message set (non-localized).\n            "
+        code:
+          type:
+          - string
+          - 'null'
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     MarketInformation:
       type: object
       description: "Model information about the market arrival and destination details.\n            "
@@ -174,6 +219,28 @@ components:
         identifier:
           description: "Gets or sets the leg arrival station.\n            "
           $ref: '#/components/schemas/TransportationIdentifier'
+    AssignTailNumbersResponse:
+      type: object
+      description: "Defines the response from assigning a tail number(s).\n            "
+      additionalProperties: false
+      properties:
+        needEquipmentSwap:
+          type: boolean
+          description: "Whether an equipment swap needs to be performed or not.\n            "
+        equipmentType:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type to swap the leg to.\n            "
+          maxLength: 3
+          minLength: 0
+        equipmentTypeSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The equipment type suffix to swap the leg to.\n            "
+          maxLength: 3
+          minLength: 0
     EquipmentSwapRequest:
       type: object
       description: "Defines the equipment swap request.\n            "
@@ -236,6 +303,30 @@ components:
         preserveInventoryLid:
           type: boolean
           description: "Whether to preserve the inventory lid or not.\n            "
+    TransportationIdentifier:
+      type: object
+      description: "Represents the transportation identifier model data.\n            "
+      additionalProperties: false
+      required:
+      - identifier
+      - carrierCode
+      properties:
+        identifier:
+          type: string
+          description: "The unique transportation identifier.\n            "
+          maxLength: 4
+          minLength: 0
+        carrierCode:
+          type: string
+          description: "The carrier code.\n            "
+          maxLength: 3
+          minLength: 2
+        opSuffix:
+          type:
+          - string
+          - 'null'
+          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
     IJsonResponseOfAssignTailNumbersResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -258,78 +349,17 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    EquipmentSwapPassenger:
-      type: object
-      description: "Defines the moved passenger as a result of swapping equipment.\n            "
-      additionalProperties: false
-      properties:
-        passengerAlternateKey:
-          type:
-          - string
-          - 'null'
-          description: "The passenger alternate key because NewSkies gives us back the PassengerId\n            "
-        passengerName:
-          description: "The name of the passenger that was swapped.\n            "
-          $ref: '#/components/schemas/Name'
-        recordLocator:
-          type:
-          - string
-          - 'null'
-          description: "The record locator for the passenger.\n            "
-        oldSeat:
-          description: "The seat on the old equipment.\n            "
-          $ref: '#/components/schemas/EquipmentSwapSeat'
-        newSeat:
-          description: "The seat on the new equipment.\n            "
-          $ref: '#/components/schemas/EquipmentSwapSeat'
-        identifier:
-          description: "The flight on which the passenger lost a seat assignment.\n            "
-          $ref: '#/components/schemas/TransportationIdentifier'
-        departureStation:
-          type:
-          - string
-          - 'null'
-          description: "Airport code where the lost seat assignment begins.\n            "
-        arrivalStation:
-          type:
-          - string
-          - 'null'
-          description: "Airport code where the lost seat assignment ends.\n            "
-        liftStatus:
-          description: "The lift status of the passenger who has a lost seat assignment.\n            "
-          $ref: '#/components/schemas/LiftStatus'
-    EquipmentSwapSeat:
-      type: object
-      description: "Defines the moved seat as a result of swapping equipment.\n            "
-      additionalProperties: false
-      properties:
-        row:
-          type: integer
-          description: "The row of the aircraft the seat is in.\n            "
-        column:
-          type: string
-          description: "The column of the aircraft the seat is in.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-        cabinOfService:
-          type: string
-          description: "The cabin of services the seat is in.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
+    MessageStatus:
+      type: integer
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
     IJsonResponse:
       type: object
       description: "Defines the JSON response contract for a not content type response.\n            "
@@ -377,47 +407,6 @@ components:
           description: "The collection of informational messages.\n            "
           items:
             $ref: '#/components/schemas/Message'
-    TransportationIdentifier:
-      type: object
-      description: "Represents the transportation identifier model data.\n            "
-      additionalProperties: false
-      required:
-      - identifier
-      - carrierCode
-      properties:
-        identifier:
-          type: string
-          description: "The unique transportation identifier.\n            "
-          maxLength: 4
-          minLength: 0
-        carrierCode:
-          type: string
-          description: "The carrier code.\n            "
-          maxLength: 3
-          minLength: 2
-        opSuffix:
-          type:
-          - string
-          - 'null'
-          description: "The op suffix.\nPlease note that this should be a char and not a string.\n            "
-          maxLength: 1
-    CodeShareIndicator:
-      type: integer
-      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
-      x-enumNames:
-      - NonCodeShare
-      - CodeShareCommercialDuplicate
-      - SharedDesignatorOrWetLease
-      - CodeShareHostOperatingCarrier
-      - CodeShareCommercialDuplicateWithOverrideText
-      - SharedDesignatorOrWetLeaseWithOverrideText
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
     Name:
       type: object
       description: "Defines a common name.\n            "
@@ -458,84 +447,6 @@ components:
           description: "The suffix.\n            "
           maxLength: 6
           minLength: 0
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
-    Message:
-      type: object
-      description: "Defines a unique informational message.\n            "
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
     LiftStatus:
       type: integer
       description: "Lift status enumeration.\n            \n\n0 = Default\n1 = CheckedIn\n2 = Boarded\n3 = NoShow"
@@ -549,6 +460,22 @@ components:
       - 1
       - 2
       - 3
+    EquipmentSwapSeat:
+      type: object
+      description: "Defines the moved seat as a result of swapping equipment.\n            "
+      additionalProperties: false
+      properties:
+        row:
+          type: integer
+          description: "The row of the aircraft the seat is in.\n            "
+        column:
+          type: string
+          description: "The column of the aircraft the seat is in.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
+        cabinOfService:
+          type: string
+          description: "The cabin of services the seat is in.\nPlease note that this should be a char and not a string.\n            "
+          maxLength: 1
     AssignTailNumberRequest:
       type: object
       description: "Defines the request to assign a tail number for a leg.\n            "
@@ -571,6 +498,79 @@ components:
           - boolean
           - 'null'
           description: "This flag is set to true to ignore the Aircraft Configuration difference\nbetween the one set to FlightNumber and the one set to TailNumber.\nUnder normal circumstances, a user will be prompted to record the tail number\nassignment as an equipment swap.\n            "
+    Exception:
+      type: object
+      additionalProperties: false
+      properties:
+        Message:
+          type: string
+        InnerException:
+          $ref: '#/components/schemas/Exception'
+        Source:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+    EquipmentSwapPassenger:
+      type: object
+      description: "Defines the moved passenger as a result of swapping equipment.\n            "
+      additionalProperties: false
+      properties:
+        passengerAlternateKey:
+          type:
+          - string
+          - 'null'
+          description: "The passenger alternate key because NewSkies gives us back the PassengerId\n            "
+        passengerName:
+          description: "The name of the passenger that was swapped.\n            "
+          $ref: '#/components/schemas/Name'
+        recordLocator:
+          type:
+          - string
+          - 'null'
+          description: "The record locator for the passenger.\n            "
+        oldSeat:
+          description: "The seat on the old equipment.\n            "
+          $ref: '#/components/schemas/EquipmentSwapSeat'
+        newSeat:
+          description: "The seat on the new equipment.\n            "
+          $ref: '#/components/schemas/EquipmentSwapSeat'
+        identifier:
+          description: "The flight on which the passenger lost a seat assignment.\n            "
+          $ref: '#/components/schemas/TransportationIdentifier'
+        departureStation:
+          type:
+          - string
+          - 'null'
+          description: "Airport code where the lost seat assignment begins.\n            "
+        arrivalStation:
+          type:
+          - string
+          - 'null'
+          description: "Airport code where the lost seat assignment ends.\n            "
+        liftStatus:
+          description: "The lift status of the passenger who has a lost seat assignment.\n            "
+          $ref: '#/components/schemas/LiftStatus'
+    CodeShareIndicator:
+      type: integer
+      description: "Specifies the type of code share agreement.\n            \n\n0 = NonCodeShare\n1 = CodeShareCommercialDuplicate\n2 = SharedDesignatorOrWetLease\n3 = CodeShareHostOperatingCarrier\n4 = CodeShareCommercialDuplicateWithOverrideText\n5 = SharedDesignatorOrWetLeaseWithOverrideText"
+      x-enumNames:
+      - NonCodeShare
+      - CodeShareCommercialDuplicate
+      - SharedDesignatorOrWetLease
+      - CodeShareHostOperatingCarrier
+      - CodeShareCommercialDuplicateWithOverrideText
+      - SharedDesignatorOrWetLeaseWithOverrideText
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
   securitySchemes:
     JWT:
       type: http

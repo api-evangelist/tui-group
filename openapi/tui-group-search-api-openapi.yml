@@ -170,24 +170,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    SearchResponse:
-      type: object
-      properties:
-        groups:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/FlightGroup'
-          description: Collection of flight groups organized by the specified grouping strategy
-      additionalProperties: false
-      description: Search response containing grouped flight results
-    GroupBy:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
     UnauthorizedError:
       type: object
       properties:
@@ -201,6 +183,124 @@ components:
           - 'null'
       additionalProperties: false
       description: Unauthorized error response object for the Api.
+    SearchResponse:
+      type: object
+      properties:
+        groups:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/FlightGroup'
+          description: Collection of flight groups organized by the specified grouping strategy
+      additionalProperties: false
+      description: Search response containing grouped flight results
+    Flight:
+      type: object
+      properties:
+        arrivalDateTime:
+          type: string
+          description: Flight arrival date and time
+          format: date-time
+        availability:
+          type: integer
+          description: Number of available seats for the requested passenger count
+          format: int32
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: Airline carrier code (e.g., TB, OR, X3)
+        departureDateTime:
+          type: string
+          description: Flight departure date and time
+          format: date-time
+        flightNumber:
+          type:
+          - string
+          - 'null'
+          description: Flight number
+        journeyKey:
+          type:
+          - string
+          - 'null'
+          description: Unique journey identifier
+        encryptedJourneyKey:
+          type:
+          - string
+          - 'null'
+          description: Encrypted journey identifier for secure operations
+        flightDuration:
+          type: integer
+          description: Flight duration in minutes
+          format: int32
+        departureStationCode:
+          type:
+          - string
+          - 'null'
+          description: Departure airport code (e.g., BRU, LHR, MAN)
+        arrivalStationCode:
+          type:
+          - string
+          - 'null'
+          description: Arrival airport code (e.g., ACE, LPA, PMI)
+        departureCountryCode:
+          type:
+          - string
+          - 'null'
+          description: Departure country code (e.g., GB, DE, BE)
+        arrivalCountryCode:
+          type:
+          - string
+          - 'null'
+          description: Arrival country code (e.g., ES, FR, IT)
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+          description: Operating carrier code if different from marketing carrier
+        stopOverFlights:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/StopOverFlight'
+          description: List of stopover flights for multi-leg journeys (maximum 2 stopovers)
+        fares:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Fare'
+          description: List of available fares with pricing details
+      additionalProperties: false
+      description: Flight availability and pricing information
+    FlightGroup:
+      required:
+      - flights
+      - name
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Group identifier (e.g., 'BRU-ACE' for origin-destination or '2024-07-15' for date grouping)
+        flights:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Flight'
+          description: List of flights within this group
+      additionalProperties: false
+      description: Group of flights organized by origin-destination or date
+    GroupBy:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
     StopOverFlight:
       type: object
       properties:
@@ -306,6 +406,12 @@ components:
           format: double
       additionalProperties: false
       description: Fare pricing and class information
+    TripType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
     Error:
       type: object
       properties:
@@ -319,109 +425,3 @@ components:
           - 'null'
       additionalProperties: false
       description: Error response object for the Api.
-    TripType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Flight:
-      type: object
-      properties:
-        arrivalDateTime:
-          type: string
-          description: Flight arrival date and time
-          format: date-time
-        availability:
-          type: integer
-          description: Number of available seats for the requested passenger count
-          format: int32
-        carrierCode:
-          type:
-          - string
-          - 'null'
-          description: Airline carrier code (e.g., TB, OR, X3)
-        departureDateTime:
-          type: string
-          description: Flight departure date and time
-          format: date-time
-        flightNumber:
-          type:
-          - string
-          - 'null'
-          description: Flight number
-        journeyKey:
-          type:
-          - string
-          - 'null'
-          description: Unique journey identifier
-        encryptedJourneyKey:
-          type:
-          - string
-          - 'null'
-          description: Encrypted journey identifier for secure operations
-        flightDuration:
-          type: integer
-          description: Flight duration in minutes
-          format: int32
-        departureStationCode:
-          type:
-          - string
-          - 'null'
-          description: Departure airport code (e.g., BRU, LHR, MAN)
-        arrivalStationCode:
-          type:
-          - string
-          - 'null'
-          description: Arrival airport code (e.g., ACE, LPA, PMI)
-        departureCountryCode:
-          type:
-          - string
-          - 'null'
-          description: Departure country code (e.g., GB, DE, BE)
-        arrivalCountryCode:
-          type:
-          - string
-          - 'null'
-          description: Arrival country code (e.g., ES, FR, IT)
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-          description: Operating carrier code if different from marketing carrier
-        stopOverFlights:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/StopOverFlight'
-          description: List of stopover flights for multi-leg journeys (maximum 2 stopovers)
-        fares:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Fare'
-          description: List of available fares with pricing details
-      additionalProperties: false
-      description: Flight availability and pricing information
-    FlightGroup:
-      required:
-      - flights
-      - name
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Group identifier (e.g., 'BRU-ACE' for origin-destination or '2024-07-15' for date grouping)
-        flights:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Flight'
-          description: List of flights within this group
-      additionalProperties: false
-      description: Group of flights organized by origin-destination or date

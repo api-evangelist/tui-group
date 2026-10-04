@@ -50,228 +50,16 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AccomFeatures:
+    BoardBasisData:
       properties:
-        introduction:
-          type: array
-          items: {}
-          example:
-          - Er heerst een levendige sfeer in hotel Gala dat populair is bij de Belgen. De centrale ligging, vlak bij het strand en de levendige uitgaansbuurt van Playa de la Americas is een van de pluspunten van dit hotel. Wil je je vakantie dat tikkeltje meer geven? Kies dan voor een verblijf in een superieure kamer met lekkere Nespresso koffie en één keer per dag gratis toegang tot het 'Spa circuit'.
-        latitude:
-          type: array
-          items: {}
-          example:
-          - 28.066465
-        locationInformation:
-          type: array
-          items: {}
-          example:
-          - centrum Playa las Americas op ca. 100 m
-        longitude:
-          type: array
-          items: {}
-          example:
-          - -16.73017
+        boardbasisCode:
+          type: string
+          example: GT06-FB
         name:
-          type: array
-          items: {}
-          example:
-          - lti Gala
-        freeWifi:
-          type: array
-          items: {}
-          example:
-          - 'true'
-        officialRating:
-          type: array
-          items: {}
-          example:
-          - '5'
-        tuinlId:
-          type: array
-          items: {}
-          example:
-          - '647319'
-        noOfLifts:
-          type: array
-          items: {}
-          example:
-          - '1'
-        accommodationType:
-          type: array
-          items: {}
-          example:
-          - hotel
-        tRating:
-          type: array
-          items: {}
-          example:
-          - '5'
-        noOfrooms:
-          type: array
-          items: {}
-          example:
-          - '121'
-        usps:
-          type: array
-          items: {}
-          example:
-          - seaview
-    BoardBasisFeatures:
-      type: object
-      properties:
-        lunch_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        dinner_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        drinks_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        snacks_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-        breakfast_included:
-          type: array
-          items:
-            type: string
-            example: 'true'
-    GalleryMediaData:
-      type: array
-      items:
-        type: object
-        properties:
-          mainSrc:
-            type: string
-            example: https://tui-sit-images.imgix.net/869a453196a5cbbae3fe908d7968e53b.jpg?&w=1080&h=608&fm=jpg&fl=progressive
-          mime:
-            type: string
-            example: image/jpeg
-          size:
-            type: string
-            example: large
-          description:
-            type: string
-          caption:
-            type: string
-    ContentGeoHierarchy:
-      type: array
-      items:
-        type: object
-        properties:
-          code:
-            type: string
-            example: 21bcba21-288b-5336-8298-b17883011f2f
-          name:
-            type: string
-            example: Spanje
-          locationType:
-            type: string
-            example: COUNTRY
-          locationLevel:
-            type: string
-            example: 1
-          subCategories:
-            type: array
-            items:
-              type: object
-              properties:
-                code:
-                  type: string
-                  example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
-                name:
-                  type: string
-                  example: Gran Canaria
-                locationType:
-                  type: string
-                  example: DESTINATION
-                locationLevel:
-                  type: string
-                  example: 2
-                subCategories:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      code:
-                        type: string
-                        example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
-                      name:
-                        type: string
-                        example: Meloneras
-                      locationType:
-                        type: string
-                        example: RESORT
-                      locationLevel:
-                        type: string
-                        example: 3
-                      subCategories:
-                        type: array
-                        items: {}
-    ReviewData:
-      type: object
-      properties:
-        source:
           type: string
-          example: TUI
-        averageRating:
-          type: number
-          example: 3.5
-        tRating:
-          type: number
-          example: 5
-        reviewsCount:
-          type: number
-          example: 200
-        ratingBar:
-          type: string
-        ratingReviewsUrl:
-          type: string
-    ContentResponse:
-      type: object
-      properties:
-        code:
-          type: string
-          description: Accommodation code
-          example: A0376761
-        accommodationType:
-          type: string
-          description: Accommodation type
-          example: HOTEL
+          example: Volpension
         featureCodesAndValues:
-          $ref: '#/components/schemas/AccomFeatures'
-        galleryImages:
-          $ref: '#/components/schemas/GalleryMediaData'
-        roomsData:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoomData'
-        boardBasis:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoardBasisData'
-        geoHierarchy:
-          type: object
-          properties:
-            geoHierarchy:
-              $ref: '#/components/schemas/ContentGeoHierarchy'
-        facilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityData'
-        review:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReviewData'
+          $ref: '#/components/schemas/BoardBasisFeatures'
     FacilityData:
       type: object
       properties:
@@ -305,16 +93,25 @@ components:
                   example:
                   - massage
                   - spa
-    BoardBasisData:
+    ReviewData:
+      type: object
       properties:
-        boardbasisCode:
+        source:
           type: string
-          example: GT06-FB
-        name:
+          example: TUI
+        averageRating:
+          type: number
+          example: 3.5
+        tRating:
+          type: number
+          example: 5
+        reviewsCount:
+          type: number
+          example: 200
+        ratingBar:
           type: string
-          example: Volpension
-        featureCodesAndValues:
-          $ref: '#/components/schemas/BoardBasisFeatures'
+        ratingReviewsUrl:
+          type: string
     RoomData:
       type: object
       properties:
@@ -382,6 +179,209 @@ components:
               type: array
               items:
                 type: string
+    GalleryMediaData:
+      type: array
+      items:
+        type: object
+        properties:
+          mainSrc:
+            type: string
+            example: https://tui-sit-images.imgix.net/869a453196a5cbbae3fe908d7968e53b.jpg?&w=1080&h=608&fm=jpg&fl=progressive
+          mime:
+            type: string
+            example: image/jpeg
+          size:
+            type: string
+            example: large
+          description:
+            type: string
+          caption:
+            type: string
+    BoardBasisFeatures:
+      type: object
+      properties:
+        lunch_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        dinner_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        drinks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        snacks_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+        breakfast_included:
+          type: array
+          items:
+            type: string
+            example: 'true'
+    ContentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Accommodation code
+          example: A0376761
+        accommodationType:
+          type: string
+          description: Accommodation type
+          example: HOTEL
+        featureCodesAndValues:
+          $ref: '#/components/schemas/AccomFeatures'
+        galleryImages:
+          $ref: '#/components/schemas/GalleryMediaData'
+        roomsData:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomData'
+        boardBasis:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardBasisData'
+        geoHierarchy:
+          type: object
+          properties:
+            geoHierarchy:
+              $ref: '#/components/schemas/ContentGeoHierarchy'
+        facilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityData'
+        review:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewData'
+    ContentGeoHierarchy:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: string
+            example: 21bcba21-288b-5336-8298-b17883011f2f
+          name:
+            type: string
+            example: Spanje
+          locationType:
+            type: string
+            example: COUNTRY
+          locationLevel:
+            type: string
+            example: 1
+          subCategories:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                name:
+                  type: string
+                  example: Gran Canaria
+                locationType:
+                  type: string
+                  example: DESTINATION
+                locationLevel:
+                  type: string
+                  example: 2
+                subCategories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: 62f3df64-e9f4-4c27-a06d-d3612c3f7f9b
+                      name:
+                        type: string
+                        example: Meloneras
+                      locationType:
+                        type: string
+                        example: RESORT
+                      locationLevel:
+                        type: string
+                        example: 3
+                      subCategories:
+                        type: array
+                        items: {}
+    AccomFeatures:
+      properties:
+        introduction:
+          type: array
+          items: {}
+          example:
+          - Er heerst een levendige sfeer in hotel Gala dat populair is bij de Belgen. De centrale ligging, vlak bij het strand en de levendige uitgaansbuurt van Playa de la Americas is een van de pluspunten van dit hotel. Wil je je vakantie dat tikkeltje meer geven? Kies dan voor een verblijf in een superieure kamer met lekkere Nespresso koffie en één keer per dag gratis toegang tot het 'Spa circuit'.
+        latitude:
+          type: array
+          items: {}
+          example:
+          - 28.066465
+        locationInformation:
+          type: array
+          items: {}
+          example:
+          - centrum Playa las Americas op ca. 100 m
+        longitude:
+          type: array
+          items: {}
+          example:
+          - -16.73017
+        name:
+          type: array
+          items: {}
+          example:
+          - lti Gala
+        freeWifi:
+          type: array
+          items: {}
+          example:
+          - 'true'
+        officialRating:
+          type: array
+          items: {}
+          example:
+          - '5'
+        tuinlId:
+          type: array
+          items: {}
+          example:
+          - '647319'
+        noOfLifts:
+          type: array
+          items: {}
+          example:
+          - '1'
+        accommodationType:
+          type: array
+          items: {}
+          example:
+          - hotel
+        tRating:
+          type: array
+          items: {}
+          example:
+          - '5'
+        noOfrooms:
+          type: array
+          items: {}
+          example:
+          - '121'
+        usps:
+          type: array
+          items: {}
+          example:
+          - seaview
 x-header: 'This API returns the content for particular hotel for TUI''s packages specifically for OTA''s according to the G7 standard.
 
   '
