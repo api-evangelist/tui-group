@@ -170,19 +170,12 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    UnauthorizedError:
-      type: object
-      properties:
-        ErrorMessage:
-          type:
-          - string
-          - 'null'
-        StackTrace:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-      description: Unauthorized error response object for the Api.
+    TripType:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
     SearchResponse:
       type: object
       properties:
@@ -195,6 +188,39 @@ components:
           description: Collection of flight groups organized by the specified grouping strategy
       additionalProperties: false
       description: Search response containing grouped flight results
+    FlightGroup:
+      required:
+      - flights
+      - name
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Group identifier (e.g., 'BRU-ACE' for origin-destination or '2024-07-15' for date grouping)
+        flights:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Flight'
+          description: List of flights within this group
+      additionalProperties: false
+      description: Group of flights organized by origin-destination or date
+    Error:
+      type: object
+      properties:
+        ErrorMessage:
+          type:
+          - string
+          - 'null'
+        StackTrace:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+      description: Error response object for the Api.
     Flight:
       type: object
       properties:
@@ -275,65 +301,6 @@ components:
           description: List of available fares with pricing details
       additionalProperties: false
       description: Flight availability and pricing information
-    FlightGroup:
-      required:
-      - flights
-      - name
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Group identifier (e.g., 'BRU-ACE' for origin-destination or '2024-07-15' for date grouping)
-        flights:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Flight'
-          description: List of flights within this group
-      additionalProperties: false
-      description: Group of flights organized by origin-destination or date
-    GroupBy:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    StopOverFlight:
-      type: object
-      properties:
-        stationCode:
-          type:
-          - string
-          - 'null'
-          description: Stopover airport code (e.g., MAD, CDG, AMS)
-        carrierCode:
-          type:
-          - string
-          - 'null'
-          description: Marketing carrier code for the stopover leg
-        operatingCarrierCode:
-          type:
-          - string
-          - 'null'
-          description: Operating carrier code if different from marketing carrier
-        flightNumber:
-          type:
-          - string
-          - 'null'
-          description: Flight number for the stopover leg
-        sta:
-          type: string
-          description: Scheduled time of arrival at stopover station
-          format: date-time
-        std:
-          type: string
-          description: Scheduled time of departure from stopover station
-          format: date-time
-      additionalProperties: false
-      description: Stopover flight information for multi-leg journeys
     Fare:
       type: object
       properties:
@@ -406,13 +373,7 @@ components:
           format: double
       additionalProperties: false
       description: Fare pricing and class information
-    TripType:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-    Error:
+    UnauthorizedError:
       type: object
       properties:
         ErrorMessage:
@@ -424,4 +385,43 @@ components:
           - string
           - 'null'
       additionalProperties: false
-      description: Error response object for the Api.
+      description: Unauthorized error response object for the Api.
+    StopOverFlight:
+      type: object
+      properties:
+        stationCode:
+          type:
+          - string
+          - 'null'
+          description: Stopover airport code (e.g., MAD, CDG, AMS)
+        carrierCode:
+          type:
+          - string
+          - 'null'
+          description: Marketing carrier code for the stopover leg
+        operatingCarrierCode:
+          type:
+          - string
+          - 'null'
+          description: Operating carrier code if different from marketing carrier
+        flightNumber:
+          type:
+          - string
+          - 'null'
+          description: Flight number for the stopover leg
+        sta:
+          type: string
+          description: Scheduled time of arrival at stopover station
+          format: date-time
+        std:
+          type: string
+          description: Scheduled time of departure from stopover station
+          format: date-time
+      additionalProperties: false
+      description: Stopover flight information for multi-leg journeys
+    GroupBy:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32

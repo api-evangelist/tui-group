@@ -293,84 +293,65 @@ paths:
                     data: null
 components:
   schemas:
-    Message:
+    TransactionType:
+      type: integer
+      description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
+      x-enumNames:
+      - Default
+      - Payment
+      - Adjustment
+      - Supplementary
+      - Transfer
+      - Spoilage
+      - StatementDateAndBalance
+      - PayableCommission
+      - Commission
+      - ChildCommissionTransfer
+      - ParentCommissionTransfer
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+    AccountExpirationUpdateRequest:
       type: object
-      description: "Defines a unique informational message.\n            "
+      description: "The account transaction code model.\n            "
+      additionalProperties: false
+      required:
+      - expirationDate
+      properties:
+        expirationDate:
+          type: string
+          description: "The expiration date.\n            "
+          format: date-time
+          minLength: 1
+        reinstateAmount:
+          type: number
+          description: "The re-instate amount.\n            "
+          format: decimal
+    Exception:
+      type: object
       additionalProperties: false
       properties:
-        code:
-          type:
-          - string
-          - 'null'
-          description: "The unique message code.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The message type.\n            "
-        value:
-          type:
-          - string
-          - 'null'
-          description: "The message's value.\n            "
-        status:
-          description: "The message's status.\n            "
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the message.\n            "
-          additionalProperties:
-            type: string
-    ErrorResponse:
-      type: object
-      description: "Defines a unique error response.\n            "
-      additionalProperties: false
-      properties:
-        exception:
-          description: "The original exception that was thrown and all the exception details.\n            "
+        Message:
+          type: string
+        InnerException:
           $ref: '#/components/schemas/Exception'
-        rawMessage:
+        Source:
           type:
           - string
           - 'null'
-          description: "The original raw message set (non-localized).\n            "
-        code:
+        StackTrace:
           type:
           - string
           - 'null'
-          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
-        message:
-          type:
-          - string
-          - 'null'
-          description: "The error message. Deprecated: Please use the Code instead.\n            "
-        type:
-          type:
-          - string
-          - 'null'
-          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
-        number:
-          type:
-          - integer
-          - 'null'
-          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          description: "Dynamic detailed information about the error.\n            "
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
     IJsonResponseOfPagedTransactionResponse:
       type: object
       description: "Defines the JSON response contract.\n            "
@@ -379,6 +360,53 @@ components:
         data:
           description: "The payload data.\n            "
           $ref: '#/components/schemas/PagedTransactionResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponse:
+      type: object
+      description: "Defines the JSON response contract for a not content type response.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
+        errors:
+          type:
+          - array
+          - 'null'
+          description: "The collection of errors being thrown.\n            "
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          description: "The collection of informational messages.\n            "
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfIListOfTransaction:
+      type: object
+      description: "Defines the JSON response contract.\n            "
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          description: "The payload data.\n            "
+          items:
+            $ref: '#/components/schemas/Transaction'
         errors:
           type:
           - array
@@ -468,64 +496,36 @@ components:
           - string
           - 'null'
           description: "The account collection key associated with the transaction.\n            "
-    IJsonResponseOfIListOfTransaction:
+    Message:
       type: object
-      description: "Defines the JSON response contract.\n            "
+      description: "Defines a unique informational message.\n            "
       additionalProperties: false
       properties:
-        data:
+        code:
           type:
-          - array
+          - string
           - 'null'
-          description: "The payload data.\n            "
-          items:
-            $ref: '#/components/schemas/Transaction'
-        errors:
+          description: "The unique message code.\n            "
+        type:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
+          description: "The message type.\n            "
+        value:
           type:
-          - array
+          - string
           - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
-    MessageStatus:
-      type: integer
-      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponse:
-      type: object
-      description: "Defines the JSON response contract for a not content type response.\n            "
-      additionalProperties: false
-      properties:
-        data:
-          description: "The payload data, this will always be null for errors responses and no content responses.\n            "
-        errors:
+          description: "The message's value.\n            "
+        status:
+          description: "The message's status.\n            "
+          $ref: '#/components/schemas/MessageStatus'
+        details:
           type:
-          - array
+          - object
           - 'null'
-          description: "The collection of errors being thrown.\n            "
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          description: "The collection of informational messages.\n            "
-          items:
-            $ref: '#/components/schemas/Message'
+          description: "Dynamic detailed information about the message.\n            "
+          additionalProperties:
+            type: string
     PagedTransactionResponse:
       type: object
       description: "The paged transaction response.\n            "
@@ -547,65 +547,65 @@ components:
           description: "The collection of transactions.\n            "
           items:
             $ref: '#/components/schemas/Transaction'
-    TransactionType:
+    MessageStatus:
       type: integer
-      description: "The dotREZ specific transaction types.  This includes some system specific values that\nare not allowed during a transaction creation.\n            \n\n0 = Default\n1 = Payment\n2 = Adjustment\n3 = Supplementary\n4 = Transfer\n5 = Spoilage\n6 = StatementDateAndBalance\n7 = PayableCommission\n8 = Commission\n9 = ChildCommissionTransfer\n10 = ParentCommissionTransfer"
+      description: "Defines the message status.\n            \n\n0 = General\n1 = Warning\n2 = Critical"
       x-enumNames:
-      - Default
-      - Payment
-      - Adjustment
-      - Supplementary
-      - Transfer
-      - Spoilage
-      - StatementDateAndBalance
-      - PayableCommission
-      - Commission
-      - ChildCommissionTransfer
-      - ParentCommissionTransfer
+      - General
+      - Warning
+      - Critical
       enum:
       - 0
       - 1
       - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-    Exception:
+    ErrorResponse:
       type: object
+      description: "Defines a unique error response.\n            "
       additionalProperties: false
       properties:
-        Message:
-          type: string
-        InnerException:
+        exception:
+          description: "The original exception that was thrown and all the exception details.\n            "
           $ref: '#/components/schemas/Exception'
-        Source:
+        rawMessage:
           type:
           - string
           - 'null'
-        StackTrace:
+          description: "The original raw message set (non-localized).\n            "
+        code:
           type:
           - string
           - 'null'
-    AccountExpirationUpdateRequest:
-      type: object
-      description: "The account transaction code model.\n            "
-      additionalProperties: false
-      required:
-      - expirationDate
-      properties:
-        expirationDate:
-          type: string
-          description: "The expiration date.\n            "
-          format: date-time
-          minLength: 1
-        reinstateAmount:
-          type: number
-          description: "The re-instate amount.\n            "
-          format: decimal
+          description: "The unique error code. The primary value used to match against a unique message localized for the end user in the\nchosen language.\n            "
+        message:
+          type:
+          - string
+          - 'null'
+          description: "The error message. Deprecated: Please use the Code instead.\n            "
+        type:
+          type:
+          - string
+          - 'null'
+          description: "The error type showing severity. Values: Critical, Error, Validation, Information.\n            "
+        number:
+          type:
+          - integer
+          - 'null'
+          description: "A unique identifier in numeric form. This is required for Splunk logging. If none is provided a number will be\ngenerated based on code and type.\n            "
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          description: "Dynamic detailed information about the error.\n            "
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+          description: "The activity ID unique to the request. Useful for debugging purposes to uniquely look up what happened for this\nspecific request.\n            "
   securitySchemes:
     JWT:
       type: http

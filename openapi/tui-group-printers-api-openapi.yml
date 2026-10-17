@@ -509,172 +509,6 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    PaymentReceiptPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - recordLocator
-      - stationCode
-      - printer
-      - paymentKey
-      properties:
-        recordLocator:
-          type: string
-          minLength: 1
-        stationCode:
-          type: string
-          description: 'The station code specifying which time zone will be used when formatting the
-
-            receipt.'
-          maxLength: 3
-          minLength: 3
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        paymentKey:
-          type: string
-          minLength: 1
-    ResponseData:
-      type: object
-      additionalProperties: false
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: The key or name for this data.
-        value:
-          type:
-          - string
-          - 'null'
-          description: The value for this data.
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
-          $ref: '#/components/schemas/Exception'
-        rawMessage:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    PrinterCommandsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        clientId:
-          type:
-          - string
-          - 'null'
-        deviceName:
-          type:
-          - string
-          - 'null'
-        responses:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/PrinterCommandResponse'
-    BoardingPassPrintRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - recordLocator
-      - segmentKeys
-      - passengerKeys
-      - printer
-      - deviceManagerKey
-      - documentName
-      - documentId
-      - clientName
-      - clientId
-      properties:
-        recordLocator:
-          type: string
-          minLength: 1
-        segmentKeys:
-          type: array
-          items:
-            type: string
-        passengerKeys:
-          type: array
-          items:
-            type: string
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        deviceManagerKey:
-          type: string
-          minLength: 1
-        documentName:
-          type: string
-          minLength: 1
-        documentId:
-          type: string
-          minLength: 1
-        clientName:
-          type: string
-          minLength: 1
-        clientId:
-          type: string
-          minLength: 1
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
     PassengerReceiptPrintRequest:
       type: object
       additionalProperties: false
@@ -732,335 +566,6 @@ components:
         clientId:
           type: string
           minLength: 1
-    PrinterInitializationRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - printer
-      - deviceManagerKey
-      - clientName
-      - clientId
-      properties:
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        deviceManagerKey:
-          type: string
-          minLength: 1
-        clientName:
-          type: string
-          minLength: 1
-        clientId:
-          type: string
-          minLength: 1
-    DevicePropertyType:
-      type: integer
-      description: 'Defines the different types of properties that can be associated with an external device.
-
-
-        0 = Unknown
-
-        1 = System
-
-        2 = User
-
-        3 = Permanent'
-      x-enumNames:
-      - Unknown
-      - System
-      - User
-      - Permanent
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    PassengerReceiptPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - recordLocator
-      - stationCode
-      - printer
-      - passengerKeys
-      properties:
-        recordLocator:
-          type: string
-          minLength: 1
-        stationCode:
-          type: string
-          description: 'The station code specifying which time zone will be used when formatting the
-
-            receipt.'
-          maxLength: 3
-          minLength: 3
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        passengerKeys:
-          type: array
-          items:
-            type: string
-        useKioskFormat:
-          type: boolean
-          description: 'If true, the print streams will be formatted for receipt type of Kiosk. If false or
-
-            null, the print streams will be formatted for receipt type of PrintSelected.'
-    IJsonResponseOfPrinterCommandsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          $ref: '#/components/schemas/PrinterCommandsResponse'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    PaymentReceiptPrintRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - paymentKey
-      - recordLocator
-      - stationCode
-      - printer
-      - deviceManagerKey
-      - documentName
-      - documentId
-      - clientName
-      - clientId
-      properties:
-        paymentKey:
-          type: string
-          minLength: 1
-        recordLocator:
-          type: string
-          minLength: 1
-        stationCode:
-          type: string
-          description: 'The station code specifying which time zone will be used when formatting the
-
-            receipt.'
-          maxLength: 3
-          minLength: 3
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        deviceManagerKey:
-          type: string
-          minLength: 1
-        documentName:
-          type: string
-          minLength: 1
-        documentId:
-          type: string
-          minLength: 1
-        clientName:
-          type: string
-          minLength: 1
-        clientId:
-          type: string
-          minLength: 1
-    BookingReceiptPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - recordLocator
-      - stationCode
-      - printer
-      properties:
-        recordLocator:
-          type: string
-          minLength: 1
-        stationCode:
-          type: string
-          description: 'The station code specifying which time zone will be used when formatting the
-
-            receipt.'
-          maxLength: 3
-          minLength: 3
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        useSummaryFormat:
-          type: boolean
-          description: 'If true, the print streams will be formatted for receipt type of Summary. If false or
-
-            null, the print streams will be formatted for receipt type of PrintAll.'
-    IJsonResponseOfListOfPrinter:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Printer'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    BagTagPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - printer
-      - recordLocator
-      - baggageKeys
-      properties:
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        recordLocator:
-          type: string
-          minLength: 1
-        baggageKeys:
-          type: array
-          items:
-            type: string
-    IJsonResponseOfListOfString:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    BoardingPassPrintStreamsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - printer
-      - recordLocator
-      - segmentKeys
-      - passengerKeys
-      properties:
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-        recordLocator:
-          type: string
-          minLength: 1
-        segmentKeys:
-          type: array
-          items:
-            type: string
-        passengerKeys:
-          type: array
-          items:
-            type: string
-    PrinterCommandsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - printer
-      properties:
-        printer:
-          $ref: '#/components/schemas/PrinterRequest'
-        locationCode:
-          type:
-          - string
-          - 'null'
-          description: 'The location code specifying which preload or formatter will be used to generate
-
-            streams.  If not specified, the default location code from the JWT will be used.'
-    DeviceProperty:
-      type: object
-      additionalProperties: false
-      required:
-      - key
-      - type
-      - value
-      properties:
-        key:
-          type: string
-          minLength: 1
-        type:
-          $ref: '#/components/schemas/DevicePropertyType'
-        value:
-          type: string
-          minLength: 1
-    BagTagPrintStreams:
-      type: object
-      additionalProperties: false
-      properties:
-        baggageKey:
-          type:
-          - string
-          - 'null'
-        printStreams:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
     BookingReceiptPrintRequest:
       type: object
       additionalProperties: false
@@ -1129,6 +634,74 @@ components:
           type:
           - string
           - 'null'
+    PaymentReceiptPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - paymentKey
+      - recordLocator
+      - stationCode
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        paymentKey:
+          type: string
+          minLength: 1
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     Printer:
       type: object
       additionalProperties: false
@@ -1147,124 +720,20 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/DeviceProperty'
-    PrinterRequest:
+    BagTagPrintStreams:
       type: object
       additionalProperties: false
-      required:
-      - printerKey
       properties:
-        printerKey:
-          type: string
-          minLength: 1
-        properties:
+        baggageKey:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/DeviceProperty'
-        usages:
+        printStreams:
           type:
           - array
           - 'null'
           items:
             type: string
-    PrinterCommandResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        documentId:
-          type:
-          - string
-          - 'null'
-        isSuccessful:
-          type: boolean
-        errorCode:
-          type:
-          - string
-          - 'null'
-          description: Error Code that informs about any failures.
-        errorMessage:
-          type:
-          - string
-          - 'null'
-          description: 'Error Message that informs about any failures.
-
-            Only set when IsSuccessful is false.'
-        result:
-          type:
-          - string
-          - 'null'
-          description: The actual result of the command.
-        responseData:
-          type:
-          - array
-          - 'null'
-          description: Any additinal data.
-          items:
-            $ref: '#/components/schemas/ResponseData'
-    Message:
-      type: object
-      additionalProperties: false
-      properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    IJsonResponseOfListOfBagTagPrintStreams:
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/BagTagPrintStreams'
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    IJsonResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
     BagTagPrintRequest:
       type: object
       additionalProperties: false
@@ -1309,6 +778,537 @@ components:
         clientId:
           type: string
           minLength: 1
+    PrinterCommandResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        documentId:
+          type:
+          - string
+          - 'null'
+        isSuccessful:
+          type: boolean
+        errorCode:
+          type:
+          - string
+          - 'null'
+          description: Error Code that informs about any failures.
+        errorMessage:
+          type:
+          - string
+          - 'null'
+          description: 'Error Message that informs about any failures.
+
+            Only set when IsSuccessful is false.'
+        result:
+          type:
+          - string
+          - 'null'
+          description: The actual result of the command.
+        responseData:
+          type:
+          - array
+          - 'null'
+          description: Any additinal data.
+          items:
+            $ref: '#/components/schemas/ResponseData'
+    PassengerReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      - passengerKeys
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        useKioskFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Kiosk. If false or
+
+            null, the print streams will be formatted for receipt type of PrintSelected.'
+    PrinterCommandsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+    PrinterCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        clientId:
+          type:
+          - string
+          - 'null'
+        deviceName:
+          type:
+          - string
+          - 'null'
+        responses:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PrinterCommandResponse'
+    DevicePropertyType:
+      type: integer
+      description: 'Defines the different types of properties that can be associated with an external device.
+
+
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
+      x-enumNames:
+      - Unknown
+      - System
+      - User
+      - Permanent
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+    PrinterInitializationRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - deviceManagerKey
+      - clientName
+      - clientId
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    BoardingPassPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - recordLocator
+      - segmentKeys
+      - passengerKeys
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+    IJsonResponseOfListOfString:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfPrinterCommandsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/PrinterCommandsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    PaymentReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      - paymentKey
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        paymentKey:
+          type: string
+          minLength: 1
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
+    PrinterRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printerKey
+      properties:
+        printerKey:
+          type: string
+          minLength: 1
+        properties:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DeviceProperty'
+        usages:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    BookingReceiptPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - stationCode
+      - printer
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        stationCode:
+          type: string
+          description: 'The station code specifying which time zone will be used when formatting the
+
+            receipt.'
+          maxLength: 3
+          minLength: 3
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        useSummaryFormat:
+          type: boolean
+          description: 'If true, the print streams will be formatted for receipt type of Summary. If false or
+
+            null, the print streams will be formatted for receipt type of PrintAll.'
+    DeviceProperty:
+      type: object
+      additionalProperties: false
+      required:
+      - key
+      - type
+      - value
+      properties:
+        key:
+          type: string
+          minLength: 1
+        type:
+          $ref: '#/components/schemas/DevicePropertyType'
+        value:
+          type: string
+          minLength: 1
+    BoardingPassPrintRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - recordLocator
+      - segmentKeys
+      - passengerKeys
+      - printer
+      - deviceManagerKey
+      - documentName
+      - documentId
+      - clientName
+      - clientId
+      properties:
+        recordLocator:
+          type: string
+          minLength: 1
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerKeys:
+          type: array
+          items:
+            type: string
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        deviceManagerKey:
+          type: string
+          minLength: 1
+        documentName:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          minLength: 1
+        clientName:
+          type: string
+          minLength: 1
+        clientId:
+          type: string
+          minLength: 1
+    ResponseData:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: The key or name for this data.
+        value:
+          type:
+          - string
+          - 'null'
+          description: The value for this data.
+    BagTagPrintStreamsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - printer
+      - recordLocator
+      - baggageKeys
+      properties:
+        printer:
+          $ref: '#/components/schemas/PrinterRequest'
+        locationCode:
+          type:
+          - string
+          - 'null'
+          description: 'The location code specifying which preload or formatter will be used to generate
+
+            streams.  If not specified, the default location code from the JWT will be used.'
+        recordLocator:
+          type: string
+          minLength: 1
+        baggageKeys:
+          type: array
+          items:
+            type: string
+    IJsonResponseOfListOfPrinter:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Printer'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    IJsonResponseOfListOfBagTagPrintStreams:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/BagTagPrintStreams'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
   securitySchemes:
     JWT:
       type: http

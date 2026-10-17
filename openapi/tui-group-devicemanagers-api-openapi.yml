@@ -49,114 +49,60 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Message:
+    DeviceProperty:
       type: object
       additionalProperties: false
+      required:
+      - key
+      - type
+      - value
       properties:
-        code:
-          type:
-          - string
-          - 'null'
+        key:
+          type: string
+          minLength: 1
         type:
-          type:
-          - string
-          - 'null'
+          $ref: '#/components/schemas/DevicePropertyType'
         value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    ErrorResponse:
+          type: string
+          minLength: 1
+    Exception:
       type: object
       additionalProperties: false
       properties:
-        exception:
+        Message:
+          type: string
+        InnerException:
           $ref: '#/components/schemas/Exception'
-        rawMessage:
+        Source:
           type:
           - string
           - 'null'
-        code:
+        StackTrace:
           type:
           - string
           - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
-          type:
-          - string
-          - 'null'
-    DeviceManagerInfo:
-      type: object
-      additionalProperties: false
-      properties:
-        deviceManagerKey:
-          type:
-          - string
-          - 'null'
-        version:
-          type:
-          - string
-          - 'null'
-        port:
-          type:
-          - string
-          - 'null'
-        workstationName:
-          type:
-          - string
-          - 'null'
-        devices:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ExternalDevice'
-        connectionId:
-          type:
-          - string
-          - 'null'
-    MessageStatus:
+    DevicePropertyType:
       type: integer
-      description: '0 = General
+      description: 'Defines the different types of properties that can be associated with an external device.
 
-        1 = Warning
 
-        2 = Critical'
+        0 = Unknown
+
+        1 = System
+
+        2 = User
+
+        3 = Permanent'
       x-enumNames:
-      - General
-      - Warning
-      - Critical
+      - Unknown
+      - System
+      - User
+      - Permanent
       enum:
       - 0
       - 1
       - 2
+      - 3
     IJsonResponse:
       type: object
       additionalProperties: false
@@ -197,44 +143,54 @@ components:
       - 2
       - 3
       - 4
-    DevicePropertyType:
-      type: integer
-      description: 'Defines the different types of properties that can be associated with an external device.
-
-
-        0 = Unknown
-
-        1 = System
-
-        2 = User
-
-        3 = Permanent'
-      x-enumNames:
-      - Unknown
-      - System
-      - User
-      - Permanent
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-    Exception:
+    DeviceManagerInfo:
       type: object
       additionalProperties: false
       properties:
-        Message:
-          type: string
-        InnerException:
-          $ref: '#/components/schemas/Exception'
-        Source:
+        deviceManagerKey:
           type:
           - string
           - 'null'
-        StackTrace:
+        version:
           type:
           - string
           - 'null'
+        port:
+          type:
+          - string
+          - 'null'
+        workstationName:
+          type:
+          - string
+          - 'null'
+        devices:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalDevice'
+        connectionId:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfDeviceManagerInfo:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DeviceManagerInfo'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     ExternalDevice:
       type: object
       additionalProperties: false
@@ -275,40 +231,84 @@ components:
           description: 'The language of this device.
 
             Use constant file DeviceLanguage to populate this field.'
-    IJsonResponseOfDeviceManagerInfo:
+    Message:
       type: object
       additionalProperties: false
       properties:
-        data:
-          $ref: '#/components/schemas/DeviceManagerInfo'
-        errors:
+        code:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DeviceProperty:
-      type: object
-      additionalProperties: false
-      required:
-      - key
-      - type
-      - value
-      properties:
-        key:
-          type: string
-          minLength: 1
         type:
-          $ref: '#/components/schemas/DevicePropertyType'
+          type:
+          - string
+          - 'null'
         value:
-          type: string
-          minLength: 1
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        exception:
+          $ref: '#/components/schemas/Exception'
+        rawMessage:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     JWT:
       type: http

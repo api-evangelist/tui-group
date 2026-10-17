@@ -50,66 +50,34 @@ paths:
                 $ref: '#/components/schemas/IJsonResponse'
 components:
   schemas:
-    Message:
+    MessageStatus:
+      type: integer
+      description: '0 = General
+
+        1 = Warning
+
+        2 = Critical'
+      x-enumNames:
+      - General
+      - Warning
+      - Critical
+      enum:
+      - 0
+      - 1
+      - 2
+    Exception:
       type: object
       additionalProperties: false
       properties:
-        code:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        value:
-          type:
-          - string
-          - 'null'
-        status:
-          $ref: '#/components/schemas/MessageStatus'
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-    ErrorResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        exception:
+        Message:
+          type: string
+        InnerException:
           $ref: '#/components/schemas/Exception'
-        rawMessage:
+        Source:
           type:
           - string
           - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        number:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          maximum: 99999.0
-          minimum: 0.0
-        details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-        ActivityId:
+        StackTrace:
           type:
           - string
           - 'null'
@@ -176,6 +144,23 @@ components:
       - 12
       - 13
       - 14
+    IJsonResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data: {}
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
     SegmentStatus:
       type: integer
       description: 'The list of IATA standard booking action codes.
@@ -282,76 +267,42 @@ components:
       - 21
       - 22
       - 23
-    MessageStatus:
-      type: integer
-      description: '0 = General
-
-        1 = Warning
-
-        2 = Critical'
-      x-enumNames:
-      - General
-      - Warning
-      - Critical
-      enum:
-      - 0
-      - 1
-      - 2
-    IJsonResponse:
+    ErrorResponse:
       type: object
       additionalProperties: false
       properties:
-        data: {}
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    GetDownlineSegmentsRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - segmentKeys
-      - passengerAlternateKeys
-      properties:
-        segmentKeys:
-          type: array
-          items:
-            type: string
-        passengerAlternateKeys:
-          type: array
-          items:
-            type: string
-    DownlineSegmentsResponse:
-      type: object
-      additionalProperties: false
-      properties:
-        downlineSegments:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DownlineSearchSegment'
-    Exception:
-      type: object
-      additionalProperties: false
-      properties:
-        Message:
-          type: string
-        InnerException:
+        exception:
           $ref: '#/components/schemas/Exception'
-        Source:
+        rawMessage:
           type:
           - string
           - 'null'
-        StackTrace:
+        code:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        number:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          maximum: 99999.0
+          minimum: 0.0
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        ActivityId:
           type:
           - string
           - 'null'
@@ -405,6 +356,90 @@ components:
           type: boolean
         isBaggageCheckinAllowed:
           type: boolean
+    GetDownlineSegmentsRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - segmentKeys
+      - passengerAlternateKeys
+      properties:
+        segmentKeys:
+          type: array
+          items:
+            type: string
+        passengerAlternateKeys:
+          type: array
+          items:
+            type: string
+    DownlineSearchLeg:
+      type: object
+      additionalProperties: false
+      properties:
+        isCheckedIn:
+          type: boolean
+        displayLegStatus:
+          $ref: '#/components/schemas/LegStatus'
+        isProcessedOffline:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/LegStatus'
+        origin:
+          type:
+          - string
+          - 'null'
+        destination:
+          type:
+          - string
+          - 'null'
+        departureTime:
+          type: string
+          format: date-time
+        legKey:
+          type:
+          - string
+          - 'null'
+    IJsonResponseOfDownlineSegmentsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          $ref: '#/components/schemas/DownlineSegmentsResponse'
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ErrorResponse'
+        messages:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        value:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
     SegmentType:
       type: integer
       description: '0 = Normal
@@ -436,51 +471,16 @@ components:
       - 4
       - 5
       - 6
-    IJsonResponseOfDownlineSegmentsResponse:
+    DownlineSegmentsResponse:
       type: object
       additionalProperties: false
       properties:
-        data:
-          $ref: '#/components/schemas/DownlineSegmentsResponse'
-        errors:
+        downlineSegments:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/ErrorResponse'
-        messages:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Message'
-    DownlineSearchLeg:
-      type: object
-      additionalProperties: false
-      properties:
-        isCheckedIn:
-          type: boolean
-        displayLegStatus:
-          $ref: '#/components/schemas/LegStatus'
-        isProcessedOffline:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/LegStatus'
-        origin:
-          type:
-          - string
-          - 'null'
-        destination:
-          type:
-          - string
-          - 'null'
-        departureTime:
-          type: string
-          format: date-time
-        legKey:
-          type:
-          - string
-          - 'null'
+            $ref: '#/components/schemas/DownlineSearchSegment'
   securitySchemes:
     JWT:
       type: http

@@ -385,48 +385,6 @@ paths:
       description: Pre-prod Server
 components:
   schemas:
-    ApiAccommodation:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        href:
-          type: string
-        imagesHref:
-          type: string
-        allInclusive:
-          type: boolean
-      required:
-      - id
-      - name
-      - href
-      - imagesHref
-      - allInclusive
-      type: object
-      additionalProperties: false
-    ApiPackages:
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-        totalNumberOfItems:
-          type: number
-          format: double
-        version:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/ApiPackage'
-          type: array
-      required:
-      - next
-      - totalNumberOfItems
-      - version
-      - items
-      type: object
-      additionalProperties: false
     ApiFlightLeg:
       properties:
         typeOfFlightName:
@@ -465,93 +423,6 @@ components:
       - departureCode
       - legNumber
       type: object
-    AccommodationResponseModel:
-      properties:
-        total:
-          type: number
-          format: double
-        items:
-          items:
-            $ref: '#/components/schemas/AccommodationModel'
-          type: array
-      required:
-      - total
-      - items
-      type: object
-      additionalProperties: false
-    LocationResponseModel:
-      properties:
-        total:
-          type: number
-          format: double
-        items:
-          items:
-            $ref: '#/components/schemas/LocationModel'
-          type: array
-      required:
-      - total
-      - items
-      type: object
-      additionalProperties: false
-    AccommodationModel:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        locations:
-          type: string
-        tags:
-          type: string
-      required:
-      - id
-      - name
-      - locations
-      - tags
-      type: object
-      additionalProperties: false
-    ApiPrice:
-      properties:
-        priceOriginal:
-          type: number
-          format: double
-        currentPrice:
-          type: number
-          format: double
-        currency:
-          type: string
-        flightClassName:
-          type: string
-        urlToBooking:
-          type: string
-        roomTypeCode:
-          type: string
-        roomTypeName:
-          type: string
-        boardIncluded:
-          type: string
-      required:
-      - priceOriginal
-      - currentPrice
-      - currency
-      - flightClassName
-      - urlToBooking
-      - roomTypeCode
-      - roomTypeName
-      - boardIncluded
-      type: object
-      additionalProperties: false
-    LocationModel:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
-      type: object
-      additionalProperties: false
     ApiPackage:
       properties:
         departureCode:
@@ -619,11 +490,48 @@ components:
       - prices
       type: object
       additionalProperties: false
-    ApiAccommodation_2:
+    AccommodationResponseModel:
+      properties:
+        total:
+          type: number
+          format: double
+        items:
+          items:
+            $ref: '#/components/schemas/AccommodationModel'
+          type: array
+      required:
+      - total
+      - items
+      type: object
+      additionalProperties: false
+    LocationResponseModel:
+      properties:
+        total:
+          type: number
+          format: double
+        items:
+          items:
+            $ref: '#/components/schemas/LocationModel'
+          type: array
+      required:
+      - total
+      - items
+      type: object
+      additionalProperties: false
+    LocationModel:
       properties:
         id:
           type: string
-        configurationId:
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    ApiAccommodation:
+      properties:
+        id:
           type: string
         name:
           type: string
@@ -633,16 +541,82 @@ components:
           type: string
         allInclusive:
           type: boolean
-        destinationName:
-          type: string
-        climateCompensated:
-          type: boolean
       required:
       - id
       - name
       - href
       - imagesHref
       - allInclusive
+      type: object
+      additionalProperties: false
+    ApiPackages:
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+        totalNumberOfItems:
+          type: number
+          format: double
+        version:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ApiPackage'
+          type: array
+      required:
+      - next
+      - totalNumberOfItems
+      - version
+      - items
+      type: object
+      additionalProperties: false
+    AccommodationModel:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        locations:
+          type: string
+        tags:
+          type: string
+      required:
+      - id
+      - name
+      - locations
+      - tags
+      type: object
+      additionalProperties: false
+    ApiPrice:
+      properties:
+        priceOriginal:
+          type: number
+          format: double
+        currentPrice:
+          type: number
+          format: double
+        currency:
+          type: string
+        flightClassName:
+          type: string
+        urlToBooking:
+          type: string
+        roomTypeCode:
+          type: string
+        roomTypeName:
+          type: string
+        boardIncluded:
+          type: string
+      required:
+      - priceOriginal
+      - currentPrice
+      - currency
+      - flightClassName
+      - urlToBooking
+      - roomTypeCode
+      - roomTypeName
+      - boardIncluded
       type: object
       additionalProperties: false
     ApiFlightLeg_2:
@@ -689,63 +663,6 @@ components:
       - departureCode
       - legNumber
       type: object
-    ApiPrice_2:
-      properties:
-        priceOriginal:
-          type: number
-          format: double
-        currentPrice:
-          type: number
-          format: double
-        currency:
-          type: string
-        available:
-          type: number
-          format: double
-        seatsAvailable:
-          type: number
-          format: double
-        flightClassName:
-          type: string
-        urlToBooking:
-          type: string
-        roomTags:
-          items:
-            type: string
-          type: array
-        roomGroupCode:
-          type: string
-        roomTypeCode:
-          type: string
-        roomTypeName:
-          type: string
-        numberOfOrdinaryBeds:
-          type: number
-          format: double
-        numberOfExtraBeds:
-          type: number
-          format: double
-        campaignCode:
-          type:
-          - string
-          - 'null'
-        campaignName:
-          type:
-          - string
-          - 'null'
-        boardIncluded:
-          type: string
-      required:
-      - priceOriginal
-      - currentPrice
-      - currency
-      - flightClassName
-      - urlToBooking
-      - roomTypeCode
-      - roomTypeName
-      - boardIncluded
-      type: object
-      additionalProperties: false
     ApiPackage_2:
       properties:
         id:
@@ -825,6 +742,89 @@ components:
       - outboundFlightLegs
       - homeboundFlightLegs
       - prices
+      type: object
+      additionalProperties: false
+    ApiAccommodation_2:
+      properties:
+        id:
+          type: string
+        configurationId:
+          type: string
+        name:
+          type: string
+        href:
+          type: string
+        imagesHref:
+          type: string
+        allInclusive:
+          type: boolean
+        destinationName:
+          type: string
+        climateCompensated:
+          type: boolean
+      required:
+      - id
+      - name
+      - href
+      - imagesHref
+      - allInclusive
+      type: object
+      additionalProperties: false
+    ApiPrice_2:
+      properties:
+        priceOriginal:
+          type: number
+          format: double
+        currentPrice:
+          type: number
+          format: double
+        currency:
+          type: string
+        available:
+          type: number
+          format: double
+        seatsAvailable:
+          type: number
+          format: double
+        flightClassName:
+          type: string
+        urlToBooking:
+          type: string
+        roomTags:
+          items:
+            type: string
+          type: array
+        roomGroupCode:
+          type: string
+        roomTypeCode:
+          type: string
+        roomTypeName:
+          type: string
+        numberOfOrdinaryBeds:
+          type: number
+          format: double
+        numberOfExtraBeds:
+          type: number
+          format: double
+        campaignCode:
+          type:
+          - string
+          - 'null'
+        campaignName:
+          type:
+          - string
+          - 'null'
+        boardIncluded:
+          type: string
+      required:
+      - priceOriginal
+      - currentPrice
+      - currency
+      - flightClassName
+      - urlToBooking
+      - roomTypeCode
+      - roomTypeName
+      - boardIncluded
       type: object
       additionalProperties: false
   securitySchemes:
